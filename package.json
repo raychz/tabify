@@ -26,6 +26,15 @@
     "@ionic-native/status-bar": "4.7.0",
     "@ionic/pro": "^1.0.20",
     "@ionic/storage": "2.1.3",
+    "cordova-android": "7.0.0",
+    "cordova-browser": "5.0.3",
+    "cordova-ios": "4.5.4",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-ionic": "^4.1.7",
+    "cordova-plugin-ionic-keyboard": "^2.0.5",
+    "cordova-plugin-ionic-webview": "^1.1.19",
+    "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-whitelist": "^1.3.3",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
     "rxjs": "5.5.11",
@@ -36,5 +45,19 @@
     "@ionic/app-scripts": "^3.1.9",
     "typescript": "~2.6.2"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {}
+    },
+    "platforms": [
+      "ios",
+      "android",
+      "browser"
+    ]
+  }
 }
