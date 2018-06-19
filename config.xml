@@ -86,4 +86,5 @@
     <engine name="android" spec="~7.0.0" />
     <engine name="browser" spec="~5.0.3" />
     <allow-navigation href="http://10.9.27.25:8100" />
+    <allow-navigation href="http://172.20.26.63:8102" />
 </widget>

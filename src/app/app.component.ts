@@ -6,7 +6,9 @@ import { AuthService } from '../services/auth.service';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
-import { LoginPage } from '../pages/login/login';
+// import { LoginPage } from '../pages/unauthenticated/login/login';
+import { UnauthenticatedPage } from '../pages/unauthenticated/unauthenticated';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -35,20 +37,17 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.backgroundColorByHexString("#ffffff");
       this.splashScreen.hide();
+      this.rootPage = UnauthenticatedPage;
     });
-    this.auth.afAuth.authState
-      .subscribe(
-        user => {
-          if (user) {
-            this.rootPage = HomePage;
-          } else {
-            this.rootPage = LoginPage;
-          }
-        },
-        () => {
-          this.rootPage = LoginPage;
-        }
-      );
+    // this.auth.afAuth.authState
+    //   .subscribe(
+    //     user => {
+    //       this.rootPage = user ? HomePage : UnauthenticatedPage;
+    //     },
+    //     () => {
+    //       this.rootPage = UnauthenticatedPage;
+    //     }
+    //   );
   }
 
   openPage(page) {
@@ -60,7 +59,7 @@ export class MyApp {
   login() {
     this.menu.close();
     this.auth.signOut();
-    this.nav.setRoot(LoginPage);
+    this.nav.setRoot(UnauthenticatedPage);
   }
 
   logout() {

@@ -32,5 +32,5 @@ export class AuthService {
 
   signOut(): Promise<void> {
     return this.afAuth.auth.signOut();
-  }  
+  }
 }
