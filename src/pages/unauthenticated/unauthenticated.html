@@ -1,32 +1,28 @@
-<!--
-  Generated template for the UnauthenticatedPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<!-- <ion-header>
-
-  <ion-navbar>
-    <ion-title>unauthenticated</ion-title>
-  </ion-navbar>
-
-</ion-header> -->
-
-<ion-content [ngClass]="'background image1'">
-
+<ion-content [ngClass]="'background image' + (activeSlideIndex + 1)">
+    <ion-slides pager (ionSlideDidChange)="slideChanged()">
+        <ion-slide>
+            <h2>Slide 1</h2>
+        </ion-slide>
+        <ion-slide>
+            <h2>Slide 2</h2>
+        </ion-slide>
+        <ion-slide>
+            <h2>Slide 3</h2>
+        </ion-slide>
+    </ion-slides>
 </ion-content>
 
 <ion-footer no-shadow>
     <ion-grid>
         <ion-row>
             <ion-col col-6>
-                <button ion-button color="tabify" class="my-width" float-right>
+                <button ion-button color="tabify" class="action-btn" float-right>
                   Sign Up
                 </button>
             </ion-col>
 
             <ion-col col-6>
-                <button ion-button color="tabify-alt" class="my-width" float-left>
+                <button ion-button color="tabify-alt" class="action-btn" float-left>
                   Login
                 </button>
             </ion-col>

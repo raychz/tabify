@@ -25,17 +25,25 @@ page-unauthenticated {
             @content;
         }
     }
-    .my-width {
+    .action-btn {
         width: 80%;
     }
     .background {
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
-        @include animation(move, 15s, infinite, linear, alternate);
+        @include vendor-prefix('transition', all 0.2s linear);
+        @include vendor-prefix('filter', brightness(30%) grayscale(50%));
+        @include animation(move, 15s, infinite, linear, alternate-reverse);
         will-change: transform;
         &.image1 {
-            background-image: url(../../assets/imgs/logo.png);
+            background-image: url(../../assets/imgs/login/img1.png);
+        }
+        &.image2 {
+            background-image: url(../../assets/imgs/login/img1.1.jpeg);
+        }
+        &.image3 {
+            background-image: url(../../assets/imgs/login/img1.2.jpeg);
         }
         @include keyframe(move) {
             from {

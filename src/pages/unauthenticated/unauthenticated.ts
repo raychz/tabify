@@ -1,12 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the UnauthenticatedPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -14,6 +7,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'unauthenticated.html',
 })
 export class UnauthenticatedPage {
+  @ViewChild(Slides) slides: Slides;
+  activeSlideIndex = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -22,4 +17,9 @@ export class UnauthenticatedPage {
     console.log('ionViewDidLoad UnauthenticatedPage');
   }
 
+  slideChanged() {
+    this.activeSlideIndex = this.slides.getActiveIndex();
+    this.slides.lockSwipeToNext(this.activeSlideIndex === this.slides.length() - 1);
+    this.slides.lockSwipeToPrev(this.activeSlideIndex === 0);
+  }
 }
