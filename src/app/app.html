@@ -4,12 +4,9 @@
             <ion-title>Tabify</ion-title>
         </ion-toolbar>
     </ion-header>
-
     <ion-content>
         <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-            </button>
+            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">{{p.title}}</button>
             <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
 
             <ion-item (click)="logout()" *ngIf="auth.authenticated">
@@ -23,7 +20,6 @@
             </ion-item>
         </ion-list>
     </ion-content>
-
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->

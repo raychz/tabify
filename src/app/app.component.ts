@@ -9,7 +9,6 @@ import { ListPage } from '../pages/list/list';
 // import { LoginPage } from '../pages/unauthenticated/login/login';
 import { UnauthenticatedPage } from '../pages/unauthenticated/unauthenticated';
 
-
 @Component({
   templateUrl: 'app.html'
 })
@@ -28,26 +27,27 @@ export class MyApp {
       { title: 'Home', component: HomePage },
       { title: 'List', component: ListPage }
     ];
-
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(readySource => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      console.log('Platform ready from', readySource);
       this.statusBar.backgroundColorByHexString("#ffffff");
       this.splashScreen.hide();
-      this.rootPage = UnauthenticatedPage;
+      this.auth.afAuth.authState
+        .subscribe(
+          user => {
+            this.rootPage = user ? HomePage : UnauthenticatedPage;
+            this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
+          },
+          () => {
+            this.rootPage = UnauthenticatedPage;
+            this.menu.swipeEnable(false);
+          }
+        );
     });
-    // this.auth.afAuth.authState
-    //   .subscribe(
-    //     user => {
-    //       this.rootPage = user ? HomePage : UnauthenticatedPage;
-    //     },
-    //     () => {
-    //       this.rootPage = UnauthenticatedPage;
-    //     }
-    //   );
   }
 
   openPage(page) {

@@ -26,9 +26,6 @@ page-unauthenticated {
         }
     }
     ion-content {
-        h1, h4 {
-            color: map-get($colors, light);
-        }
         .action-btn {
             width: 70%;
         }
@@ -83,11 +80,14 @@ page-unauthenticated {
             position: absolute;
             z-index: 2;
             height: 100%;
-            ion-row:nth-child(1) {
-                height: 85%;
-            }
-            ion-row:nth-child(2) {
-                height: 15%;
+            ion-row {
+                &:nth-child(1) {
+                    height: 85%;
+                }
+                &:nth-child(2) {
+                    height: 15%;
+
+                }
             }
         }
     }

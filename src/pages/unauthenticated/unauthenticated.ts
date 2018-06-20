@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { SignUpPage } from './sign-up/sign-up';
+import { LoginPage } from './login/login';
 
 @IonicPage()
 @Component({
@@ -21,5 +23,13 @@ export class UnauthenticatedPage {
     this.activeSlideIndex = this.slides.getActiveIndex();
     this.slides.lockSwipeToNext(this.activeSlideIndex === this.slides.length() - 1);
     this.slides.lockSwipeToPrev(this.activeSlideIndex === 0);
+  }
+
+  signUp() {
+    this.navCtrl.push(SignUpPage);
+  }
+
+  login() {
+    this.navCtrl.push(LoginPage);
   }
 }
