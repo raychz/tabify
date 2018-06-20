@@ -1,31 +1,44 @@
-<ion-content [ngClass]="'background image' + (activeSlideIndex + 1)">
-    <ion-slides pager (ionSlideDidChange)="slideChanged()">
-        <ion-slide>
-            <h2>Slide 1</h2>
-        </ion-slide>
-        <ion-slide>
-            <h2>Slide 2</h2>
-        </ion-slide>
-        <ion-slide>
-            <h2>Slide 3</h2>
-        </ion-slide>
-    </ion-slides>
-</ion-content>
-
-<ion-footer no-shadow>
+<ion-content>
+    <div [ngClass]="'background image' + (activeSlideIndex + 1)"></div>
     <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-slides pager (ionSlideDidChange)="slideChanged()">
+                    <ion-slide>
+                        <img class="slide-icon" src="../../assets/imgs/logo.png" />
+                        <h1>Split the Tab</h1>
+                        <h4>Tabify makes it quick and easy to pay for your fair share at restaurants</h4>
+                    </ion-slide>
+                    <ion-slide>
+                        <img class="slide-icon" src="../../assets/imgs/logo.png" />
+                        <h1>Restaurant Integrated</h1>
+                        <h4>Enter the 6-character code on your check to retrieve every item ordered at the table</h4>
+                    </ion-slide>
+                    <ion-slide>
+                        <img class="slide-icon" src="../../assets/imgs/logo.png" />
+                        <h1>Select and Split</h1>
+                        <h4>Select the items you ordered, split a percentage of the ones you shared, and leave a tip</h4>
+                    </ion-slide>
+                    <ion-slide>
+                        <img class="slide-icon" src="../../assets/imgs/logo.png" />
+                        <h1>Seamless</h1>
+                        <h4>Make group dining fun again and eliminate the hassle of settling up later</h4>
+                    </ion-slide>
+                </ion-slides>
+            </ion-col>
+        </ion-row>
         <ion-row>
             <ion-col col-6>
                 <button ion-button color="tabify" class="action-btn" float-right>
-                  Sign Up
-                </button>
+                          Sign Up
+                        </button>
             </ion-col>
 
             <ion-col col-6>
                 <button ion-button color="tabify-alt" class="action-btn" float-left>
-                  Login
-                </button>
+                          Login
+                        </button>
             </ion-col>
         </ion-row>
     </ion-grid>
-</ion-footer>
+</ion-content>

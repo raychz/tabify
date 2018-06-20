@@ -25,32 +25,69 @@ page-unauthenticated {
             @content;
         }
     }
-    .action-btn {
-        width: 80%;
-    }
-    .background {
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        @include vendor-prefix('transition', all 0.2s linear);
-        @include vendor-prefix('filter', brightness(30%) grayscale(50%));
-        @include animation(move, 15s, infinite, linear, alternate-reverse);
-        will-change: transform;
-        &.image1 {
-            background-image: url(../../assets/imgs/login/img1.png);
+    ion-content {
+        h1, h4 {
+            color: map-get($colors, light);
         }
-        &.image2 {
-            background-image: url(../../assets/imgs/login/img1.1.jpeg);
+        .action-btn {
+            width: 70%;
         }
-        &.image3 {
-            background-image: url(../../assets/imgs/login/img1.2.jpeg);
-        }
-        @include keyframe(move) {
-            from {
-                transform: scale(1.2, 1.2);
+        .background {
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            @include vendor-prefix('transition', background-image 0.2s linear);
+            @include vendor-prefix('filter', brightness(30%) grayscale(50%));
+            @include animation(move, 15s, infinite, linear, alternate-reverse);
+            will-change: transform;
+            &.image1 {
+                background-image: url(../../assets/imgs/login/img1.png);
             }
-            to {
-                transform: scale(1, 1);
+            &.image2 {
+                background-image: url(../../assets/imgs/login/img1.1.jpeg);
+            }
+            &.image3 {
+                background-image: url(../../assets/imgs/login/img1.2.jpeg);
+            }
+            @include keyframe(move) {
+                from {
+                    transform: scale(1.2, 1.2);
+                }
+                to {
+                    transform: scale(1, 1);
+                }
+            }
+        }
+        .scroll-content {
+            overflow: hidden;
+        }
+        .slide-icon {
+            height: 70px;
+            width: 70px;
+        }
+        .slide-zoom {
+            width: 90%;
+        }
+        .swiper-pagination-bullet {
+            background: map-get($colors, light);
+        }
+        .swiper-pagination-bullet-active {
+            background: map-get($colors, primary);
+        }
+        ion-grid {
+            position: absolute;
+            z-index: 2;
+            height: 100%;
+            ion-row:nth-child(1) {
+                height: 85%;
+            }
+            ion-row:nth-child(2) {
+                height: 15%;
             }
         }
     }
