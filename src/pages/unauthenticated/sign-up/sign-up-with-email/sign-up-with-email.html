@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Sign Up With Email</ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <form (ngSubmit)="signUp()" [formGroup]="form">
+                    <ion-list inset>
+                        <ion-item [ngClass]="{ invalid: emailErrors.hasError('*', ['touched']) }">
+                            <ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+                        </ion-item>
+
+                        <div ngxErrors="email" #emailErrors="ngxErrors">
+                            <div [ngxError]="['email', 'required']" [when]="['dirty']">Enter a valid email.</div>
+                        </div>
+
+                        <ion-item [ngClass]="{ invalid: passwordErrors.hasError('*', ['touched']) }">
+                            <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+                        </ion-item>
+
+                        <div ngxErrors="password" #passwordErrors="ngxErrors">
+                            <div [ngxError]="['minlength', 'required']" [when]="['dirty']">Password must have at least 6 characters</div>
+                        </div>
+                    </ion-list>
+
+                    <div padding-horizontal>
+                        <div class="form-error">{{signUpError}}</div>
+                        <button ion-button block type="submit" [disabled]="!form.valid">Sign Up</button>
+                    </div>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

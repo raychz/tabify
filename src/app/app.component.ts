@@ -4,11 +4,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth.service';
 
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
-// import { LoginPage } from '../pages/unauthenticated/login/login';
-import { UnauthenticatedPage } from '../pages/unauthenticated/unauthenticated';
-
 @Component({
   templateUrl: 'app.html'
 })
@@ -24,8 +19,8 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage }
+      { title: 'Home', component: 'HomePage' },
+      { title: 'List', component: 'ListPage' }
     ];
   }
 
@@ -39,11 +34,11 @@ export class MyApp {
       this.auth.afAuth.authState
         .subscribe(
           user => {
-            this.rootPage = user ? HomePage : UnauthenticatedPage;
+            this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
             this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
           },
           () => {
-            this.rootPage = UnauthenticatedPage;
+            this.rootPage = 'UnauthenticatedPage';
             this.menu.swipeEnable(false);
           }
         );
@@ -59,12 +54,12 @@ export class MyApp {
   login() {
     this.menu.close();
     this.auth.signOut();
-    this.nav.setRoot(UnauthenticatedPage);
+    this.nav.setRoot('UnauthenticatedPage');
   }
 
   logout() {
     this.menu.close();
     this.auth.signOut();
-    this.nav.setRoot(HomePage);
+    this.nav.setRoot('HomePage');
   }
 }

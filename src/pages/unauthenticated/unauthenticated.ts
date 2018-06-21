@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
-import { SignUpPage } from './sign-up/sign-up';
-import { LoginPage } from './login/login';
 
 @IonicPage()
 @Component({
@@ -26,10 +24,10 @@ export class UnauthenticatedPage {
   }
 
   signUp() {
-    this.navCtrl.push(SignUpPage);
+    this.navCtrl.push('SignUpPage');
   }
 
   login() {
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.push('LoginPage');
   }
 }
