@@ -26,6 +26,9 @@ page-unauthenticated {
         }
     }
     ion-content {
+        h1, h4 {
+            font-weight: 400;
+        }
         .action-btn {
             width: 70%;
         }
@@ -81,12 +84,14 @@ page-unauthenticated {
             z-index: 2;
             height: 100%;
             ion-row {
+                ion-col {
+                    height: 100%;
+                }
                 &:nth-child(1) {
                     height: 85%;
                 }
                 &:nth-child(2) {
                     height: 15%;
-
                 }
             }
         }

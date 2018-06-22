@@ -47,4 +47,8 @@ export class LoginWithEmailPage {
         error => this.loginError = error.message
       );
   }
+
+  forgotPassword() {
+    this.navCtrl.push('ForgotPasswordPage');
+  }
 }
