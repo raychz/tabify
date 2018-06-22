@@ -19,6 +19,13 @@ export class LoginPage {
     this.navCtrl.push('LoginWithEmailPage');
   }
 
+  loginWithFacebook() {
+    this.auth.signInWithFacebook().then(
+      res => console.log(res),
+      error => console.log("ERROR", error)
+    );
+  }
+
   signUp() {
     this.navCtrl.pop().then(() => {
       this.navCtrl.push('SignUpPage');

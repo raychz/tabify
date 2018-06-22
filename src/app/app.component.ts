@@ -34,10 +34,12 @@ export class MyApp {
       this.auth.afAuth.authState
         .subscribe(
           user => {
+            console.log("IN SUBSCRIBE APP COMPONENT, USER: ", user);
             this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
             this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
           },
-          () => {
+          (error) => {
+            console.log("IN SUBSCRIBE APP COMPONENT, ERROR: ", error);
             this.rootPage = 'UnauthenticatedPage';
             this.menu.swipeEnable(false);
           }
