@@ -30,7 +30,7 @@ export class ForgotPasswordPage {
           () => {
             const alert = this.alertCtrl.create({
               title: 'Success',
-              subTitle: 'A password reset link has been sent to your email.',
+              subTitle: `A password reset link has been sent to ${email}.`,
               buttons: ['Ok']
             });
             this.navCtrl.setRoot('UnauthenticatedPage').then(() => alert.present());
