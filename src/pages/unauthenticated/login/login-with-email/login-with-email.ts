@@ -31,21 +31,15 @@ export class LoginWithEmailPage {
   }
 
   login() {
-    let data = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    if (!data.email) {
-      return;
+    if (email && password) {
+      this.auth.signInWithEmail({ email, password })
+        .then(
+          () => this.navCtrl.setRoot('HomePage'),
+          error => this.loginError = error.message
+        );
     }
-
-    let credentials = {
-      email: data.email,
-      password: data.password
-    };
-    this.auth.signInWithEmail(credentials)
-      .then(
-        () => this.navCtrl.setRoot('HomePage'),
-        error => this.loginError = error.message
-      );
   }
 
   forgotPassword() {
