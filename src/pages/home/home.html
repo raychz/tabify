@@ -5,7 +5,7 @@
                 <ion-icon name="menu"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-segment color="tabify-alt">
+        <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
             <ion-segment-button value="global" icon-only>
                 <ion-icon name="globe"></ion-icon>
             </ion-segment-button>
@@ -25,15 +25,36 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-refresher >
+    <ion-refresher>
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing...">
         </ion-refresher-content>
     </ion-refresher>
-    <h3>Ionic Menu Starter</h3>
+    <div [ngSwitch]="selectedSegment">
+        <ion-list *ngSwitchCase="'global'">
+            <ion-item>
+                <ion-thumbnail item-start>
+                    <img src="img/thumbnail-puppy-1.jpg">
+                </ion-thumbnail>
+                <h2>Ruby</h2>
+            </ion-item>
+        </ion-list>
 
-    <p>
-        If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-    </p>
+        <ion-list *ngSwitchCase="'community'">
+            <ion-item>
+                <ion-thumbnail item-start>
+                    <img src="img/thumbnail-kitten-1.jpg">
+                </ion-thumbnail>
+                <h2>Luna</h2>
+            </ion-item>
+        </ion-list>
 
-    <button ion-button secondary menuToggle>Toggle Menu</button>
+        <ion-list *ngSwitchCase="'user'">
+            <ion-item>
+                <ion-thumbnail item-start>
+                    <img src="img/thumbnail-kitten-1.jpg">
+                </ion-thumbnail>
+                <h2>Luna</h2>
+            </ion-item>
+        </ion-list>
+    </div>
 </ion-content>

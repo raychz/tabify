@@ -7,9 +7,17 @@ import { IonicPage, NavController } from 'ionic-angular';
   templateUrl: 'home.html'
 })
 export class HomePage {
-
+  selectedSegment = 'user';
+  global = [];
+  community = [];
+  user = [];
+  
   constructor(public navCtrl: NavController) {
 
+  }
+
+  segmentChanged(event) {
+    console.log(event);
   }
 
 }
