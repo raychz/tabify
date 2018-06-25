@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { AlertController, IonicPage, NavController } from 'ionic-angular';
 import { AuthService } from '../../../services/auth.service';
 
 @IonicPage()
@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  constructor(private navCtrl: NavController, private auth: AuthService) {
+  constructor(private navCtrl: NavController, private auth: AuthService, private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -22,7 +22,15 @@ export class LoginPage {
   loginWithFacebook() {
     this.auth.signInWithFacebook().then(
       res => console.log(res),
-      error => console.log("ERROR", error)
+      error => {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: 'An error occurred while logging in with Facebook.',
+          buttons: ['Ok']
+        });
+        alert.present();
+        console.log("ERROR", error)
+      }
     );
   }
 
