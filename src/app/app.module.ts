@@ -45,7 +45,9 @@ export class MyErrorHandler implements ErrorHandler {
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      preloadModules: true
+    }),
     AngularFireModule.initializeApp(firebaseConfig.fire),
     AngularFireAuthModule
   ],
