@@ -29,7 +29,7 @@ export class LoginPage {
           buttons: ['Ok']
         });
         alert.present();
-        console.log("ERROR", error)
+        console.log("ERROR", error);
       }
     );
   }

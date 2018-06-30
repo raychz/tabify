@@ -1,7 +1,7 @@
 # Tabify
 
 ## Getting Started
-```
+```js
 npm install -g ionic
 ionic serve
 ```
