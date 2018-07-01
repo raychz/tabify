@@ -11,8 +11,10 @@ import { Pro } from '@ionic/pro';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { firebaseConfig } from '../config';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 import { Facebook } from '@ionic-native/facebook';
+import { LoaderService } from '../services/utilities/loader.service';
+import { AlertService } from '../services/utilities/alert.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -59,6 +61,8 @@ export class MyErrorHandler implements ErrorHandler {
     AngularFireAuth,
     AuthService,
     Facebook,
+    LoaderService,
+    AlertService
   ],
 })
 export class AppModule {}

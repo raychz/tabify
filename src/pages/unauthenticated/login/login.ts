@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { AlertController, IonicPage, LoadingController, NavController } from 'ionic-angular';
-import { AuthService } from '../../../services/auth.service';
+import { IonicPage, NavController } from 'ionic-angular';
+
+import { AuthService } from '../../../services/auth/auth.service';
+import { LoaderService } from '../../../services/utilities/loader.service';
+import { AlertService } from '../../../services/utilities/alert.service';
 
 @IonicPage()
 @Component({
@@ -8,8 +11,12 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  constructor(public loadingCtrl: LoadingController, private navCtrl: NavController, private auth: AuthService, private alertCtrl: AlertController) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public auth: AuthService,
+    public alert: AlertService,
+    public loader: LoaderService
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
@@ -20,34 +27,29 @@ export class LoginPage {
   }
 
   loginWithFacebook() {
-    const loading = this.loadingCtrl.create({
+    this.loader.present({
       content: 'Waiting on Facebook to log you in...',
-      spinner: 'dots'
     });
 
-    loading.present();
-
-    return this.auth.signInWithFacebook()
+    return this.auth
+      .signInWithFacebook()
       .then(
-        res => {
-          console.log(res);
-          return res;
-        },
+        res => res,
         error => {
-          const alert = this.alertCtrl.create({
+          const alert = this.alert.create({
             title: 'Error',
             subTitle: 'An error occurred while logging in with Facebook.',
-            buttons: ['Ok']
+            buttons: ['Ok'],
           });
           return alert.present();
         }
       )
-      .then(() => loading.dismiss());
+      .then(() => this.loader.dismiss());
   }
 
   signUp() {
     this.navCtrl.pop().then(() => {
       this.navCtrl.push('SignUpPage');
-    })
+    });
   }
 }
