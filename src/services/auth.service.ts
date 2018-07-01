@@ -8,7 +8,11 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 export class AuthService {
   private user: firebase.User;
 
-  constructor(public afAuth: AngularFireAuth, private fb: Facebook, private platform: Platform) {
+  constructor(
+    public afAuth: AngularFireAuth,
+    private fb: Facebook,
+    private platform: Platform
+  ) {
     afAuth.authState.subscribe(user => {
       this.user = user;
     });
@@ -24,24 +28,35 @@ export class AuthService {
 
   signInWithEmail(credentials) {
     console.log('Sign in with email');
-    return this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
+    return this.afAuth.auth.signInWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    );
   }
 
   signInWithFacebook() {
     if (this.platform.is('cordova')) {
-      return this.fb.login(['email', 'public_profile']).then((res: FacebookLoginResponse) => {
-        const { accessToken } = res.authResponse;
-        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(accessToken);
-        return firebase.auth().signInWithCredential(facebookCredential);
-      });
-    }
-    else {
-      return this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+      return this.fb
+        .login(['email', 'public_profile'])
+        .then((res: FacebookLoginResponse) => {
+          const { accessToken } = res.authResponse;
+          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
+            accessToken
+          );
+          return firebase.auth().signInWithCredential(facebookCredential);
+        });
+    } else {
+      return this.afAuth.auth.signInWithPopup(
+        new firebase.auth.FacebookAuthProvider()
+      );
     }
   }
 
   signUp(credentials) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+    return this.afAuth.auth.createUserWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    );
   }
 
   getEmail() {

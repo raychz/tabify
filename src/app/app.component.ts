@@ -5,22 +5,28 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
 
-  pages: Array<{ title: string, component: any }>;
+  pages: Array<{ title: string; component: any }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private auth: AuthService, private menu: MenuController) {
+  constructor(
+    public platform: Platform,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    public auth: AuthService,
+    public menu: MenuController
+  ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: 'HomePage' },
-      { title: 'List', component: 'ListPage' }
+      { title: 'List', component: 'ListPage' },
     ];
   }
 
@@ -29,21 +35,20 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       console.log('Platform ready from', readySource);
-      this.statusBar.backgroundColorByHexString("#ffffff");
+      this.statusBar.backgroundColorByHexString('#ffffff');
       this.splashScreen.hide();
-      this.auth.afAuth.authState
-        .subscribe(
-          user => {
-            console.log("IN SUBSCRIBE APP COMPONENT, USER: ", user);
-            this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
-            this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
-          },
-          (error) => {
-            console.log("IN SUBSCRIBE APP COMPONENT, ERROR: ", error);
-            this.rootPage = 'UnauthenticatedPage';
-            this.menu.swipeEnable(false);
-          }
-        );
+      this.auth.afAuth.authState.subscribe(
+        user => {
+          console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
+          this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
+          this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
+        },
+        error => {
+          console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
+          this.rootPage = 'UnauthenticatedPage';
+          this.menu.swipeEnable(false);
+        }
+      );
     });
   }
 

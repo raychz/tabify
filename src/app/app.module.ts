@@ -15,8 +15,8 @@ import { AuthService } from '../services/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 
 Pro.init('66369498', {
-  appVersion: '0.0.1'
-})
+  appVersion: '0.0.1',
+});
 
 @Injectable()
 export class MyErrorHandler implements ErrorHandler {
@@ -25,7 +25,7 @@ export class MyErrorHandler implements ErrorHandler {
   constructor(injector: Injector) {
     try {
       this.ionicErrorHandler = injector.get(IonicErrorHandler);
-    } catch(e) {
+    } catch (e) {
       // Unable to get the IonicErrorHandler provider, ensure
       // IonicErrorHandler has been added to the providers list below
     }
@@ -40,29 +40,25 @@ export class MyErrorHandler implements ErrorHandler {
 }
 
 @NgModule({
-  declarations: [
-    MyApp,
-  ],
+  declarations: [MyApp],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, {
-      preloadModules: true
+      preloadModules: true,
     }),
     AngularFireModule.initializeApp(firebaseConfig.fire),
-    AngularFireAuthModule
+    AngularFireAuthModule,
   ],
   bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-  ],
+  entryComponents: [MyApp],
   providers: [
     StatusBar,
     SplashScreen,
     IonicErrorHandler,
-    {provide: ErrorHandler, useClass: MyErrorHandler},
+    { provide: ErrorHandler, useClass: MyErrorHandler },
     AngularFireAuth,
     AuthService,
-    Facebook
-  ]
+    Facebook,
+  ],
 })
 export class AppModule {}
