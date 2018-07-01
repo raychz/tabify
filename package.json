@@ -1,7 +1,7 @@
 {
   "name": "tabify",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Raymond Chavez",
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
@@ -9,7 +9,8 @@
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
+    "ionic:serve": "ionic-app-scripts serve",
+    "format": "prettier --single-quote --trailing-comma es5 --write src/**/*.ts"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.9",
+    "prettier": "1.13.7",
     "typescript": "~2.6.2"
   },
   "description": "An Ionic project",
