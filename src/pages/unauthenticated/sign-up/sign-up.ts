@@ -5,7 +5,9 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 
-@IonicPage()
+@IonicPage({
+  priority: 'high'
+})
 @Component({
   selector: 'page-sign-up',
   templateUrl: 'sign-up.html',

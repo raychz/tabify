@@ -3,7 +3,9 @@ import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../../services/auth/auth.service';
 
-@IonicPage()
+@IonicPage({
+  priority: 'off'
+})
 @Component({
   selector: 'page-forgot-password',
   templateUrl: 'forgot-password.html',

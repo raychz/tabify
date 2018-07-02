@@ -10,7 +10,9 @@ import { AuthService } from '../../../../services/auth/auth.service';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+@IonicPage({
+  priority: 'high'
+})
 @Component({
   selector: 'page-login-with-email',
   templateUrl: 'login-with-email.html',
