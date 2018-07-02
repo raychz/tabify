@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth/auth.service';
 @Component({
   templateUrl: 'app.html',
 })
-export class MyApp {
+export class Tabify {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;

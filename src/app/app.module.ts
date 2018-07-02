@@ -3,7 +3,7 @@ import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
-import { MyApp } from './app.component';
+import { Tabify } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Pro } from '@ionic/pro';
@@ -42,17 +42,17 @@ export class MyErrorHandler implements ErrorHandler {
 }
 
 @NgModule({
-  declarations: [MyApp],
+  declarations: [Tabify],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp, {
+    IonicModule.forRoot(Tabify, {
       preloadModules: true,
     }),
     AngularFireModule.initializeApp(firebaseConfig.fire),
     AngularFireAuthModule,
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp],
+  entryComponents: [Tabify],
   providers: [
     StatusBar,
     SplashScreen,
