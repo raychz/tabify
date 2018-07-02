@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  LoadingController,
-  Loading,
-  LoadingOptions,
-} from 'ionic-angular';
+import { LoadingController, Loading, LoadingOptions } from 'ionic-angular';
 
 @Injectable()
 export class LoaderService {
@@ -12,17 +8,18 @@ export class LoaderService {
 
   loader: Loading;
 
-  constructor(
-    public loadingCtrl: LoadingController
-  ) {}
+  constructor(public loadingCtrl: LoadingController) {}
 
-  present({
-    content = LoaderService.defaultContent,
-    spinner = LoaderService.defaultSpinner,
-  }: LoadingOptions) {
+  present(opts: LoadingOptions) {
+    const {
+      content = LoaderService.defaultContent,
+      spinner = LoaderService.defaultSpinner,
+      ...rest
+    } = opts;
     this.loader = this.loadingCtrl.create({
       content,
       spinner,
+      ...rest
     });
     return this.loader.present();
   }

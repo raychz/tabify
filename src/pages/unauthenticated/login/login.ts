@@ -28,7 +28,7 @@ export class LoginPage {
 
   loginWithFacebook() {
     this.loader.present({
-      content: 'Waiting on Facebook to log you in...',
+      content: 'Logging in with Facebook...',
     });
 
     return this.auth

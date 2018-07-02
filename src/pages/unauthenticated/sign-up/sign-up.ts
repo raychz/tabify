@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
+
 import { AuthService } from '../../../services/auth/auth.service';
+import { AlertService } from '../../../services/utilities/alert.service';
+import { LoaderService } from '../../../services/utilities/loader.service';
 
 @IonicPage()
 @Component({
@@ -8,10 +11,12 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: 'sign-up.html',
 })
 export class SignUpPage {
-  signupError: string;
-
-  constructor(private navCtrl: NavController, private auth: AuthService, private alertCtrl: AlertController) {
-  }
+  constructor(
+    private navCtrl: NavController,
+    private auth: AuthService,
+    public alert: AlertService,
+    public loader: LoaderService
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SignUpPage');
@@ -22,18 +27,24 @@ export class SignUpPage {
   }
 
   signUpWithFacebook() {
-    this.auth.signInWithFacebook().then(
-      res => console.log(res),
-      error => {
-        const alert = this.alertCtrl.create({
-          title: 'Error',
-          subTitle: 'An error occurred while signing up with Facebook.',
-          buttons: ['Ok']
-        });
-        alert.present();
-        console.log("ERROR", error)
-      }
-    );
+    this.loader.present({
+      content: 'Signing up with Facebook...',
+    });
+
+    return this.auth
+      .signInWithFacebook()
+      .then(
+        res => res,
+        error => {
+          const alert = this.alert.create({
+            title: 'Error',
+            subTitle: 'An error occurred while signing up with Facebook.',
+            buttons: ['Ok'],
+          });
+          return alert.present();
+        }
+      )
+      .then(() => this.loader.dismiss());
   }
 
   login() {
