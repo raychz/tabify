@@ -14,7 +14,7 @@ export class ForgotPasswordPage {
   forgotPasswordError: string;
   forgotPasswordForm: FormGroup;
 
-  constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, private fb: FormBuilder, private auth: AuthService) {
+  constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public fb: FormBuilder, private auth: AuthService) {
     this.forgotPasswordForm = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
     });

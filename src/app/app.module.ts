@@ -62,7 +62,7 @@ export class MyErrorHandler implements ErrorHandler {
     AuthService,
     Facebook,
     LoaderService,
-    AlertService
+    AlertService,
   ],
 })
 export class AppModule {}
