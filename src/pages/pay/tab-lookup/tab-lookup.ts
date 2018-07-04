@@ -14,6 +14,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'tab-lookup.html',
 })
 export class TabLookupPage {
+  location = this.navParams.data;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
