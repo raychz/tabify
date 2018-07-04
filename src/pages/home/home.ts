@@ -20,4 +20,8 @@ export class HomePage {
     console.log(event);
   }
 
+  payNewTab() {
+    this.navCtrl.push('PayPage');
+  }
+
 }
