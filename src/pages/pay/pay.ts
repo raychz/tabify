@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -9,11 +9,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class PayPage {
   @ViewChild('pay') nav: NavController;
 
-  constructor(public navParams: NavParams) {
-  }
+  constructor(public navParams: NavParams) {}
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad PayPage');
+    this.nav.push('LocationPage');
   }
-
 }

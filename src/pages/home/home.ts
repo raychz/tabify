@@ -21,7 +21,7 @@ export class HomePage {
   }
 
   payNewTab() {
-    this.navCtrl.push('PayPage');
+    this.navCtrl.push('PayPage', {}, { animate: true, animation: 'md-transition', direction: 'forward' });
   }
 
 }
