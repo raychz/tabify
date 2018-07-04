@@ -1,17 +1,29 @@
 <ion-header>
-
   <ion-navbar>
-      <ion-buttons left>
-          <button ion-button (click)="cancel()">
-              Cancel
-          </button>
-      </ion-buttons>
-    <ion-title>Location</ion-title>
+    <ion-buttons left>
+      <button ion-button (click)="cancel()">
+        Cancel
+      </button>
+    </ion-buttons>
+    <ion-title>Find Location</ion-title>
   </ion-navbar>
-
+  <ion-toolbar no-border-top>
+    <ion-searchbar placeholder="Search for restaurant by name" (ionInput)="filterItems($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-
 <ion-content padding>
-  <button ion-button color="tabify" (click)="next()" block outline>Next</button>
+  <ion-list>
+    <ion-item (click)="selectLocation(location)" *ngFor="let location of locations">
+      <ion-avatar item-start>
+        <img src="assets/imgs/logo.png">
+      </ion-avatar>
+      <h2>{{location.name}}</h2>
+      <h3>{{location.city}}</h3>
+      <p>{{location.streetAddress}}</p>
+      <ion-note item-end>{{location.distance}} mi.</ion-note>
+    </ion-item>
+  </ion-list>
+  <p *ngIf="!locations.length">No restaurants found.</p>
+  <p *ngIf="locations.length">More locations coming soon!</p>
 </ion-content>
