@@ -10,7 +10,7 @@ export class LoaderService {
 
   constructor(public loadingCtrl: LoadingController) {}
 
-  present(opts: LoadingOptions) {
+  present(opts: LoadingOptions = {}) {
     const {
       content = LoaderService.defaultContent,
       spinner = LoaderService.defaultSpinner,
