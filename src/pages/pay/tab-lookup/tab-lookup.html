@@ -7,6 +7,36 @@
 </ion-header>
 
 
-<ion-content padding>
-    <p>{{location.name}}</p>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div padding-horizontal>
+          <p>We hope you enjoyed your time at {{location.name}}! Let's find your tab number now. Look for the 6-digit code on
+            the bottom of your check.</p>
+        </div>
+        <form (ngSubmit)="findTab()" [formGroup]="tabForm">
+          <ion-list inset>
+            <ion-item [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
+              <ion-label floating>Tab Number</ion-label>
+              <ion-input type="text" formControlName="tabNumber"></ion-input>
+            </ion-item>
+            <div ngxErrors="tabNumber" #tabErrors="ngxErrors">
+              <div [ngxError]="['required']" [when]="['dirty']">Enter a valid tab number.</div>
+            </div>
+            <ion-item [ngClass]="{ invalid: nameErrors.hasError('*', ['touched', 'dirty']) }">
+              <ion-label floating>First Name</ion-label>
+              <ion-input type="text" formControlName="name"></ion-input>
+            </ion-item>
+            <div ngxErrors="name" #nameErrors="ngxErrors">
+              <div [ngxError]="['required']" [when]="['dirty']">Enter a name for other users on the tab to identify you.</div>
+            </div>
+          </ion-list>
+          <div padding-horizontal>
+            <button ion-button block type="submit" [disabled]="!tabForm.valid">Continue</button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
