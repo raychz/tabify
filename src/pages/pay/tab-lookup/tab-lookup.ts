@@ -19,14 +19,8 @@ export class TabLookupPage {
     public loader: LoaderService
   ) {
     this.tabForm = fb.group({
-      tabNumber: [
-        '',
-        Validators.compose([Validators.required]),
-      ],
-      name: [
-        '',
-        Validators.compose([Validators.required]),
-      ],
+      tabNumber: ['', Validators.compose([Validators.required])],
+      name: ['', Validators.compose([Validators.required])],
     });
   }
 
@@ -38,6 +32,9 @@ export class TabLookupPage {
     const { tabNumber, name } = this.tabForm.value;
     console.log(tabNumber, name);
     this.loader.present();
-    setTimeout(() => this.loader.dismiss(), 3500);
+    setTimeout(() => {
+      this.loader.dismiss();
+      this.navCtrl.push('SelectItemsPage');
+    }, 300);
   }
 }

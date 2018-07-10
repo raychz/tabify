@@ -1,0 +1,18 @@
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+@IonicPage()
+@Component({
+  selector: 'page-select-items',
+  templateUrl: 'select-items.html',
+})
+export class SelectItemsPage {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad SelectItemsPage');
+  }
+
+}

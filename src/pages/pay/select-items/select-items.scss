@@ -1,0 +1,10 @@
+page-select-items {
+  .toolbar-title {
+    color: map-get($colors, primary);
+    .subtitle {
+      color: map-get($colors, dark);
+      font-size: 96%;
+      margin: 0;
+    }
+  }
+}
