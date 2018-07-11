@@ -1,177 +1,35 @@
 <ion-header>
-  <ion-navbar color="tabify">
+  <ion-navbar color='tabify'>
     <ion-title>Select Items</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content class="cards-bg">
-  <ion-card>
+<ion-content class='cards-bg'>
+  <ion-card *ngFor='let item of receiptItems'>
     <ion-item>
-      <h2>Ribeye Steak</h2>
+      <h2>{{item.name}}</h2>
       <ion-note item-end>
-        <h2>$19.84</h2>
+        <h2>${{item.price}}</h2>
       </ion-note>
     </ion-item>
     <ion-card-content>
-      <p>Ray got this.</p>
+      <p>{{item.payersDescription}}</p>
+      <p *ngIf='item.payers.length > 1'>List of percentages for each person here</p>
     </ion-card-content>
     <ion-row>
-      <ion-col col-4 align-self-center text-left>
-        <button ion-button color="primary" clear icon-start>
+      <ion-col col-6 align-self-center text-center>
+        <button ion-button color='primary' block outline icon-start>
           <ion-icon name='add-circle'></ion-icon>
           Claim
         </button>
       </ion-col>
-      <ion-col col-4 align-self-center text-center>
-        <button ion-button color="primary" clear icon-start>
+      <ion-col col-6 align-self-center text-center>
+        <button ion-button color='primary' block outline icon-start>
           <ion-icon name='cut'></ion-icon>
           Split
         </button>
       </ion-col>
-      <ion-col col-4 align-self-center text-right>
-        <button disabled ion-button color="danger" clear icon-start>
-          <ion-icon name='trash'></ion-icon>
-          Un-claim
-        </button>
-      </ion-col>
     </ion-row>
-
-  </ion-card>
-  <ion-card>
-
-    <ion-item>
-      <h2>Ribeye Steak</h2>
-      <ion-note item-end>
-        <h2>$19.84</h2>
-      </ion-note>
-    </ion-item>
-    <ion-card-content>
-      <p>Nobody has claimed this.</p>
-    </ion-card-content>
-    <ion-row>
-      <ion-col col-4 align-self-center text-left>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='add-circle'></ion-icon>
-          Claim
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-center>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='cut'></ion-icon>
-          Split
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-right>
-        <button ion-button color="danger" clear icon-start>
-          <ion-icon name='trash'></ion-icon>
-          Delete
-        </button>
-      </ion-col>
-    </ion-row>
-
-  </ion-card>
-  <ion-card>
-
-    <ion-item>
-      <h2>Ribeye Steak</h2>
-      <ion-note item-end>
-        <h2>$19.84</h2>
-      </ion-note>
-    </ion-item>
-    <ion-card-content>
-      <p>Ray, John, and Bob shared this.</p>
-      <p>Ray: 50%</p>
-      <p>John: 30%</p>
-      <p>Bob: 15%</p>
-      <p>Warning: 5% of this item remains unclaimed.</p>
-    </ion-card-content>
-    <ion-row>
-      <ion-col col-4 align-self-center text-left>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='add-circle'></ion-icon>
-          Claim
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-center>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='cut'></ion-icon>
-          Split
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-right>
-        <button ion-button color="danger" clear icon-start>
-          <ion-icon name='trash'></ion-icon>
-          Delete
-        </button>
-      </ion-col>
-    </ion-row>
-
-  </ion-card>
-  <ion-card>
-
-    <ion-item>
-      <h2>Ribeye Steak</h2>
-      <ion-note item-end>
-        <h2>$19.84</h2>
-      </ion-note>
-    </ion-item>
-    <ion-card-content>
-      <p>Ray, John, and Bob shared this.</p>
-    </ion-card-content>
-    <ion-row>
-      <ion-col col-4 align-self-center text-left>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='add-circle'></ion-icon>
-          Claim
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-center>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='cut'></ion-icon>
-          Split
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-right>
-        <button ion-button color="danger" clear icon-start>
-          <ion-icon name='trash'></ion-icon>
-          Delete
-        </button>
-      </ion-col>
-    </ion-row>
-
-  </ion-card>
-  <ion-card>
-
-    <ion-item>
-      <h2>Ribeye Steak</h2>
-      <ion-note item-end>
-        <h2>$19.84</h2>
-      </ion-note>
-    </ion-item>
-    <ion-card-content>
-      <p>Ray, John, and Bob shared this.</p>
-    </ion-card-content>
-    <ion-row>
-      <ion-col col-4 align-self-center text-left>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='add-circle'></ion-icon>
-          Claim
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-center>
-        <button ion-button color="primary" clear icon-start>
-          <ion-icon name='cut'></ion-icon>
-          Split
-        </button>
-      </ion-col>
-      <ion-col col-4 align-self-center text-right>
-        <button ion-button color="danger" clear icon-start>
-          <ion-icon name='trash'></ion-icon>
-          Delete
-        </button>
-      </ion-col>
-    </ion-row>
-
   </ion-card>
 </ion-content>
 
@@ -179,7 +37,7 @@
   <ion-toolbar>
     <ion-title>
       Your Subtotal
-      <p class="subtitle">$54.32</p>
+      <p class='subtitle'>$54.32</p>
     </ion-title>
   </ion-toolbar>
 </ion-footer>
