@@ -4,54 +4,24 @@
 #
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/node:8.11.3
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      - run: 
-          name : Install Ionic and Cordova
-          command : sudo npm i -g ionic@3.20.0 cordova@8.0.0
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          name: Install Node Modules
-          command: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-    
-      - run:
-          name: Build PWA
-          command: npm run ionic:build --prod
-    
-  deploy:
-    production:
-      branch: master
-        commands:
-          - ./node_modules/.bin/firebase use default
-          - ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN --non-interactive
-
+    build:
+        docker:
+            - {image: 'circleci/node:8.11.3'}
+        working_directory: ~/repo
+        steps:
+            - checkout
+            - {run: {name: 'Install Ionic and Cordova', command: 'sudo npm i -g ionic@3.20.0 cordova@8.0.0'}}
+            - {restore_cache: {keys: ['v1-dependencies-{{ checksum "package.json" }}', v1-dependencies-]}}
+            - {run: {name: 'Install Node Modules', command: 'npm install'}}
+            - {save_cache: {paths: [node_modules], key: 'v1-dependencies-{{ checksum "package.json" }}'}}
+            - {run: {name: 'Build PWA', command: 'npm run ionic:build --prod'}}
+    deploy:
+        production:
+            branch: master
+            commands: ['./node_modules/.bin/firebase use default', './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN --non-interactive']
 workflows:
     version: 2
     build-and-deploy:
         jobs:
-        - build
-        - deploy:
-            requires:
-                - build
-            filters:
-                branches:
-                  only: master
+            - build
+            - {deploy: {requires: [build], filters: {branches: {only: master}}}}
