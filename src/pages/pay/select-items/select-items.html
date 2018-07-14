@@ -14,17 +14,21 @@
     </ion-item>
     <ion-card-content>
       <p>{{item.payersDescription}}</p>
-      <p *ngIf='item.payers.length > 1'>List of percentages for each person here</p>
+      <ng-container *ngIf='item.payers.length > 1'>
+        <p *ngFor='let payer of item.payers'>
+          {{payer.firstName}}: ${{getPrice(item.price, payer.percentage)}} {{payer.percentage}}%
+        </p>
+      </ng-container>
     </ion-card-content>
     <ion-row>
       <ion-col col-6 align-self-center text-center>
-        <button ion-button color='primary' block outline icon-start>
+        <button ion-button color='primary' clear outline icon-start>
           <ion-icon name='add-circle'></ion-icon>
           Claim
         </button>
       </ion-col>
       <ion-col col-6 align-self-center text-center>
-        <button ion-button color='primary' block outline icon-start>
+        <button ion-button color='primary' clear outline icon-start>
           <ion-icon name='cut'></ion-icon>
           Split
         </button>
