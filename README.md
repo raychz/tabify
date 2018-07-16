@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/raychz/tabify.svg?style=svg)](https://circleci.com/gh/raychz/tabify)
+[![CircleCI](https://circleci.com/gh/raychz/tabify/tree/master.svg?style=svg&circle-token=c39c47037361a7c7422e5a21c49538e32e553910)](https://circleci.com/gh/raychz/tabify/tree/master)
 
 # Tabify
 
