@@ -34,8 +34,9 @@ jobs:
           name: 'Build PWA'
           command: 'npm run ionic:build --prod'
   deploy:
-    machine:
-      enabled: true
+    docker:
+      -
+        image: 'circleci/node:8.11.3'
     working_directory: ~/repo
     steps:
       -
