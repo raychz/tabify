@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/raychz/tabify.svg?style=svg)](https://circleci.com/gh/raychz/tabify)
+
 # Tabify
 
 ## Getting Started
