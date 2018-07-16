@@ -40,8 +40,12 @@ jobs:
     steps:
       -
         run:
+          name: 'Install firebase-tools'
+          command: 'sudo npm install -g firebase-tools'
+      -
+        run:
           name: 'Deploy to Firebase'
-          command: 'node_modules/firebase-tools/bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN'
+          command: 'firebase deploy --token=$FIREBASE_DEPLOY_TOKEN'
       
 workflows:
   version: 2
