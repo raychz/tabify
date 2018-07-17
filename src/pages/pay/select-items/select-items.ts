@@ -1,5 +1,17 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import currency from 'currency.js';
+
+export interface ReceiptItem {
+  name: string;
+  price: number;
+  payers: {
+    uid: string;
+    firstName: string;
+    price: number;
+  }[];
+  payersDescription?: string;
+}
 
 @IonicPage()
 @Component({
@@ -7,12 +19,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  receiptItems: {
-    name: string;
-    price: number;
-    payers: { uid: string; firstName: string; percentage: number }[];
-    payersDescription?: string;
-  }[];
+  receiptItems: ReceiptItem[];
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.getItems();
   }
@@ -26,32 +34,47 @@ export class SelectItemsPage {
       {
         name: 'Ribeye Steak',
         price: 23.47,
-        payers: [{ uid: '1', firstName: 'Ray', percentage: 100 }],
+        payers: [],
       },
       {
         name: 'Cheeseburger',
         price: 12.39,
-        payers: [{ uid: '2', firstName: 'Bob', percentage: 100 }],
+        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
       },
       {
         name: 'Salad',
         price: 14.77,
-        payers: [{ uid: '3', firstName: 'John', percentage: 100 }],
+        payers: [{ uid: '3', firstName: 'John', price: 14.77 }],
       },
       {
         name: 'Nachos',
         price: 14.77,
         payers: [
-          { uid: '1', firstName: 'Ray', percentage: 33.33 },
-          { uid: '2', firstName: 'Bob', percentage: 33.33 },
-          { uid: '3', firstName: 'John', percentage: 33.33 },
+          { uid: '1', firstName: 'Ray', price: 7.38 },
+          { uid: '2', firstName: 'Bob', price: 7.39 },
         ],
       },
     ];
+    this.updatePayersDescription();
+  }
+
+  splitItem(item: ReceiptItem) {
+    item.payers.push({
+      uid: '9',
+      firstName: 'Cam',
+      price: 0,
+    });
+    const distribution = currency(item.price).distribute(item.payers.length);
+    distribution.forEach((d, index) => {
+      item.payers[index].price = d.value;
+    });
+    this.updatePayersDescription();
+  }
+
+  updatePayersDescription() {
     this.receiptItems.forEach(item => {
       const { payers } = item;
       const { length: numberOfPayers } = payers;
-      console.log(numberOfPayers);
       switch (numberOfPayers) {
         case 0:
           item.payersDescription = 'Nobody has claimed this.';
@@ -61,18 +84,13 @@ export class SelectItemsPage {
           break;
         default: {
           const payersNamesMap = payers.map(p => p.firstName);
-          item.payersDescription = `${payersNamesMap.slice(0, numberOfPayers - 1).join(', ')} and ${payers[numberOfPayers - 1].firstName} shared this.`
+          item.payersDescription = `${payersNamesMap
+            .slice(0, numberOfPayers - 1)
+            .join(', ')} and ${
+            payers[numberOfPayers - 1].firstName
+          } shared this.`;
         }
       }
     });
-  }
-
-  getPrice(uid) {
-    // Set price on split event, ie, when a user selects a split percentage, set the price value on the payer's object
-    // this.receiptItems.forEach(item => {
-      
-    // });
-    // return (Math.round(0.01 * percentage * price * Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    return 0;
   }
 }

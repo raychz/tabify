@@ -9,14 +9,14 @@
     <ion-item>
       <h2>{{item.name}}</h2>
       <ion-note item-end>
-        <h2>${{item.price}}</h2>
+        <h2>${{item.price | number:'1.2-2'}}</h2>
       </ion-note>
     </ion-item>
     <ion-card-content>
       <p>{{item.payersDescription}}</p>
       <ng-container *ngIf='item.payers.length > 1'>
         <p *ngFor='let payer of item.payers'>
-          {{payer.firstName}}: ${{getPrice(item.price, payer.percentage)}} {{payer.percentage}}%
+          {{payer.firstName}}: ${{payer.price | number:'1.2-2'}}
         </p>
       </ng-container>
     </ion-card-content>
@@ -28,7 +28,7 @@
         </button>
       </ion-col>
       <ion-col col-6 align-self-center text-center>
-        <button ion-button color='primary' clear outline icon-start>
+        <button ion-button color='primary' clear outline icon-start (click)='splitItem(item)'>
           <ion-icon name='cut'></ion-icon>
           Split
         </button>
