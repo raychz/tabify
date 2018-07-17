@@ -12,9 +12,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list>
-    <ion-item (click)="selectLocation(location)" *ngFor="let location of locations">
+<ion-content class='cards-bg'>
+  <ion-card *ngFor="let location of locations">
+    <ion-item (click)="selectLocation(location)">
       <ion-avatar item-start>
         <img src="assets/imgs/logo.png">
       </ion-avatar>
@@ -23,7 +23,7 @@
       <p>{{location.streetAddress}}</p>
       <ion-note item-end>{{location.distance}} mi.</ion-note>
     </ion-item>
-  </ion-list>
-  <p *ngIf="!locations.length">No restaurants found.</p>
-  <p *ngIf="locations.length">More locations coming soon!</p>
+  </ion-card>
+  <p class="muted" *ngIf="!locations.length">No restaurants found.</p>
+  <p class="muted" *ngIf="locations.length">More locations coming soon!</p>
 </ion-content>
