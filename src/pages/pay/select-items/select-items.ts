@@ -93,4 +93,8 @@ export class SelectItemsPage {
       }
     });
   }
+
+  viewTotals() {
+    this.navCtrl.push('TotalsPage');
+  }
 }
