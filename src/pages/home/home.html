@@ -18,8 +18,8 @@
         </ion-segment>
         <ion-buttons right>
             <button ion-button icon-only (click)="payNewTab()">
-				<ion-icon ios="ios-create" md="md-create"></ion-icon>
-			</button>
+                <ion-icon ios="ios-create" md="md-create"></ion-icon>
+            </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -29,8 +29,42 @@
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing...">
         </ion-refresher-content>
     </ion-refresher>
-    <div [ngSwitch]="selectedSegment">
-        <ion-list *ngSwitchCase="'global'">
+    <!-- <div [ngSwitch]="selectedSegment"> -->
+    <ion-card *ngFor="let story of stories[selectedSegment]">
+        <ion-item>
+            <ion-avatar item-start>
+                <img src="img/marty-avatar.png">
+            </ion-avatar>
+            <h2>Marty McFly</h2>
+            <p>November 5, 1955</p>
+        </ion-item>
+        <img src="img/advance-card-bttf.png">
+        <ion-card-content>
+            <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?!
+                Whoa. This is heavy.</p>
+        </ion-card-content>
+        <ion-row>
+            <ion-col>
+                <button ion-button icon-start clear small>
+                    <ion-icon name="thumbs-up"></ion-icon>
+                    <div>12 Likes</div>
+                </button>
+            </ion-col>
+            <ion-col>
+                <button ion-button icon-start clear small>
+                    <ion-icon name="text"></ion-icon>
+                    <div>4 Comments</div>
+                </button>
+            </ion-col>
+            <ion-col center text-center>
+                <ion-note>
+                    11h ago
+                </ion-note>
+            </ion-col>
+        </ion-row>
+    </ion-card>
+
+    <!-- <ion-list *ngSwitchCase="'global'">
             <ion-item>
                 <ion-thumbnail item-start>
                     <img src="img/thumbnail-puppy-1.jpg">
@@ -55,6 +89,6 @@
                 </ion-thumbnail>
                 <h2>Luna</h2>
             </ion-item>
-        </ion-list>
-    </div>
+        </ion-list> -->
+    <!-- </div> -->
 </ion-content>
