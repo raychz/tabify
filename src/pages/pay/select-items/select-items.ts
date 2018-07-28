@@ -58,7 +58,7 @@ export class SelectItemsPage {
     this.updatePayersDescription();
   }
 
-  splitItem(item: ReceiptItem) {
+  addItemToMyTab(item: ReceiptItem) {
     item.payers.push({
       uid: '9',
       firstName: 'Cam',
@@ -68,6 +68,18 @@ export class SelectItemsPage {
     distribution.forEach((d, index) => {
       item.payers[index].price = d.value;
     });
+    this.updatePayersDescription();
+  }
+
+  isItemOnMyTab(item: ReceiptItem) {
+    return !!item.payers.find(e => e.uid === '9');
+  }
+
+  removeItemFromMyTab(item: ReceiptItem) {
+    const index = item.payers.indexOf(item.payers.find(e => {
+      return e.uid === '9';
+    }));
+    item.payers.splice(index, 1);
     this.updatePayersDescription();
   }
 

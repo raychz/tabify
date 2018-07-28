@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content class='cards-bg'>
-  <ion-card *ngFor='let item of receiptItems'>
+  <ion-card *ngFor='let item of receiptItems' [class.item-on-tab]='isItemOnMyTab(item)'>
     <ion-item>
       <h2>{{item.name}}</h2>
       <ion-note item-end>
@@ -27,18 +27,16 @@
       </ng-container>
     </ion-card-content>
     <ion-row>
-      <ion-col col-6 align-self-center text-center>
-        <button ion-button color='primary' clear outline icon-start>
+      <ion-col align-self-center text-center>
+        <button *ngIf='!isItemOnMyTab(item)' ion-button color='primary' clear block icon-start (click)='addItemToMyTab(item)'>
           <ion-icon name='add-circle'></ion-icon>
-          Claim
+          Add to My Tab
         </button>
-      </ion-col>
-      <ion-col col-6 align-self-center text-center>
-        <button ion-button color='primary' clear outline icon-start (click)='splitItem(item)'>
-          <ion-icon name='cut'></ion-icon>
-          Split
+        <button *ngIf='isItemOnMyTab(item)' ion-button color='danger' clear block icon-start (click)='removeItemFromMyTab(item)'>
+          <ion-icon name='remove-circle'></ion-icon>
+          Remove From My Tab
         </button>
-      </ion-col>
+      </ion-col> 
     </ion-row>
   </ion-card>
 </ion-content>

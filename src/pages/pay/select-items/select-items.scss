@@ -7,4 +7,7 @@ page-select-items {
       margin: 0;
     }
   }
+  .item-on-tab {
+    border: 1px solid map-get($colors, primary);
+  }
 }
