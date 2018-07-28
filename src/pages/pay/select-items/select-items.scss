@@ -10,4 +10,14 @@ page-select-items {
   .item-on-tab {
     border: 1px solid map-get($colors, primary);
   }
+  .payers {
+    &-description {
+      
+    }
+    &-list {
+      &-item {
+        color: #aeacb4;
+      }
+    }
+  }
 }

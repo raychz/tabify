@@ -39,12 +39,16 @@ export class SelectItemsPage {
       {
         name: 'Cheeseburger',
         price: 12.39,
-        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
+        payers: [
+          { uid: '2', firstName: 'Bob', price: 12.39 }
+        ],
       },
       {
         name: 'Salad',
         price: 14.77,
-        payers: [{ uid: '3', firstName: 'John', price: 14.77 }],
+        payers: [
+          { uid: '3', firstName: 'John', price: 14.77 }
+        ],
       },
       {
         name: 'Nachos',
@@ -104,6 +108,17 @@ export class SelectItemsPage {
         }
       }
     });
+  }
+
+  updateSubTotal() {
+    let sum = 0;
+    this.receiptItems.forEach(item => {
+      const payer = item.payers.find(e => e.uid === '9');
+      if (payer) {
+        sum += payer.price;
+      }
+    });
+    return sum;
   }
 
   viewTotals() {
