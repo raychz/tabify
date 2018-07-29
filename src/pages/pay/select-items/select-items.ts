@@ -111,17 +111,28 @@ export class SelectItemsPage {
   }
 
   updateSubTotal() {
-    let sum = 0;
+    let sum = currency(0);
     this.receiptItems.forEach(item => {
       const payer = item.payers.find(e => e.uid === '9');
       if (payer) {
-        sum += payer.price;
+        sum = sum.add(payer.price);
       }
     });
-    return sum;
+    return sum.value;
   }
 
   viewTotals() {
     this.navCtrl.push('TotalsPage');
+  }
+
+  filterItems(ev) {
+    this.getItems();
+    const { value } = ev.target;
+    if (value && value.trim() !== '') {
+      this.receiptItems = this.receiptItems.filter(
+        item =>
+          item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+      );
+    }
   }
 }

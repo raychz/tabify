@@ -8,6 +8,9 @@
       </button>
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar no-border-top color="tabify">
+    <ion-searchbar placeholder="Search for items on the tab" (ionInput)="filterItems($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class='cards-bg'>
@@ -22,9 +25,9 @@
       <p class="payers-description">{{item.payersDescription}}</p>
       <ng-container *ngIf='item.payers.length > 1'>
         <div class="payers-list">
-            <p class="payers-list-item" *ngFor='let payer of item.payers'>
-                {{payer.firstName}}: ${{payer.price | number:'1.2-2'}}
-            </p>
+          <p class="payers-list-item" *ngFor='let payer of item.payers'>
+            {{payer.firstName}}: ${{payer.price | number:'1.2-2'}}
+          </p>
         </div>
       </ng-container>
     </ion-card-content>
@@ -34,17 +37,17 @@
           <ion-icon name='add-circle'></ion-icon>
           Add to My Tab
         </button>
-        <button *ngIf='isItemOnMyTab(item)' ion-button color='danger' clear block icon-start (click)='removeItemFromMyTab(item)'>
+        <button *ngIf='isItemOnMyTab(item)' ion-button color='primary' clear block icon-start (click)='removeItemFromMyTab(item)'>
           <ion-icon name='remove-circle'></ion-icon>
           Remove From My Tab
         </button>
-      </ion-col> 
+      </ion-col>
     </ion-row>
   </ion-card>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar color='tabify'>
     <ion-title>
       Your Subtotal
       <p class='subtitle'>${{updateSubTotal()}}</p>
