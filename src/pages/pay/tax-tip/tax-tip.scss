@@ -19,4 +19,17 @@ page-tax-tip {
       margin: 0;
     }
   }
+
+  .total {
+    color: gray;
+  }
+
+  #grand-total {
+    border-top: 1px lightgray dashed;
+  }
+
+  .adjust-tip {
+    font-size: 1em;
+    color: map-get($colors, light);
+  }
 }

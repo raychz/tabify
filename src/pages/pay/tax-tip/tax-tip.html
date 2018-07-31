@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar color='tabify'>
-    <ion-title>Tip, Tax, Total</ion-title>
+    <ion-title>Tax, Tip, Total</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -14,25 +14,25 @@
     </ion-list>
 
     <ion-card-content>
-      <ion-item>
+      <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
           <h2>$45.45</h2>
         </div>
       </ion-item>
-      <ion-item>
-        <h2>Tip (20%)</h2>
+      <ion-item class='total'>
+        <h2>Tax (6.25%)</h2>
         <div item-end>
           <h2>$45.45</h2>
         </div>
       </ion-item>
-      <ion-item>
-        <h2>Tax</h2>
+      <ion-item class='total'>
+        <h2>Tip ({{tip}}%)</h2>
         <div item-end>
           <h2>$45.45</h2>
         </div>
       </ion-item>
-      <ion-item>
+      <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
           <h2>$45.45</h2>
@@ -40,13 +40,18 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+  <p class="muted">Adjust your desired tip below.</p>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar color='tabify'>
     <ion-title>
       <p class='footer-title'>Tip Your Server</p>
-      <p class='footer-subtitle'><ion-icon name='remove-circle'></ion-icon>20%<ion-icon name='add-circle'></ion-icon></p>
+      <div class='footer-subtitle'>
+        <ion-icon class="adjust-tip" name='remove' (click)="adjustTip(false)"></ion-icon>
+        {{tip}}%
+        <ion-icon class="adjust-tip" name='add' (click)="adjustTip(true)"></ion-icon>
+      </div>
     </ion-title>
   </ion-toolbar>
 </ion-footer>
