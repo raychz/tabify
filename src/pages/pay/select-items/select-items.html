@@ -2,7 +2,7 @@
   <ion-navbar color='tabify'>
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
-      <button ion-button icon-end (click)="viewTotals()">
+      <button ion-button icon-end (click)="viewTaxAndTip()">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
@@ -49,8 +49,8 @@
 <ion-footer>
   <ion-toolbar color='tabify'>
     <ion-title>
-      Your Subtotal
-      <p class='subtitle'>${{updateSubTotal()}}</p>
+      <p class='footer-title'>Your Subtotal</p>
+      <p class='footer-subtitle'>${{updateSubTotal()}}</p>
     </ion-title>
   </ion-toolbar>
 </ion-footer>

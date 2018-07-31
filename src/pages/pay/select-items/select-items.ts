@@ -121,10 +121,6 @@ export class SelectItemsPage {
     return sum.value;
   }
 
-  viewTotals() {
-    this.navCtrl.push('TotalsPage');
-  }
-
   filterItems(ev) {
     this.getItems();
     const { value } = ev.target;
@@ -134,5 +130,9 @@ export class SelectItemsPage {
           item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
       );
     }
+  }
+
+  viewTaxAndTip() {
+    this.navCtrl.push('TaxTipPage');
   }
 }
