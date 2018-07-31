@@ -118,7 +118,7 @@ export class SelectItemsPage {
         sum = sum.add(payer.price);
       }
     });
-    return sum.value;
+    return sum.format(false);
   }
 
   filterItems(ev) {
