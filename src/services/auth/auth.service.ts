@@ -63,6 +63,10 @@ export class AuthService {
     return this.user && this.user.email;
   }
 
+  getDisplayName() {
+    return this.user && this.user.displayName;
+  }
+
   signOut(): Promise<void> {
     return this.afAuth.auth.signOut();
   }

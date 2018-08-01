@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -11,17 +12,20 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 export class TabLookupPage {
   location = this.navParams.data;
   tabForm: FormGroup;
+  displayName: string;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public fb: FormBuilder,
-    public loader: LoaderService
+    public loader: LoaderService,
+    public auth: AuthService,
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
       displayName: ['', Validators.compose([Validators.required])],
     });
+    this.displayName = auth.getDisplayName();
   }
 
   ionViewDidLoad() {
