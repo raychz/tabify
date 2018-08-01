@@ -17,6 +17,7 @@ export class LocationPage {
     city: string;
     streetAddress: string;
     distance: number;
+    photoUrl: string;
   }[];
 
   constructor(
@@ -58,24 +59,28 @@ export class LocationPage {
         city: 'Cambridge, MA',
         streetAddress: '25 Hampshire St.',
         distance: 0.01,
+        photoUrl: 'assets/imgs/restaurants/smokeshop.png',
       },
       {
         name: "Mamaleh's Delicatessen",
         city: 'Cambridge, MA',
         streetAddress: '15 Hampshire St.',
         distance: 0.01,
+        photoUrl: 'assets/imgs/restaurants/mamalehs.png',
       },
       {
         name: 'Naco Taco',
         city: 'Cambridge, MA',
         streetAddress: '297 Massachusetts Ave.',
         distance: 0.6,
+        photoUrl: 'assets/imgs/restaurants/naco-taco.png',
       },
       {
         name: 'The Smoke Shop BBQ - Seaport',
         city: 'Boston, MA',
         streetAddress: '343 Congress St.',
         distance: 3.0,
+        photoUrl: 'assets/imgs/restaurants/smokeshop.png',
       },
     ];
   }
