@@ -32,4 +32,8 @@ page-tax-tip {
     font-size: 1em;
     color: map-get($colors, light);
   }
+
+  .line-details {
+    color: gray;
+  }
 }

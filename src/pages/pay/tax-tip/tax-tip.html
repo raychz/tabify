@@ -2,6 +2,12 @@
 
   <ion-navbar color='tabify'>
     <ion-title>Tax, Tip, Total</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end (click)="pay()">
+        Pay
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -9,33 +15,51 @@
 
 <ion-content class='cards-bg'>
   <ion-card>
-    <ion-list>
-
-    </ion-list>
-
+    <ion-card-header>
+      Selected Items
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item class='total' *ngFor='let item of myTabItems'>
+        <h2>{{item.name}}
+          <span class='line-details' *ngIf='item.payers.length > 1'> (shared)</span>
+        </h2>
+        <div item-end>
+          <h2>${{item.price | number:'1.2-2'}}</h2>
+        </div>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      Total
+    </ion-card-header>
     <ion-card-content>
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>$45.45</h2>
+          <h2>${{getSubtotal()}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
-        <h2>Tax (6.25%)</h2>
+        <h2>Tip
+          <span class='line-details'>({{tip}}%)</span>
+        </h2>
         <div item-end>
-          <h2>$45.45</h2>
+          <h2>${{getTip()}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
-        <h2>Tip ({{tip}}%)</h2>
+        <h2>Tax
+          <span class='line-details'>(6.25%)</span>
+        </h2>
         <div item-end>
-          <h2>$45.45</h2>
+          <h2>${{getTax()}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>$45.45</h2>
+          <h2>${{getGrandTotal()}}</h2>
         </div>
       </ion-item>
     </ion-card-content>
@@ -48,9 +72,9 @@
     <ion-title>
       <p class='footer-title'>Tip Your Server</p>
       <div class='footer-subtitle'>
-        <ion-icon class="adjust-tip" name='remove' (click)="adjustTip(false)"></ion-icon>
+        <ion-icon class="adjust-tip" name='remove-circle' (click)="adjustTip(false)"></ion-icon>
         {{tip}}%
-        <ion-icon class="adjust-tip" name='add' (click)="adjustTip(true)"></ion-icon>
+        <ion-icon class="adjust-tip" name='add-circle' (click)="adjustTip(true)"></ion-icon>
       </div>
     </ion-title>
   </ion-toolbar>
