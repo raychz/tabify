@@ -20,7 +20,7 @@ export class TabLookupPage {
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
-      name: ['', Validators.compose([Validators.required])],
+      displayName: ['', Validators.compose([Validators.required])],
     });
   }
 
@@ -29,12 +29,16 @@ export class TabLookupPage {
   }
 
   findTab() {
-    const { tabNumber, name } = this.tabForm.value;
-    console.log(tabNumber, name);
+    const { tabNumber, displayName } = this.tabForm.value;
+    console.log(tabNumber, displayName);
     this.loader.present();
     setTimeout(() => {
       this.loader.dismiss();
-      this.navCtrl.push('SelectItemsPage');
+      this.navCtrl.push('SelectItemsPage', {
+        tabNumber,
+        displayName,
+        location: this.location
+      });
     }, 300);
   }
 }

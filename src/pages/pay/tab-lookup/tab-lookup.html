@@ -30,10 +30,10 @@
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a valid tab number.</div>
                 </div>
                 <ion-item [ngClass]="{ invalid: nameErrors.hasError('*', ['touched', 'dirty']) }">
-                  <ion-label floating>First Name</ion-label>
-                  <ion-input type="text" formControlName="name"></ion-input>
+                  <ion-label floating>Display Name</ion-label>
+                  <ion-input type="text" formControlName="displayName"></ion-input>
                 </ion-item>
-                <div ngxErrors="name" #nameErrors="ngxErrors">
+                <div ngxErrors="displayName" #nameErrors="ngxErrors">
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a name for other users on the tab to identify you.</div>
                 </div>
               </ion-list>
