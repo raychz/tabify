@@ -11,6 +11,7 @@ export interface ReceiptItem {
     price: number;
   }[];
   payersDescription?: string;
+  isHidden?: boolean;
 }
 
 @IonicPage()
@@ -20,13 +21,14 @@ export interface ReceiptItem {
 })
 export class SelectItemsPage {
   receiptItems: ReceiptItem[];
+  tab = this.navParams.data;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.getItems();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SelectItemsPage');
+    console.log('tab: ', this.tab);
   }
 
   getItems() {
@@ -39,16 +41,12 @@ export class SelectItemsPage {
       {
         name: 'Cheeseburger',
         price: 12.39,
-        payers: [
-          { uid: '2', firstName: 'Bob', price: 12.39 }
-        ],
+        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
       },
       {
         name: 'Salad',
         price: 14.77,
-        payers: [
-          { uid: '3', firstName: 'John', price: 14.77 }
-        ],
+        payers: [{ uid: '3', firstName: 'John', price: 14.77 }],
       },
       {
         name: 'Nachos',
@@ -80,9 +78,11 @@ export class SelectItemsPage {
   }
 
   removeItemFromMyTab(item: ReceiptItem) {
-    const index = item.payers.indexOf(item.payers.find(e => {
-      return e.uid === '9';
-    }));
+    const index = item.payers.indexOf(
+      item.payers.find(e => {
+        return e.uid === '9';
+      })
+    );
     item.payers.splice(index, 1);
     this.updatePayersDescription();
   }
@@ -122,17 +122,26 @@ export class SelectItemsPage {
   }
 
   filterItems(ev) {
-    this.getItems();
     const { value } = ev.target;
     if (value && value.trim() !== '') {
-      this.receiptItems = this.receiptItems.filter(
-        item =>
+      this.receiptItems.forEach(item => {
+        item.isHidden = !(
           item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-      );
+        );
+      });
+    } else {
+      this.receiptItems.forEach(item => (item.isHidden = false));
     }
   }
 
   viewTaxAndTip() {
-    this.navCtrl.push('TaxTipPage');
+    this.navCtrl.push('TaxTipPage', {
+      ...this.tab,
+      receiptItems: this.receiptItems,
+    });
+  }
+
+  allItemsAreHidden() {
+    return this.receiptItems.every(item => item.isHidden);
   }
 }
