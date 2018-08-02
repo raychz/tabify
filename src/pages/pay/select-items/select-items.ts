@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import currency from 'currency.js';
+import { AuthService } from '../../../services/auth/auth.service';
 
 export interface ReceiptItem {
   name: string;
@@ -23,7 +24,11 @@ export class SelectItemsPage {
   receiptItems: ReceiptItem[];
   tab = this.navParams.data;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public auth: AuthService
+  ) {
     this.getItems();
   }
 
@@ -34,8 +39,23 @@ export class SelectItemsPage {
   getItems() {
     this.receiptItems = [
       {
+        name: 'Coca-Cola',
+        price: 2.99,
+        payers: [],
+      },
+      {
+        name: 'Dr. Pepper',
+        price: 2.99,
+        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
+      },
+      {
+        name: 'Sprite',
+        price: 2.99,
+        payers: [],
+      },
+      {
         name: 'Ribeye Steak',
-        price: 23.47,
+        price: 23.41,
         payers: [],
       },
       {
@@ -45,15 +65,22 @@ export class SelectItemsPage {
       },
       {
         name: 'Salad',
-        price: 14.77,
-        payers: [{ uid: '3', firstName: 'John', price: 14.77 }],
+        price: 11.27,
+        payers: [{ uid: '3', firstName: 'Mary', price: 14.77 }],
       },
       {
         name: 'Nachos',
         price: 14.77,
         payers: [
-          { uid: '1', firstName: 'Ray', price: 7.38 },
+          { uid: '1', firstName: 'Cam', price: 7.38 },
           { uid: '2', firstName: 'Bob', price: 7.39 },
+        ],
+      },
+      {
+        name: 'Calamari',
+        price: 15.29,
+        payers: [
+          { uid: '3', firstName: 'Mary', price: 7.38 },
         ],
       },
     ];
@@ -62,8 +89,8 @@ export class SelectItemsPage {
 
   addItemToMyTab(item: ReceiptItem) {
     item.payers.push({
-      uid: '9',
-      firstName: 'Cam',
+      uid: this.auth.getUid(),
+      firstName: this.tab.displayName,
       price: 0,
     });
     const distribution = currency(item.price).distribute(item.payers.length);
@@ -74,13 +101,13 @@ export class SelectItemsPage {
   }
 
   isItemOnMyTab(item: ReceiptItem) {
-    return !!item.payers.find(e => e.uid === '9');
+    return !!item.payers.find(e => e.uid === this.auth.getUid());
   }
 
   removeItemFromMyTab(item: ReceiptItem) {
     const index = item.payers.indexOf(
       item.payers.find(e => {
-        return e.uid === '9';
+        return e.uid === this.auth.getUid();
       })
     );
     item.payers.splice(index, 1);
@@ -113,7 +140,7 @@ export class SelectItemsPage {
   updateSubTotal() {
     let sum = currency(0);
     this.receiptItems.forEach(item => {
-      const payer = item.payers.find(e => e.uid === '9');
+      const payer = item.payers.find(e => e.uid === this.auth.getUid());
       if (payer) {
         sum = sum.add(payer.price);
       }

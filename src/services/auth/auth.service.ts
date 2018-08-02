@@ -67,6 +67,10 @@ export class AuthService {
     return this.user && this.user.displayName;
   }
 
+  getUid() {
+    return this.user && this.user.uid;
+  }
+
   signOut(): Promise<void> {
     return this.afAuth.auth.signOut();
   }

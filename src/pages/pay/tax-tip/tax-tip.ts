@@ -4,6 +4,7 @@ import { ReceiptItem } from '../select-items/select-items';
 import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -19,16 +20,17 @@ export class TaxTipPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertService,
-    public loader: LoaderService
+    public loader: LoaderService,
+    public auth: AuthService
   ) {
     this.myTabItems =
       this.tab.receiptItems &&
       this.tab.receiptItems
-        .filter(item => item.payers.find(e => e.uid === '9'))
+        .filter(item => item.payers.find(e => e.uid === this.auth.getUid()))
         .map(item => ({
           name: item.name,
           payers: item.payers,
-          ...item.payers.find(e => e.uid === '9'),
+          ...item.payers.find(e => e.uid === this.auth.getUid()),
         }));
   }
 
@@ -50,7 +52,7 @@ export class TaxTipPage {
     let sum = currency(0);
     this.myTabItems &&
       this.myTabItems.forEach((item: ReceiptItem) => {
-        const payer = item.payers.find(e => e.uid === '9');
+        const payer = item.payers.find(e => e.uid === this.auth.getUid());
         if (payer) {
           sum = sum.add(payer.price);
         }
