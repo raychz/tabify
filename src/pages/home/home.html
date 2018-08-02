@@ -24,71 +24,53 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-    <ion-refresher>
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing...">
+<ion-content class="cards-bg">
+    <ion-refresher (ionRefresh)="refresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing stories...">
         </ion-refresher-content>
     </ion-refresher>
-    <!-- <div [ngSwitch]="selectedSegment"> -->
-    <!-- <ion-card *ngFor="let story of stories[selectedSegment]">
-        <ion-item>
-            <ion-avatar item-start>
-                <img src="img/marty-avatar.png">
-            </ion-avatar>
-            <h2>Marty McFly</h2>
-            <p>November 5, 1955</p>
-        </ion-item>
-        <img src="img/advance-card-bttf.png">
-        <ion-card-content>
-            <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?!
-                Whoa. This is heavy.</p>
-        </ion-card-content>
-        <ion-row>
-            <ion-col>
-                <button ion-button icon-start clear small>
-                    <ion-icon name="thumbs-up"></ion-icon>
-                    <div>12 Likes</div>
-                </button>
-            </ion-col>
-            <ion-col>
-                <button ion-button icon-start clear small>
-                    <ion-icon name="text"></ion-icon>
-                    <div>4 Comments</div>
-                </button>
-            </ion-col>
-            <ion-col center text-center>
-                <ion-note>
-                    11h ago
-                </ion-note>
-            </ion-col>
-        </ion-row>
-    </ion-card> -->
-
-    <!-- <ion-list *ngSwitchCase="'global'">
+    <p class="muted">Newsfeeds are currently under construction.</p>
+    <ng-container *ngFor="let story of feeds[selectedSegment]">
+        <ion-card *ngIf='!!story'>
             <ion-item>
-                <ion-thumbnail item-start>
-                    <img src="img/thumbnail-puppy-1.jpg">
-                </ion-thumbnail>
-                <h2>Ruby</h2>
+                <ion-avatar item-start>
+                    <img src={{story.location.photoUrl}}>
+                </ion-avatar>
+                <h2>{{story.location.name}}</h2>
+                <h3>{{story.location.city}}</h3>
+                <p>{{story.location.streetAddress}}</p>
+                <ion-note item-end>{{story.location.distance}} mi.</ion-note>
             </ion-item>
-        </ion-list>
-
-        <ion-list *ngSwitchCase="'community'">
-            <ion-item>
-                <ion-thumbnail item-start>
-                    <img src="img/thumbnail-kitten-1.jpg">
-                </ion-thumbnail>
-                <h2>Luna</h2>
-            </ion-item>
-        </ion-list>
-
-        <ion-list *ngSwitchCase="'user'">
-            <ion-item>
-                <ion-thumbnail item-start>
-                    <img src="img/thumbnail-kitten-1.jpg">
-                </ion-thumbnail>
-                <h2>Luna</h2>
-            </ion-item>
-        </ion-list> -->
-    <!-- </div> -->
+            <ion-card-content>
+                <p>Ray and John were here.</p>
+                <div class="members-comments">
+                    <p class="members-comment">
+                        Ray: "Loved the brisket!"
+                    </p>
+                    <p class="members-comment">
+                        John: "Best BBQ I've had in ages. Will be back for more!"
+                    </p>
+                </div>
+            </ion-card-content>
+            <ion-row>
+                <ion-col>
+                    <button ion-button color="primary" clear small icon-start>
+                        <ion-icon name="heart"></ion-icon>
+                        {{story.likes}} Likes
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button color="primary" clear small icon-start>
+                        <ion-icon name='text'></ion-icon>
+                        {{story.comments}} Comments
+                    </button>
+                </ion-col>
+                <ion-col align-self-center text-center>
+                    <ion-note>
+                        11h ago
+                    </ion-note>
+                </ion-col>
+            </ion-row>
+        </ion-card>
+    </ng-container>
 </ion-content>

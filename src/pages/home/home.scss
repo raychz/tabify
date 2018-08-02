@@ -1,12 +1,20 @@
 page-home {
-    ion-segment.segment-ios {
-        max-width: 65%;
-        margin: auto;
+  ion-segment.segment-ios {
+    max-width: 65%;
+    margin: auto;
+  }
+  .bar-buttons-md[right] {
+    margin-left: 2rem !important;
+  }
+  .bar-buttons-ios[right] {
+    margin-right: 0.65rem !important;
+  }
+  .members-comments {
+    .members-comment {
+      &:first-child {
+        margin-top: 0.5em;
+      }
+      color: #8e9093;
     }
-    .bar-buttons-md[right] {
-        margin-left: 2rem !important;
-    }
-    .bar-buttons-ios[right] {
-        margin-right: 0.65rem !important;
-    }
+  }
 }

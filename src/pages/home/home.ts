@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
+import { Location } from '../pay/location/location';
+import { user, global, community } from './example-stories';
 
 export interface Story {
-  locationName: string;
+  location: Location;
   members: string[];
   timestamp;
   likes: number;
@@ -16,9 +18,9 @@ export interface Story {
 })
 export class HomePage {
   selectedSegment = 'user';
-  global = [];
-  community = [];
-  user = [];
+  feeds = {
+    user, community, global
+  };
 
   constructor(public navCtrl: NavController) {}
 
@@ -32,5 +34,11 @@ export class HomePage {
       {},
       { animate: true, animation: 'md-transition', direction: 'forward' }
     );
+  }
+
+  refresh(refresher) {
+    setTimeout(() => {
+      refresher.complete();
+    }, 2000);
   }
 }

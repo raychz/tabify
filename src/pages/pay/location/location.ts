@@ -6,19 +6,20 @@ import {
   ViewController,
 } from 'ionic-angular';
 
+export interface Location {
+  name: string;
+  city: string;
+  streetAddress: string;
+  distance: number;
+  photoUrl: string;
+}
 @IonicPage()
 @Component({
   selector: 'page-location',
   templateUrl: 'location.html',
 })
 export class LocationPage {
-  locations: {
-    name: string;
-    city: string;
-    streetAddress: string;
-    distance: number;
-    photoUrl: string;
-  }[];
+  locations: Location[];
 
   constructor(
     public navCtrl: NavController,
