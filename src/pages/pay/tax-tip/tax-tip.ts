@@ -80,6 +80,12 @@ export class TaxTipPage {
       title: 'All set?',
       message: `You will be submitting a payment of $${this.getGrandTotal()} to ${this
         .tab.location && this.tab.location.name}.`,
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Leave a review...',
+        },
+      ],
       buttons: [
         {
           text: 'Cancel',
