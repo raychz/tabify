@@ -43,7 +43,10 @@ page-select-items {
     }
     &-list {
       &-item {
-        color: #aeacb4;
+        &:first-child {
+          margin-top: 0.5em;
+        }
+        color: #8e9093;
       }
     }
   }
