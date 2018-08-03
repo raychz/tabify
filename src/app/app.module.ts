@@ -10,11 +10,15 @@ import { Pro } from '@ionic/pro';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { firebaseConfig } from '../config';
+import config from '../config';
 import { AuthService } from '../services/auth/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 import { LoaderService } from '../services/utilities/loader.service';
 import { AlertService } from '../services/utilities/alert.service';
+import { SocketService } from '../services/socket/socket.service';
+import { SocketIoModule } from 'ng-socket-io';
+import { ExtendedSocket } from '../services/socket/socket';
+
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -48,8 +52,9 @@ export class MyErrorHandler implements ErrorHandler {
     IonicModule.forRoot(Tabify, {
       preloadModules: true,
     }),
-    AngularFireModule.initializeApp(firebaseConfig.fire),
+    AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,
+    SocketIoModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [Tabify],
@@ -63,6 +68,8 @@ export class MyErrorHandler implements ErrorHandler {
     Facebook,
     LoaderService,
     AlertService,
+    SocketService,
+    ExtendedSocket
   ],
 })
 export class AppModule {}
