@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
+import { ExtendedSocket } from '../../../services/socket/socket';
 
 export interface ReceiptItem {
+  id: number;
   name: string;
   price: number;
   payers: {
@@ -27,9 +29,16 @@ export class SelectItemsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public auth: AuthService
+    public auth: AuthService,
+    public socket: ExtendedSocket
   ) {
     this.getItems();
+    this.socket.emit('join', this.tab.tabNumber);
+    this.socket.on('message-room', ({ item }) => {
+      this.receiptItems.forEach((_item, i) => {
+        if (_item.id === item.id) this.receiptItems[i] = item;
+      });
+    });
   }
 
   ionViewDidLoad() {
@@ -39,36 +48,43 @@ export class SelectItemsPage {
   getItems() {
     this.receiptItems = [
       {
+        id: 1,
         name: 'Coca-Cola',
         price: 2.99,
         payers: [],
       },
       {
+        id: 2,
         name: 'Dr. Pepper',
         price: 2.99,
         payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
       },
       {
+        id: 3,
         name: 'Sprite',
         price: 2.99,
         payers: [],
       },
       {
+        id: 4,
         name: 'Ribeye Steak',
         price: 23.41,
         payers: [],
       },
       {
+        id: 5,
         name: 'Cheeseburger',
         price: 12.39,
         payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
       },
       {
+        id: 6,
         name: 'Salad',
         price: 11.27,
         payers: [{ uid: '3', firstName: 'Mary', price: 14.77 }],
       },
       {
+        id: 7,
         name: 'Nachos',
         price: 14.77,
         payers: [
@@ -77,11 +93,10 @@ export class SelectItemsPage {
         ],
       },
       {
+        id: 8,
         name: 'Calamari',
         price: 15.29,
-        payers: [
-          { uid: '3', firstName: 'Mary', price: 7.38 },
-        ],
+        payers: [{ uid: '3', firstName: 'Mary', price: 7.38 }],
       },
     ];
     this.updatePayersDescription();
@@ -98,6 +113,10 @@ export class SelectItemsPage {
       item.payers[index].price = d.value;
     });
     this.updatePayersDescription();
+    this.socket.emit('message-room', {
+      room: this.tab.tabNumber,
+      item,
+    });
   }
 
   isItemOnMyTab(item: ReceiptItem) {
@@ -112,6 +131,10 @@ export class SelectItemsPage {
     );
     item.payers.splice(index, 1);
     this.updatePayersDescription();
+    this.socket.emit('message-room', {
+      room: this.tab.tabNumber,
+      item,
+    });
   }
 
   updatePayersDescription() {
