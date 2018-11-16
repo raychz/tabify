@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { Ionic2RatingModule } from 'ionic2-rating';
 
 import { Tabify } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -54,7 +55,8 @@ export class MyErrorHandler implements ErrorHandler {
     }),
     AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,
-    SocketIoModule
+    SocketIoModule,
+    Ionic2RatingModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [Tabify],
