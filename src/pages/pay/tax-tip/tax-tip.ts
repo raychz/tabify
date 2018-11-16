@@ -30,6 +30,8 @@ export class TaxTipPage {
         .map(item => ({
           name: item.name,
           payers: item.payers,
+          rating: 0,
+          feedback: '',
           ...item.payers.find(e => e.uid === this.auth.getUid()),
         }));
   }
@@ -85,7 +87,7 @@ export class TaxTipPage {
       inputs: [
         {
           name: 'title',
-          placeholder: 'Leave a review...',
+          placeholder: 'How was your experience? (optional)',
         },
       ],
       buttons: [

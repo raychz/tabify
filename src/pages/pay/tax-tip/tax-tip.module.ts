@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TaxTipPage } from './tax-tip';
-import { StarRatingModule } from 'ionic3-star-rating';
+import { Ionic2RatingModule } from "ionic2-rating";
 
 @NgModule({
   declarations: [
@@ -9,7 +9,7 @@ import { StarRatingModule } from 'ionic3-star-rating';
   ],
   imports: [
     IonicPageModule.forChild(TaxTipPage),
-    StarRatingModule
+    Ionic2RatingModule
   ],
 })
 export class TaxTipPageModule {}

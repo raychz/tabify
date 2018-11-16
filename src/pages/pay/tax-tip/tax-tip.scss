@@ -44,3 +44,26 @@ page-tax-tip {
     color: gray;
   }
 }
+
+div.reviews>ion-item.item-feedback {
+  border-left: 1px solid lightgray;
+  padding-left: 0px;
+  .text-input-ios {
+    padding-left: 1rem;
+  }
+}
+
+ul.rating {
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 0px 3px !important;
+    background: none;
+    color: map-get($colors, primary);;
+
+    ion-icon {
+      font-size: 35px;
+    }
+  }
+}

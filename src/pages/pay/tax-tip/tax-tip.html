@@ -23,9 +23,14 @@
         <h2>{{item.name}}
           <span class='line-details' *ngIf='item.payers.length > 1'> (shared)</span>
         </h2>
-        <ionic3-star-rating activeIcon="ios-star" defaultIcon="ios-star-outline" activeColor="#55acee" defaultColor="gray" readonly="false"
-          [rating]="rating">
-        </ionic3-star-rating>
+        <div class="reviews">
+          <rating
+            [(ngModel)]="item.rating">
+          </rating>
+          <ion-item *ngIf="item.rating > 0" class="item-feedback">
+            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)"></ion-textarea>
+          </ion-item>
+        </div>
         <div item-end>
           <h2>${{item.price | number:'1.2-2'}}</h2>
         </div>

@@ -45,7 +45,7 @@
     "currency.js": "^1.1.4",
     "firebase": "5.0.4",
     "ionic-angular": "3.9.2",
-    "ionic3-star-rating": "^1.1.4",
+    "ionic2-rating": "^1.2.2",
     "ionicons": "4.2.4",
     "ng-socket-io": "^0.2.4",
     "promise-polyfill": "8.0.0",
