@@ -24,6 +24,13 @@ page-tax-tip {
     color: gray;
   }
 
+  .tab-item {
+    border-bottom: 1px lightgray solid;
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
   #grand-total {
     border-top: 1px lightgray dashed;
   }

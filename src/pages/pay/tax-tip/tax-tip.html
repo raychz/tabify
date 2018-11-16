@@ -19,10 +19,13 @@
       Selected Items
     </ion-card-header>
     <ion-card-content>
-      <ion-item class='total' *ngFor='let item of myTabItems'>
+      <ion-item class='total tab-item' *ngFor='let item of myTabItems'>
         <h2>{{item.name}}
           <span class='line-details' *ngIf='item.payers.length > 1'> (shared)</span>
         </h2>
+        <ionic3-star-rating activeIcon="ios-star" defaultIcon="ios-star-outline" activeColor="#55acee" defaultColor="gray" readonly="false"
+          [rating]="rating">
+        </ionic3-star-rating>
         <div item-end>
           <h2>${{item.price | number:'1.2-2'}}</h2>
         </div>
