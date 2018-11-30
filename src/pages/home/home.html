@@ -29,7 +29,6 @@
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing stories...">
         </ion-refresher-content>
     </ion-refresher>
-    <p class="muted">Newsfeeds are currently under construction.</p>
     <ng-container *ngFor="let story of feeds[selectedSegment]">
         <ion-card *ngIf='!!story'>
             <ion-item>

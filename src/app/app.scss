@@ -14,7 +14,14 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 ion-content.cards-bg {
-  background-color: #f4f4f7;
+  background-image: url("/assets/imgs/restaurants/restaurant.jpg");
+  background-color: transparent;
+  background-position: center center;
+  // background-color: #f4f4f7;
+}
+
+ion-header, ion-card, ion-footer {
+  opacity: 0.92
 }
 
 .muted {
