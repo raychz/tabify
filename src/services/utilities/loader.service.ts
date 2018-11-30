@@ -27,4 +27,8 @@ export class LoaderService {
   dismiss() {
     return this.loader && this.loader.dismiss();
   }
+
+  setContent(content) {
+    return this.loader && this.loader.setContent(content);
+  }
 }
