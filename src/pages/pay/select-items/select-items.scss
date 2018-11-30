@@ -21,6 +21,23 @@ page-select-items {
   ion-toolbar {
     text-align: center;
     height: 100%;
+    .toolbar-col {
+      padding: 0px 5px;
+      color: #666;
+    }
+    .share-tab {
+      &-text {
+        display: block;
+      }
+    }
+    .invite-others {
+        font-weight: bold;
+        color: map-get($colors, primary);
+
+    }
+    .secondary-toolbar {
+      min-height: 0;
+    }
   }
   .toolbar-title {
     color: map-get($colors, primary);
@@ -36,7 +53,10 @@ page-select-items {
     }
   }
   .item-on-tab {
-    border: 1px solid map-get($colors, primary);
+    border-left: 5px solid map-get($colors, primary);
+  }
+  .item-not-on-tab {
+    border-left: 5px solid lightgray;
   }
   .payers {
     &-description {
@@ -50,4 +70,5 @@ page-select-items {
       }
     }
   }
+
 }

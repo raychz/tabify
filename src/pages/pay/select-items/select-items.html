@@ -1,45 +1,74 @@
 <ion-header>
-  <ion-navbar color='tabify'>
+  <ion-navbar color="tabify">
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
-      <button ion-button icon-end (click)="viewTaxAndTip()">
+      <button ion-button icon-end (click)="confirmSelections()">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-  <ion-toolbar no-border-top color="tabify">
-    <ion-searchbar placeholder="Search for items on the tab" (ionInput)="filterItems($event)"></ion-searchbar>
+  <ion-toolbar no-border-top color="white" class="secondary-toolbar">
+    <ion-row no-border-top>
+      <ion-col align-self-center text-center class="toolbar-col">
+        <ion-icon name="people"></ion-icon>
+        <b>Guests:</b> Raymond C., Ryan B., Roger M., Davi D., Rob F. 
+        <span class="invite-others">
+            <ion-icon name="send"></ion-icon>
+            Invite Others
+        </span>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class='cards-bg'>
-  <ng-container *ngFor='let item of receiptItems'>
-    <ion-card [class.item-on-tab]='isItemOnMyTab(item)' *ngIf='!item.isHidden'>
+<ion-content class="cards-bg">
+  <ng-container *ngFor="let item of receiptItems">
+    <ion-card
+      [class.item-not-on-tab]="!isItemOnMyTab(item)"
+      [class.item-on-tab]="isItemOnMyTab(item)"
+      *ngIf="!item.isHidden"
+    >
       <ion-item>
-        <h2>{{item.name}}</h2>
+        <h2>{{ item.name }}</h2>
         <ion-note item-end>
-          <h2>${{item.price | number:'1.2-2'}}</h2>
+          <h2>${{ item.price | number: '1.2-2' }}</h2>
         </ion-note>
       </ion-item>
       <ion-card-content>
-        <p class="payers-description">{{item.payersDescription}}</p>
-        <ng-container *ngIf='item.payers.length > 1'>
+        <p class="payers-description">{{ item.payersDescription }}</p>
+        <ng-container *ngIf="item.payers.length > 1">
           <div class="payers-list">
-            <p class="payers-list-item" *ngFor='let payer of item.payers'>
-              {{payer.firstName}}: ${{payer.price | number:'1.2-2'}}
+            <p class="payers-list-item" *ngFor="let payer of item.payers">
+              {{ payer.firstName }}: ${{ payer.price | number: '1.2-2' }}
             </p>
           </div>
         </ng-container>
       </ion-card-content>
       <ion-row>
         <ion-col align-self-center text-center>
-          <button *ngIf='!isItemOnMyTab(item)' ion-button color='primary' clear block icon-start (click)='addItemToMyTab(item)'>
-            <ion-icon name='add-circle'></ion-icon>
+          <button
+            *ngIf="!isItemOnMyTab(item)"
+            ion-button
+            color="primary"
+            clear
+            block
+            icon-start
+            (click)="addItemToMyTab(item)"
+          >
+            <ion-icon name="add-circle"></ion-icon>
             Add to My Tab
           </button>
-          <button *ngIf='isItemOnMyTab(item)' ion-button color='primary' clear block icon-start (click)='removeItemFromMyTab(item)'>
-            <ion-icon name='remove-circle'></ion-icon>
+          <button
+            *ngIf="isItemOnMyTab(item)"
+            ion-button
+            color="primary"
+            clear
+            block
+            icon-start
+            (click)="removeItemFromMyTab(item)"
+          >
+            <ion-icon name="remove-circle"></ion-icon>
             Remove From My Tab
           </button>
         </ion-col>
@@ -50,10 +79,16 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar color='tabify'>
+  <ion-toolbar color="tabify">
+    <ion-buttons start>
+      <button ion-button icon-only><ion-icon name="share"></ion-icon></button>
+    </ion-buttons>
     <ion-title>
-      <p class='footer-title'>Your Subtotal</p>
-      <p class='footer-subtitle'>${{updateSubTotal() | number:'1.2-2'}}</p>
+      <p class="footer-title">Your Subtotal</p>
+      <p class="footer-subtitle">${{ updateSubTotal() | number: '1.2-2' }}</p>
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only><ion-icon name="more"></ion-icon></button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-footer>
