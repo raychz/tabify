@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { ExtendedSocket } from '../../../services/socket/socket';
+import { LoaderService } from '../../../services/utilities/loader.service';
+import { AlertService } from '../../../services/utilities/alert.service';
 
 export interface ReceiptItem {
   id: number;
@@ -30,7 +32,9 @@ export class SelectItemsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
-    public socket: ExtendedSocket
+    public socket: ExtendedSocket,
+    public loader: LoaderService,
+    public alertCtrl: AlertService
   ) {
     this.getItems();
     this.socket.emit('join', this.tab.tabNumber);
@@ -123,6 +127,12 @@ export class SelectItemsPage {
     return !!item.payers.find(e => e.uid === this.auth.getUid());
   }
 
+  countItemsOnMyTab() {
+    let count = 0;
+    this.receiptItems.forEach(item => (count += ~~this.isItemOnMyTab(item)));
+    return count;
+  }
+
   removeItemFromMyTab(item: ReceiptItem) {
     const index = item.payers.indexOf(
       item.payers.find(e => {
@@ -185,10 +195,67 @@ export class SelectItemsPage {
   }
 
   viewTaxAndTip() {
-    this.navCtrl.push('TaxTipPage', {
-      ...this.tab,
-      receiptItems: this.receiptItems,
-    });
+    this.loader
+      .present({
+        content:
+          'Waiting on Alice, Bob, and John to finish making their selections...',
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.loader.setContent(
+            'Waiting on Bob to finish making their selections...'
+          );
+        }, 1500);
+      });
+    setTimeout(() => {
+      this.loader.dismiss();
+      this.navCtrl.push('TaxTipPage', {
+        ...this.tab,
+        receiptItems: this.receiptItems,
+      });
+    }, 3500);
+  }
+
+  confirmSelections() {
+    const itemCount = this.countItemsOnMyTab();
+    if (itemCount) {
+      const confirm = this.alertCtrl.create({
+        title: 'Confirm Selections',
+        message: `You've added ${itemCount} items to your tab. Is this correct?`,
+        buttons: [
+          {
+            text: 'No',
+            handler: () => {
+              console.log('Cancel clicked');
+            },
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              confirm.dismiss().then(() => {
+                this.viewTaxAndTip();
+              });
+              return false;
+            },
+          },
+        ],
+      });
+      confirm.present();
+    } else {
+      const warning = this.alertCtrl.create({
+        title: 'Warning',
+        message: `Please add 1 or more items to your tab before continuing.`,
+        buttons: [
+          {
+            text: 'Ok',
+            handler: () => {
+              console.log('Ok clicked');
+            },
+          },
+        ],
+      });
+      warning.present();
+    }
   }
 
   allItemsAreHidden() {
