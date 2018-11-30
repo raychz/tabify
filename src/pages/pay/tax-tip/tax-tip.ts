@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { ReceiptItem } from '../select-items/select-items';
 import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
@@ -12,7 +12,9 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: 'tax-tip.html',
 })
 export class TaxTipPage {
-  tip = 20;
+  @ViewChild(Navbar) navBar: Navbar;
+
+  tip = 18;
   tab = this.navParams.data;
   myTabItems = [];
 
@@ -40,6 +42,34 @@ export class TaxTipPage {
     console.log('ionViewDidLoad TaxTipPage');
     console.log(this.tab);
     console.log(this.myTabItems);
+    this.setBackButtonAction();
+  }
+
+  setBackButtonAction() {
+    this.navBar.backButtonClick = () => {
+      const confirm = this.alertCtrl.create({
+        title: 'Warning',
+        message: `All users on this tab will be sent back to the 'Select Items' page. Are you sure you want to continue?`,
+        buttons: [
+          {
+            text: 'No, stay on this page',
+            handler: () => {
+              console.log('Cancel clicked');
+            },
+          },
+          {
+            text: 'Yes, take me back',
+            handler: () => {
+              confirm.dismiss().then(() => {
+                this.navCtrl.pop();
+              });
+              return false;
+            },
+          },
+        ],
+      });
+      confirm.present();
+    };
   }
 
   adjustTip(shouldIncreaseTip) {
