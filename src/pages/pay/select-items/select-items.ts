@@ -198,12 +198,12 @@ export class SelectItemsPage {
     this.loader
       .present({
         content:
-          'Waiting on Alice, Bob, and John to finish making their selections...',
+          'Waiting on Alice, Bob, and John to finish making selections...',
       })
       .then(() => {
         setTimeout(() => {
           this.loader.setContent(
-            'Waiting on Bob to finish making their selections...'
+            'Waiting on Bob to finish making selections...'
           );
         }, 1500);
       });
