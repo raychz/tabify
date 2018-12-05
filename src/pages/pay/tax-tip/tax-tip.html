@@ -28,7 +28,7 @@
             [(ngModel)]="item.rating">
           </rating>
           <ion-item *ngIf="item.rating > 0" class="item-feedback">
-            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)"></ion-textarea>
+            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on" spellcheck="on" autocorrect="on"></ion-textarea>
           </ion-item>
         </div>
         <div item-end>
