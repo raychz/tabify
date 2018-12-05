@@ -40,7 +40,7 @@ page-payment-methods {
     }
   }
 
-  .cvv-help {
+  .cvv-help, .linked-card-icon {
     color: map-get($colors, primary);
   }
 }

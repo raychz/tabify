@@ -40,9 +40,8 @@ export class PaymentMethodsPage {
     Spreedly.on('ready', () => {
       this.spreedlyReady = true;
       Spreedly.setParam('allow_blank_name', true);
-      Spreedly.setParam('retained', true);
-      Spreedly.setFieldType('text');
-      Spreedly.setNumberFormat('prettyFormat');
+      Spreedly.setFieldType("number", "tel");
+      Spreedly.setFieldType("cvv", "tel");
       Spreedly.setStyle(
         'number',
         'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
