@@ -46,13 +46,17 @@ page-tax-tip {
 }
 
 div.reviews>ion-item.item-feedback {
-  border-left: 1px solid lightgray;
+  border-left: 3px solid #55acee;  
+  border-radius: 4px;
   padding-left: 0px;
-  .text-input-ios {
-    padding-left: 1rem;
+  .text-input {
+    margin: 4px 7px;
+    &-ios {
+      padding-left: 1rem;
+    }
   }
   textarea {
-    height: 3em;
+    height: 4em;
   }
 }
 
