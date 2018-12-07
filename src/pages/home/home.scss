@@ -18,15 +18,18 @@ page-home {
     }
   }
   ion-footer {
-    background:#f4f4f7;
+    background: map-get($colors, primary);
     border-top: 1px solid lightgray;
     .pay-tab-text {
-      color: map-get($colors, primary);
+      color: map-get($colors, light);
       font-weight: 400;
       font-size: 20px;
     }
   }
   .pay-fab {
-    bottom: 35px;
+    button {
+      box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
+    }
+    bottom: 40px;
   }
 }
