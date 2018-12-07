@@ -40,12 +40,19 @@ $extended-colors: (
   ),
 );
 $colors: (map-merge($base-colors, $extended-colors));
+
+$refresher-icon-color: map-get($colors, primary);
+
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
+$spinner-ios-dots-color: map-get($colors, primary);
+$loading-ios-spinner-color: map-get($colors, primary);
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
+$spinner-md-dots-color: map-get($colors, primary);
+$loading-md-spinner-color: map-get($colors, primary);
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here
