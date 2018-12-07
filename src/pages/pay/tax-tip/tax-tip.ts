@@ -110,59 +110,9 @@ export class TaxTipPage {
   }
 
   pay() {
-    const confirm = this.alertCtrl.create({
-      title: 'All set?',
-      message: `You will be submitting a payment of $${this.getGrandTotal()} to ${this
-        .tab.location && this.tab.location.name}.`,
-      inputs: [
-        {
-          name: 'title',
-          placeholder: 'How was your experience? (optional)',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          },
-        },
-        {
-          text: 'Pay',
-          handler: () => {
-            confirm.dismiss().then(() => {
-              this.loader
-                .present({
-                  duration: 3000,
-                })
-                .then(() => {
-                  const parentNav: NavController = this.navCtrl.parent;
-                  parentNav
-                    .setRoot(
-                      'HomePage',
-                      {},
-                      {
-                        animate: true,
-                        animation: 'md-transition',
-                        direction: 'back',
-                      }
-                    )
-                    .then(() => {
-                      const alert = this.alertCtrl.create({
-                        title: 'All done',
-                        subTitle: `Thanks for visiting ${this.tab.location &&
-                          this.tab.location.name}!`,
-                        buttons: ['Ok'],
-                      });
-                      alert.present();
-                    });
-                });
-            });
-            return false;
-          },
-        },
-      ],
+    this.navCtrl.push('PaymentMethodsPage', {
+      ...this.myTabItems,
+      mode: 'PAY_TAB'
     });
-    confirm.present();
   }
 }
