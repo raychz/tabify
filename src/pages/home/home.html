@@ -1,75 +1,91 @@
 <ion-header>
-    <ion-navbar color="tabify">
-        <ion-buttons left>
-            <button ion-button icon-only menuToggle>
-                <ion-icon name="menu"></ion-icon>
-            </button>
-        </ion-buttons>
-        <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
-            <ion-segment-button value="global" icon-only>
-                <ion-icon name="globe"></ion-icon>
-            </ion-segment-button>
-            <ion-segment-button value="community" icon-only>
-                <ion-icon name="people"></ion-icon>
-            </ion-segment-button>
-            <ion-segment-button value="user" icon-only>
-                <ion-icon name="person"></ion-icon>
-            </ion-segment-button>
-        </ion-segment>
-        <ion-buttons right>
-            <button ion-button icon-only (click)="payNewTab()">
-                <ion-icon ios="ios-create" md="md-create"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
+  <ion-navbar color="tabify">
+    <ion-buttons left>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-segment
+      color="tabify-alt"
+      [(ngModel)]="selectedSegment"
+      (ionChange)="segmentChanged($event)"
+    >
+      <ion-segment-button value="global" icon-only>
+        <ion-icon name="globe"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="community" icon-only>
+        <ion-icon name="people"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="user" icon-only>
+        <ion-icon name="person"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="notifications"></ion-icon>
+        <ion-badge color="danger">7+</ion-badge>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 <ion-content class="cards-bg">
-    <ion-refresher (ionRefresh)="refresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots" refreshingText="Refreshing stories...">
-        </ion-refresher-content>
-    </ion-refresher>
-    <ng-container *ngFor="let story of feeds[selectedSegment]">
-        <ion-card *ngIf='!!story'>
-            <ion-item>
-                <ion-avatar item-start>
-                    <img src={{story.location.photoUrl}}>
-                </ion-avatar>
-                <h2>{{story.location.name}}</h2>
-                <h3>{{story.location.city}}</h3>
-                <p>{{story.location.streetAddress}}</p>
-                <ion-note item-end>{{story.location.distance}} mi.</ion-note>
-            </ion-item>
-            <ion-card-content>
-                <p>Ray and John were here.</p>
-                <div class="members-comments">
-                    <p class="members-comment">
-                        Ray: "Loved the brisket!"
-                    </p>
-                    <p class="members-comment">
-                        John: "Best BBQ I've had in ages. Will be back for more!"
-                    </p>
-                </div>
-            </ion-card-content>
-            <ion-row>
-                <ion-col>
-                    <button ion-button color="primary" clear small icon-start>
-                        <ion-icon name="heart"></ion-icon>
-                        {{story.likes}} Likes
-                    </button>
-                </ion-col>
-                <ion-col>
-                    <button ion-button color="primary" clear small icon-start>
-                        <ion-icon name='text'></ion-icon>
-                        {{story.comments}} Comments
-                    </button>
-                </ion-col>
-                <ion-col align-self-center text-center>
-                    <ion-note>
-                        11h ago
-                    </ion-note>
-                </ion-col>
-            </ion-row>
-        </ion-card>
-    </ng-container>
+  <ion-refresher (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="dots"
+      refreshingText="Refreshing stories..."
+    >
+    </ion-refresher-content>
+  </ion-refresher>
+  <ng-container *ngFor="let story of feeds[selectedSegment]">
+    <ion-card *ngIf="!!story">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="{{story.location.photoUrl}}" />
+        </ion-avatar>
+        <h2>{{ story.location.name }}</h2>
+        <h3>{{ story.location.city }}</h3>
+        <p>{{ story.location.streetAddress }}</p>
+        <ion-note item-end>{{ story.location.distance }} mi.</ion-note>
+      </ion-item>
+      <ion-card-content>
+        <p>Ray and John were here.</p>
+        <div class="members-comments">
+          <p class="members-comment">Ray: "Loved the brisket!"</p>
+          <p class="members-comment">
+            John: "Best BBQ I've had in a long time. Will be back for more!"
+          </p>
+        </div>
+      </ion-card-content>
+      <ion-row>
+        <ion-col>
+          <button ion-button color="primary" clear small icon-start>
+            <ion-icon name="heart"></ion-icon>
+            {{ story.likes }} Likes
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button color="primary" clear small icon-start>
+            <ion-icon name="text"></ion-icon>
+            {{ story.comments }} Comments
+          </button>
+        </ion-col>
+        <ion-col align-self-center text-center>
+          <ion-note> 11h ago </ion-note>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ng-container>
 </ion-content>
+
+<ion-fab center bottom class="pay-fab">
+  <button ion-fab color="tabify" (click)="payNewTab()">
+    <ion-icon name="logo-usd"></ion-icon>
+  </button>
+</ion-fab>
+
+<ion-footer text-center border-top transparent>
+  <h3 (click)="payNewTab()" class="pay-tab-text">Pay Tab</h3>
+</ion-footer>

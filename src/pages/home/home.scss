@@ -1,6 +1,6 @@
 page-home {
   ion-segment.segment-ios {
-    max-width: 65%;
+    max-width: 55%;
     margin: auto;
   }
   .bar-buttons-md[right] {
@@ -16,5 +16,17 @@ page-home {
       }
       color: #8e9093;
     }
+  }
+  ion-footer {
+    background:#f4f4f7;
+    border-top: 1px solid lightgray;
+    .pay-tab-text {
+      color: map-get($colors, primary);
+      font-weight: 400;
+      font-size: 20px;
+    }
+  }
+  .pay-fab {
+    bottom: 35px;
   }
 }

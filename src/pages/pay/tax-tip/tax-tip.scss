@@ -46,7 +46,7 @@ page-tax-tip {
 }
 
 div.reviews>ion-item.item-feedback {
-  border-left: 3px solid #55acee;  
+  border-left: 3px solid map-get($colors, primary);  
   border-radius: 4px;
   padding-left: 0px;
   .text-input {
