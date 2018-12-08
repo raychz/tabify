@@ -1,4 +1,4 @@
-page-payment-methods {
+page-payment-details {
   #spreedly {
     &-number,
     &-cvv,
@@ -40,7 +40,7 @@ page-payment-methods {
     }
   }
 
-  .linked-card-icon {
+  .cvv-help {
     color: map-get($colors, primary);
   }
 }
