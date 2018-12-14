@@ -7,6 +7,7 @@ import {
 } from 'ionic-angular';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { PaymentService } from '../../../services/payment/payment.service';
 
 declare var Spreedly: any;
 
@@ -30,7 +31,8 @@ export class PaymentDetailsPage {
     public toastCtrl: ToastController,
     public loader: LoaderService,
     public alertCtrl: AlertService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private paymentService: PaymentService
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
@@ -98,6 +100,14 @@ export class PaymentDetailsPage {
 
     Spreedly.on('paymentMethod', (token, details) => {
       this.loader.dismiss().then(() => {
+        this.paymentService.createGatewayPurchase(token, 499).then(
+          response => {
+            console.log('response', response);
+          },
+          error => {
+            console.log('error', error);
+          }
+        );
         console.log('TOKEN HERE', token, details);
       });
     });
