@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="tabify">
-    <ion-title>{{title}}</ion-title>
+    <ion-title>{{ title }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -8,6 +8,15 @@
   <ion-card>
     <ion-card-header>Add New Card</ion-card-header>
     <ion-card-content>
+      <label>Full Name</label>
+      <div class="spf-field">
+        <input
+          [(ngModel)]="newCard.full_name"
+          type="text"
+          class="spf-input-text"
+        />
+      </div>
+
       <label>Credit Card Number</label>
       <div id="spreedly-number"></div>
 
@@ -48,13 +57,17 @@
         </div>
       </div>
 
+      <ng-container *ngIf="paymentMethodError">
+        <div class="payment-method-error">{{ paymentMethodError }}</div>
+      </ng-container>
+
       <button
-        (click)="submitPaymentForm()"
+        (click)="validatePaymentMethod()"
         ion-button
         block
-        [disabled]="!canSave()"
+        [disabled]="!spreedlyReady"
       >
-        {{saveButtonText}}
+        {{ saveButtonText }}
       </button>
     </ion-card-content>
   </ion-card>

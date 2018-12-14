@@ -43,4 +43,8 @@ page-payment-details {
   .cvv-help {
     color: map-get($colors, primary);
   }
+
+  .payment-method-error {
+    color: map-get($colors, danger);
+  }
 }
