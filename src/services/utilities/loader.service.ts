@@ -19,13 +19,15 @@ export class LoaderService {
     this.loader = this.loadingCtrl.create({
       content,
       spinner,
-      ...rest
+      ...rest,
     });
     return this.loader.present();
   }
 
   dismiss() {
-    return this.loader && this.loader.dismiss();
+    if (this.loader) {
+      return this.loader && this.loader.dismiss().catch(()=>{});
+    }
   }
 
   setContent(content) {
