@@ -13,9 +13,7 @@ export class AuthService {
     private fb: Facebook,
     private platform: Platform
   ) {
-    afAuth.authState.subscribe(user => {
-      this.user = user;
-    });
+    afAuth.authState.subscribe(user => (this.user = user));
   }
 
   get authenticated(): boolean {
@@ -57,6 +55,10 @@ export class AuthService {
       credentials.email,
       credentials.password
     );
+  }
+
+  getPhotoUrl() {
+    return this.user && this.user.photoURL && (this.user.photoURL + '?width=75&height=75');
   }
 
   getEmail() {
