@@ -13,4 +13,5 @@ export default {
     url: 'http://localhost:3000',
     options: {},
   },
+  serverUrl: 'http://localhost:3000',
 };
