@@ -1,21 +1,33 @@
 <ion-menu [content]="content">
-    <ion-header>
-        <ion-toolbar>
-            <ion-title>Tabify</ion-title>
-        </ion-toolbar>
-    </ion-header>
-    <ion-content>
-        <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">{{p.title}}</button>
-            <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
-
-            <ion-item (click)="logout()" *ngIf="auth.authenticated">
-                <ion-icon name="log-out" item-left></ion-icon>
-                Log Out
+  <ion-content class="tabify-sidemenu">
+    <div class="tabify-sidemenu-background"></div>
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col align-self-center text-center>
+          <img class="tabify-sidemenu-profile-pic" [src]="auth.getPhotoUrl() || '../assets/imgs/user.png'" />
+          <h5 class="tabify-sidemenu-display-name">{{ auth.getDisplayName() }}</h5>
+          <p class="muted tabify-sidemenu-email">{{ auth.getEmail() }}</p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item class="tabify-sidemenu-list-item" menuClose  *ngFor="let p of pages" (click)="openPage(p)" [class.active]="checkActivePage(p)" no-lines>
+                <ion-icon [name]="p.icon" item-left></ion-icon>
+                {{p.title}}
             </ion-item>
-        </ion-list>
-    </ion-content>
+            <ion-item class="tabify-sidemenu-list-item" (click)="logout()" *ngIf="auth.authenticated">
+              <ion-icon name="log-out" item-left></ion-icon>
+              Log Out
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
 </ion-menu>
 
-<!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+<!--
+  Disable swipe-to-go-back because it's poor UX to combine STGB with side menus
+-->
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

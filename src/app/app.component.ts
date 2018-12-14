@@ -14,26 +14,29 @@ export class Tabify {
 
   rootPage: any;
 
-  pages: Array<{ title: string; component: any }>;
+  pages: Array<{ title: string; component: any; icon: string }>;
 
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public auth: AuthService,
-    public menu: MenuController,
-    public socket: ExtendedSocket
-  ) {
+    public menu: MenuController
+  ) // public socket: ExtendedSocket
+  {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: 'HomePage' },
-      { title: 'List', component: 'ListPage' },
-      { title: 'Payment Methods', component: 'PaymentMethodsPage' }
+      { title: 'Home', component: 'HomePage', icon: 'home' },
+      {
+        title: 'Payment Methods',
+        component: 'PaymentMethodsPage',
+        icon: 'card',
+      },
     ];
 
-    this.socket.connect();
+    // this.socket.connect();
   }
 
   initializeApp() {
@@ -75,6 +78,11 @@ export class Tabify {
     } else {
       this.nav.setRoot(page.component);
     }
+  }
+
+  checkActivePage(page): boolean {
+    const active = this.nav.getActive();
+    return active && active.id === page.component;
   }
 
   logout() {
