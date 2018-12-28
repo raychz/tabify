@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   getUid() {
-    return  this.user.uid;
+    return this.user.uid;
   }
 
   signOut(): Promise<void> {

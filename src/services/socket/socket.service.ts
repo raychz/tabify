@@ -3,9 +3,7 @@ import { ExtendedSocket } from './socket';
 
 @Injectable()
 export class SocketService {
-  constructor(public socket: ExtendedSocket) {
-    this.socket.connect();
-  }
+  constructor(public socket: ExtendedSocket) {}
 
   joinRoom(room: string) {
     this.socket.emit('join', room);

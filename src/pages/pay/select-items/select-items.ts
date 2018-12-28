@@ -37,16 +37,29 @@ export class SelectItemsPage {
     public alertCtrl: AlertService
   ) {
     this.getItems();
-    this.socket.emit('join', this.tab.tabNumber);
-    this.socket.on('message-room', ({ item }) => {
-      this.receiptItems.forEach((_item, i) => {
-        if (_item.id === item.id) this.receiptItems[i] = item;
-      });
+    this.socket.connect();
+    this.socket.on('connect', () => {
+      this.socket.emit('JOIN_TICKET_ROOM', this.tab.tabNumber);
     });
+
+    this.socket.on(this.tab.tabNumber, (message) => {
+      console.log(message)
+      // this.receiptItems.forEach((_item, i) => {
+      //   if (_item.id === item.id) this.receiptItems[i] = item;
+      // });
+    });
+
+    this.socket.on('disconnect', () => {
+      this.socket.removeAllListeners();
+    })
   }
 
   ionViewDidLoad() {
     console.log('tab: ', this.tab);
+  }
+
+  ionViewWillUnload() {
+    this.socket.disconnect()
   }
 
   getItems() {
