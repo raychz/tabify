@@ -50,11 +50,10 @@ export class AuthService {
     }
   }
 
-  signUp(credentials) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(
-      credentials.email,
-      credentials.password
-    );
+  async signUp(credentials) {
+    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+    const displayName =  `${credentials.firstName} ${credentials.lastName}`;
+    return user.updateProfile({ displayName })
   }
 
   getPhotoUrl() {

@@ -17,19 +17,19 @@ export class SignUpWithEmailPage {
   constructor(fb: FormBuilder, private navCtrl: NavController, private auth: AuthService) {
     this.form = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+      firstName: ['', Validators.compose([Validators.required])],
+      lastName: ['', Validators.compose([Validators.required])]
     });
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SignUpWithEmailPage');
   }
 
   signUp() {
     let data = this.form.value;
     let credentials = {
       email: data.email,
-      password: data.password
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
     };
     this.auth.signUp(credentials).then(
       () => this.navCtrl.setRoot('HomePage'),

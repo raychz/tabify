@@ -3,8 +3,6 @@ import { Nav, Platform, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
-// import { Socket } from 'ng-socket-io';
-import { ExtendedSocket } from '../services/socket/socket';
 
 @Component({
   templateUrl: 'app.html',
