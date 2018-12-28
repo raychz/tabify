@@ -41,17 +41,24 @@ export class PaymentDetailsPage {
   }
 
   ionViewDidLoad() {
-    this.loader.present({ dismissOnPageChange: false }).then(() => {
-      this.initializeSpreedly();
-      this.spreedlyTimeout = setTimeout(() => {
-        this.navCtrl.popTo('PaymentMethodsPage').then(() => {
-          const alert = this.alertCtrl.create({
-            title: 'Network Error',
-            message: `Please check your connection and try again.`,
-          });
-          alert.present();
+    const showError = () => {
+      this.loader.dismiss();
+      this.navCtrl.popTo('PaymentMethodsPage').then(() => {
+        const alert = this.alertCtrl.create({
+          title: 'Network Error',
+          message: `Please check your connection and try again.`,
         });
-      }, 15000);
+        alert.present();
+      });
+    }
+    this.loader.present({ dismissOnPageChange: false }).then(() => {
+      this.spreedlyTimeout = setTimeout(showError, 15000);
+      try {
+        this.initializeSpreedly();
+      } catch (error) {
+        showError();
+        console.error(error);
+      }
     });
   }
 
