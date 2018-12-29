@@ -5,15 +5,25 @@ import { ExtendedSocket } from './socket';
 export class SocketService {
   constructor(public socket: ExtendedSocket) {}
 
+  public connect() {
+    this.socket.connect();
+  }
+
+  public disconnect() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
+  }
+
   joinRoom(room: string) {
-    this.socket.emit('join', room);
+    this.socket.emit('JOIN_TICKET_ROOM', room);
+
   }
 
   sendMessage(msg: any) {
     this.socket.emit('message-room', msg);
   }
 
-  getMessage() {
+  getMessage(room: string) {
     return this.socket.fromEvent('message-room').map(data => data);
   }
 }

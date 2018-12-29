@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
-import { ExtendedSocket } from '../../../services/socket/socket';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { SocketService } from "../../../services/socket/socket.service";
 
 export interface ReceiptItem {
   id: number;
@@ -32,34 +32,31 @@ export class SelectItemsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
-    public socket: ExtendedSocket,
+    public socketService: SocketService,
     public loader: LoaderService,
     public alertCtrl: AlertService
   ) {
     this.getItems();
-    this.socket.connect();
-    this.socket.on('connect', () => {
-      this.socket.emit('JOIN_TICKET_ROOM', this.tab.tabNumber);
+
+    this.socketService.connect();
+    this.socketService.socket.on('connect', () => {
+      this.socketService.joinRoom(this.tab.tabNumber);
     });
 
-    this.socket.on(this.tab.tabNumber, (message) => {
-      console.log(message)
-      // this.receiptItems.forEach((_item, i) => {
-      //   if (_item.id === item.id) this.receiptItems[i] = item;
-      // });
+    this.socketService.socket.on('USER_JOINED', (user) => {
+      console.log('USER_JOINED', user)
     });
 
-    this.socket.on('disconnect', () => {
-      this.socket.removeAllListeners();
-    })
+    this.socketService.socket.on('USER_LEFT', (user) => {
+      console.log('USER_LEFT', user)
+    });
+
   }
 
-  ionViewDidLoad() {
-    console.log('tab: ', this.tab);
-  }
+  ionViewDidLoad() {}
 
   ionViewWillUnload() {
-    this.socket.disconnect()
+    this.socketService.disconnect()
   }
 
   getItems() {
@@ -130,7 +127,7 @@ export class SelectItemsPage {
       item.payers[index].price = d.value;
     });
     this.updatePayersDescription();
-    this.socket.emit('message-room', {
+    this.socketService.socket.emit('message-room', {
       room: this.tab.tabNumber,
       item,
     });
@@ -154,7 +151,7 @@ export class SelectItemsPage {
     );
     item.payers.splice(index, 1);
     this.updatePayersDescription();
-    this.socket.emit('message-room', {
+    this.socketService.socket.emit('message-room', {
       room: this.tab.tabNumber,
       item,
     });
