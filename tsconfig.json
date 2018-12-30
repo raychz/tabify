@@ -11,13 +11,15 @@
     "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5"
+    "target": "es5",
+    "strict": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
+    "node_modules/**/*",
     "src/**/*.spec.ts",
     "src/**/__tests__/*.ts"
   ],

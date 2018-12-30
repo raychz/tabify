@@ -22,7 +22,7 @@
     "@angular/http": "5.2.10",
     "@angular/platform-browser": "5.2.10",
     "@angular/platform-browser-dynamic": "5.2.10",
-    "@ionic-native/core": "4.7.0",
+    "@ionic-native/core": "^4.18.0",
     "@ionic-native/facebook": "4.9.0",
     "@ionic-native/keychain": "4.9.0",
     "@ionic-native/splash-screen": "4.7.0",
@@ -49,7 +49,7 @@
     "ionicons": "4.2.4",
     "ng-socket-io": "^0.2.4",
     "promise-polyfill": "8.0.0",
-    "rxjs": "5.5.11",
+    "rxjs": "5.5.12",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
   },
@@ -57,7 +57,7 @@
     "@ionic/app-scripts": "3.1.9",
     "firebase-tools": "^6.1.0",
     "prettier": "1.13.7",
-    "typescript": "~2.6.2"
+    "typescript": "^3.2.2"
   },
   "description": "An Ionic project",
   "cordova": {
