@@ -9,7 +9,7 @@ import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
   templateUrl: 'unauthenticated.html',
 })
 export class UnauthenticatedPage {
-  @ViewChild(Slides) slides: Slides;
+  @ViewChild(Slides) slides!: Slides;
   activeSlideIndex = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {

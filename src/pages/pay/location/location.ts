@@ -6,20 +6,21 @@ import {
   ViewController,
 } from 'ionic-angular';
 
-export interface Location {
+export interface ILocation {
   name: string;
   city: string;
   streetAddress: string;
   distance: number;
   photoUrl: string;
 }
+
 @IonicPage()
 @Component({
   selector: 'page-location',
   templateUrl: 'location.html',
 })
 export class LocationPage {
-  locations: Location[];
+  locations: ILocation[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -42,7 +43,7 @@ export class LocationPage {
     );
   }
 
-  filterItems(ev) {
+  filterItems(ev: any) {
     this.getLocations();
     const { value } = ev.target;
     if (value && value.trim() !== '') {
@@ -90,7 +91,7 @@ export class LocationPage {
     this.navCtrl.push('TabLookupPage');
   }
 
-  selectLocation(location) {
+  selectLocation(location: ILocation) {
     this.navCtrl.push('TabLookupPage', location);
   }
 }

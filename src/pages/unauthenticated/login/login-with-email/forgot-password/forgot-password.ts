@@ -11,7 +11,7 @@ import { AuthService } from '../../../../../services/auth/auth.service';
   templateUrl: 'forgot-password.html',
 })
 export class ForgotPasswordPage {
-  forgotPasswordError: string;
+  forgotPasswordError: string = '';
   forgotPasswordForm: FormGroup;
 
   constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public fb: FormBuilder, private auth: AuthService) {

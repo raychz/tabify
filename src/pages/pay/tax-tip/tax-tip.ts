@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: 'tax-tip.html',
 })
 export class TaxTipPage {
-  @ViewChild(Navbar) navBar: Navbar;
+  @ViewChild(Navbar) navBar!: Navbar;
 
   tip = 18;
   tab = this.navParams.data;
@@ -28,13 +28,13 @@ export class TaxTipPage {
     this.myTabItems =
       this.tab.receiptItems &&
       this.tab.receiptItems
-        .filter(item => item.payers.find(e => e.uid === this.auth.getUid()))
-        .map(item => ({
+        .filter((item: any) => item.payers.find((e: any) => e.uid === this.auth.getUid()))
+        .map((item: any) => ({
           name: item.name,
           payers: item.payers,
           rating: 0,
           feedback: '',
-          ...item.payers.find(e => e.uid === this.auth.getUid()),
+          ...item.payers.find((e: any) => e.uid === this.auth.getUid()),
         }));
   }
 
@@ -72,7 +72,7 @@ export class TaxTipPage {
     };
   }
 
-  adjustTip(shouldIncreaseTip) {
+  adjustTip(shouldIncreaseTip: boolean) {
     if (this.tip > 0) {
       this.tip = shouldIncreaseTip ? this.tip + 1 : this.tip - 1;
     } else if (shouldIncreaseTip) {

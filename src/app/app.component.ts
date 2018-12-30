@@ -4,15 +4,20 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
 
+interface IPage {
+  title: string,
+  component: string,
+  icon: string,
+}
 @Component({
   templateUrl: 'app.html',
 })
 export class Tabify {
-  @ViewChild(Nav) nav: Nav;
+  @ViewChild(Nav) nav!: Nav;
 
   rootPage: any;
 
-  pages: Array<{ title: string; component: any; icon: string }>;
+  pages: Array<IPage>;
 
   constructor(
     public platform: Platform,
@@ -33,8 +38,6 @@ export class Tabify {
         icon: 'card',
       },
     ];
-
-    // this.socket.connect();
   }
 
   initializeApp() {
@@ -68,7 +71,7 @@ export class Tabify {
     });
   }
 
-  openPage(page) {
+  openPage(page: IPage) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     if (this.nav.getActive().id === page.component) {
@@ -78,7 +81,7 @@ export class Tabify {
     }
   }
 
-  checkActivePage(page): boolean {
+  checkActivePage(page: IPage): boolean {
     const active = this.nav.getActive();
     return active && active.id === page.component;
   }

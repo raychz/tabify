@@ -7,7 +7,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'pay.html',
 })
 export class PayPage {
-  @ViewChild('pay') nav: NavController;
+  @ViewChild('pay') nav!: NavController;
 
   constructor(public navParams: NavParams) {}
 

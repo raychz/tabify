@@ -11,7 +11,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
   templateUrl: 'sign-up-with-email.html',
 })
 export class SignUpWithEmailPage {
-  signUpError: string;
+  signUpError: string = '';
   form: FormGroup;
 
   constructor(fb: FormBuilder, private navCtrl: NavController, private auth: AuthService) {

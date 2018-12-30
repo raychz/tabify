@@ -19,7 +19,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
 })
 export class LoginWithEmailPage {
   loginForm: FormGroup;
-  loginError: string;
+  loginError: string = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fb: FormBuilder, private auth: AuthService) {
     this.loginForm = fb.group({

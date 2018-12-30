@@ -4,9 +4,21 @@ import * as firebase from 'firebase/app';
 import { Platform } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
+interface ISignUpCredentials {
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+}
+
+interface ISignInCredentials {
+  email: string,
+  password: string,
+}
+
 @Injectable()
 export class AuthService {
-  private user: firebase.User;
+  private user: firebase.User | null = null;
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -20,29 +32,25 @@ export class AuthService {
     return this.user !== null;
   }
 
-  sendPasswordResetEmail(email) {
+  sendPasswordResetEmail(email: string) {
     return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
-  signInWithEmail(credentials) {
-    console.log('Sign in with email');
+  signInWithEmail(credentials: ISignInCredentials) {
     return this.afAuth.auth.signInWithEmailAndPassword(
       credentials.email,
       credentials.password
     );
   }
 
-  signInWithFacebook() {
+  async signInWithFacebook() {
     if (this.platform.is('cordova')) {
-      return this.fb
-        .login(['email', 'public_profile'])
-        .then((res: FacebookLoginResponse) => {
-          const { accessToken } = res.authResponse;
-          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
-            accessToken
-          );
-          return firebase.auth().signInWithCredential(facebookCredential);
-        });
+        const res: FacebookLoginResponse = await this.fb.login(['email', 'public_profile']);
+        const { accessToken } = res.authResponse;
+        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
+          accessToken
+        );
+        return firebase.auth().signInWithCredential(facebookCredential);
     } else {
       return this.afAuth.auth.signInWithPopup(
         new firebase.auth.FacebookAuthProvider()
@@ -50,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async signUp(credentials) {
+  async signUp(credentials: ISignUpCredentials) {
     const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
     const displayName =  `${credentials.firstName} ${credentials.lastName}`;
     return user.updateProfile({ displayName })
@@ -69,7 +77,7 @@ export class AuthService {
   }
 
   getUid() {
-    return this.user.uid;
+    return this.user && this.user.uid;
   }
 
   signOut(): Promise<void> {

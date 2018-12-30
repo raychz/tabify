@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class TabLookupPage {
   location = this.navParams.data;
   tabForm: FormGroup;
-  displayName: string;
+  displayName: string | null;
 
   constructor(
     public navCtrl: NavController,

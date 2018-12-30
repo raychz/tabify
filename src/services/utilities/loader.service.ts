@@ -6,7 +6,7 @@ export class LoaderService {
   static defaultContent = 'Loading...';
   static defaultSpinner = 'dots';
 
-  loader: Loading;
+  loader?: Loading;
 
   constructor(public loadingCtrl: LoadingController) {}
 
@@ -26,11 +26,11 @@ export class LoaderService {
 
   dismiss() {
     if (this.loader) {
-      return this.loader && this.loader.dismiss().catch(()=>{});
+      return this.loader.dismiss().catch(()=>{});
     }
   }
 
-  setContent(content) {
+  setContent(content: string) {
     return this.loader && this.loader.setContent(content);
   }
 }

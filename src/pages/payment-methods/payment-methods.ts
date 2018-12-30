@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {PaymentDetailsPageMode} from "./payment-details/payment-details";
 
 @IonicPage()
 @Component({
@@ -7,7 +8,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'payment-methods.html',
 })
 export class PaymentMethodsPage {
-  mode;
+  mode: PaymentDetailsPageMode;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.mode = navParams.get('mode');

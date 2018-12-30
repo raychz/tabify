@@ -29,7 +29,7 @@ export class ListPage {
     }
   }
 
-  itemTapped(event, item) {
+  itemTapped(event: any, item: any) {
     // That's right, we're pushing to ourselves!
     this.navCtrl.push('ListPage', {
       item: item

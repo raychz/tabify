@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { Location } from '../pay/location/location';
+import { ILocation } from '../pay/location/location';
 import { user, global, community } from './example-stories';
 
 export interface Story {
-  location: Location;
+  location: ILocation;
   members: string[];
-  timestamp;
+  timestamp: number | string;
   likes: number;
   comments: number;
 }
@@ -24,7 +24,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController) {}
 
-  segmentChanged(event) {
+  segmentChanged(event: any ) {
     console.log(event);
   }
 
@@ -36,7 +36,7 @@ export class HomePage {
     );
   }
 
-  refresh(refresher) {
+  refresh(refresher: any) {
     setTimeout(() => {
       refresher.complete();
     }, 2000);

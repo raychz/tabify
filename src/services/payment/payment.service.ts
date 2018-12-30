@@ -12,7 +12,7 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  createGatewayPurchase(token, amount) {
+  createGatewayPurchase(token: string, amount: number) {
     const url = `${config.serverUrl}${PaymentService.API_ENDPOINTS.createGatewayPurchase}`;
 
     return this.http

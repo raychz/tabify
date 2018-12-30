@@ -29,7 +29,7 @@ Pro.init('66369498', {
 
 @Injectable()
 export class MyErrorHandler implements ErrorHandler {
-  ionicErrorHandler: IonicErrorHandler;
+  ionicErrorHandler!: IonicErrorHandler;
 
   constructor(injector: Injector) {
     try {

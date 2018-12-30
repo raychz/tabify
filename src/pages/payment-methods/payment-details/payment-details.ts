@@ -9,7 +9,26 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentService } from '../../../services/payment/payment.service';
 
-declare var Spreedly: any;
+declare const Spreedly: any;
+
+export enum PaymentDetailsPageMode {
+  PAY_TAB = 'PAY_TAB',
+  SAVE_CARD = 'SAVE_CARD',
+}
+
+interface INewCard {
+  month: number,
+  year: number,
+  full_name: string,
+}
+
+interface ISpreedlyValidationResponse {
+  cardType: string,
+  validNumber: boolean,
+  validCvv: boolean,
+  numberLength: number,
+  cvvLength: number
+}
 
 @IonicPage()
 @Component({
@@ -17,12 +36,12 @@ declare var Spreedly: any;
   templateUrl: 'payment-details.html',
 })
 export class PaymentDetailsPage {
-  newCard = { month: '', year: '', full_name: '' };
+  newCard: INewCard = { month: 1, year: 1973, full_name: '' };
   spreedlyReady = false;
-  mode;
-  title;
-  saveButtonText;
-  spreedlyTimeout;
+  mode: PaymentDetailsPageMode;
+  title: string;
+  saveButtonText: string;
+  spreedlyTimeout?: number = undefined;
   paymentMethodError = '';
 
   constructor(
@@ -37,7 +56,7 @@ export class PaymentDetailsPage {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
     console.log('PAY MODE', this.mode);
-    this.saveButtonText = this.mode === 'PAY_TAB' ? 'Save and Pay' : 'Save';
+    this.saveButtonText = this.mode === PaymentDetailsPageMode.PAY_TAB ? 'Save and Pay' : 'Save';
   }
 
   ionViewDidLoad() {
@@ -50,7 +69,7 @@ export class PaymentDetailsPage {
         });
         alert.present();
       });
-    }
+    };
     this.loader.present({ dismissOnPageChange: false }).then(() => {
       this.spreedlyTimeout = setTimeout(showError, 15000);
       try {
@@ -65,7 +84,7 @@ export class PaymentDetailsPage {
   ionViewDidLeave() {
     this.loader.dismiss();
     Spreedly.removeHandlers();
-    clearTimeout(this.spreedlyTimeout);
+    this.clearSpreedlyTimer();
   }
 
   initializeSpreedly() {
@@ -74,69 +93,67 @@ export class PaymentDetailsPage {
       cvvEl: 'spreedly-cvv',
     });
 
-    Spreedly.on('ready', () => {
+    Spreedly.on('ready', async () => {
       clearTimeout(this.spreedlyTimeout);
-      this.loader.dismiss().then(() => {
-        this.spreedlyReady = true;
-        Spreedly.setParam('allow_blank_name', true);
-        Spreedly.setFieldType('number', 'tel');
-        Spreedly.setFieldType('cvv', 'tel');
-        Spreedly.setStyle(
-          'number',
-          'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
-        );
-        Spreedly.setStyle(
-          'cvv',
-          'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
-        );
-        console.log('SPREEDLY READY');
-        this.changeDetectorRef.detectChanges();
-      });
+
+      await this.loader.dismiss();
+
+      this.spreedlyReady = true;
+      Spreedly.setParam('allow_blank_name', true);
+      Spreedly.setFieldType('number', 'tel');
+      Spreedly.setFieldType('cvv', 'tel');
+      Spreedly.setStyle(
+        'number',
+        'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
+      );
+      Spreedly.setStyle(
+        'cvv',
+        'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
+      );
+      console.log('SPREEDLY READY');
+      this.changeDetectorRef.detectChanges();
     });
 
-    Spreedly.on('errors', errors => {
-      this.loader.dismiss().then(() => {
-        this.paymentMethodError = '';
-        errors.forEach(error => {
-          console.log(error);
-          this.paymentMethodError += error.message + '. ';
-        });
-        this.changeDetectorRef.detectChanges();
+    Spreedly.on('errors', async (errors: Error[]) => {
+      await this.loader.dismiss();
+      this.paymentMethodError = '';
+      errors.forEach(error => {
+        console.log(error);
+        this.paymentMethodError += error.message + '. ';
       });
+      this.changeDetectorRef.detectChanges();
     });
 
-    Spreedly.on('paymentMethod', (token, details) => {
-      this.loader.dismiss().then(() => {
-        this.paymentService.createGatewayPurchase(token, 499).then(
-          response => {
-            console.log('response', response);
-          },
-          error => {
-            console.log('error', error);
-          }
-        );
-        console.log('TOKEN HERE', token, details);
-      });
-    });
-
-    Spreedly.on('validation', ({ cardType, validNumber, validCvv }) => {
-      this.loader.dismiss().then(() => {
-        console.log(cardType, validNumber, validCvv);
-        if (
-          cardType &&
-          validNumber &&
-          validCvv &&
-          this.newCard.month &&
-          this.newCard.year
-        ) {
-          this.paymentMethodError = '';
-          this.tokenizePaymentMethod();
-        } else {
-          this.paymentMethodError =
-            'Please enter a valid credit card and CVV number.';
+    Spreedly.on('paymentMethod', async (token: string, details: string) => {
+      await this.loader.dismiss()
+      this.paymentService.createGatewayPurchase(token, 499).then(
+        response => {
+          console.log('response', response);
+        },
+        error => {
+          console.log('error', error);
         }
-        this.changeDetectorRef.detectChanges();
-      });
+      );
+      console.log('TOKEN HERE', token, details);
+    });
+
+    Spreedly.on('validation', async ({ cardType, validNumber, validCvv }: ISpreedlyValidationResponse) => {
+      await this.loader.dismiss();
+      console.log(cardType, validNumber, validCvv);
+      if (
+        cardType &&
+        validNumber &&
+        validCvv &&
+        this.newCard.month &&
+        this.newCard.year
+      ) {
+        this.paymentMethodError = '';
+        this.tokenizePaymentMethod();
+      } else {
+        this.paymentMethodError =
+          'Please enter a valid credit card and CVV number.';
+      }
+      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -160,5 +177,11 @@ export class PaymentDetailsPage {
       showCloseButton: true,
     });
     toast.present();
+  }
+
+  private clearSpreedlyTimer() {
+    if (this.spreedlyTimeout) {
+      clearTimeout(this.spreedlyTimeout)
+    }
   }
 }
