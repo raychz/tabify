@@ -11,7 +11,7 @@ export interface ReceiptItem {
   name: string;
   price: number;
   payers: {
-    uid: string;
+    uid?: string | null;
     firstName: string;
     price: number;
   }[];
@@ -25,7 +25,7 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  receiptItems: ReceiptItem[];
+  receiptItems: ReceiptItem[] = [];
   tab = this.navParams.data;
 
   constructor(
@@ -43,14 +43,17 @@ export class SelectItemsPage {
       this.socketService.joinRoom(this.tab.tabNumber);
     });
 
-    this.socketService.socket.on('USER_JOINED', (user) => {
-      console.log('USER_JOINED', user)
-    });
+    this.socketService.getMessage('USER_JOINED').subscribe(
+      (user: any) => {
+        console.log('USER_JOINED', user)
+      }
+    );
 
-    this.socketService.socket.on('USER_LEFT', (user) => {
-      console.log('USER_LEFT', user)
-    });
-
+    this.socketService.getMessage('USER_LEFT').subscribe(
+      (user: any) => {
+        console.log('USER_LEFT', user)
+      }
+    );
   }
 
   ionViewDidLoad() {}
@@ -144,12 +147,7 @@ export class SelectItemsPage {
   }
 
   removeItemFromMyTab(item: ReceiptItem) {
-    const index = item.payers.indexOf(
-      item.payers.find(e => {
-        return e.uid === this.auth.getUid();
-      })
-    );
-    item.payers.splice(index, 1);
+    item.payers = item.payers.filter(i => i.uid === this.auth.getUid())
     this.updatePayersDescription();
     this.socketService.socket.emit('message-room', {
       room: this.tab.tabNumber,
@@ -191,7 +189,7 @@ export class SelectItemsPage {
     return sum.format(false);
   }
 
-  filterItems(ev) {
+  filterItems(ev: any) {
     const { value } = ev.target;
     if (value && value.trim() !== '') {
       this.receiptItems.forEach(item => {
@@ -269,6 +267,6 @@ export class SelectItemsPage {
   }
 
   allItemsAreHidden() {
-    return this.receiptItems.every(item => item.isHidden);
+    return this.receiptItems.every(item => !!item.isHidden );
   }
 }

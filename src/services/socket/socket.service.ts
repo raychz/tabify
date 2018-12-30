@@ -16,14 +16,13 @@ export class SocketService {
 
   joinRoom(room: string) {
     this.socket.emit('JOIN_TICKET_ROOM', room);
-
   }
 
   sendMessage(msg: any) {
     this.socket.emit('message-room', msg);
   }
 
-  getMessage(room: string) {
-    return this.socket.fromEvent('message-room').map(data => data);
+  getMessage(event: string) {
+    return this.socket.fromEvent(event).map(data => data);
   }
 }
