@@ -41,7 +41,7 @@ export class Tabify {
   }
 
   initializeApp() {
-    this.platform.ready().then(readySource => {
+    this.platform.ready().then((readySource: string) => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       console.log('Platform ready from', readySource);

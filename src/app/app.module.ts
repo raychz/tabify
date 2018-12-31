@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -21,6 +21,7 @@ import { AlertService } from '../services/utilities/alert.service';
 import { SocketService } from '../services/socket/socket.service';
 import { SocketIoModule } from 'ng-socket-io';
 import { ExtendedSocket } from '../services/socket/socket';
+import { TokenInterceptor } from '../interceptors/token.interceptor';
 
 
 Pro.init('66369498', {
@@ -70,6 +71,11 @@ export class MyErrorHandler implements ErrorHandler {
     { provide: ErrorHandler, useClass: MyErrorHandler },
     AngularFireAuth,
     AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+   },
     Facebook,
     LoaderService,
     AlertService,
