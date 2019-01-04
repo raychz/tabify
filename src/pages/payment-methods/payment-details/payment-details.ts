@@ -8,6 +8,7 @@ import {
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentService } from '../../../services/payment/payment.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 declare var Spreedly: any;
 
@@ -32,7 +33,8 @@ export class PaymentDetailsPage {
     public loader: LoaderService,
     public alertCtrl: AlertService,
     private changeDetectorRef: ChangeDetectorRef,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    public auth: AuthService
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
@@ -54,6 +56,7 @@ export class PaymentDetailsPage {
     this.loader.present({ dismissOnPageChange: false }).then(() => {
       this.spreedlyTimeout = setTimeout(showError, 15000);
       try {
+        this.newCard.full_name = this.auth.getDisplayName();
         this.initializeSpreedly();
       } catch (error) {
         showError();
