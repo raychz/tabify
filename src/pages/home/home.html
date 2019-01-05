@@ -43,7 +43,7 @@
     <ion-card *ngIf="!!story">
       <ion-item>
         <ion-avatar item-start>
-          <img src="{{story.location.photoUrl}}" />
+          <img src="{{ story.location.photoUrl }}" />
         </ion-avatar>
         <h2>{{ story.location.name }}</h2>
         <h3>{{ story.location.city }}</h3>
@@ -78,14 +78,17 @@
       </ion-row>
     </ion-card>
   </ng-container>
+  <div class="blank-space"></div>
 </ion-content>
 
-<ion-fab center bottom class="pay-fab">
-  <button ion-fab color="tabify-alt" (click)="payNewTab()">
-    <ion-icon name="logo-usd"></ion-icon>
-  </button>
-</ion-fab>
-
-<ion-footer text-center border-top transparent>
-  <h3 (click)="payNewTab()" class="pay-tab-text">Pay Tab</h3>
-</ion-footer>
+<button
+  ion-button
+  block
+  color="tabify"
+  class="pay-tab"
+  icon-start
+  (click)="payNewTab()"
+>
+  <ion-icon name="create"></ion-icon>
+  Pay Tab
+</button>
