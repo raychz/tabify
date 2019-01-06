@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   public getDisplayName() {
-    return this.user && this.user.displayName;
+    return this.user && this.user.displayName || '';
   }
 
   public getUid() {
