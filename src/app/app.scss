@@ -14,20 +14,18 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 ion-content.cards-bg {
-  // background-image: url("/assets/imgs/restaurants/restaurant.jpg");
-  // background-image: url("https://previews.123rf.com/images/weedezign/weedezign1602/weedezign160200178/52876693-empty-wood-table-with-blur-open-cooking-restaurant-background-mock-up-template-for-montage-of-your-p.jpg");
-  // background-image: url("https://cdn.hipwallpaper.com/i/67/99/VJlgdD.jpg");
-  // background-image: url("../assets/imgs/login/img2.png");
-  // background-size: cover;
-  // background-color: transparent;
-  // background-position: left center;
-  // background-repeat: no-repeat;
-  background-color: #f4f4f7;
+  @include linear-gradient(bottom left, $friday);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;  
 }
 
 ion-header,
-ion-card,
 ion-footer {
+  opacity: 0.85;
+}
+
+ion-card {
   opacity: 1;
 }
 
@@ -43,7 +41,10 @@ ion-footer {
     z-index: 1;
     width: 100%;
     height: 100%;
-    background-color: map-get($colors, white);
+    @include linear-gradient(bottom left, $clouds);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;  
   }
   &-display-name {
     margin-top: 2px;
@@ -68,6 +69,7 @@ ion-footer {
     }
     ion-list {
       ion-item.tabify-sidemenu-list-item {
+        background: none;
         color: gray;
         &.active {
           border-left: 4px solid map-get($colors, primary);
