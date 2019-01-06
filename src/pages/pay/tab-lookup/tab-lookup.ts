@@ -12,7 +12,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class TabLookupPage {
   location = this.navParams.data;
   tabForm: FormGroup;
-  displayName: string;
 
   constructor(
     public navCtrl: NavController,
@@ -23,9 +22,7 @@ export class TabLookupPage {
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
-      displayName: ['', Validators.compose([Validators.required])],
     });
-    this.displayName = auth.getDisplayName();
   }
 
   ionViewDidLoad() {
@@ -33,14 +30,13 @@ export class TabLookupPage {
   }
 
   findTab() {
-    const { tabNumber, displayName } = this.tabForm.value;
-    console.log(tabNumber, displayName);
+    const { tabNumber } = this.tabForm.value;
     this.loader.present();
     setTimeout(() => {
       this.loader.dismiss();
       this.navCtrl.push('SelectItemsPage', {
         tabNumber,
-        displayName,
+        displayName: this.auth.getDisplayName(),
         location: this.location
       });
     }, 300);

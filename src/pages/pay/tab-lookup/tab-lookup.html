@@ -29,13 +29,6 @@
                 <div ngxErrors="tabNumber" #tabErrors="ngxErrors">
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a valid tab number.</div>
                 </div>
-                <ion-item [ngClass]="{ invalid: nameErrors.hasError('*', ['touched', 'dirty']) }">
-                  <ion-label floating>Display Name</ion-label>
-                  <ion-input type="text" formControlName="displayName" [(ngModel)]="displayName"></ion-input>
-                </ion-item>
-                <div ngxErrors="displayName" #nameErrors="ngxErrors">
-                  <div [ngxError]="['required']" [when]="['dirty']">Enter a name for other users on the tab to identify you.</div>
-                </div>
               </ion-list>
             </form>
           </ion-card-content>
