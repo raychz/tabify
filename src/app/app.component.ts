@@ -5,9 +5,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
 
 interface IPage {
-  title: string,
-  component: string,
-  icon: string,
+  title: string;
+  component: string;
+  icon: string;
 }
 @Component({
   templateUrl: 'app.html',
@@ -24,9 +24,8 @@ export class Tabify {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public auth: AuthService,
-    public menu: MenuController
-  ) // public socket: ExtendedSocket
-  {
+    public menu: MenuController // public socket: ExtendedSocket
+  ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation

@@ -23,7 +23,6 @@ import { SocketIoModule } from 'ng-socket-io';
 import { ExtendedSocket } from '../services/socket/socket';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 
-
 Pro.init('66369498', {
   appVersion: '0.0.1',
 });
@@ -74,13 +73,13 @@ export class MyErrorHandler implements ErrorHandler {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
-   },
+      multi: true,
+    },
     Facebook,
     LoaderService,
     AlertService,
     SocketService,
-    ExtendedSocket
+    ExtendedSocket,
   ],
 })
 export class AppModule {}
