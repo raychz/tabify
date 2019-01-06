@@ -14,20 +14,18 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 ion-content.cards-bg {
-  // background-image: url("/assets/imgs/restaurants/restaurant.jpg");
-  // background-image: url("https://previews.123rf.com/images/weedezign/weedezign1602/weedezign160200178/52876693-empty-wood-table-with-blur-open-cooking-restaurant-background-mock-up-template-for-montage-of-your-p.jpg");
-  // background-image: url("https://cdn.hipwallpaper.com/i/67/99/VJlgdD.jpg");
-  // background-image: url("../assets/imgs/login/img2.png");
-  // background-size: cover;
-  // background-color: transparent;
-  // background-position: left center;
-  // background-repeat: no-repeat;
-  background-color: #f4f4f7;
+  @include linear-gradient(bottom left, $friday);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;  
 }
 
 ion-header,
-ion-card,
 ion-footer {
+  opacity: 0.85;
+}
+
+ion-card {
   opacity: 1;
 }
 
@@ -36,8 +34,6 @@ ion-footer {
   color: gray;
 }
 
-
-
 .tabify-sidemenu {
   color: map-get($colors, dark);;
   &-background {
@@ -45,7 +41,10 @@ ion-footer {
     z-index: 1;
     width: 100%;
     height: 100%;
-    background-color: map-get($colors, white);
+    @include linear-gradient(bottom left, $clouds);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;  
   }
   &-display-name {
     margin-top: 2px;
@@ -57,8 +56,12 @@ ion-footer {
   &-profile-pic {
     height: 75px;
     width: 75px;
+    font-size: 75px;
+    line-height: 75px;
     border-radius: 50%;
     border: 2px solid map-get($colors, primary);
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
+    color: map-get($colors, primary);;
   }
   ion-grid {
     ion-col {
@@ -66,6 +69,7 @@ ion-footer {
     }
     ion-list {
       ion-item.tabify-sidemenu-list-item {
+        background: none;
         color: gray;
         &.active {
           border-left: 4px solid map-get($colors, primary);
@@ -81,5 +85,7 @@ ion-footer {
     position: absolute;
     z-index: 2;
     height: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 }

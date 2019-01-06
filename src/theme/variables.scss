@@ -8,6 +8,11 @@ $font-path: '../assets/fonts';
 // http://ionicframework.com/docs/theming/rtl-support/
 $app-direction: ltr;
 @import 'ionic.globals';
+
+// uigradients
+// For more info, see: https://github.com/subinsebastian/uigradients-scss
+@import './gradient-mixins';
+
 // Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
@@ -32,10 +37,10 @@ $base-colors: (
 $extended-colors: (
   tabify: (
     base: map-get($base-colors, primary),
-    contrast: map-get($base-colors, light),
+    contrast: white,
   ),
   tabify-alt: (
-    base: map-get($base-colors, light),
+    base: white,
     contrast: map-get($base-colors, primary),
   ),
 );
