@@ -4,7 +4,7 @@
     <ion-grid>
       <ion-row align-items-center>
         <ion-col align-self-center text-center>
-          <ion-icon *ngIf="!auth.getPhotoUrl()" class="tabify-sidemenu-profile-pic" name="person"></ion-icon>
+          <ion-icon *ngIf="!auth.getPhotoUrl()" class="tabify-sidemenu-profile-pic" name="ios-person"></ion-icon>
           <img *ngIf="auth.getPhotoUrl()" class="tabify-sidemenu-profile-pic" [src]="auth.getPhotoUrl()"/>
           <h5 class="tabify-sidemenu-display-name">{{ auth.getDisplayName() }}</h5>
           <p class="muted tabify-sidemenu-email">{{ auth.getEmail() }}</p>
