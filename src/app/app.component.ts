@@ -46,6 +46,7 @@ export class Tabify {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       console.log('Platform ready from', readySource);
+      this.checkAuthState();
       this.statusBar.overlaysWebView(false);
       this.statusBar.hide();
       this.platform.registerBackButtonAction(() => {
