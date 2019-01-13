@@ -1,5 +1,5 @@
-<ion-header>
-  <ion-navbar color="tabify">
+<ion-header no-border>
+  <ion-navbar color="tabify" class="transparent-toolbar">
     <ion-buttons left>
       <button ion-button (click)="cancel()">
         Cancel
@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title>Find Location</ion-title>
   </ion-navbar>
-  <ion-toolbar no-border-top color="tabify">
+  <ion-toolbar no-border-top color="tabify" class="transparent-toolbar">
     <ion-searchbar placeholder="Search for restaurant by name" (ionInput)="filterItems($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
@@ -25,9 +25,9 @@
     </ion-item>
   </ion-card>
   <p class="muted" *ngIf="!locations.length">No restaurants found.</p>
-  <ion-card>
+  <ion-card *ngIf="locations.length">
     <ion-item>
-      <p class="muted" *ngIf="locations.length">More locations coming soon!</p>
+      <p class="muted">More locations coming soon!</p>
     </ion-item>
   </ion-card>
 </ion-content>
