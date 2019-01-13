@@ -3,6 +3,7 @@ import { Nav, Platform, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
+import { AlertService } from '../services/utilities/alert.service';
 
 interface IPage {
   title: string;
@@ -24,7 +25,8 @@ export class Tabify {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public auth: AuthService,
-    public menu: MenuController // public socket: ExtendedSocket
+    public menu: MenuController,
+    public alertCtrl: AlertService
   ) {
     this.initializeApp();
 
@@ -44,20 +46,8 @@ export class Tabify {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       console.log('Platform ready from', readySource);
-      this.statusBar.backgroundColorByHexString('#ffffff');
-      this.splashScreen.hide();
-      this.auth.afAuth.authState.subscribe(
-        user => {
-          console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
-          this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
-          this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
-        },
-        error => {
-          console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
-          this.rootPage = 'UnauthenticatedPage';
-          this.menu.swipeEnable(false);
-        }
-      );
+      this.statusBar.overlaysWebView(false);
+      this.statusBar.hide();
       this.platform.registerBackButtonAction(() => {
         if (this.menu.isOpen()) {
           this.menu.close();
@@ -83,6 +73,28 @@ export class Tabify {
   checkActivePage(page: IPage): boolean {
     const active = this.nav.getActive();
     return active && active.id === page.component;
+  }
+
+  checkAuthState() {
+    this.auth.afAuth.authState.subscribe(
+      user => {
+        console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
+        this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
+        this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
+        this.splashScreen.hide();
+      },
+      error => {
+        console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
+        this.rootPage = 'UnauthenticatedPage';
+        this.menu.swipeEnable(false);
+        this.splashScreen.hide();
+        const alert = this.alertCtrl.create({
+          title: 'Network Error',
+          message: `Please check your connection and try again.`,
+        });
+        alert.present();
+      }
+    );
   }
 
   logout() {
