@@ -29,13 +29,23 @@ ion-card {
   opacity: 1;
 }
 
+.transparent-toolbar {
+  .toolbar-background {
+    background-color: transparent
+  }
+}
+
+.has-refresher  .scroll-content {
+  border-top: 1px solid map-get($colors, light) !important;
+}
+
 .muted {
   text-align: center;
-  color: gray;
+  color: map-get($colors, light);
 }
 
 .tabify-sidemenu {
-  color: map-get($colors, dark);;
+  color: map-get($colors, dark);
   &-background {
     position: absolute;
     z-index: 1;
