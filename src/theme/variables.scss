@@ -32,7 +32,7 @@ $base-colors: (
   danger: #f53d3d,
   light: #f4f4f4,
   dark: #222,
-  white: #fff
+  white: #fff,
 );
 $extended-colors: (
   tabify: (
@@ -46,7 +46,8 @@ $extended-colors: (
 );
 $colors: (map-merge($base-colors, $extended-colors));
 
-$refresher-icon-color: map-get($colors, primary);
+$refresher-icon-color: map-get($colors, light);
+$refresher-text-color: map-get($colors, light);
 
 // App iOS Variables
 // --------------------------------------------------
