@@ -22,13 +22,8 @@ page-home {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 24px);
-    &.button-ios {
-      width: calc(100% - 24px);
-    }
-    &.button-md {
-      width: calc(100% - 20px);
-    }
+    width: 80%;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
     &-text {
       color: map-get($colors, light);
       font-weight: 400;
