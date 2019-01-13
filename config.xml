@@ -3,7 +3,7 @@
     <name>tabify</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content original-src="index.html" src="http://172.20.31.120:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -41,6 +41,7 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <allow-navigation href="https://core.spreedly.com*" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -108,6 +109,8 @@
     <allow-navigation href="http://192.168.1.31:8101" />
     <allow-navigation href="http://192.168.1.31:8100" />
     <allow-navigation href="http://172.20.31.120:8100" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+    <allow-navigation href="http://172.20.31.120:8101" />
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="6.4.0" />
     <engine name="ios" spec="4.5.5" />
