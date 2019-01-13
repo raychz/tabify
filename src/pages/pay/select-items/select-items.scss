@@ -53,10 +53,12 @@ page-select-items {
     }
   }
   .item-on-tab {
-    border-left: 8px solid map-get($colors, primary);
+    border-left: 8px solid #607d8b;
+    transition: border-left .2s linear;
   }
   .item-not-on-tab {
     border-left: 8px solid lightgray;
+    transition: border-left .2s linear;
   }
   .payers {
     &-description {
