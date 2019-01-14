@@ -26,6 +26,9 @@ page-unauthenticated {
         }
     }
     ion-content {
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size: cover;  
         h1, h4 {
             font-weight: 400;
         }
@@ -42,7 +45,7 @@ page-unauthenticated {
             background-position: center center;
             background-repeat: no-repeat;
             @include vendor-prefix('transition', background-image 0.2s linear);
-            @include vendor-prefix('filter', brightness(30%) grayscale(50%));
+            @include vendor-prefix('filter', brightness(50%) grayscale(10%));
             @include animation(move, 15s, infinite, linear, alternate-reverse);
             will-change: transform;
             &.image1 {
