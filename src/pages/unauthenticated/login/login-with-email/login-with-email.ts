@@ -46,5 +46,6 @@ export class LoginWithEmailPage {
 
   forgotPassword() {
     this.navCtrl.push('ForgotPasswordPage');
+    return false;
   }
 }

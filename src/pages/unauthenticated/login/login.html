@@ -1,13 +1,12 @@
-<ion-header>
-    <ion-navbar>
+<ion-header no-border>
+    <ion-navbar color="tabify" class="transparent-toolbar">
         <button ion-button menuToggle>
 			<ion-icon name="menu"></ion-icon>
 		</button>
-        <ion-title>Login</ion-title>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="cards-bg">
     <ion-grid>
         <ion-row>
             <ion-col text-center>
@@ -19,12 +18,12 @@
         </ion-row>
         <ion-row>
             <ion-col text-center>
-                <button ion-button color="tabify" (click)="loginWithEmail()" block outline>Or Login With Email</button>
+                <button ion-button color="tabify-alt" (click)="loginWithEmail()" block outline>Or Login With Email</button>
             </ion-col>
         </ion-row>
         <ion-row>
             <ion-col text-center>
-                <button ion-button color="tabify" (click)="signUp()" clear>New User?</button>
+                <button ion-button color="tabify-alt" (click)="signUp()" clear>New User?</button>
             </ion-col>
         </ion-row>
     </ion-grid>
