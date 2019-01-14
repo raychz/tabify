@@ -13,9 +13,10 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+ion-header,
+ion-card,
 ion-footer {
-  bottom: constant(safe-area-inset-bottom);
-  bottom: env(safe-area-inset-bottom);
+  opacity: 0.95;
 }
 
 ion-content {
@@ -33,13 +34,14 @@ ion-content {
   }
 }
 
-ion-header,
 ion-footer {
-  opacity: 0.85;
-}
-
-ion-card {
-  opacity: 1;
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+  ion-toolbar {
+    .toolbar-background {
+      // TODO: Figure out how to fill safe area inset with footer color
+    }
+  }
 }
 
 .transparent-toolbar {

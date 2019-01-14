@@ -1,8 +1,8 @@
 {
   "name": "tabify",
-  "app_id": "66369498",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "id": "66369498"
 }
