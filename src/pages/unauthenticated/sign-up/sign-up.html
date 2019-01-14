@@ -1,28 +1,37 @@
-<ion-header>
-    <ion-navbar>
-        <ion-title>Sign Up</ion-title>
-    </ion-navbar>
+<ion-header no-border>
+  <ion-navbar color="tabify" class="transparent-toolbar">
+  </ion-navbar>
 </ion-header>
 
-<ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col text-center>
-                <button ion-button color="tabify" (click)="signUpWithFacebook()" block>
-                    <ion-icon name="logo-facebook"></ion-icon>
-                    Sign Up With Facebook
-                </button>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col text-center>
-                <button ion-button color="tabify" (click)="signUpWithEmail()" block outline>Or Sign Up With Email</button>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col text-center>
-                <button ion-button color="tabify" (click)="login()" clear>Already a User?</button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+<ion-content class="cards-bg">
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button color="tabify" (click)="signUpWithFacebook()" block>
+          <ion-icon name="logo-facebook"></ion-icon>
+          Sign Up With Facebook
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center>
+        <button
+          ion-button
+          color="tabify-alt"
+          (click)="signUpWithEmail()"
+          block
+          outline
+        >
+          Or Sign Up With Email
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button color="tabify-alt" (click)="login()" clear>
+          Already a User?
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
