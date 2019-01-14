@@ -59,34 +59,31 @@ ion-footer {
   color: map-get($colors, light);
 }
 
-.tabify-sidemenu {
-  color: map-get($colors, dark);
-  &-background {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    @include linear-gradient(bottom left, $clouds);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-  }
-  &-display-name {
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
-  &-email {
-    margin-top: 2px;
-  }
-  &-profile-pic {
-    height: 75px;
-    width: 75px;
-    font-size: 75px;
-    line-height: 75px;
-    border-radius: 50%;
-    border: 2px solid map-get($colors, primary);
-    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
-    color: map-get($colors, primary);
+ion-content.tabify-sidemenu {
+  color: map-get($colors, light);
+  @include linear-gradient(bottom left, $royal);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  .tabify-sidemenu {
+    &-display-name {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    &-email {
+      color: lightgray;
+      margin-top: 2px;
+    }
+    &-profile-pic {
+      height: 75px;
+      width: 75px;
+      font-size: 75px;
+      line-height: 75px;
+      border-radius: 50%;
+      border: 2px solid map-get($colors, primary);
+      box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
+      color: map-get($colors, primary);
+    }
   }
   ion-grid {
     ion-col {
@@ -95,7 +92,7 @@ ion-footer {
     ion-list {
       ion-item.tabify-sidemenu-list-item {
         background: none;
-        color: gray;
+        color: lightgray;
         &.active {
           border-left: 4px solid map-get($colors, primary);
           padding-left: 12px;
