@@ -48,6 +48,7 @@ export class Tabify {
       console.log('Platform ready from', readySource);
       this.checkAuthState();
       this.statusBar.overlaysWebView(false);
+      this.statusBar.styleLightContent();
       this.statusBar.hide();
       this.platform.registerBackButtonAction(() => {
         if (this.menu.isOpen()) {
@@ -81,13 +82,11 @@ export class Tabify {
       user => {
         console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
         this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
-        this.menu.swipeEnable(!!user); // Disable menu swipe if unauthenticated
         this.splashScreen.hide();
       },
       error => {
         console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
         this.rootPage = 'UnauthenticatedPage';
-        this.menu.swipeEnable(false);
         this.splashScreen.hide();
         const alert = this.alertCtrl.create({
           title: 'Network Error',
