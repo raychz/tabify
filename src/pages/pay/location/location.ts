@@ -5,14 +5,7 @@ import {
   NavParams,
   ViewController,
 } from 'ionic-angular';
-
-export interface ILocation {
-  name: string;
-  city: string;
-  streetAddress: string;
-  distance: number;
-  photoUrl: string;
-}
+import { ILocation } from '../../../interfaces/location.interface';
 
 @IonicPage()
 @Component({

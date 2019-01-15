@@ -3,6 +3,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { SocketService } from '../../../services/socket/socket.service';
+import { TicketService } from '../../../services/ticket/ticket.service';
+import { AlertService } from '../../../services/utilities/alert.service';
+
 
 @IonicPage()
 @Component({
@@ -19,6 +23,9 @@ export class TabLookupPage {
     public fb: FormBuilder,
     public loader: LoaderService,
     public auth: AuthService,
+    public socketService: SocketService,
+    public ticketService: TicketService,
+    public alertCtrl: AlertService
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
@@ -29,16 +36,26 @@ export class TabLookupPage {
     console.log('ionViewDidLoad TabLookupPage');
   }
 
-  findTab() {
+  async findTab() {
     const { tabNumber } = this.tabForm.value;
+    
     this.loader.present();
-    setTimeout(() => {
+    const { error } = await this.ticketService.addSelf(tabNumber, this.location);
+    
+    if (error) {
       this.loader.dismiss();
-      this.navCtrl.push('SelectItemsPage', {
-        tabNumber,
-        displayName: this.auth.getDisplayName(),
-        location: this.location
+      const alert = this.alertCtrl.create({
+        title: 'Tab Not Found',
+        message: `Please check your ticket number or location and try again.`,
+        buttons: ['Ok']
       });
-    }, 300);
+      alert.present();
+      return;
+    }
+    
+    await this.socketService.connect()
+    this.loader.dismiss();
+    this.navCtrl.push('SelectItemsPage');
+
   }
 }

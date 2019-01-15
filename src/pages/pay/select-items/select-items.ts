@@ -37,8 +37,9 @@ export class SelectItemsPage {
     public alertCtrl: AlertService
   ) {
     this.getItems();
+  }
 
-    this.socketService.connect();
+  ionViewDidLoad() {
     this.socketService.socket.on('connect', () => {
       this.socketService.joinRoom(this.tab.tabNumber);
     });
@@ -55,8 +56,6 @@ export class SelectItemsPage {
       }
     );
   }
-
-  ionViewDidLoad() {}
 
   ionViewWillUnload() {
     this.socketService.disconnect()

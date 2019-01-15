@@ -20,8 +20,8 @@ import { LoaderService } from '../services/utilities/loader.service';
 import { AlertService } from '../services/utilities/alert.service';
 import { SocketService } from '../services/socket/socket.service';
 import { SocketIoModule } from 'ng-socket-io';
-import { ExtendedSocket } from '../services/socket/socket';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
+import { TicketService } from '../services/ticket/ticket.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -79,7 +79,7 @@ export class MyErrorHandler implements ErrorHandler {
     LoaderService,
     AlertService,
     SocketService,
-    ExtendedSocket,
+    TicketService,
   ],
 })
 export class AppModule {}
