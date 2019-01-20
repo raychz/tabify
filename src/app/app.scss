@@ -44,6 +44,12 @@ ion-footer {
   }
 }
 
+.semi-transparent-toolbar {
+  .toolbar-background {
+    opacity: 0.4;
+  }
+}
+
 .transparent-toolbar {
   .toolbar-background {
     background-color: transparent;
