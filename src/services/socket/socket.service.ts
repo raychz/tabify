@@ -39,5 +39,4 @@ export class SocketService {
   getMessage(event: string) {
     return this.socket.fromEvent(event).map(data => data);
   }
-
 }
