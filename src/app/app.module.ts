@@ -22,6 +22,7 @@ import { SocketService } from '../services/socket/socket.service';
 import { SocketIoModule } from 'ng-socket-io';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
+import { LocationService } from '../services/location/location.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -80,6 +81,7 @@ export class MyErrorHandler implements ErrorHandler {
     AlertService,
     SocketService,
     TicketService,
+    LocationService,
   ],
 })
 export class AppModule {}
