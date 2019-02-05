@@ -12,5 +12,4 @@ export interface ITicketItem {
   name: string;
   price: number;
   quantity: number;
-  payers: User[];
 }

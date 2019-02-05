@@ -37,10 +37,10 @@
       </ion-item>
       <ion-card-content>
         <p class="payers-description">{{ item.payersDescription }}</p>
-        <ng-container *ngIf="item.payers.length > 1">
+        <ng-container *ngIf="item.payers && item.payers.length > 1">
           <div class="payers-list">
             <p class="payers-list-item" *ngFor="let payer of item.payers">
-              {{ payer.firstName }}: ${{ payer.price | number: '1.2-2' }}
+              {{ payer.firstName }}: ${{ (payer.price / 100) | number: '1.2-2' }}
             </p>
           </div>
         </ng-container>

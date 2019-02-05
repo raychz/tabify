@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { SocketService } from '../../../services/socket/socket.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { ILocation } from '../../../interfaces/location.interface';
 
 
 @IonicPage()
@@ -14,7 +15,7 @@ import { AlertService } from '../../../services/utilities/alert.service';
   templateUrl: 'tab-lookup.html',
 })
 export class TabLookupPage {
-  location = this.navParams.data;
+  location: ILocation = this.navParams.data;
   tabForm: FormGroup;
 
   constructor(
@@ -40,7 +41,7 @@ export class TabLookupPage {
     const { tabNumber } = this.tabForm.value;
     
     this.loader.present();
-    const { error } = await this.ticketService.addSelf(tabNumber, this.location);
+    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id);
     
     if (error) {
       this.loader.dismiss();
@@ -55,7 +56,7 @@ export class TabLookupPage {
     
     await this.socketService.connect()
     this.loader.dismiss();
-    this.navCtrl.push('SelectItemsPage');
+    this.navCtrl.push('SelectItemsPage', ticket);
 
   }
 }

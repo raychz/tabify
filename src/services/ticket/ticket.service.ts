@@ -5,21 +5,25 @@ import { sleep } from "../../utilities/utils";
 import config from '../../config';
 @Injectable()
 export class TicketService {
-
-  // ticket: Ticket;
   constructor(private readonly http: HttpClient) {}
 
-  async addSelf(toTicket: string, location: string) {
-    const ticket = await this.http.post(`${config.serverUrl}/ticket`, {
-      ticket: toTicket,
-      location
-    }).toPromise();
-
-    console.log(ticket);
-    // Check if error, if error return error, if no error set instance ticket;
-    return {   
-      ticket: null,
-      error: null
-    }
+  async getTicket(tab_id: string, omnivoreLocationId: string) {
+    try {
+      const params = {
+        ticket_number: tab_id,
+        location: String(omnivoreLocationId),
+      }
+      const ticket = await this.http.get(`${config.serverUrl}/ticket`, { params }).toPromise();
+    
+      return {   
+        ticket: ticket,
+        error: null,
+      }
+    } catch (error) {
+      return {   
+        ticket: null,
+        error: error
+      }
+    }    
   }
 }
