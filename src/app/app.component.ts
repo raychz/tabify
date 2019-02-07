@@ -38,6 +38,16 @@ export class Tabify {
         component: 'PaymentMethodsPage',
         icon: 'card',
       },
+      {
+        title: 'Settings',
+        component: 'PaymentMethodsPage',
+        icon: 'cog',
+      },
+      {
+        title: 'Help',
+        component: 'PaymentMethodsPage',
+        icon: 'help-circle',
+      },
     ];
   }
 
