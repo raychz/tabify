@@ -8,6 +8,7 @@ import {
 import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
+import { AlertService } from '../../../services/utilities/alert.service';
 
 @IonicPage()
 @Component({
@@ -22,7 +23,8 @@ export class LocationPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public loader: LoaderService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    public alertCtrl: AlertService
   ) {
     this.getLocations();
   }
@@ -53,7 +55,15 @@ export class LocationPage {
 
   private async getLocations() {
     this.loader.present();
-    this.locations = await this.locationService.getLocations();
+    try {
+      this.locations = await this.locationService.getLocations();
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+    }
     this.loader.dismiss();
   }
 
