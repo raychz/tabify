@@ -54,7 +54,7 @@ export class TabLookupPage {
       return;
     }
     
-    await this.socketService.connect()
+    // await this.socketService.connect()
     this.loader.dismiss();
     this.navCtrl.push('SelectItemsPage', ticket);
 
