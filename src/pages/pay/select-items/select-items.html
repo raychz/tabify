@@ -12,10 +12,11 @@
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col">
         <ion-icon name="people"></ion-icon>
-        <b>Guests:</b> Raymond C., Ryan B., Roger M., Davi D., Rob F. 
+        <b>Guests:</b>
+        <span [innerHTML]="getUsers((firestoreTicket | async)?.users)"></span>
         <span class="invite-others">
-            <ion-icon name="send"></ion-icon>
-            Invite Others
+          <ion-icon name="send"></ion-icon>
+          Invite Others
         </span>
       </ion-col>
     </ion-row>
@@ -23,7 +24,7 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container *ngFor="let item of receiptItems">
+  <ng-container *ngFor="let item of (receiptItems | async)">
     <ion-card
       [class.item-not-on-tab]="!isItemOnMyTab(item)"
       [class.item-on-tab]="isItemOnMyTab(item)"
@@ -40,7 +41,7 @@
         <ng-container *ngIf="item.payers && item.payers.length > 1">
           <div class="payers-list">
             <p class="payers-list-item" *ngFor="let payer of item.payers">
-              {{ payer.firstName }}: ${{ (payer.price / 100) | number: '1.2-2' }}
+              {{ payer.firstName }}: ${{ payer.price / 100 | number: '1.2-2' }}
             </p>
           </div>
         </ng-container>
