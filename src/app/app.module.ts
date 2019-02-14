@@ -3,7 +3,8 @@ import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { Ionic2RatingModule } from 'ionic2-rating';
 
 import { Tabify } from './app.component';
@@ -11,8 +12,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Pro } from '@ionic/pro';
 
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuth } from '@angular/fire/auth';
 import config from '../config';
 import { AuthService } from '../services/auth/auth.service';
 import { Facebook } from '@ionic-native/facebook';
@@ -23,6 +24,7 @@ import { SocketIoModule } from 'ng-socket-io';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
+import { FirestoreService } from '../services/firestore/firestore.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -58,6 +60,7 @@ export class MyErrorHandler implements ErrorHandler {
     }),
     AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,
+    AngularFirestoreModule,
     SocketIoModule,
     Ionic2RatingModule,
     HttpClientModule,
@@ -82,6 +85,7 @@ export class MyErrorHandler implements ErrorHandler {
     SocketService,
     TicketService,
     LocationService,
+    FirestoreService
   ],
 })
 export class AppModule {}

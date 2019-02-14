@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../services/auth/auth.service';
-
+import 'rxjs/add/operator/mergeMap';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor(public auth: AuthService) {}
