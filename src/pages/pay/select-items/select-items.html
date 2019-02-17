@@ -24,7 +24,7 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container *ngFor="let item of (receiptItems | async)">
+  <ng-container *ngFor="let item of (firestoreTicketItems | async)">
     <ion-card
       [class.item-not-on-tab]="!isItemOnMyTab(item)"
       [class.item-on-tab]="isItemOnMyTab(item)"
@@ -49,7 +49,7 @@
       <ion-row>
         <ion-col align-self-center text-center>
           <button
-            *ngIf="!isItemOnMyTab(item)"
+            *ngIf="!isItemOnMyTab(item) && !item.loading"
             ion-button
             color="primary"
             clear
@@ -61,7 +61,7 @@
             Add to My Tab
           </button>
           <button
-            *ngIf="isItemOnMyTab(item)"
+            *ngIf="isItemOnMyTab(item) && !item.loading"
             ion-button
             color="primary"
             clear
@@ -71,6 +71,9 @@
           >
             <ion-icon name="remove-circle"></ion-icon>
             Remove From My Tab
+          </button>
+          <button *ngIf="item.loading" ion-button disabled clear block>
+            <ion-spinner name="dots"></ion-spinner>
           </button>
         </ion-col>
       </ion-row>

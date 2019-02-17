@@ -10,6 +10,9 @@ import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { FirestoreService } from '../../../services/firestore/firestore.service';
 import { tap } from 'rxjs/operators';
 import { user } from '../../home/example-stories';
+import { TicketService } from '../../../services/ticket/ticket.service';
+import { Observable } from 'rxjs';
+import { abbreviateName } from '../../../utilities/utils';
 
 export interface ReceiptItem {
   id: number;
@@ -30,10 +33,10 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  receiptItems: any;
   // receiptItems: ITicketItem[] = [];
   ticket: ITicket = this.navParams.data;
-  firestoreTicket?: any;
+  firestoreTicket!: any;
+  firestoreTicketItems!: any;
 
   constructor(
     public navCtrl: NavController,
@@ -42,85 +45,72 @@ export class SelectItemsPage {
     public socketService: SocketService,
     public loader: LoaderService,
     public alertCtrl: AlertService,
-    public afs: FirestoreService
+    public ticketService: TicketService
   ) {}
 
   ionViewDidLoad() {
-    this.getItems();
-    // this.socketService.socket.on('connect', () => {
-    //   this.socketService.joinRoom(String(this.ticket.id));
-    // });
-
-    // this.socketService.getMessage('USER_JOINED').subscribe(
-    //   (user: any) => {
-    //     console.log('USER_JOINED', user)
-    //   }
-    // );
-
-    // this.socketService.getMessage('USER_LEFT').subscribe(
-    //   (user: any) => {
-    //     console.log('USER_LEFT', user)
-    //   }
-    // );
-
-    // this.socketService.socket.once('disconnect', () => {
-    //   console.log('disconnecting')
-    //   this.navCtrl.pop();
-    // })
+    this.initializeTicket();
   }
 
   ionViewWillUnload() {
+    console.log('Unloading');
     // this.socketService.disconnect()
   }
 
   getUsers(users: any[]) {
     if (!users) return 'No users on this tab.';
 
-    const abbrevNames = users.map(user => {
-      const nameSplit: string[] = user.name.split(' ');
-      const firstName = nameSplit.shift();
-      const rest = nameSplit.map(v => `${v[0].toUpperCase()}.`).join('');
-      return `${firstName} ${rest}`;
-    });
+    const abbreviatedNames = users.map(user => abbreviateName(user.name));
 
     const userDisplayLimit = 3;
-    if (abbrevNames.length > userDisplayLimit) {
-      const overflowNames = abbrevNames.splice(userDisplayLimit);
-      const others = `+${overflowNames.length} other${overflowNames.length > 1 ? 's' : ''}`;
+    if (abbreviatedNames.length > userDisplayLimit) {
+      const overflowNames = abbreviatedNames.splice(userDisplayLimit);
+      const others = `+${overflowNames.length} other${
+        overflowNames.length > 1 ? 's' : ''
+      }`;
       const othersContainer = `<span class='plus-others'>${others}</span>`;
-      return `${abbrevNames.join(', ')} ${othersContainer}`
+      return `${abbreviatedNames.join(', ')} ${othersContainer}`;
     }
-    return abbrevNames.join(', ');
+    return abbreviatedNames.join(', ');
   }
 
-  getItems() {
-    this.firestoreTicket = this.afs
-      .doc$(`tickets/${this.ticket.id}/`)
-      .pipe(tap(val => console.log(`firestore ticket:`, val)));
-    this.receiptItems = this.afs
-      .collection$(`tickets/${this.ticket.id}/ticketItems`)
-      .pipe(tap(val => console.log(`AFTER MAP:`, val)));
+  initializeTicket() {
+    this.firestoreTicket = this.ticketService.getFirestoreTicket(
+      this.ticket.id
+    );
+    this.firestoreTicketItems = this.ticketService.getFirestoreTicketItems(
+      this.ticket.id
+    );
   }
 
-  addItemToMyTab(item: ReceiptItem) {
-    // item.payers.push({
-    //   uid: this.auth.getUid(),
-    //   firstName: this.tab.displayName,
-    //   price: 0,
-    // });
-    // const distribution = currency(item.price).distribute(item.payers.length);
-    // distribution.forEach((d, index) => {
-    //   item.payers[index].price = d.value;
-    // });
-    // this.updatePayersDescription();
-    // this.socketService.socket.emit('message-room', {
-    //   room: this.tab.tabNumber,
-    //   item,
-    // });
+  async addItemToMyTab(item: any) {
+    item.loading = true;
+    const {
+      success,
+      message,
+    } = await this.ticketService.addUserToFirestoreTicketItem(
+      this.ticket.id,
+      item.id
+    );
+    item.loading = false;
+    if (!success) {
+      const error = this.alertCtrl.create({
+        title: 'Error',
+        message,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      error.present();
+    }
   }
 
-  isItemOnMyTab(item: ReceiptItem) {
-    //   return !!item.payers.find(e => e.uid === this.auth.getUid());
+  isItemOnMyTab(item: any) {
+    return !!item.users.find(
+      (e: { uid: string | null }) => e.uid === this.auth.getUid()
+    );
   }
 
   countItemsOnMyTab() {
@@ -129,35 +119,28 @@ export class SelectItemsPage {
     //   return count;
   }
 
-  removeItemFromMyTab(item: ReceiptItem) {
-    //   item.payers = item.payers.filter(i => i.uid === this.auth.getUid())
-    //   this.updatePayersDescription();
-    //   this.socketService.socket.emit('message-room', {
-    //     room: this.tab.tabNumber,
-    //     item,
-    //   });
-  }
-
-  updatePayersDescription() {
-    //   this.receiptItems.forEach(item => {
-    //     let numberOfPayers = 0
-    //     switch (numberOfPayers) {
-    //       case 0:
-    //         item.payersDescription = 'Nobody has claimed this.';
-    //         break;
-    //       case 1:
-    //         item.payersDescription = `${payers[0].firstName} got this.`;
-    //         break;
-    //       default: {
-    //         const payersNamesMap = payers.map(p => p.firstName);
-    //         item.payersDescription = `${payersNamesMap
-    //           .slice(0, numberOfPayers - 1)
-    //           .join(', ')} and ${
-    //           payers[numberOfPayers - 1].firstName
-    //         } shared this.`;
-    //       }
-    //     }
-    //   });
+  async removeItemFromMyTab(item: any) {
+    item.loading = true;
+    const {
+      success,
+      message,
+    } = await this.ticketService.removeUserFromFirestoreTicketItem(
+      this.ticket.id,
+      item.id
+    );
+    item.loading = false;
+    if (!success) {
+      const error = this.alertCtrl.create({
+        title: 'Error',
+        message,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      error.present();
+    }
   }
 
   updateSubTotal() {
