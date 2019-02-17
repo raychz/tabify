@@ -26,11 +26,11 @@ export class LocationPage {
     private locationService: LocationService,
     public alertCtrl: AlertService
   ) {
-    this.getLocations();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LocationPage');
+    this.getLocations();
   }
 
   cancel() {
