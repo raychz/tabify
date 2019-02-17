@@ -1,11 +1,29 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { firestore } from 'firebase';
 
+type CollectionPredicate<T> = string | AngularFirestoreCollection<T>;
+type DocPredicate<T> = string | AngularFirestoreDocument<T>;
 @Injectable()
 export class FirestoreService {
   constructor(private afs: AngularFirestore) {}
+
+  collection<T>(
+    ref: CollectionPredicate<T>,
+    queryFn?: any
+  ): AngularFirestoreCollection<T> {
+    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref;
+  }
+
+  document<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
+    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref;
+  }
 
   collection$(path: any, query?: any) {
     return this.afs
@@ -23,13 +41,13 @@ export class FirestoreService {
       );
   }
 
-  doc$(path: any) {
+  document$(path: any) {
     return this.afs
       .doc(path)
       .snapshotChanges()
       .pipe(
         map(doc => {
-          console.log('DOC HERE');
+          console.log('DOC HERE', doc);
           return { id: doc.payload.id, ...doc.payload.data() };
         })
       );
@@ -42,5 +60,19 @@ export class FirestoreService {
     } else {
       return this.afs.doc(path).set(data, { merge: true });
     }
+  }
+
+  runTransaction(
+    updateFunction: (transaction: firestore.Transaction) => Promise<{}>
+  ) {
+    return this.afs.firestore.runTransaction(updateFunction);
+  }
+
+  arrayUnion(...elements: any[]) {
+    return firestore.FieldValue.arrayUnion(...elements);
+  }
+
+  arrayRemove(...elements: any[]) {
+    return firestore.FieldValue.arrayRemove(...elements);
   }
 }
