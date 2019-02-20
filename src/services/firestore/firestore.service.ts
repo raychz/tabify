@@ -6,7 +6,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { firestore } from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 type CollectionPredicate<T> = string | AngularFirestoreCollection<T>;
 type DocPredicate<T> = string | AngularFirestoreDocument<T>;
@@ -31,7 +32,6 @@ export class FirestoreService {
       .snapshotChanges()
       .pipe(
         map(actions => {
-          console.log('ACTIONS', actions);
           return actions.map(a => {
             const data: Object = a.payload.doc.data();
             const id = a.payload.doc.id;
@@ -63,16 +63,16 @@ export class FirestoreService {
   }
 
   runTransaction(
-    updateFunction: (transaction: firestore.Transaction) => Promise<{}>
+    updateFunction: (transaction: firebase.firestore.Transaction) => Promise<{}>
   ) {
     return this.afs.firestore.runTransaction(updateFunction);
   }
 
   arrayUnion(...elements: any[]) {
-    return firestore.FieldValue.arrayUnion(...elements);
+    return firebase.firestore.FieldValue.arrayUnion(...elements);
   }
 
   arrayRemove(...elements: any[]) {
-    return firestore.FieldValue.arrayRemove(...elements);
+    return firebase.firestore.FieldValue.arrayRemove(...elements);
   }
 }
