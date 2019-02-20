@@ -13,7 +13,9 @@
   </ion-navbar>
   <ion-toolbar color="tabify" class="transparent-toolbar">
     <ion-title>
-      <p class="footer-subtitle">${{ subtotal || 0 }}</p>
+      <p class="footer-subtitle">
+        ${{ (subtotal && subtotal / 100 | number: '1.2-2') || 0.00 }}
+      </p>
       <p class="footer-title">Your Subtotal</p>
     </ion-title>
     <ion-buttons showWhen="ios" right>
@@ -82,7 +84,9 @@
                   >
                     <div class="payers-list">
                       <p class="payers-list-item">
-                        You owe: ${{ findMyShare(item) | number: '1.2-2' }}
+                        You owe: ${{
+                          findMyShare(item) / 100 | number: '1.2-2'
+                        }}
                       </p>
                     </div>
                   </ng-container>

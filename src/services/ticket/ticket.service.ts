@@ -77,10 +77,10 @@ export class TicketService {
         });
 
         const { length: numberOfPayers } = users;
-        currency(price)
+        currency(price / 100)
           .distribute(numberOfPayers)
           .forEach((d, index) => {
-            users[index].price = d.value;
+            users[index].price = d.intValue;
           });
 
         const payersDescription = this.getPayersDescription(users);
@@ -129,10 +129,10 @@ export class TicketService {
 
         users = users.filter(u => u.uid !== uid);
         const { length: numberOfPayers } = users;
-        currency(price)
+        currency(price / 100)
           .distribute(numberOfPayers)
           .forEach((d, index) => {
-            users[index].price = d.value;
+            users[index].price = d.intValue;
           });
 
         const payersDescription = this.getPayersDescription(users);

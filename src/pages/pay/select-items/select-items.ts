@@ -137,9 +137,10 @@ export class SelectItemsPage {
   }
 
   findMyShare(item: any) {
-    return item.users.find(
+    const share = item.users.find(
       (user: { uid: string | null }) => user.uid === this.auth.getUid()
     ).price;
+    return share || 0;
   }
 
   countItemsOnMyTab(): number {
@@ -174,17 +175,18 @@ export class SelectItemsPage {
   }
 
   updateSubTotal(items: any[]) {
-    let sum = currency(0);
+    let sum = 0;
     items &&
       items.forEach(item => {
         const payer = item.users.find(
           (e: { uid: string | null }) => e.uid === this.auth.getUid()
         );
         if (payer) {
-          sum = sum.add(payer.price);
+          sum += payer.price;
         }
       });
-    this.subtotal = sum.format(false);
+    this.subtotal = sum;
+    console.log("new subtotal", this.subtotal);
   }
 
   async viewTaxAndTip() {
