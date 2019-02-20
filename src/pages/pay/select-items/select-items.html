@@ -2,18 +2,30 @@
   <ion-navbar color="tabify" class="transparent-toolbar">
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
+      <button showWhen="android" ion-button icon-only>
+        <ion-icon name="more"></ion-icon>
+      </button>
       <button ion-button icon-end (click)="confirmSelections()">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar color="tabify" class="transparent-toolbar">
+    <ion-title>
+      <p class="footer-subtitle">${{ subtotal || 0 }}</p>
+      <p class="footer-title">Your Subtotal</p>
+    </ion-title>
+    <ion-buttons showWhen="ios" right>
+      <button ion-button icon-only><ion-icon name="more"></ion-icon></button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-toolbar no-border-top color="white" class="secondary-toolbar">
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col">
         <ion-icon name="people"></ion-icon>
         <b>Guests:</b>
-        <span [innerHTML]="getUsers((firestoreTicket | async)?.users)"></span>
+        <span [innerHTML]="getUsers((firestoreTicket$ | async)?.users)"></span>
         <span class="invite-others">
           <ion-icon name="send"></ion-icon>
           Invite Others
@@ -24,75 +36,66 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container *ngFor="let item of (firestoreTicketItems | async)">
-    <ion-card
-      [class.item-not-on-tab]="!isItemOnMyTab(item)"
-      [class.item-on-tab]="isItemOnMyTab(item)"
-      *ngIf="!item.isHidden"
-    >
-      <ion-item>
-        <h2>{{ item.name }}</h2>
-        <ion-note item-end>
-          <h2>${{ item.price | number: '1.2-2' }}</h2>
-        </ion-note>
-      </ion-item>
-      <ion-card-content>
-        <p class="payers-description">{{ item.payersDescription }}</p>
-        <ng-container *ngIf="item.payers && item.payers.length > 1">
-          <div class="payers-list">
-            <p class="payers-list-item" *ngFor="let payer of item.payers">
-              {{ payer.firstName }}: ${{ payer.price / 100 | number: '1.2-2' }}
-            </p>
-          </div>
-        </ng-container>
-      </ion-card-content>
-      <ion-row>
-        <ion-col align-self-center text-center>
-          <button
-            *ngIf="!isItemOnMyTab(item) && !item.loading"
-            ion-button
-            color="primary"
-            clear
-            block
-            icon-start
-            (click)="addItemToMyTab(item)"
-          >
-            <ion-icon name="add-circle"></ion-icon>
-            Add to My Tab
-          </button>
-          <button
-            *ngIf="isItemOnMyTab(item) && !item.loading"
-            ion-button
-            color="primary"
-            clear
-            block
-            icon-start
-            (click)="removeItemFromMyTab(item)"
-          >
-            <ion-icon name="remove-circle"></ion-icon>
-            Remove From My Tab
-          </button>
-          <button *ngIf="item.loading" ion-button disabled clear block>
-            <ion-spinner name="dots"></ion-spinner>
-          </button>
-        </ion-col>
-      </ion-row>
-    </ion-card>
+  <ng-container *ngIf="(firestoreTicketItems$ | async) as items; else loading">
+    <ng-container *ngFor="let item of items">
+      <ion-card
+        [class.item-not-on-tab]="!isItemOnMyTab(item)"
+        [class.item-on-tab]="isItemOnMyTab(item)"
+      >
+        <div>
+          <ion-row>
+            <ion-col
+              (click)="addOrRemoveItem(item)"
+              class="modify-item"
+              [class.item-not-on-tab]="!isItemOnMyTab(item)"
+              [class.item-on-tab]="isItemOnMyTab(item)"
+              text-center
+            >
+              <div>
+                <ion-icon
+                  *ngIf="!isItemOnMyTab(item) && !item.loading"
+                  color="primary"
+                  name="add"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="isItemOnMyTab(item) && !item.loading"
+                  color="primary"
+                  name="checkmark-circle"
+                ></ion-icon>
+                <ion-spinner *ngIf="item.loading" name="bubbles"></ion-spinner>
+              </div>
+            </ion-col>
+            <ion-col class="item-details">
+              <div>
+                <ion-item>
+                  <h2>{{ item.name }}</h2>
+                  <ion-note item-end>
+                    <h2>${{ item.price / 100 | number: '1.2-2' }}</h2>
+                  </ion-note>
+                </ion-item>
+                <ion-card-content>
+                  <p class="payers-description">{{ item.payersDescription }}</p>
+                  <ng-container
+                    *ngIf="
+                      item.users && item.users.length > 1 && isItemOnMyTab(item)
+                    "
+                  >
+                    <div class="payers-list">
+                      <p class="payers-list-item">
+                        You owe: ${{ findMyShare(item) | number: '1.2-2' }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </ion-card-content>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-card>
+    </ng-container>
   </ng-container>
-  <p class="muted" *ngIf="allItemsAreHidden()">No matching items found.</p>
+  <ng-template #loading>
+    <p class="muted">Loading ticket items...</p>
+    <ion-spinner class="ticket-spinner" name="dots"></ion-spinner>
+  </ng-template>
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar color="tabify" class="semi-transparent-toolbar">
-    <ion-buttons left>
-      <button ion-button icon-only><ion-icon name="share"></ion-icon></button>
-    </ion-buttons>
-    <ion-title>
-      <p class="footer-title">Your Subtotal</p>
-      <p class="footer-subtitle">${{ updateSubTotal() | number: '1.2-2' }}</p>
-    </ion-title>
-    <ion-buttons right>
-      <button ion-button icon-only><ion-icon name="more"></ion-icon></button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

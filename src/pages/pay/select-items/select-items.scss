@@ -35,9 +35,9 @@ page-select-items {
       white-space: nowrap;
     }
     .invite-others {
-        font-weight: bold;
-        color: map-get($colors, primary);
-        white-space: nowrap;
+      font-weight: bold;
+      color: map-get($colors, primary);
+      white-space: nowrap;
     }
     .secondary-toolbar {
       min-height: 0;
@@ -49,6 +49,7 @@ page-select-items {
       color: map-get($colors, light);
       font-size: 14px;
       margin: 0;
+      margin-bottom: 5px;
     }
     .footer-subtitle {
       color: map-get($colors, light);
@@ -56,13 +57,60 @@ page-select-items {
       margin: 0;
     }
   }
-  .item-on-tab {
-    border-left: 8px solid #607d8b;
-    transition: border-left .2s linear;
-  }
-  .item-not-on-tab {
-    border-left: 8px solid lightgray;
-    transition: border-left .2s linear;
+  ion-content {
+    .ticket-spinner {
+      display: flex;
+      margin: auto;
+    }
+    ion-card {
+      ion-row {
+        ion-col {
+          &.item-details,
+          &.modify-item {
+            padding: 0;
+          }
+          &.item-details {
+            ion-item {
+              min-height: 0;
+              padding-left: 8px;
+            }
+            ion-card-content {
+              padding-left: 8px;
+              padding-right: 8px;
+              padding-top: 0px;
+              padding-bottom: 4px;
+            }
+          }
+          &.modify-item {
+            flex: 0 0 40px;
+
+            ion-spinner, ion-spinner * {
+              fill: map-get($colors, primary);
+              margin: auto;
+            }
+            &.item-on-tab {
+              background-color: #607d8b;
+              transition: background-color 0.2s linear;
+            }
+            &.item-not-on-tab {
+              background-color: #ededed;
+              transition: background-color 0.2s linear;
+            }
+            > div {
+              justify-content: center;
+              flex-direction: column;
+              text-align: center;
+              display: flex;
+              height: 100%;
+            }
+            ion-icon {
+              font-size: 2em;
+              // font-weight: 600;
+            }
+          }
+        }
+      }
+    }
   }
   .payers {
     &-description {
@@ -70,11 +118,10 @@ page-select-items {
     &-list {
       &-item {
         &:first-child {
-          margin-top: 0.5em;
+          // margin-top: 0.5em;
         }
         color: #8e9093;
       }
     }
   }
-
 }

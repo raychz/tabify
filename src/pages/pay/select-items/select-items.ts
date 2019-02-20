@@ -7,7 +7,6 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { SocketService } from '../../../services/socket/socket.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
-import { FirestoreService } from '../../../services/firestore/firestore.service';
 import { tap } from 'rxjs/operators';
 import { user } from '../../home/example-stories';
 import { TicketService } from '../../../services/ticket/ticket.service';
@@ -33,10 +32,13 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  // receiptItems: ITicketItem[] = [];
   ticket: ITicket = this.navParams.data;
+  firestoreTicket$!: any;
+  firestoreTicketItems$!: any;
+
   firestoreTicket!: any;
-  firestoreTicketItems!: any;
+  firestoreTicketItems!: any[];
+  subtotal: any;
 
   constructor(
     public navCtrl: NavController,
@@ -75,12 +77,33 @@ export class SelectItemsPage {
   }
 
   initializeTicket() {
-    this.firestoreTicket = this.ticketService.getFirestoreTicket(
-      this.ticket.id
-    );
-    this.firestoreTicketItems = this.ticketService.getFirestoreTicketItems(
-      this.ticket.id
-    );
+    this.firestoreTicket$ = this.ticketService
+      .getFirestoreTicket(this.ticket.id)
+      .pipe(tap(ticket => this.onTicketUpdate(ticket)));
+
+    this.firestoreTicketItems$ = this.ticketService
+      .getFirestoreTicketItems(this.ticket.id)
+      .pipe(tap(items => this.onTicketItemsUpdate(items)));
+  }
+
+  onTicketItemsUpdate(items: any) {
+    console.log(`firestore ticket items update:`, items);
+    this.firestoreTicketItems = items;
+    this.updateSubTotal(items);
+  }
+
+  onTicketUpdate(ticket: any) {
+    console.log(`firestore ticket update:`, ticket);
+    this.firestoreTicket = ticket;
+  }
+
+  async addOrRemoveItem(item: any) {
+    if (item.loading) return;
+    if (this.isItemOnMyTab(item)) {
+      this.removeItemFromMyTab(item);
+    } else {
+      this.addItemToMyTab(item);
+    }
   }
 
   async addItemToMyTab(item: any) {
@@ -113,10 +136,17 @@ export class SelectItemsPage {
     );
   }
 
-  countItemsOnMyTab() {
-    //   let count = 0;
-    //   this.receiptItems.forEach(item => (count += ~~this.isItemOnMyTab(item)));
-    //   return count;
+  findMyShare(item: any) {
+    return item.users.find(
+      (user: { uid: string | null }) => user.uid === this.auth.getUid()
+    ).price;
+  }
+
+  countItemsOnMyTab(): number {
+    const myItems = this.firestoreTicketItems.filter((item: any) =>
+      this.isItemOnMyTab(item)
+    );
+    return myItems.length;
   }
 
   async removeItemFromMyTab(item: any) {
@@ -143,95 +173,72 @@ export class SelectItemsPage {
     }
   }
 
-  updateSubTotal() {
-    //   let sum = currency(0);
-    //   this.receiptItems.forEach(item => {
-    //     const payer = item.payers.find(e => e.uid === this.auth.getUid());
-    //     if (payer) {
-    //       sum = sum.add(payer.price);
-    //     }
-    //   });
-    //   return sum.format(false);
+  updateSubTotal(items: any[]) {
+    let sum = currency(0);
+    items &&
+      items.forEach(item => {
+        const payer = item.users.find(
+          (e: { uid: string | null }) => e.uid === this.auth.getUid()
+        );
+        if (payer) {
+          sum = sum.add(payer.price);
+        }
+      });
+    this.subtotal = sum.format(false);
   }
 
-  filterItems(ev: any) {
-    //   const { value } = ev.target;
-    //   if (value && value.trim() !== '') {
-    //     this.receiptItems.forEach(item => {
-    //       item.isHidden = !(
-    //         item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-    //       );
-    //     });
-    //   } else {
-    //     this.receiptItems.forEach(item => (item.isHidden = false));
-    //   }
+  async viewTaxAndTip() {
+    await this.loader.present({
+      content: 'Waiting on Alice, Bob, and John to finish making selections...',
+    });
+    setTimeout(() => {
+      this.loader.setContent('Waiting on Bob to finish making selections...');
+    }, 1500);
+    setTimeout(() => {
+      this.loader.dismiss();
+      this.navCtrl.push('TaxTipPage');
+    }, 3500);
   }
 
-  viewTaxAndTip() {
-    //   this.loader
-    //     .present({
-    //       content:
-    //         'Waiting on Alice, Bob, and John to finish making selections...',
-    //     })
-    //     .then(() => {
-    //       setTimeout(() => {
-    //         this.loader.setContent(
-    //           'Waiting on Bob to finish making selections...'
-    //         );
-    //       }, 1500);
-    //     });
-    //   setTimeout(() => {
-    //     this.loader.dismiss();
-    //     this.navCtrl.push('TaxTipPage', {
-    //       ...this.tab,
-    //       receiptItems: this.receiptItems,
-    //     });
-    //   }, 3500);
-  }
-
-  confirmSelections() {
-    //   const itemCount = this.countItemsOnMyTab();
-    //   if (itemCount) {
-    //     const confirm = this.alertCtrl.create({
-    //       title: 'Confirm Selections',
-    //       message: `You've added ${itemCount} items to your tab. Is this correct?`,
-    //       buttons: [
-    //         {
-    //           text: 'No',
-    //           handler: () => {
-    //             console.log('Cancel clicked');
-    //           },
-    //         },
-    //         {
-    //           text: 'Yes',
-    //           handler: () => {
-    //             confirm.dismiss().then(() => {
-    //               this.viewTaxAndTip();
-    //             });
-    //             return false;
-    //           },
-    //         },
-    //       ],
-    //     });
-    //     confirm.present();
-    //   } else {
-    //     const warning = this.alertCtrl.create({
-    //       title: 'Warning',
-    //       message: `Please add 1 or more items to your tab before continuing.`,
-    //       buttons: [
-    //         {
-    //           text: 'Ok',
-    //           handler: () => {
-    //             console.log('Ok clicked');
-    //           },
-    //         },
-    //       ],
-    //     });
-    //     warning.present();
-    //   }
-  }
-
-  allItemsAreHidden() {
-    // return this.receiptItems.every(item => !!item.isHidden );
+  async confirmSelections() {
+    const itemCount = this.countItemsOnMyTab();
+    if (itemCount) {
+      const confirm = this.alertCtrl.create({
+        title: 'Confirm Selections',
+        message: `You've added ${itemCount} items to your tab. Is this correct?`,
+        buttons: [
+          {
+            text: 'No',
+            handler: () => {
+              console.log('Cancel clicked');
+            },
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              confirm.dismiss().then(() => {
+                this.viewTaxAndTip();
+              });
+              return false;
+            },
+          },
+        ],
+      });
+      confirm.present();
+    } else {
+      const warning = this.alertCtrl.create({
+        title: 'Warning',
+        message: `Please add 1 or more items to your tab before continuing.`,
+        buttons: [
+          {
+            text: 'Ok',
+            handler: () => {
+              console.log('Ok clicked');
+            },
+          },
+        ],
+      });
+      warning.present();
+    }
   }
 }
