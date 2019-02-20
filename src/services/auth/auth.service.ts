@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import { Platform } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
@@ -49,7 +50,7 @@ export class AuthService {
   }
 
   public async signInWithFacebook() {
-    let userObj: { user: firebase.User };
+    let userObj: any;
     if (this.platform.is('cordova')) {
       const res: FacebookLoginResponse = await this.fb.login([
         'email',
@@ -78,9 +79,10 @@ export class AuthService {
       credentials.email,
       credentials.password
     );
+    const photoURL = user!.photoURL;
     const displayName = `${credentials.firstName} ${credentials.lastName}`;
     await this.saveUser();
-    return user.updateProfile({ displayName });
+    return user!.updateProfile({ displayName, photoURL });
   }
 
   public getToken(): Observable<string> {
