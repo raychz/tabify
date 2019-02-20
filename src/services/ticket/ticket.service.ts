@@ -40,15 +40,11 @@ export class TicketService {
   }
 
   getFirestoreTicket(ticketId: number) {
-    return this.firestoreService
-      .document$(`tickets/${ticketId}/`)
-      .pipe(tap(val => console.log(`firestore ticket:`, val)));
+    return this.firestoreService.document$(`tickets/${ticketId}/`);
   }
 
   getFirestoreTicketItems(ticketId: number) {
-    return this.firestoreService
-      .collection$(`tickets/${ticketId}/ticketItems`)
-      .pipe(tap(val => console.log(`ticket items:`, val)));
+    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
   }
 
   async addUserToFirestoreTicketItem(
