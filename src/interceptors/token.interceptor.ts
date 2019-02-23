@@ -22,11 +22,13 @@ export class TokenInterceptor implements HttpInterceptor {
       });
     }
     return this.auth.getToken().mergeMap(token => {
-      request = request.clone({
-        setHeaders: {
-          authorization: token,
-        },
-      });
+      if (token) {
+        request = request.clone({
+          setHeaders: {
+            authorization: token,
+          },
+        });
+      }
       return next.handle(request);
     });
   }
