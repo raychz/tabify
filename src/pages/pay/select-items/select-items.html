@@ -3,7 +3,7 @@
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
       <button showWhen="android" ion-button icon-only>
-        <ion-icon name="more"></ion-icon>
+        <ion-icon name="md-more"></ion-icon>
       </button>
       <button ion-button icon-end (click)="confirmSelections()">
         Next
@@ -11,20 +11,9 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-  <ion-toolbar color="tabify" class="transparent-toolbar">
-    <ion-title>
-      <p class="footer-subtitle">
-        ${{ (subtotal && subtotal / 100 | number: '1.2-2') || 0.00 }}
-      </p>
-      <p class="footer-title">Your Subtotal</p>
-    </ion-title>
-    <ion-buttons showWhen="ios" right>
-      <button ion-button icon-only><ion-icon name="more"></ion-icon></button>
-    </ion-buttons>
-  </ion-toolbar>
   <ion-toolbar no-border-top color="white" class="secondary-toolbar">
     <ion-row no-border-top>
-      <ion-col align-self-center text-center class="toolbar-col">
+      <ion-col align-self-center text-center class="toolbar-col guests">
         <ion-icon name="people"></ion-icon>
         <b>Guests:</b>
         <span [innerHTML]="getUsers((firestoreTicket$ | async)?.users)"></span>
@@ -34,6 +23,27 @@
         </span>
       </ion-col>
     </ion-row>
+  </ion-toolbar>
+  <ion-toolbar color="tabify" class="transparent-toolbar tab-metadata-toolbar">
+    <ion-row no-wrap>
+      <ion-col col-6 align-self-center text-center class="toolbar-col top">
+        {{ mySelectedItemsCount }}
+      </ion-col>
+      <ion-col col-6 align-self-center text-center class="toolbar-col top">
+        ${{ (subtotal && subtotal / 100 | number: '1.2-2') || 0.0 }}
+      </ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
+        Selected Items
+      </ion-col>
+      <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
+        Your Subtotal
+      </ion-col>
+    </ion-row>
+    <ion-buttons showWhen="ios" right>
+      <button ion-button icon-only><ion-icon name="md-more"></ion-icon></button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -52,46 +62,68 @@
               [class.item-not-on-tab]="!isItemOnMyTab(item)"
               [class.item-on-tab]="isItemOnMyTab(item)"
               text-center
+              col-1
             >
               <div>
                 <ion-icon
                   *ngIf="!isItemOnMyTab(item) && !item.loading"
                   color="primary"
-                  name="add"
+                  name="ios-add"
                 ></ion-icon>
                 <ion-icon
                   *ngIf="isItemOnMyTab(item) && !item.loading"
                   color="primary"
-                  name="checkmark-circle"
+                  name="ios-checkmark"
                 ></ion-icon>
                 <ion-spinner *ngIf="item.loading" name="bubbles"></ion-spinner>
               </div>
             </ion-col>
             <ion-col class="item-details">
-              <div>
-                <ion-item>
-                  <h2>{{ item.name }}</h2>
-                  <ion-note item-end>
-                    <h2>${{ item.price / 100 | number: '1.2-2' }}</h2>
-                  </ion-note>
-                </ion-item>
-                <ion-card-content>
-                  <p class="payers-description">{{ item.payersDescription }}</p>
-                  <ng-container
+              <ion-row nowrap>
+                <ion-col class="col-item-name">
+                  <span class="name-text">🌮 {{ item.name }}</span>
+                </ion-col>
+                <ion-col col-auto class="col-item-total">
+                  <span
+                    class="my-share-text"
                     *ngIf="
                       item.users && item.users.length > 1 && isItemOnMyTab(item)
                     "
                   >
-                    <div class="payers-list">
-                      <p class="payers-list-item">
-                        You owe: ${{
-                          findMyShare(item) / 100 | number: '1.2-2'
-                        }}
-                      </p>
-                    </div>
-                  </ng-container>
-                </ion-card-content>
-              </div>
+                    ${{ findMyShare(item) / 100 | number: '1.2-2' }} /
+                  </span>
+                  <span class="total-text">
+                    ${{ item.price / 100 | number: '1.2-2' }}
+                  </span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="col-payers">
+                  <ion-icon
+                    color="primary"
+                    class="payers-icon-alert"
+                    *ngIf="item.users && item.users.length === 0"
+                    name="md-warning"
+                  ></ion-icon>
+                  <ion-icon
+                    color="primary"
+                    class="payers-icon"
+                    *ngIf="item.users && item.users.length > 0"
+                    name="ios-{{
+                      item.users && item.users.length > 1 ? 'people' : 'person'
+                    }}"
+                  ></ion-icon>
+                  <span
+                    class="payers-count"
+                    *ngIf="item.users && item.users.length > 1"
+                  >
+                    {{ item.users.length }}:
+                  </span>
+                  <span class="payers-description-text">
+                    {{ item.payersDescription || 'Nobody has claimed this.' }}
+                  </span>
+                </ion-col>
+              </ion-row>
             </ion-col>
           </ion-row>
         </div>

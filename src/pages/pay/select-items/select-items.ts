@@ -7,10 +7,10 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { SocketService } from '../../../services/socket/socket.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { user } from '../../home/example-stories';
 import { TicketService } from '../../../services/ticket/ticket.service';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { abbreviateName } from '../../../utilities/utils';
 
 export interface ReceiptItem {
@@ -39,6 +39,8 @@ export class SelectItemsPage {
   firestoreTicket!: any;
   firestoreTicketItems!: any[];
   subtotal: any;
+  hasInitializationError: boolean = false;
+  mySelectedItemsCount: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -79,22 +81,47 @@ export class SelectItemsPage {
   initializeTicket() {
     this.firestoreTicket$ = this.ticketService
       .getFirestoreTicket(this.ticket.id)
-      .pipe(tap(ticket => this.onTicketUpdate(ticket)));
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap(ticket => this.onTicketUpdate(ticket))
+      );
 
     this.firestoreTicketItems$ = this.ticketService
       .getFirestoreTicketItems(this.ticket.id)
-      .pipe(tap(items => this.onTicketItemsUpdate(items)));
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap(items => this.onTicketItemsUpdate(items))
+      );
+  }
+
+  async handleInitializationError(error: any) {
+    if (!this.hasInitializationError) {
+      this.hasInitializationError = true;
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
+          error}`,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      await alert.present();
+      await this.navCtrl.popTo('TabLookupPage');
+    }
+    return of(error);
   }
 
   onTicketItemsUpdate(items: any) {
-    console.log(`firestore ticket items update:`, items);
     this.firestoreTicketItems = items;
     this.updateSubTotal(items);
+    this.countItemsOnMyTab();
   }
 
   onTicketUpdate(ticket: any) {
-    console.log(`firestore ticket update:`, ticket);
     this.firestoreTicket = ticket;
+    this.countItemsOnMyTab();
   }
 
   async addOrRemoveItem(item: any) {
@@ -144,10 +171,12 @@ export class SelectItemsPage {
   }
 
   countItemsOnMyTab(): number {
-    const myItems = this.firestoreTicketItems.filter((item: any) =>
-      this.isItemOnMyTab(item)
-    );
-    return myItems.length;
+    console.log('counted items!');
+    const myItems =
+      this.firestoreTicketItems &&
+      this.firestoreTicketItems.filter((item: any) => this.isItemOnMyTab(item));
+    this.mySelectedItemsCount = (myItems && myItems.length) || 0;
+    return this.mySelectedItemsCount;
   }
 
   async removeItemFromMyTab(item: any) {
@@ -186,7 +215,6 @@ export class SelectItemsPage {
         }
       });
     this.subtotal = sum;
-    console.log("new subtotal", this.subtotal);
   }
 
   async viewTaxAndTip() {

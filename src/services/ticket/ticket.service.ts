@@ -4,7 +4,6 @@ import { Ticket } from '../../models/Ticket';
 import { sleep } from '../../utilities/utils';
 import config from '../../config';
 import { FirestoreService } from '../firestore/firestore.service';
-import { tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { abbreviateName } from '../../utilities/utils';
