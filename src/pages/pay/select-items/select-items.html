@@ -2,7 +2,7 @@
   <ion-navbar color="tabify" class="transparent-toolbar">
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
-      <button showWhen="android" ion-button icon-only>
+      <button showWhen="android" ion-button icon-only (click)="presentActionSheet()">
         <ion-icon name="md-more"></ion-icon>
       </button>
       <button ion-button icon-end (click)="confirmSelections()">
@@ -35,14 +35,14 @@
     </ion-row>
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
-        Selected Items
+        Selected Item{{ mySelectedItemsCount === 1 ? '' : 's'}}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
         Your Subtotal
       </ion-col>
     </ion-row>
     <ion-buttons showWhen="ios" right>
-      <button ion-button icon-only><ion-icon name="md-more"></ion-icon></button>
+      <button ion-button icon-only (click)="presentActionSheet()"><ion-icon name="md-more"></ion-icon></button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

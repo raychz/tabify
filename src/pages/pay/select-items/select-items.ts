@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ActionSheetController,
+} from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
@@ -49,7 +54,8 @@ export class SelectItemsPage {
     public socketService: SocketService,
     public loader: LoaderService,
     public alertCtrl: AlertService,
-    public ticketService: TicketService
+    public ticketService: TicketService,
+    private actionSheetCtrl: ActionSheetController
   ) {}
 
   ionViewDidLoad() {
@@ -80,14 +86,14 @@ export class SelectItemsPage {
 
   initializeTicket() {
     this.firestoreTicket$ = this.ticketService
-      .getFirestoreTicket(this.ticket.id)
+      .getFirestoreTicket(this.ticket.id || 8)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
         tap(ticket => this.onTicketUpdate(ticket))
       );
 
     this.firestoreTicketItems$ = this.ticketService
-      .getFirestoreTicketItems(this.ticket.id)
+      .getFirestoreTicketItems(this.ticket.id || 8)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
         tap(items => this.onTicketItemsUpdate(items))
@@ -270,5 +276,43 @@ export class SelectItemsPage {
       });
       warning.present();
     }
+  }
+
+  presentActionSheet() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your tab',
+      buttons: [
+        {
+          text: 'Add all to my tab',
+          handler: () => {
+            this.addAllItemsToMyTab();
+          },
+        },
+        {
+          text: 'Remove all from my tab',
+          role: 'destructive',
+          handler: () => {
+            this.removeAllItemsFromMyTab();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    actionSheet.present();
+  }
+
+  async addAllItemsToMyTab() {
+    return this.firestoreTicketItems.forEach(async item => {
+      if (!this.isItemOnMyTab(item)) await this.addItemToMyTab(item);
+    });
+  }
+
+  async removeAllItemsFromMyTab() {
+    return this.firestoreTicketItems.forEach(async item => {
+      if (this.isItemOnMyTab(item)) await this.removeItemFromMyTab(item);
+    });
   }
 }
