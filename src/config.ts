@@ -13,5 +13,5 @@ export default {
     url: 'http://localhost:3000',
     options: {},
   },
-  serverUrl: 'http://ec2-3-17-150-28.us-east-2.compute.amazonaws.com:3000',
+  serverUrl: 'https://api.tabifyapp.com/',
 };
