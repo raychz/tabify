@@ -26,15 +26,17 @@ export class TaxTipPage {
     public auth: AuthService
   ) {
     this.myTabItems =
-      this.tab.receiptItems &&
-      this.tab.receiptItems
-        .filter((item: any) => item.payers.find((e: any) => e.uid === this.auth.getUid()))
+      this.navParams.data.tab.receiptItems &&
+      this.navParams.data.tab.receiptItems
+        .filter((item: any) =>
+          item.users.find((e: any) => e.uid === this.auth.getUid())
+        )
         .map((item: any) => ({
           name: item.name,
-          payers: item.payers,
+          payers: item.users,
           rating: 0,
           feedback: '',
-          ...item.payers.find((e: any) => e.uid === this.auth.getUid()),
+          price: item.users.find((e: any) => e.uid === this.auth.getUid()).price,
         }));
   }
 
@@ -81,38 +83,36 @@ export class TaxTipPage {
   }
 
   getSubtotal() {
-    let sum = currency(0);
+    let sum = 0;
     this.myTabItems &&
-      this.myTabItems.forEach((item: ReceiptItem) => {
-        const payer = item.payers.find(e => e.uid === this.auth.getUid());
+      this.myTabItems.forEach((item: any) => {
+        const payer = item.payers && item.payers.find((e: any) => e.uid === this.auth.getUid());
         if (payer) {
-          sum = sum.add(payer.price);
+          sum += payer.price;
         }
       });
-    return sum.format(false);
+    return sum;
   }
 
   getTax() {
-    const tax = currency(this.getSubtotal()).multiply(0.0625);
-    return tax.format(false);
+    const tax = this.getSubtotal() * 0.0625;
+    return tax;
   }
 
   getTip() {
-    const tip = currency(this.getSubtotal()).multiply(this.tip / 100);
-    return tip.format(false);
+    const tip = this.getSubtotal() * (this.tip / 100);
+    return tip;
   }
 
   getGrandTotal() {
-    const grandTotal = currency(this.getSubtotal())
-      .add(this.getTax())
-      .add(this.getTip());
-    return grandTotal.format(false);
+    const grandTotal = this.getSubtotal() + this.getTax() + this.getTip();
+    return grandTotal;
   }
 
   pay() {
     this.navCtrl.push('PaymentMethodsPage', {
       ...this.myTabItems,
-      mode: 'PAY_TAB'
+      mode: 'PAY_TAB',
     });
   }
 }

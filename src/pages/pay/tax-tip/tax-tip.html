@@ -29,7 +29,7 @@
           </ion-item>
         </div>
         <div item-end>
-          <h2>${{item.price | number:'1.2-2'}}</h2>
+          <h2>${{item.price / 100 | number:'1.2-2'}}</h2>
         </div>
       </ion-item>
     </ion-card-content>
@@ -42,7 +42,7 @@
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{getSubtotal()}}</h2>
+          <h2>${{getSubtotal() / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
@@ -50,7 +50,7 @@
           <span class='line-details'>({{tip}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{getTip()}}</h2>
+          <h2>${{getTip() / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
@@ -58,13 +58,13 @@
           <span class='line-details'>(6.25%)</span>
         </h2>
         <div item-end>
-          <h2>${{getTax()}}</h2>
+          <h2>${{getTax() / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{getGrandTotal()}}</h2>
+          <h2>${{getGrandTotal() / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
     </ion-card-content>
