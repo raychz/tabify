@@ -224,16 +224,20 @@ export class SelectItemsPage {
   }
 
   async viewTaxAndTip() {
-    await this.loader.present({
-      content: 'Waiting on Alice, Bob, and John to finish making selections...',
-    });
-    setTimeout(() => {
-      this.loader.setContent('Waiting on Bob to finish making selections...');
-    }, 1500);
-    setTimeout(() => {
-      this.loader.dismiss();
-      this.navCtrl.push('TaxTipPage');
-    }, 3500);
+    // await this.loader.present({
+    //   content: 'Waiting on Alice, Bob, and John to finish making selections...',
+    // });
+    // setTimeout(() => {
+    //   this.loader.setContent('Waiting on Bob to finish making selections...');
+    // }, 1500);
+    // setTimeout(() => {
+      // this.loader.dismiss();
+      this.navCtrl.push('TaxTipPage', {
+        tab: {
+          receiptItems: this.firestoreTicketItems,
+        }
+      });
+    // }, 3500);
   }
 
   async confirmSelections() {
@@ -314,5 +318,14 @@ export class SelectItemsPage {
     return this.firestoreTicketItems.forEach(async item => {
       if (this.isItemOnMyTab(item)) await this.removeItemFromMyTab(item);
     });
+  }
+
+  getName(name: string) {
+    if(name.toLowerCase().includes('taco')) {
+      return `🌮 ${name}`;
+    } else if (name.toLowerCase().includes('pizza')) {
+      return `🍕 ${name}`;
+    }
+    return name;
   }
 }

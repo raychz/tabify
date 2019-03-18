@@ -2,9 +2,6 @@
   <ion-navbar color="tabify" class="transparent-toolbar">
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
-      <button showWhen="android" ion-button icon-only (click)="presentActionSheet()">
-        <ion-icon name="md-more"></ion-icon>
-      </button>
       <button ion-button icon-end (click)="confirmSelections()">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
@@ -41,7 +38,7 @@
         Your Subtotal
       </ion-col>
     </ion-row>
-    <ion-buttons showWhen="ios" right>
+    <ion-buttons right>
       <button ion-button icon-only (click)="presentActionSheet()"><ion-icon name="md-more"></ion-icon></button>
     </ion-buttons>
   </ion-toolbar>
@@ -81,7 +78,7 @@
             <ion-col class="item-details">
               <ion-row nowrap>
                 <ion-col class="col-item-name">
-                  <span class="name-text">🌮 {{ item.name }}</span>
+                  <span class="name-text">{{ getName(item.name) }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
                   <span
