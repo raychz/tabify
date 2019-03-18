@@ -13,5 +13,5 @@ export default {
     url: 'http://localhost:3000',
     options: {},
   },
-  serverUrl: 'https://api.tabifyapp.com/',
+  serverUrl: 'https://api.tabifyapp.com',
 };
