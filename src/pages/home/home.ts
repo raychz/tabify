@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { ILocation } from '../pay/location/location';
 import { user, global, community } from './example-stories';
+import { ILocation } from '../../interfaces/location.interface';
 
 export interface Story {
   location: ILocation;

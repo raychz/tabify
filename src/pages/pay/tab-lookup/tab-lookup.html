@@ -24,7 +24,7 @@
               <ion-list inset>
                 <ion-item [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
                   <ion-label floating>Tab Number</ion-label>
-                  <ion-input autofocus type="text" formControlName="tabNumber"></ion-input>
+                  <ion-input autofocus type="text" formControlName="tabNumber" value="177107"></ion-input>
                 </ion-item>
                 <div ngxErrors="tabNumber" #tabErrors="ngxErrors">
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a valid tab number.</div>

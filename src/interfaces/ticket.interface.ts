@@ -1,5 +1,5 @@
-import { ILocation } from '../pages/pay/location/location';
-import { User } from 'firebase';
+import { ITicketItem } from './ticket-item.interface';
+import { ILocation } from './location.interface';
 
 export interface ITicket {
   /**
@@ -18,19 +18,4 @@ export interface ITicket {
   items: ITicketItem[];
   date_created: string;
   date_modified: string;
-}
-
-export interface ITicketItem {
-  /**
-   * Unique id from Tabify server
-   */
-  id: number;
-  /**
-   * A ticket item number a restaurant's receipt
-   */
-  ticket_item_id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  payers: User[];
 }

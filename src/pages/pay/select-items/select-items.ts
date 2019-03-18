@@ -1,10 +1,22 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ActionSheetController,
+} from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { SocketService } from "../../../services/socket/socket.service";
+import { SocketService } from '../../../services/socket/socket.service';
+import { ITicket } from '../../../interfaces/ticket.interface';
+import { ITicketItem } from '../../../interfaces/ticket-item.interface';
+import { tap, catchError } from 'rxjs/operators';
+import { user } from '../../home/example-stories';
+import { TicketService } from '../../../services/ticket/ticket.service';
+import { of } from 'rxjs';
+import { abbreviateName } from '../../../utilities/utils';
 
 export interface ReceiptItem {
   id: number;
@@ -25,8 +37,15 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  receiptItems: ReceiptItem[] = [];
-  tab = this.navParams.data;
+  ticket: ITicket = this.navParams.data;
+  firestoreTicket$!: any;
+  firestoreTicketItems$!: any;
+
+  firestoreTicket!: any;
+  firestoreTicketItems!: any[];
+  subtotal: any;
+  hasInitializationError: boolean = false;
+  mySelectedItemsCount: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -34,197 +53,190 @@ export class SelectItemsPage {
     public auth: AuthService,
     public socketService: SocketService,
     public loader: LoaderService,
-    public alertCtrl: AlertService
-  ) {
-    this.getItems();
+    public alertCtrl: AlertService,
+    public ticketService: TicketService,
+    private actionSheetCtrl: ActionSheetController
+  ) {}
 
-    this.socketService.connect();
-    this.socketService.socket.on('connect', () => {
-      this.socketService.joinRoom(this.tab.tabNumber);
-    });
-
-    this.socketService.getMessage('USER_JOINED').subscribe(
-      (user: any) => {
-        console.log('USER_JOINED', user)
-      }
-    );
-
-    this.socketService.getMessage('USER_LEFT').subscribe(
-      (user: any) => {
-        console.log('USER_LEFT', user)
-      }
-    );
+  ionViewDidLoad() {
+    this.initializeTicket();
   }
-
-  ionViewDidLoad() {}
 
   ionViewWillUnload() {
-    this.socketService.disconnect()
+    console.log('Unloading');
+    // this.socketService.disconnect()
   }
 
-  getItems() {
-    this.receiptItems = [
-      {
-        id: 1,
-        name: 'Coca-Cola',
-        price: 2.99,
-        payers: [],
-      },
-      {
-        id: 2,
-        name: 'Dr. Pepper',
-        price: 2.99,
-        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
-      },
-      {
-        id: 3,
-        name: 'Sprite',
-        price: 2.99,
-        payers: [],
-      },
-      {
-        id: 4,
-        name: 'Ribeye Steak',
-        price: 23.41,
-        payers: [],
-      },
-      {
-        id: 5,
-        name: 'Cheeseburger',
-        price: 12.39,
-        payers: [{ uid: '2', firstName: 'Bob', price: 12.39 }],
-      },
-      {
-        id: 6,
-        name: 'Salad',
-        price: 11.27,
-        payers: [{ uid: '3', firstName: 'Mary', price: 14.77 }],
-      },
-      {
-        id: 7,
-        name: 'Nachos',
-        price: 14.77,
-        payers: [
-          { uid: '1', firstName: 'Cam', price: 7.38 },
-          { uid: '2', firstName: 'Bob', price: 7.39 },
+  getUsers(users: any[]) {
+    if (!users) return 'No users on this tab.';
+
+    const abbreviatedNames = users.map(user => abbreviateName(user.name));
+
+    const userDisplayLimit = 3;
+    if (abbreviatedNames.length > userDisplayLimit) {
+      const overflowNames = abbreviatedNames.splice(userDisplayLimit);
+      const others = `+${overflowNames.length} other${
+        overflowNames.length > 1 ? 's' : ''
+      }`;
+      const othersContainer = `<span class='plus-others'>${others}</span>`;
+      return `${abbreviatedNames.join(', ')} ${othersContainer}`;
+    }
+    return abbreviatedNames.join(', ');
+  }
+
+  initializeTicket() {
+    this.firestoreTicket$ = this.ticketService
+      .getFirestoreTicket(this.ticket.id || 8)
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap(ticket => this.onTicketUpdate(ticket))
+      );
+
+    this.firestoreTicketItems$ = this.ticketService
+      .getFirestoreTicketItems(this.ticket.id || 8)
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap(items => this.onTicketItemsUpdate(items))
+      );
+  }
+
+  async handleInitializationError(error: any) {
+    if (!this.hasInitializationError) {
+      this.hasInitializationError = true;
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
+          error}`,
+        buttons: [
+          {
+            text: 'Ok',
+          },
         ],
-      },
-      {
-        id: 8,
-        name: 'Calamari',
-        price: 15.29,
-        payers: [{ uid: '3', firstName: 'Mary', price: 7.38 }],
-      },
-    ];
-    this.updatePayersDescription();
-  }
-
-  addItemToMyTab(item: ReceiptItem) {
-    item.payers.push({
-      uid: this.auth.getUid(),
-      firstName: this.tab.displayName,
-      price: 0,
-    });
-    const distribution = currency(item.price).distribute(item.payers.length);
-    distribution.forEach((d, index) => {
-      item.payers[index].price = d.value;
-    });
-    this.updatePayersDescription();
-    this.socketService.socket.emit('message-room', {
-      room: this.tab.tabNumber,
-      item,
-    });
-  }
-
-  isItemOnMyTab(item: ReceiptItem) {
-    return !!item.payers.find(e => e.uid === this.auth.getUid());
-  }
-
-  countItemsOnMyTab() {
-    let count = 0;
-    this.receiptItems.forEach(item => (count += ~~this.isItemOnMyTab(item)));
-    return count;
-  }
-
-  removeItemFromMyTab(item: ReceiptItem) {
-    item.payers = item.payers.filter(i => i.uid === this.auth.getUid())
-    this.updatePayersDescription();
-    this.socketService.socket.emit('message-room', {
-      room: this.tab.tabNumber,
-      item,
-    });
-  }
-
-  updatePayersDescription() {
-    this.receiptItems.forEach(item => {
-      const { payers } = item;
-      const { length: numberOfPayers } = payers;
-      switch (numberOfPayers) {
-        case 0:
-          item.payersDescription = 'Nobody has claimed this.';
-          break;
-        case 1:
-          item.payersDescription = `${payers[0].firstName} got this.`;
-          break;
-        default: {
-          const payersNamesMap = payers.map(p => p.firstName);
-          item.payersDescription = `${payersNamesMap
-            .slice(0, numberOfPayers - 1)
-            .join(', ')} and ${
-            payers[numberOfPayers - 1].firstName
-          } shared this.`;
-        }
-      }
-    });
-  }
-
-  updateSubTotal() {
-    let sum = currency(0);
-    this.receiptItems.forEach(item => {
-      const payer = item.payers.find(e => e.uid === this.auth.getUid());
-      if (payer) {
-        sum = sum.add(payer.price);
-      }
-    });
-    return sum.format(false);
-  }
-
-  filterItems(ev: any) {
-    const { value } = ev.target;
-    if (value && value.trim() !== '') {
-      this.receiptItems.forEach(item => {
-        item.isHidden = !(
-          item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-        );
       });
+      await alert.present();
+      await this.navCtrl.popTo('TabLookupPage');
+    }
+    return of(error);
+  }
+
+  onTicketItemsUpdate(items: any) {
+    this.firestoreTicketItems = items;
+    this.updateSubTotal(items);
+    this.countItemsOnMyTab();
+  }
+
+  onTicketUpdate(ticket: any) {
+    this.firestoreTicket = ticket;
+    this.countItemsOnMyTab();
+  }
+
+  async addOrRemoveItem(item: any) {
+    if (item.loading) return;
+    if (this.isItemOnMyTab(item)) {
+      this.removeItemFromMyTab(item);
     } else {
-      this.receiptItems.forEach(item => (item.isHidden = false));
+      this.addItemToMyTab(item);
     }
   }
 
-  viewTaxAndTip() {
-    this.loader
-      .present({
-        content:
-          'Waiting on Alice, Bob, and John to finish making selections...',
-      })
-      .then(() => {
-        setTimeout(() => {
-          this.loader.setContent(
-            'Waiting on Bob to finish making selections...'
-          );
-        }, 1500);
+  async addItemToMyTab(item: any) {
+    item.loading = true;
+    const {
+      success,
+      message,
+    } = await this.ticketService.addUserToFirestoreTicketItem(
+      this.ticket.id,
+      item.id
+    );
+    item.loading = false;
+    if (!success) {
+      const error = this.alertCtrl.create({
+        title: 'Error',
+        message,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
       });
+      error.present();
+    }
+  }
+
+  isItemOnMyTab(item: any) {
+    return !!item.users.find(
+      (e: { uid: string | null }) => e.uid === this.auth.getUid()
+    );
+  }
+
+  findMyShare(item: any) {
+    const share = item.users.find(
+      (user: { uid: string | null }) => user.uid === this.auth.getUid()
+    ).price;
+    return share || 0;
+  }
+
+  countItemsOnMyTab(): number {
+    console.log('counted items!');
+    const myItems =
+      this.firestoreTicketItems &&
+      this.firestoreTicketItems.filter((item: any) => this.isItemOnMyTab(item));
+    this.mySelectedItemsCount = (myItems && myItems.length) || 0;
+    return this.mySelectedItemsCount;
+  }
+
+  async removeItemFromMyTab(item: any) {
+    item.loading = true;
+    const {
+      success,
+      message,
+    } = await this.ticketService.removeUserFromFirestoreTicketItem(
+      this.ticket.id,
+      item.id
+    );
+    item.loading = false;
+    if (!success) {
+      const error = this.alertCtrl.create({
+        title: 'Error',
+        message,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      error.present();
+    }
+  }
+
+  updateSubTotal(items: any[]) {
+    let sum = 0;
+    items &&
+      items.forEach(item => {
+        const payer = item.users.find(
+          (e: { uid: string | null }) => e.uid === this.auth.getUid()
+        );
+        if (payer) {
+          sum += payer.price;
+        }
+      });
+    this.subtotal = sum;
+  }
+
+  async viewTaxAndTip() {
+    await this.loader.present({
+      content: 'Waiting on Alice, Bob, and John to finish making selections...',
+    });
+    setTimeout(() => {
+      this.loader.setContent('Waiting on Bob to finish making selections...');
+    }, 1500);
     setTimeout(() => {
       this.loader.dismiss();
-      this.navCtrl.push('TaxTipPage', {
-        ...this.tab,
-        receiptItems: this.receiptItems,
-      });
+      this.navCtrl.push('TaxTipPage');
     }, 3500);
   }
 
-  confirmSelections() {
+  async confirmSelections() {
     const itemCount = this.countItemsOnMyTab();
     if (itemCount) {
       const confirm = this.alertCtrl.create({
@@ -266,7 +278,41 @@ export class SelectItemsPage {
     }
   }
 
-  allItemsAreHidden() {
-    return this.receiptItems.every(item => !!item.isHidden );
+  presentActionSheet() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your tab',
+      buttons: [
+        {
+          text: 'Add all to my tab',
+          handler: () => {
+            this.addAllItemsToMyTab();
+          },
+        },
+        {
+          text: 'Remove all from my tab',
+          role: 'destructive',
+          handler: () => {
+            this.removeAllItemsFromMyTab();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    actionSheet.present();
+  }
+
+  async addAllItemsToMyTab() {
+    return this.firestoreTicketItems.forEach(async item => {
+      if (!this.isItemOnMyTab(item)) await this.addItemToMyTab(item);
+    });
+  }
+
+  async removeAllItemsFromMyTab() {
+    return this.firestoreTicketItems.forEach(async item => {
+      if (this.isItemOnMyTab(item)) await this.removeItemFromMyTab(item);
+    });
   }
 }

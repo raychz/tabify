@@ -11,7 +11,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
  */
 
 @IonicPage({
-  priority: 'high'
+  priority: 'high',
 })
 @Component({
   selector: 'page-login-with-email',
@@ -21,10 +21,18 @@ export class LoginWithEmailPage {
   loginForm: FormGroup;
   loginError: string = '';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public fb: FormBuilder, private auth: AuthService) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public fb: FormBuilder,
+    private auth: AuthService
+  ) {
     this.loginForm = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      password: [
+        '',
+        Validators.compose([Validators.required, Validators.minLength(6)]),
+      ],
     });
   }
 
@@ -32,15 +40,13 @@ export class LoginWithEmailPage {
     console.log('ionViewDidLoad LoginWithEmailPage');
   }
 
-  login() {
+  async login() {
     const { email, password } = this.loginForm.value;
 
     if (email && password) {
-      this.auth.signInWithEmail({ email, password })
-        .then(
-          () => this.navCtrl.setRoot('HomePage'),
-          error => this.loginError = error.message
-        );
+      await this.auth
+        .signInWithEmail({ email, password })
+        .catch(error => (this.loginError = error.message));
     }
   }
 
