@@ -16,12 +16,12 @@
   <ion-card *ngFor="let location of locations">
     <ion-item (click)="selectLocation(location)">
       <ion-avatar item-start>
-          <img src={{location.photoUrl}}>
+          <img [src]='location.photoUrl || "assets/imgs/restaurants/naco-taco.png"'>
       </ion-avatar>
       <h2>{{location.name}}</h2>
-      <h3>{{location.city}}</h3>
-      <p>{{location.streetAddress}}</p>
-      <ion-note item-end>{{location.distance}} mi.</ion-note>
+      <h3>{{location.city || 'Cambridge, MA'}}</h3>
+      <p>{{location.streetAddress || '101 Main St.'}}</p>
+      <ion-note item-end>{{location.distance || 3}} mi.</ion-note>
     </ion-item>
   </ion-card>
   <p class="muted" *ngIf="!locations.length">No restaurants found.</p>

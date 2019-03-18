@@ -7,7 +7,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { from } from 'rxjs';
-
+import config from "../../config";
 interface ISignUpCredentials {
   email: string;
   password: string;
@@ -122,7 +122,7 @@ export class AuthService {
    */
   private async saveUser() {
     const res = await this.http
-      .post('http://localhost:3000/user', {})
+      .post(`${config.serverUrl}/user`, {})
       .toPromise();
     return res;
   }
