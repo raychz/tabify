@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../services/auth/auth.service';
-
+import 'rxjs/add/operator/mergeMap';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor(public auth: AuthService) {}
@@ -22,11 +22,13 @@ export class TokenInterceptor implements HttpInterceptor {
       });
     }
     return this.auth.getToken().mergeMap(token => {
-      request = request.clone({
-        setHeaders: {
-          authorization: token,
-        },
-      });
+      if (token) {
+        request = request.clone({
+          setHeaders: {
+            authorization: token,
+          },
+        });
+      }
       return next.handle(request);
     });
   }

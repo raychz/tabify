@@ -39,6 +39,19 @@
     >
     </ion-refresher-content>
   </ion-refresher>
+  <button
+    ion-fixed
+    ion-button
+    block
+    color="tabify"
+    class="pay-tab"
+    icon-start
+    (click)="payNewTab()"
+  >
+    <ion-icon name="create"></ion-icon>
+    Pay Tab
+  </button>
+  <div class="blank-space"></div>
   <ng-container *ngFor="let story of feeds[selectedSegment]">
     <ion-card *ngIf="!!story">
       <ion-item>
@@ -78,17 +91,4 @@
       </ion-row>
     </ion-card>
   </ng-container>
-  <div class="blank-space"></div>
-  <button
-    ion-fixed
-    ion-button
-    block
-    color="tabify"
-    class="pay-tab"
-    icon-start
-    (click)="payNewTab()"
-  >
-    <ion-icon name="restaurant"></ion-icon>
-    Pay Tab
-  </button>
 </ion-content>

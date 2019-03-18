@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import { Platform } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { from } from 'rxjs';
+import config from "../../config";
 interface ISignUpCredentials {
-  email: string,
-  password: string,
-  firstName: string,
-  lastName: string,
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface ISignInCredentials {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
 @Injectable()
@@ -38,17 +41,21 @@ export class AuthService {
     return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
-  public signInWithEmail(credentials: ISignInCredentials) {
-    return this.afAuth.auth.signInWithEmailAndPassword(
+  public async signInWithEmail(credentials: ISignInCredentials) {
+    const { user } = await this.afAuth.auth.signInWithEmailAndPassword(
       credentials.email,
       credentials.password
     );
+    return this.saveUser();
   }
 
   public async signInWithFacebook() {
-    let userObj: { user: firebase.User };
+    let userObj: any;
     if (this.platform.is('cordova')) {
-      const res: FacebookLoginResponse = await this.fb.login(['email', 'public_profile']);
+      const res: FacebookLoginResponse = await this.fb.login([
+        'email',
+        'public_profile',
+      ]);
       const { accessToken } = res.authResponse;
       const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
         accessToken
@@ -62,28 +69,35 @@ export class AuthService {
 
     const user = userObj.user;
     if (!user) {
-      throw 'No User found'
+      throw 'No User found';
     }
-    const { uid } = user;
-    return this.saveUser(uid);
+    return this.saveUser();
   }
 
   public async signUp(credentials: ISignUpCredentials) {
-    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
-    const displayName =  `${credentials.firstName} ${credentials.lastName}`;
-    await this.saveUser(user.uid)
-    return user.updateProfile({ displayName })
+    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    );
+    const photoURL = user!.photoURL;
+    const displayName = `${credentials.firstName} ${credentials.lastName}`;
+    await this.saveUser();
+    return user!.updateProfile({ displayName, photoURL });
   }
 
-  public getToken (): Observable<string> {
+  public getToken(): Observable<string> {
     if (!this.user) {
-      throw 'User not authenticated'
+      throw 'User not authenticated';
     }
-    return Observable.fromPromise(this.user.getIdToken());
+    return from(this.user.getIdToken());
   }
 
   public getPhotoUrl() {
-    return this.user && this.user.photoURL && (this.user.photoURL + '?width=75&height=75');
+    return (
+      this.user &&
+      this.user.photoURL &&
+      this.user.photoURL + '?width=75&height=75'
+    );
   }
 
   public getEmail() {
@@ -91,7 +105,7 @@ export class AuthService {
   }
 
   public getDisplayName() {
-    return this.user && this.user.displayName || '';
+    return (this.user && this.user.displayName) || '';
   }
 
   public getUid() {
@@ -104,10 +118,12 @@ export class AuthService {
 
   /**
    * Saves a user id to our db.
-   * @param uid 
+   * @param uid
    */
-  private async saveUser(uid: string) {
-    const res = await this.http.post('http://localhost:3000/user', { uid }).toPromise();
+  private async saveUser() {
+    const res = await this.http
+      .post(`${config.serverUrl}/user`, {})
+      .toPromise();
     return res;
   }
 }
