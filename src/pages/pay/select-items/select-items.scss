@@ -25,6 +25,7 @@ page-select-items {
       font-weight: bold;
       color: map-get($colors, primary);
       white-space: nowrap;
+      padding-left: 3px;
     }
     .secondary-toolbar {
       min-height: 0;

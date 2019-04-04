@@ -4,6 +4,7 @@ import {
   NavController,
   NavParams,
   ActionSheetController,
+  ModalController,
 } from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -17,6 +18,7 @@ import { user } from '../../home/example-stories';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { of } from 'rxjs';
 import { abbreviateName } from '../../../utilities/utils';
+import { InviteOthersPage } from './invite-others/invite-others';
 
 export interface ReceiptItem {
   id: number;
@@ -55,7 +57,8 @@ export class SelectItemsPage {
     public loader: LoaderService,
     public alertCtrl: AlertService,
     public ticketService: TicketService,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    public modalCtrl: ModalController
   ) {}
 
   ionViewDidLoad() {
@@ -231,12 +234,12 @@ export class SelectItemsPage {
     //   this.loader.setContent('Waiting on Bob to finish making selections...');
     // }, 1500);
     // setTimeout(() => {
-      // this.loader.dismiss();
-      this.navCtrl.push('TaxTipPage', {
-        tab: {
-          receiptItems: this.firestoreTicketItems,
-        }
-      });
+    // this.loader.dismiss();
+    this.navCtrl.push('TaxTipPage', {
+      tab: {
+        receiptItems: this.firestoreTicketItems,
+      },
+    });
     // }, 3500);
   }
 
@@ -321,11 +324,19 @@ export class SelectItemsPage {
   }
 
   getName(name: string) {
-    if(name.toLowerCase().includes('taco')) {
+    if (name.toLowerCase().includes('taco')) {
       return `🌮 ${name}`;
     } else if (name.toLowerCase().includes('pizza')) {
       return `🍕 ${name}`;
     }
     return name;
+  }
+
+  inviteOthers() {
+    const modal = this.modalCtrl.create(InviteOthersPage, {
+      tabNumber: this.firestoreTicket.tab_id,
+      users: this.firestoreTicket.users,
+    });
+    modal.present();
   }
 }
