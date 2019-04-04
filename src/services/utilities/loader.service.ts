@@ -10,6 +10,19 @@ export class LoaderService {
 
   constructor(public loadingCtrl: LoadingController) {}
 
+  create(opts: LoadingOptions = {}) {
+    const {
+      content = LoaderService.defaultContent,
+      spinner = LoaderService.defaultSpinner,
+      ...rest
+    } = opts;
+    return this.loadingCtrl.create({
+      content,
+      spinner,
+      ...rest,
+    });
+  }
+
   present(opts: LoadingOptions = {}) {
     const {
       content = LoaderService.defaultContent,

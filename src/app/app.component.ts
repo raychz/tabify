@@ -1,9 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, MenuController } from 'ionic-angular';
+import {
+  Nav,
+  Platform,
+  MenuController,
+} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
 import { AlertService } from '../services/utilities/alert.service';
+import { LoaderService } from '../services/utilities/loader.service';
 
 interface IPage {
   title: string;
@@ -26,7 +31,8 @@ export class Tabify {
     public splashScreen: SplashScreen,
     public auth: AuthService,
     public menu: MenuController,
-    public alertCtrl: AlertService
+    public alertCtrl: AlertService,
+    public loader: LoaderService
   ) {
     this.initializeApp();
 
@@ -50,7 +56,7 @@ export class Tabify {
       },
     ];
   }
-
+  
   initializeApp() {
     this.platform.ready().then((readySource: string) => {
       // Okay, so the platform is ready and our plugins are available.
@@ -87,17 +93,21 @@ export class Tabify {
     return active && active.id === page.component;
   }
 
-  checkAuthState() {
+  async checkAuthState() {
+    let loading = this.loader.create();
+    await loading.present();
     this.auth.afAuth.authState.subscribe(
       user => {
         console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
         this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
         this.splashScreen.hide();
+        loading.dismiss();
       },
       error => {
         console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
         this.rootPage = 'UnauthenticatedPage';
         this.splashScreen.hide();
+        loading.dismiss();
         const alert = this.alertCtrl.create({
           title: 'Network Error',
           message: `Please check your connection and try again.`,
