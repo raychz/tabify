@@ -1,9 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  Nav,
-  Platform,
-  MenuController,
-} from 'ionic-angular';
+import { Nav, Platform, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
@@ -44,19 +40,19 @@ export class Tabify {
         component: 'PaymentMethodsPage',
         icon: 'card',
       },
-      {
-        title: 'Settings',
-        component: 'PaymentMethodsPage',
-        icon: 'cog',
-      },
+      // {
+      //   title: 'Settings',
+      //   component: 'PaymentMethodsPage',
+      //   icon: 'cog',
+      // },
       {
         title: 'Help',
-        component: 'PaymentMethodsPage',
+        component: 'HelpPage',
         icon: 'help-circle',
       },
     ];
   }
-  
+
   initializeApp() {
     this.platform.ready().then((readySource: string) => {
       // Okay, so the platform is ready and our plugins are available.
