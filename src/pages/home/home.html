@@ -21,7 +21,7 @@
       </ion-segment-button>
     </ion-segment>
     <ion-buttons right>
-      <button ion-button icon-only>
+      <button (click)="showNotifications()" ion-button icon-only>
         <ion-icon name="notifications"></ion-icon>
         <ion-badge color="danger">7</ion-badge>
       </button>
@@ -48,7 +48,7 @@
     icon-start
     (click)="payNewTab()"
   >
-    <ion-icon name="create"></ion-icon>
+    <ion-icon name="md-restaurant"></ion-icon>
     Pay Tab
   </button>
   <div class="blank-space"></div>

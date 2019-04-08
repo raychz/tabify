@@ -19,12 +19,14 @@ export interface Story {
 export class HomePage {
   selectedSegment = 'user';
   feeds = {
-    user, community, global
+    user,
+    community,
+    global,
   };
 
   constructor(public navCtrl: NavController) {}
 
-  segmentChanged(event: any ) {
+  segmentChanged(event: any) {
     console.log(event);
   }
 
@@ -40,5 +42,13 @@ export class HomePage {
     setTimeout(() => {
       refresher.complete();
     }, 2000);
+  }
+
+  showNotifications() {
+    this.navCtrl.push(
+      'NotificationsPage',
+      {},
+      { animate: true, animation: 'md-transition', direction: 'forward' }
+    );
   }
 }
