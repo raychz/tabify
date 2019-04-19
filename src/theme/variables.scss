@@ -27,39 +27,56 @@ $app-direction: ltr;
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
 $base-colors: (
-  primary: #55acee,
+  primary: #e36640,
   secondary: #32db64,
   danger: #f53d3d,
   warning: #f5bb3d,
   light: #f4f4f4,
   dark: #222,
-  white: #fff,
 );
 $extended-colors: (
   tabify: (
     base: map-get($base-colors, primary),
-    contrast: white,
+    contrast: map-get($base-colors, light),
   ),
   tabify-alt: (
-    base: white,
+    base: map-get($base-colors, light),
     contrast: map-get($base-colors, primary),
   ),
+  tabify-dark-1: #252526,
+  tabify-dark-2: #333333,
 );
 $colors: (map-merge($base-colors, $extended-colors));
 
+$background-color: map-get($colors, tabify-dark-1);
 $refresher-icon-color: map-get($colors, light);
 $refresher-text-color: map-get($colors, light);
+$toolbar-background: map-get($colors, tabify-dark-2);
+$toolbar-text-color: map-get($colors, light);
+$list-background-color: map-get($colors, tabify-dark-2);
+$text-color: map-get($colors, light);
+$subdued-text-color: red;
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 $spinner-ios-dots-color: map-get($colors, primary);
 $loading-ios-spinner-color: map-get($colors, primary);
+$card-ios-background-color: map-get($colors, tabify-dark-2);
+$card-ios-header-color: map-get($colors, light);
+$toolbar-ios-title-text-color: map-get($base-colors, light);
+$toolbar-ios-button-color: map-get($base-colors, light);
+
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 $spinner-md-dots-color: map-get($colors, primary);
 $loading-md-spinner-color: map-get($colors, primary);
+$card-md-background-color: map-get($colors, tabify-dark-2);
+$card-md-header-color: map-get($colors, light);
+$toolbar-md-title-text-color: map-get($base-colors, light);
+$toolbar-md-button-color: map-get($base-colors, light);
+
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here

@@ -1,5 +1,5 @@
-<ion-header no-border>
-  <ion-navbar color="tabify" class="transparent-toolbar">
+<ion-header>
+  <ion-navbar>
     <ion-title>Select Items</ion-title>
     <ion-buttons end>
       <button ion-button icon-end (click)="confirmSelections()">
@@ -8,7 +8,7 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-  <ion-toolbar (click)="inviteOthers()" no-border-top color="white" class="secondary-toolbar">
+  <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col guests">
         <ion-icon name="people"></ion-icon>
@@ -21,7 +21,7 @@
       </ion-col>
     </ion-row>
   </ion-toolbar>
-  <ion-toolbar color="tabify" class="transparent-toolbar tab-metadata-toolbar">
+  <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
         {{ mySelectedItemsCount }}
@@ -52,9 +52,8 @@
         [class.item-on-tab]="isItemOnMyTab(item)"
       >
         <div>
-          <ion-row>
+          <ion-row (click)="addOrRemoveItem(item)">
             <ion-col
-              (click)="addOrRemoveItem(item)"
               class="modify-item"
               [class.item-not-on-tab]="!isItemOnMyTab(item)"
               [class.item-on-tab]="isItemOnMyTab(item)"
@@ -63,16 +62,11 @@
             >
               <div>
                 <ion-icon
-                  *ngIf="!isItemOnMyTab(item) && !item.loading"
-                  color="primary"
-                  name="ios-add"
+                  *ngIf="!item.loading"
+                  [color]="isItemOnMyTab(item) ? 'light' : 'primary'"
+                  [name]="isItemOnMyTab(item) ? 'ios-checkmark' : 'ios-add'"
                 ></ion-icon>
-                <ion-icon
-                  *ngIf="isItemOnMyTab(item) && !item.loading"
-                  color="primary"
-                  name="ios-checkmark"
-                ></ion-icon>
-                <ion-spinner *ngIf="item.loading" name="bubbles"></ion-spinner>
+                <ion-spinner *ngIf="item.loading" [color]="isItemOnMyTab(item) ? 'light' : 'primary'" name="bubbles"></ion-spinner>
               </div>
             </ion-col>
             <ion-col class="item-details">

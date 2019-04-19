@@ -1,5 +1,5 @@
-<ion-header no-border>
-  <ion-navbar color="tabify" class="transparent-toolbar">
+<ion-header>
+  <ion-navbar>
     <ion-buttons left>
       <button navPop ion-button icon-start>
         <ion-icon name="arrow-back"></ion-icon>
@@ -25,7 +25,19 @@
   </ion-card>
   <ion-card>
     <ion-card-header>
-      Current Guests
+      <ion-icon
+      color="primary"
+      class="payers-icon"
+      name="ios-{{
+        users && users.length > 1 ? 'people' : 'person'
+      }}"
+    ></ion-icon>
+    <span
+      class="payers-count"
+    >
+      {{ users.length }}:
+    </span>
+    Current Guests
     </ion-card-header>
     <ion-card-content>
       <p *ngFor="let user of users">

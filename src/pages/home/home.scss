@@ -33,4 +33,9 @@ page-home {
   .blank-space {
     height: 60px;
   }
+
+  ion-refresher {
+    z-index: 1000;
+    background-color: map-get($colors, primary);
+  }
 }

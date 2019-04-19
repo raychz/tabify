@@ -13,19 +13,8 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-ion-header,
-ion-card,
-ion-footer {
-  opacity: 0.95;
-}
 
 ion-content {
-  &.cards-bg {
-    @include linear-gradient(bottom left, $telegram);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-  }
 
   .scroll-content,
   .fixed-content {
@@ -44,16 +33,22 @@ ion-footer {
   }
 }
 
-.semi-transparent-toolbar {
-  .toolbar-background {
-    opacity: 0.4;
+.toolbar-background {
+  background-color: map-get($colors, tabify-dark-2);
+  color: green;
+}
+
+.item, .card {
+  h1, h2, h3, h4, h5, h6 {
+    color: lightgray
+  }
+  p {
+    color: lightgray;
   }
 }
 
-.transparent-toolbar {
-  .toolbar-background {
-    background-color: transparent;
-  }
+.text-input {
+  color: map-get($colors, primary);
 }
 
 .has-refresher .scroll-content {
@@ -67,7 +62,7 @@ ion-footer {
 
 ion-content.tabify-sidemenu {
   color: map-get($colors, light);
-  @include linear-gradient(bottom left, $royal);
+  @include linear-gradient(bottom left, $midnight-city);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;

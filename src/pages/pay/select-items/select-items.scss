@@ -5,7 +5,7 @@ page-select-items {
     .toolbar-col {
       padding: 0px 5px;
       &.guests {
-        color: #666;
+        color: lightgray;
       }
       &.top {
         color: white;
@@ -47,12 +47,11 @@ page-select-items {
               margin: auto;
             }
             &.item-on-tab {
-              background-color: #607d8b;
-              transition: background-color 0.2s linear;
+              background-color: map-get($colors, primary);
+              color: map-get($colors, light);
             }
             &.item-not-on-tab {
-              background-color: #ededed;
-              transition: background-color 0.2s linear;
+              background-color: map-get($colors, tabify-dark-2);
             }
             > div {
               justify-content: center;
@@ -101,7 +100,7 @@ page-select-items {
               .payers-description-text,
               .payers-count {
                 font-size: 0.9em;
-                color: #666;
+                color: lightgray;
               }
               .payers-count {
                 color: map-get($colors, primary);

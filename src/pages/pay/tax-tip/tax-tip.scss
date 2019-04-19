@@ -7,7 +7,6 @@ page-tax-tip {
     height: 100%;
   }
   .toolbar-title {
-    color: map-get($colors, primary);
     .footer-title {
       color: map-get($colors, light);
       font-size: 14px;
@@ -37,7 +36,7 @@ page-tax-tip {
 
   .adjust-tip {
     font-size: 1em;
-    color: map-get($colors, light);
+    color: map-get($colors, primary);
   }
 
   .line-details {
@@ -50,6 +49,7 @@ div.reviews>ion-item.item-feedback {
   border-radius: 4px;
   padding-left: 0px;
   .text-input {
+    color: map-get($colors, light);
     margin: 4px 7px;
     &-ios {
       padding-left: 1rem;

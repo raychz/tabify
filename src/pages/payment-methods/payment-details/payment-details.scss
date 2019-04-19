@@ -8,6 +8,7 @@ page-payment-details {
   }
 
   .spf {
+    background-color: map-get($colors, tabify-dark-2);
     &-field {
       &-group {
         display: inline-block;
