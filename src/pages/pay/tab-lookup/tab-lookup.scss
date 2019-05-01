@@ -5,4 +5,17 @@ page-tab-lookup {
   ion-label {
     color: gray;
   }
+  #restaurant-code {
+    h2 {
+      margin: 10px 0;
+      text-align: center;
+      font-size: 30px;
+      font-family: monospace;
+      color: map-get($colors, primary);
+    }
+
+    #date-time {
+      text-align: center;
+    }
+  }
 }

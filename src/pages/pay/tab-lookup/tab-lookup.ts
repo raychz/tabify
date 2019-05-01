@@ -17,6 +17,8 @@ import { ILocation } from '../../../interfaces/location.interface';
 export class TabLookupPage {
   location: ILocation = this.navParams.data;
   tabForm: FormGroup;
+  restaurantCode!: string; 
+  dateTime: number = Date.now();
 
   constructor(
     public navCtrl: NavController,
@@ -34,7 +36,13 @@ export class TabLookupPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TabLookupPage');
+    this.getDateTime();
+  }
+
+  getDateTime() {
+    setInterval(() => {
+      this.dateTime = Date.now();
+    }, 1000);
   }
 
   async findTab() {
