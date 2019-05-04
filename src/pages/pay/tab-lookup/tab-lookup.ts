@@ -7,7 +7,8 @@ import { SocketService } from '../../../services/socket/socket.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
-
+import { LocationService } from '../../../services/location/location.service';
+import { IRestaurantCode } from '../../../interfaces/restaurant-code.interface';
 
 @IonicPage()
 @Component({
@@ -17,7 +18,7 @@ import { ILocation } from '../../../interfaces/location.interface';
 export class TabLookupPage {
   location: ILocation = this.navParams.data;
   tabForm: FormGroup;
-  restaurantCode!: string; 
+  fraudPreventionCode!: IRestaurantCode;
   dateTime: number = Date.now();
 
   constructor(
@@ -28,7 +29,8 @@ export class TabLookupPage {
     public auth: AuthService,
     public socketService: SocketService,
     public ticketService: TicketService,
-    public alertCtrl: AlertService
+    public alertCtrl: AlertService,
+    public locationService: LocationService,
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
@@ -37,6 +39,7 @@ export class TabLookupPage {
 
   ionViewDidLoad() {
     this.getDateTime();
+    this.getFraudPreventionCode();
   }
 
   getDateTime() {
@@ -47,10 +50,10 @@ export class TabLookupPage {
 
   async findTab() {
     const { tabNumber } = this.tabForm.value;
-    
+
     this.loader.present();
-    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id);
-    
+    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode);
+
     if (error) {
       this.loader.dismiss();
       const alert = this.alertCtrl.create({
@@ -61,10 +64,18 @@ export class TabLookupPage {
       alert.present();
       return;
     }
-    
+
     // await this.socketService.connect()
     this.loader.dismiss();
     this.navCtrl.push('SelectItemsPage', ticket);
+  }
 
+  async getFraudPreventionCode() {
+    try {
+      const result = await this.locationService.getFraudPreventionCode();
+      this.fraudPreventionCode = result
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
