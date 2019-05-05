@@ -44,7 +44,7 @@ $extended-colors: (
     contrast: map-get($base-colors, primary),
   ),
   tabify-dark-1: #252526,
-  tabify-dark-2: #333333,
+  tabify-dark-2: #3a3a3a,
 );
 $colors: (map-merge($base-colors, $extended-colors));
 
