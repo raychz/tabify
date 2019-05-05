@@ -37,9 +37,11 @@ export class TabLookupPage {
     });
   }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
+    await this.loader.present();
     this.getDateTime();
-    this.getFraudPreventionCode();
+    await this.getFraudPreventionCode();
+    await this.loader.dismiss();
   }
 
   getDateTime() {
