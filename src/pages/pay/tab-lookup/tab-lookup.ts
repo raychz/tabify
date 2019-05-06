@@ -8,7 +8,7 @@ import { TicketService } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
-import { IRestaurantCode } from '../../../interfaces/restaurant-code.interface';
+import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 
 @IonicPage()
 @Component({
@@ -18,7 +18,7 @@ import { IRestaurantCode } from '../../../interfaces/restaurant-code.interface';
 export class TabLookupPage {
   location: ILocation = this.navParams.data;
   tabForm: FormGroup;
-  fraudPreventionCode!: IRestaurantCode;
+  fraudPreventionCode!: IFraudPreventionCode;
   dateTime: number = Date.now();
 
   constructor(

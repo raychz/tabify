@@ -7,7 +7,7 @@ import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { abbreviateName } from '../../utilities/utils';
-import { IRestaurantCode } from '../../interfaces/restaurant-code.interface';
+import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 
 @Injectable()
 export class TicketService {
@@ -17,7 +17,7 @@ export class TicketService {
     private auth: AuthService
   ) {}
 
-  async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IRestaurantCode) {
+  async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
       const params = {
         ticket_number: tab_id,

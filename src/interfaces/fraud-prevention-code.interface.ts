@@ -1,4 +1,4 @@
-export interface IRestaurantCode {
+export interface IFraudPreventionCode {
     id: number;
     code: string;
     date_created: Date;
