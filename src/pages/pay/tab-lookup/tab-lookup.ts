@@ -7,7 +7,8 @@ import { SocketService } from '../../../services/socket/socket.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
-
+import { LocationService } from '../../../services/location/location.service';
+import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 
 @IonicPage()
 @Component({
@@ -17,6 +18,8 @@ import { ILocation } from '../../../interfaces/location.interface';
 export class TabLookupPage {
   location: ILocation = this.navParams.data;
   tabForm: FormGroup;
+  fraudPreventionCode!: IFraudPreventionCode;
+  dateTime: number = Date.now();
 
   constructor(
     public navCtrl: NavController,
@@ -26,23 +29,33 @@ export class TabLookupPage {
     public auth: AuthService,
     public socketService: SocketService,
     public ticketService: TicketService,
-    public alertCtrl: AlertService
+    public alertCtrl: AlertService,
+    public locationService: LocationService,
   ) {
     this.tabForm = fb.group({
       tabNumber: ['', Validators.compose([Validators.required])],
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TabLookupPage');
+  async ionViewDidLoad() {
+    await this.loader.present();
+    this.getDateTime();
+    await this.getFraudPreventionCode();
+    await this.loader.dismiss();
+  }
+
+  getDateTime() {
+    setInterval(() => {
+      this.dateTime = Date.now();
+    }, 1000);
   }
 
   async findTab() {
     const { tabNumber } = this.tabForm.value;
-    
+
     this.loader.present();
-    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id);
-    
+    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode);
+
     if (error) {
       this.loader.dismiss();
       const alert = this.alertCtrl.create({
@@ -53,10 +66,18 @@ export class TabLookupPage {
       alert.present();
       return;
     }
-    
+
     // await this.socketService.connect()
     this.loader.dismiss();
     this.navCtrl.push('SelectItemsPage', ticket);
+  }
 
+  async getFraudPreventionCode() {
+    try {
+      const result = await this.locationService.getFraudPreventionCode();
+      this.fraudPreventionCode = result
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

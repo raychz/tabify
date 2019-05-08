@@ -33,6 +33,16 @@
             </form>
           </ion-card-content>
         </ion-card>
+        <ion-card>
+          <ion-card-header>
+            For Restaurant Use Only
+          </ion-card-header>
+          <ion-card-content id="fraud-prevention-code">
+            <p>If requested, show this code to your server:</p>
+            <h2>{{fraudPreventionCode?.code}}</h2>
+            <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
