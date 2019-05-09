@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { AuthService } from '../../../services/auth/auth.service';
 import { AlertService } from '../../../services/utilities/alert.service';
@@ -13,15 +13,19 @@ import { LoaderService } from '../../../services/utilities/loader.service';
   templateUrl: 'sign-up.html',
 })
 export class SignUpPage {
+  referralCode = this.navParams.get("referralCode");
+
   constructor(
     private navCtrl: NavController,
     private auth: AuthService,
     public alert: AlertService,
-    public loader: LoaderService
-  ) {}
+    public loader: LoaderService,
+    private navParams: NavParams
+  ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SignUpPage');
+    console.log(this.referralCode);
   }
 
   signUpWithEmail() {

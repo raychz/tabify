@@ -26,7 +26,7 @@ export class UnauthenticatedPage {
   }
 
   signUp() {
-    this.navCtrl.push('SignUpPage');
+    this.navCtrl.push('ReferralCodePage');
   }
 
   login() {
