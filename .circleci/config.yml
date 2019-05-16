@@ -6,37 +6,55 @@ version: 2
 jobs:
   build:
     docker:
-      - image: 'circleci/node:8.11.3'
+      - image: circleci/node:8.11.3
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 'Install Ionic and Cordova'
-          command: 'sudo yarn global add ionic'
+          name: Install Ionic and Cordova
+          command: sudo yarn global add ionic
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: 'Install Dependencies'
-          command: 'yarn install --frozen-lockfile'
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
       - run:
-          name: 'Build PWA'
-          command: 'yarn ionic:build'
+          name: Build Ionic Application
+          command: yarn ionic:build
+      - persist_to_workspace:
+          paths:
+            - www
+            - package.json
+            - firebase.json
+            - .firebaserc
+  deploy:
+    docker:
+      - image: 'circleci/node:8.11.3'
+    working_directory: ~/repo
+    steps:
+      - attach_workspace
       - run:
-          name: 'Deploy to Firebase'
-          command: './node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN'
+          name: Install Firebase
+          command: yarn add firebase-tools
+      - run:
+          name: Deploy to Firebase
+          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build:
+      - build
+      - deploy:
+          requires:
+            - build
           filters:
             branches:
               only: master
