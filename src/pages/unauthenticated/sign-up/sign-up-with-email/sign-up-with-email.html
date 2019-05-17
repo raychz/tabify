@@ -8,63 +8,52 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <form (ngSubmit)="signUp()" [formGroup]="form">
-          <ion-list inset>
-            <ion-item>
-              <ion-input
-                type="text"
-                placeholder="First Name"
-                formControlName="firstName"
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input
-                type="text"
-                placeholder="Last Name"
-                formControlName="lastName"
-              ></ion-input>
-            </ion-item>
-            <ion-item
-              [ngClass]="{
-                invalid: emailErrors.hasError('*', ['touched', 'dirty'])
-              }"
-            >
-              <ion-input
-                type="text"
-                placeholder="Email"
-                formControlName="email"
-              ></ion-input>
-            </ion-item>
-            <div ngxErrors="email" #emailErrors="ngxErrors">
-              <div [ngxError]="['email', 'required']" [when]="['dirty']">
-                Enter a valid email
-              </div>
-            </div>
-            <ion-item
-              [ngClass]="{
-                invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
-              }"
-            >
-              <ion-input
-                type="password"
-                placeholder="Password"
-                formControlName="password"
-              ></ion-input>
-            </ion-item>
-            <div ngxErrors="password" #passwordErrors="ngxErrors">
-              <div [ngxError]="['minlength', 'required']" [when]="['dirty']">
-                Password must have at least 6 characters
-              </div>
-            </div>
-          </ion-list>
+        <ion-card>
+          <ion-card-content>
+            <h1>Welcome back,</h1>
+            <form (ngSubmit)="signUp()" [formGroup]="form">
+              <ion-list inset>
+                <ion-item>
+                  <ion-label floating>First Name</ion-label>
+                  <ion-input type="text" formControlName="firstName"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label floating>Last Name</ion-label>
+                  <ion-input type="text" formControlName="lastName"></ion-input>
+                </ion-item>
+                <ion-item [ngClass]="{
+                            invalid: emailErrors.hasError('*', ['touched', 'dirty'])
+                          }">
+                  <ion-label floating>Email</ion-label>
+                  <ion-input type="text" formControlName="email"></ion-input>
+                </ion-item>
+                <div ngxErrors="email" #emailErrors="ngxErrors">
+                  <div [ngxError]="['email', 'required']" [when]="['dirty']">
+                    Enter a valid email
+                  </div>
+                </div>
+                <ion-item [ngClass]="{
+                            invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
+                          }">
+                  <ion-label floating>Password</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                </ion-item>
+                <div ngxErrors="password" #passwordErrors="ngxErrors">
+                  <div [ngxError]="['minlength', 'required']" [when]="['dirty']">
+                    Password must have at least 6 characters
+                  </div>
+                </div>
+              </ion-list>
 
-          <div padding-horizontal>
-            <div class="form-error">{{ signUpError }}</div>
-            <button ion-button block type="submit" [disabled]="!form.valid">
-              Sign Up
-            </button>
-          </div>
-        </form>
+              <div padding-horizontal>
+                <div class="form-error">{{ signUpError }}</div>
+                <button ion-button block type="submit" [disabled]="!form.valid">
+                  Sign Up
+                </button>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

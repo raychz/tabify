@@ -1,35 +1,84 @@
-<ion-header>
-  <ion-navbar>
+<ion-header no-border>
+  <ion-navbar class="transparent-toolbar">
   </ion-navbar>
 </ion-header>
 
-<ion-content class="cards-bg">
+<ion-content>
   <ion-grid>
     <ion-row>
       <ion-col text-center>
-        <button ion-button color="tabify" (click)="loginWithFacebook()" block>
-          <ion-icon name="logo-facebook"></ion-icon>
-          Login With Facebook
-        </button>
+        <h2>Welcome Back 👋</h2>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col text-center>
-        <button
-          ion-button
-          color="tabify-alt"
-          (click)="loginWithEmail()"
-          block
-          outline
-        >
-          Or Login With Email
-        </button>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            Recommended
+          </ion-card-header>
+          <ion-card-content>
+            <button ion-button color="tabify" (click)="loginWithFacebook()" block>
+              <ion-icon name="logo-facebook"></ion-icon>
+              Login With Facebook
+            </button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header id="form-card-header">
+            Or connect with email
+          </ion-card-header>
+          <ion-card-content>
+            <form (ngSubmit)="login()" [formGroup]="loginForm">
+              <ion-list inset>
+                <ion-item [ngClass]="{
+                          invalid: emailErrors.hasError('*', ['touched', 'dirty'])
+                        }">
+                  <ion-label floating>Email</ion-label>
+                  <ion-input type="text" formControlName="email"></ion-input>
+                </ion-item>
+                <div ngxErrors="email" #emailErrors="ngxErrors">
+                  <div [ngxError]="['email', 'required']" [when]="['dirty']">
+                    Enter a valid email
+                  </div>
+                </div>
+                <ion-item [ngClass]="{
+                          invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
+                        }">
+                  <ion-label floating>Password</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                </ion-item>
+                <div ngxErrors="password" #passwordErrors="ngxErrors">
+                  <div [ngxError]="['minlength', 'required']" [when]="['dirty']">
+                    Password must have at least 6 characters
+                  </div>
+                </div>
+              </ion-list>
+
+              <div>
+                <div class="form-error">{{ loginError }}</div>
+                <button ion-button block type="submit" [disabled]="!loginForm.valid">
+                  Login With Email
+                </button>
+                <button ion-button block clear color="tabify-alt" (click)="forgotPassword()">
+                  Forgot Password?
+                </button>
+                <div *ngIf="loginError" class="login-footer" (click)="signUp()">
+                  <p>If you're a new user, please sign up.</p>
+                </div>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col text-center>
         <button ion-button color="tabify-alt" (click)="signUp()" clear>
-          New User?
+          New User?<span class="sign-up-text">Sign Up.</span>
         </button>
       </ion-col>
     </ion-row>

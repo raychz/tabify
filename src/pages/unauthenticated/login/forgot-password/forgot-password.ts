@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../../../services/auth/auth.service';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @IonicPage({
   priority: 'off'
