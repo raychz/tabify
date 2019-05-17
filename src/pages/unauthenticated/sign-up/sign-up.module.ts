@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { SignUpPage } from './sign-up';
+import { NgxErrorsModule } from '@ultimate/ngxerrors';
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { SignUpPage } from './sign-up';
   ],
   imports: [
     IonicPageModule.forChild(SignUpPage),
+    NgxErrorsModule
   ],
 })
 export class SignUpPageModule {}

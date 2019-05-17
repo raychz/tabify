@@ -4,6 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @IonicPage({
   priority: 'high'
@@ -13,19 +14,33 @@ import { AlertService } from '../../../services/utilities/alert.service';
   templateUrl: 'login.html',
 })
 export class LoginPage {
+  loginForm: FormGroup;
+  loginError: string = '';
+
   constructor(
     public navCtrl: NavController,
     public auth: AuthService,
     public alert: AlertService,
-    public loader: LoaderService
-  ) {}
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    public loader: LoaderService,
+    public fb: FormBuilder,
+  ) {
+    this.loginForm = fb.group({
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      password: [
+        '',
+        Validators.compose([Validators.required, Validators.minLength(6)]),
+      ],
+    });
   }
 
-  loginWithEmail() {
-    this.navCtrl.push('LoginWithEmailPage');
+  async login() {
+    const { email, password } = this.loginForm.value;
+
+    if (email && password) {
+      await this.auth
+        .signInWithEmail({ email, password })
+        .catch(error => (this.loginError = error.message));
+    }
   }
 
   loginWithFacebook() {
@@ -47,6 +62,11 @@ export class LoginPage {
         }
       )
       .then(() => this.loader.dismiss());
+  }
+
+  forgotPassword() {
+    this.navCtrl.push('ForgotPasswordPage');
+    return false;
   }
 
   signUp() {

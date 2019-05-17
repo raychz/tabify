@@ -33,6 +33,12 @@ ion-footer {
   }
 }
 
+.transparent-toolbar {
+  .toolbar-background {
+    background-color: transparent
+  }
+}
+
 .toolbar-background {
   background-color: map-get($colors, tabify-dark-2);
   color: green;
