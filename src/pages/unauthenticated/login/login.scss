@@ -5,7 +5,8 @@ page-login {
     }
   }
 
-  .list-ios[inset], .list-md[inset] {
+  .list-ios[inset],
+  .list-md[inset] {
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
@@ -16,7 +17,7 @@ page-login {
   }
 
   .sign-up-text {
-      margin-left: 1rem;
-      color: map-get($colors, primary);
+    margin-left: 1rem;
+    color: map-get($colors, primary);
   }
 }
