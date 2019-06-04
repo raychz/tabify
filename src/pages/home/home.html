@@ -5,11 +5,7 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-segment
-      color="tabify-alt"
-      [(ngModel)]="selectedSegment"
-      (ionChange)="segmentChanged($event)"
-    >
+    <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
       <ion-segment-button value="global" icon-only>
         <ion-icon name="globe"></ion-icon>
       </ion-segment-button>
@@ -31,64 +27,71 @@
 
 <ion-content class="cards-bg">
   <ion-refresher (ionRefresh)="refresh($event)">
-    <ion-refresher-content
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingSpinner="dots"
-      refreshingText="Refreshing stories..."
-    >
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots"
+      refreshingText="Refreshing stories...">
     </ion-refresher-content>
   </ion-refresher>
-  <button
-    ion-fixed
-    ion-button
-    block
-    color="tabify"
-    class="pay-tab"
-    icon-start
-    (click)="payNewTab()"
-  >
+  <button ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
     <ion-icon name="md-restaurant"></ion-icon>
     Pay Tab
   </button>
+
   <div class="blank-space"></div>
-  <ng-container *ngFor="let story of feeds[selectedSegment]">
-    <ion-card *ngIf="!!story">
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="{{ story.location.photoUrl }}" />
-        </ion-avatar>
-        <h2>{{ story.location.name }}</h2>
-        <h3>{{ story.location.city }}</h3>
-        <p>{{ story.location.streetAddress }}</p>
-        <ion-note item-end>{{ story.location.distance }} mi.</ion-note>
-      </ion-item>
-      <ion-card-content>
-        <p>Ray and John were here.</p>
-        <div class="members-comments">
-          <p class="members-comment">Ray: "Loved the brisket!"</p>
-          <p class="members-comment">
-            John: "Best BBQ I've had in a long time. Will be back for more!"
-          </p>
-        </div>
-      </ion-card-content>
-      <ion-row>
-        <ion-col>
-          <button ion-button color="primary" clear small icon-start>
-            <ion-icon name="heart"></ion-icon>
-            {{ story.likes }} Likes
-          </button>
-        </ion-col>
-        <ion-col>
-          <button ion-button color="primary" clear small icon-start>
-            <ion-icon name="text"></ion-icon>
-            {{ story.comments }} Comments
-          </button>
-        </ion-col>
-        <ion-col align-self-center text-center>
-          <ion-note> 11h ago </ion-note>
-        </ion-col>
-      </ion-row>
-    </ion-card>
-  </ng-container>
+
+  <div *ngIf="feeds[selectedSegment].length > 0; else emptyFeed">
+    <ng-container *ngFor="let story of feeds[selectedSegment]">
+      <ion-card *ngIf="!!story">
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="{{ story.location.photoUrl }}" />
+          </ion-avatar>
+          <h2>{{ story.location.name }}</h2>
+          <h3>{{ story.location.city }}</h3>
+          <p>{{ story.location.streetAddress }}</p>
+          <ion-note item-end>{{ story.location.distance }} mi.</ion-note>
+        </ion-item>
+        <ion-card-content>
+          <p>Ray and John were here.</p>
+          <div class="members-comments">
+            <p class="members-comment">Ray: "Loved the brisket!"</p>
+            <p class="members-comment">
+              John: "Best BBQ I've had in a long time. Will be back for more!"
+            </p>
+          </div>
+        </ion-card-content>
+        <ion-row>
+          <ion-col>
+            <button ion-button color="primary" clear small icon-start>
+              <ion-icon name="heart"></ion-icon>
+              {{ story.likes }} Likes
+            </button>
+          </ion-col>
+          <ion-col>
+            <button ion-button color="primary" clear small icon-start>
+              <ion-icon name="text"></ion-icon>
+              {{ story.comments }} Comments
+            </button>
+          </ion-col>
+          <ion-col align-self-center text-center>
+            <ion-note> 11h ago </ion-note>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ng-container>
+  </div>
+
+  <ng-template #emptyFeed>
+    <br>
+    <ion-row justify-content-center>
+      <ion-icon class="empty-feed-arrow" name="arrow-round-up"></ion-icon>
+      <ion-card>
+        <ion-card-content text-center>
+          No payment history (yet!).
+          <br>
+          To join a tab, hit the Pay Tab button 🥂
+        </ion-card-content>
+      </ion-card>
+    </ion-row>
+  </ng-template>
+
 </ion-content>

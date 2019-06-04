@@ -34,6 +34,11 @@ page-home {
     height: 60px;
   }
 
+  .empty-feed-arrow {
+    color: red;
+    font-size: 48px;
+  }
+
   ion-refresher {
     z-index: 1000;
     background-color: map-get($colors, primary);
