@@ -80,18 +80,17 @@
     </ng-container>
   </div>
 
+  <!-- If selected segment's feed is empty, display this template -->
+  <!-- Fix centering the message -->
   <ng-template #emptyFeed>
-    <br>
-    <ion-row justify-content-center>
-      <ion-icon class="empty-feed-arrow" name="arrow-round-up"></ion-icon>
-      <ion-card>
-        <ion-card-content text-center>
-          No payment history (yet!).
-          <br>
-          To join a tab, hit the Pay Tab button 🥂
-        </ion-card-content>
-      </ion-card>
+    <ion-row class="no-feed-row" align-items-center>
+      <ion-col text-center>
+        <h6>No payment history (yet!)</h6>
+        <div>
+          <h6>To join a tab, hit the Pay Tab button</h6>
+        </div>
+        <h1>🥂</h1>
+      </ion-col>
     </ion-row>
   </ng-template>
-
 </ion-content>
