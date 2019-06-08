@@ -1,3 +1,4 @@
+$blank-space-height: 60px;
 page-home {
   ion-segment.segment-ios {
     max-width: 55%;
@@ -31,7 +32,16 @@ page-home {
     }
   }
   .blank-space {
-    height: 60px;
+    height: $blank-space-height;
+  }
+
+  .empty-feed-arrow {
+    color: red;
+    font-size: 48px;
+  }
+
+  .no-feed-row {
+    height: calc(100% - #{$blank-space-height});
   }
 
   ion-refresher {
