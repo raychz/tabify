@@ -8,6 +8,7 @@
     <ion-row>
       <ion-col text-center>
         <h2>Welcome 👋</h2>
+        <span>Create an account to get started</span>
       </ion-col>
     </ion-row>
     <ion-row [hidden]="signUpStep!==SignUpStep.REFERRAL_CODE_ENTRY">
@@ -18,10 +19,12 @@
           </ion-card-header>
           <ion-card-content>
             <ion-row *ngIf="showServerCodeInput">
-              <ion-item>
-                <ion-label floating>Enter Referral Code</ion-label>
-                <ion-input type="text" [(ngModel)]="referralCode"></ion-input>
-              </ion-item>
+              <ion-list inset>
+                <ion-item>
+                  <ion-label floating>Enter Referral Code</ion-label>
+                  <ion-input type="text" [(ngModel)]="referralCode"></ion-input>
+                </ion-item>
+              </ion-list>
             </ion-row>
             <ion-row *ngIf="showServerCodeInput">
               <ion-col col-6>

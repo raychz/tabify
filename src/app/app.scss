@@ -66,6 +66,19 @@ ion-footer {
   color: map-get($colors, light);
 }
 
+.list-ios[inset] {
+  > .item:last-child,
+  .item {
+    border-bottom: 1px solid #c8c7cc;
+  }
+}
+
+.list-md[inset] {
+  .item > .item-inner {
+    border-bottom: 1px solid #c8c7cc;
+  }
+}
+
 ion-content.tabify-sidemenu {
   color: map-get($colors, light);
   @include linear-gradient(bottom left, $midnight-city);
