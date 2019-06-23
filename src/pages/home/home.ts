@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { user, global, community } from './example-stories';
+// import { user, global, community } from './example-stories';
 import { ILocation } from '../../interfaces/location.interface';
+import { StoryService } from '../../services/story/story.service';
+import * as moment from 'moment';
 
 export interface Story {
   location: ILocation;
@@ -19,12 +21,33 @@ export interface Story {
 export class HomePage {
   selectedSegment = 'user';
   feeds = {
-    user,
-    community,
-    global,
+    user: [],
+    community: [],
+    global: [],
   };
 
-  constructor(public navCtrl: NavController) {}
+  constructor(
+    public navCtrl: NavController,
+    private storyService: StoryService
+    ) {}
+
+  ionViewDidLoad() {
+    this.getUserStories();
+  }
+
+  async getUserStories() {
+    const userStories = await this.storyService.getUserStories();
+
+    this.feeds.user = userStories.map((story: any) => ({
+      ...story, 
+      relativeTime: moment(story.ticket.date_created).fromNow()
+    }));
+  }
+
+  async createLike(storyId: number) {
+    await this.storyService.createLike(storyId);
+    // do more stuff, like update the template with an additional like
+  }
 
   segmentChanged(event: any) {
     console.log(event);
