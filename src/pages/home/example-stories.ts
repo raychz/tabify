@@ -1,5 +1,5 @@
-// // import { Story } from './home';
-// let user: any[] = [
+// import { Story } from './home';
+let user: any[] = [
 //   {
 //     location: {
 //       name: 'The Smoke Shop BBQ',
@@ -65,9 +65,9 @@
 //     likes: 4,
 //     comments: 3,
 //   },
-// ];
-// let global: any[] = user;
+];
+let global: any[] = user;
 
-// let community: any[] = [...user].reverse();
+let community: any[] = [...user].reverse();
 
-// export { user, global, community };
+export { user, global, community };
