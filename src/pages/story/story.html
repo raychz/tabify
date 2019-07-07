@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Story</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-card *ngIf="!!story">
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="{{ story.ticket.location.photoUrl }}" />
+      </ion-avatar>
+      <h2>{{ story.ticket.location.name }}</h2>
+      <h3>{{ story.ticket.location.city }}</h3>
+      <p>{{ story.ticket.location.streetAddress }}</p>
+      <ion-note item-end>2 mi.</ion-note>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <button ion-button color="primary" clear small icon-start (click)='createLike(story.id)'>
+          <ion-icon name="heart"></ion-icon>
+          {{ story.like_count }} Likes
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button color="primary" clear small icon-start>
+          <ion-icon name="text"></ion-icon>
+          {{ story.comment_count }} Comments
+        </button>
+      </ion-col>
+      <ion-col align-self-center text-center>
+        <ion-note> {{story.relativeTime}} </ion-note>
+      </ion-col>
+    </ion-row>
+
+    <ion-card-content>
+      <ion-input placeholder="Post a new comment!"></ion-input>
+    </ion-card-content>
+
+  </ion-card>
+
+
+</ion-content>

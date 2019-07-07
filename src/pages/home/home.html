@@ -45,7 +45,7 @@
           <ion-avatar item-start>
             <img src={{story.ticket.location.photo_url}} />
           </ion-avatar>
-          <h2>{{ story.ticket.location.name }}</h2>
+          <h2 (click)="openDetailedStory(story.id)">{{ story.ticket.location.name }}</h2>
           <h3>{{ story.ticket.location.city }}</h3>
           <p>{{ story.ticket.location.streetAddress }}</p>
           <ion-note item-end>2 mi.</ion-note>
@@ -60,7 +60,7 @@
             </button>
           </ion-col>
           <ion-col>
-            <button ion-button color="primary" clear small icon-start>
+            <button ion-button color="primary" clear small icon-start (click)="openDetailedStory(story.id)">
               <ion-icon name="text"></ion-icon>
               {{ story.comment_count }} Comments
             </button>

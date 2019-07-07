@@ -29,7 +29,7 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private storyService: StoryService
-    ) {}
+  ) { }
 
   ionViewDidLoad() {
     this.getUserStories();
@@ -39,7 +39,7 @@ export class HomePage {
     const userStories = await this.storyService.getUserStories();
 
     this.feeds.user = userStories.map((story: any) => ({
-      ...story, 
+      ...story,
       relativeTime: moment(story.ticket.date_created).fromNow()
     }));
   }
@@ -57,6 +57,14 @@ export class HomePage {
     this.navCtrl.push(
       'PayPage',
       {},
+      { animate: true, animation: 'md-transition', direction: 'forward' }
+    );
+  }
+
+  openDetailedStory(storyId: number) {
+    this.navCtrl.push(
+      'StoryPage',
+      { storyId: storyId },
       { animate: true, animation: 'md-transition', direction: 'forward' }
     );
   }

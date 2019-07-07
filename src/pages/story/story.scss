@@ -1,0 +1,51 @@
+$blank-space-height: 60px;
+page-home {
+  ion-segment.segment-ios {
+    max-width: 55%;
+    margin: auto;
+  }
+  .bar-buttons-md[right] {
+    margin-left: 2rem !important;
+  }
+  .bar-buttons-ios[right] {
+    margin-right: 0.65rem !important;
+  }
+  .members-comments {
+    .members-comment {
+      &:first-child {
+        margin-top: 0.5em;
+      }
+      color: #8e9093;
+    }
+  }
+
+  .pay-tab {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
+    &-text {
+      color: map-get($colors, light);
+      font-weight: 400;
+      font-size: 20px;
+    }
+  }
+  .blank-space {
+    height: $blank-space-height;
+  }
+
+  .empty-feed-arrow {
+    color: red;
+    font-size: 48px;
+  }
+
+  .no-feed-row {
+    height: calc(100% - #{$blank-space-height});
+  }
+
+  ion-refresher {
+    z-index: 1000;
+    background-color: map-get($colors, primary);
+  }
+}
