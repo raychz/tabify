@@ -19,7 +19,7 @@
       <p>{{ story.ticket.location.streetAddress }}</p>
       <ion-note item-end>2 mi.</ion-note>
     </ion-item>
-    <ion-row>
+    <ion-row class="bottom-border">
       <ion-col>
         <button ion-button color="primary" clear small icon-start (click)='createLike(story.id)'>
           <ion-icon name="heart"></ion-icon>
@@ -38,9 +38,25 @@
     </ion-row>
 
     <ion-card-content>
-      <ion-input placeholder="Post a new comment!"></ion-input>
-    </ion-card-content>
+      <ng-container *ngFor="let comment of comments">
+        <ng-container *ngIf="!!comment">
+          <ion-row class="comment-background">
+            <ion-col>
+              <ion-note>{{comment.user.uid}}</ion-note>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>{{comment.text}}</ion-item>
+            </ion-col>
+          </ion-row>
+        </ng-container>
+      </ng-container>
 
+
+      <ion-input placeholder="Post a new comment!"></ion-input>
+
+    </ion-card-content>
   </ion-card>
 
 

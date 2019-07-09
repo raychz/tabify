@@ -1,5 +1,5 @@
 $blank-space-height: 60px;
-page-home {
+page-story {
   ion-segment.segment-ios {
     max-width: 55%;
     margin: auto;
@@ -43,6 +43,14 @@ page-home {
   .no-feed-row {
     height: calc(100% - #{$blank-space-height});
   }
+
+  .bottom-border {
+    border-bottom: 1px solid white;
+  }
+
+  // .comment-background {
+  //   background-color:#ffffff;
+  // }
 
   ion-refresher {
     z-index: 1000;

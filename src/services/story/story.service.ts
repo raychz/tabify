@@ -23,6 +23,9 @@ export class StoryService {
     }
 
     async createLike(storyId: number): Promise<any> {
-        return await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/likes`, {}).toPromise();
+        const response = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/likes`, {}).toPromise();
+
+        console.log(response);
+        return response;
     }
 }
