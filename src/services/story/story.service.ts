@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import config from "../../config";
+import { observable } from "rxjs";
 
 @Injectable()
 export class StoryService {
@@ -22,10 +22,17 @@ export class StoryService {
         return await this.httpClient.get(`${config.serverUrl}/stories/${storyId}/comments`).toPromise();
     }
 
-    async createLike(storyId: number): Promise<any> {
-        const response = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/likes`, {}).toPromise();
+    async createLike(storyId: number) {
+        const res = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/likes`, {}, { observe: 'response' })
+            .toPromise();
 
-        console.log(response);
-        return response;
+        console.log(res);
+    }
+
+    async createComment(storyId: number, newComment: string) {
+        const res = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/comments`,
+            { newComment: newComment }, { observe: 'response' }).toPromise();
+
+        return res.status;
     }
 }

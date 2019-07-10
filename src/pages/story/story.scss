@@ -48,10 +48,6 @@ page-story {
     border-bottom: 1px solid white;
   }
 
-  // .comment-background {
-  //   background-color:#ffffff;
-  // }
-
   ion-refresher {
     z-index: 1000;
     background-color: map-get($colors, primary);

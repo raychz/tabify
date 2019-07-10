@@ -45,7 +45,7 @@ export class HomePage {
   }
 
   async createLike(storyId: number) {
-    await this.storyService.createLike(storyId);
+    const response = await this.storyService.createLike(storyId);
     // do more stuff, like update the template with an additional like
   }
 

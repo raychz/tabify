@@ -21,15 +21,19 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <button ion-button color="primary" clear small icon-start (click)='createLike(story.id)'>
+        <button ion-button color="primary" clear small icon-start (click)='createLike()'>
           <ion-icon name="heart"></ion-icon>
-          {{ story.like_count }} Likes
+          {{ story.like_count }}&nbsp;
+          <div *ngIf="story.like_count != 1; else singularLikes">Likes</div>
+          <ng-template #singularLikes>Like</ng-template>
         </button>
       </ion-col>
       <ion-col>
         <button ion-button color="primary" clear small icon-start>
           <ion-icon name="text"></ion-icon>
-          {{ story.comment_count }} Comments
+          {{ story.comment_count }}&nbsp;
+          <div *ngIf="story.comment_count != 1; else singularComment">Comments</div>
+          <ng-template #singularComment>Comment</ng-template>
         </button>
       </ion-col>
       <ion-col align-self-center text-center>
@@ -40,7 +44,7 @@
     <ion-card-content>
       <ng-container *ngFor="let comment of comments">
         <ng-container *ngIf="!!comment">
-          <ion-row class="comment-background">
+          <ion-row>
             <ion-col>
               <ion-note>{{comment.user.uid}}</ion-note>
             </ion-col>
@@ -54,7 +58,8 @@
       </ng-container>
 
 
-      <ion-input placeholder="Post a new comment!"></ion-input>
+      <ion-input [(ngModel)]="newComment" placeholder="Enter a new comment!"></ion-input>
+      <button ion-button small block outline (click)='createComment()'>Post Comment</button>
 
     </ion-card-content>
   </ion-card>
