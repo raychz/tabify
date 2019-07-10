@@ -42,6 +42,8 @@ export class HomePage {
       ...story,
       relativeTime: moment(story.ticket.date_created).fromNow()
     }));
+
+    console.log(this.feeds.user);
   }
 
   async createLike(storyId: number) {
@@ -65,7 +67,7 @@ export class HomePage {
     this.navCtrl.push(
       'StoryPage',
       { storyId: storyId },
-      { animate: true, animation: 'md-transition', direction: 'forward' }
+      { animate: true, direction: 'forward' }
     );
   }
 

@@ -6,7 +6,6 @@
 
 </ion-header>
 
-
 <ion-content padding>
 
   <ion-card *ngIf="!!story">
@@ -61,13 +60,14 @@
           </ion-row>
         </ng-container>
       </ng-container>
-
-
-      <ion-input [(ngModel)]="newComment" placeholder="Enter a new comment!"></ion-input>
-      <button ion-button small block outline (click)='createComment()'>Post Comment</button>
-
     </ion-card-content>
   </ion-card>
 
-
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-input margin-left margin-right [(ngModel)]="newComment" placeholder="Enter a new comment!"></ion-input>
+    <button ion-button block small outline (click)='createComment()'>Post Comment</button>
+  </ion-toolbar>
+</ion-footer>

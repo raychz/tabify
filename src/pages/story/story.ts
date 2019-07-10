@@ -13,7 +13,7 @@ import { IUser } from '../../interfaces/user.interface';
 export class StoryPage {
 
   story: any;
-  comments: any = [];
+  comments: any[] = [];
   user = <IUser>{};
   newComment: string = '';
 
@@ -82,15 +82,11 @@ export class StoryPage {
   async deleteComment(commentId: number) {
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res == 200) {
-
-      // remove that comment from front end
+    if (res == 200) { 
+      // remove the comment from front end
       const index = this.comments.findIndex((comment: any) => comment.id === commentId);
-      this.comments = [
-        ...this.comments.slice(0, index)
-      ];
+      this.comments.splice(index, 1);
     }
-
     this.story.comment_count -= 1;
   }
 }
