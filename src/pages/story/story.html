@@ -53,6 +53,11 @@
             <ion-col>
               <ion-item>{{comment.text}}</ion-item>
             </ion-col>
+            <ion-col text-right>
+              <button ion-button color="primary" clear small icon-start (click)='deleteComment(comment.id)'>
+                <ion-icon *ngIf="comment.user.uid == user.uid" name="trash"></ion-icon>
+              </button>
+            </ion-col>
           </ion-row>
         </ng-container>
       </ng-container>

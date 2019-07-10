@@ -69,12 +69,28 @@ export class StoryPage {
     if (res == 201) {
       let newCommentId = this.comments[this.comments.length - 1].id + 1
 
-      let user = {uid: this.user.uid};
-      let comment = {id: newCommentId, text: this.newComment, user};
+      let user = { uid: this.user.uid };
+      let comment = { id: newCommentId, text: this.newComment, user };
 
       this.comments.push(comment);
     }
 
     this.newComment = '';
+    this.story.comment_count += 1;
+  }
+
+  async deleteComment(commentId: number) {
+    const res = await this.storyService.deleteComment(this.story.id, commentId);
+
+    if (res == 200) {
+
+      // remove that comment from front end
+      const index = this.comments.findIndex((comment: any) => comment.id === commentId);
+      this.comments = [
+        ...this.comments.slice(0, index)
+      ];
+    }
+
+    this.story.comment_count -= 1;
   }
 }

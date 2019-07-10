@@ -35,4 +35,11 @@ export class StoryService {
 
         return res.status;
     }
+
+    async deleteComment(storyId: number, commentId: number) {
+        const res = await this.httpClient.delete(`${config.serverUrl}/stories/${storyId}/comments/${commentId}`,
+            { observe: 'response' }).toPromise();
+
+        return res.status;
+    }
 }
