@@ -10,63 +10,39 @@
     <ion-card-content>
       <label>Full Name</label>
       <div class="spf-field">
-        <input
-          [(ngModel)]="newCard.full_name"
-          type="text"
-          class="spf-input-text"
-        />
+        <input [(ngModel)]="newCard.full_name" type="text" class="spf-input-text" />
       </div>
 
       <label>Credit Card Number</label>
       <div id="spreedly-number"></div>
 
-      <label
-        >CVV
-        <ion-icon
-          class="cvv-help"
-          (click)="showCvvHelp()"
-          name="help-circle-outline"
-        ></ion-icon
-      ></label>
+      <label>CVV
+        <ion-icon class="cvv-help" (click)="showCvvHelp()" name="help-circle-outline"></ion-icon></label>
       <div id="spreedly-cvv"></div>
 
       <label>Expiration Date</label>
       <div class="spf-field spf-field-exp">
         <div class="spf-field-group spf-month">
-          <input
-            [(ngModel)]="newCard.month"
-            type="tel"
-            class="spf-input-text"
-            id="month"
-            size="3"
-            maxlength="2"
-            placeholder="MM"
-          />
+          <input [(ngModel)]="newCard.month" type="tel" class="spf-input-text" id="month" size="3" maxlength="2"
+            placeholder="MM" />
         </div>
         <span class="spf-exp-divider">/</span>
         <div class="spf-field-group spf-year">
-          <input
-            [(ngModel)]="newCard.year"
-            type="tel"
-            class="spf-input-text"
-            id="year"
-            size="5"
-            maxlength="4"
-            placeholder="YYYY"
-          />
+          <input [(ngModel)]="newCard.year" type="tel" class="spf-input-text" id="year" size="5" maxlength="4"
+            placeholder="YYYY" />
         </div>
+      </div>
+
+      <label>Zip Code</label>
+      <div class="spf-field">
+        <input [(ngModel)]="newCard.zip" type="tel" class="spf-input-text" id="zip" />
       </div>
 
       <ng-container *ngIf="paymentMethodError">
         <div class="payment-method-error">{{ paymentMethodError }}</div>
       </ng-container>
 
-      <button
-        (click)="validatePaymentMethod()"
-        ion-button
-        block
-        [disabled]="!spreedlyReady"
-      >
+      <button (click)="validatePaymentMethod()" ion-button block [disabled]="!spreedlyReady">
         {{ saveButtonText }}
       </button>
     </ion-card-content>

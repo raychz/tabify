@@ -21,6 +21,7 @@ interface INewCard {
   month: number,
   year: number,
   full_name: string,
+  zip: string
 }
 
 interface ISpreedlyValidationResponse {
@@ -37,7 +38,7 @@ interface ISpreedlyValidationResponse {
   templateUrl: 'payment-details.html',
 })
 export class PaymentDetailsPage {
-  newCard: INewCard = { month: 1, year: 1973, full_name: '' };
+  newCard: INewCard = { month: 1, year: 2022, full_name: '', zip: '' };
   spreedlyReady = false;
   mode: PaymentDetailsPageMode;
   title: string;
@@ -107,11 +108,11 @@ export class PaymentDetailsPage {
       Spreedly.setFieldType('cvv', 'tel');
       Spreedly.setStyle(
         'number',
-        'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
+        'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
       );
       Spreedly.setStyle(
         'cvv',
-        'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%;'
+        'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
       );
       console.log('SPREEDLY READY');
       this.changeDetectorRef.detectChanges();
@@ -129,14 +130,7 @@ export class PaymentDetailsPage {
 
     Spreedly.on('paymentMethod', async (token: string, details: string) => {
       await this.loader.dismiss()
-      this.paymentService.createGatewayPurchase(token, 499).then(
-        response => {
-          console.log('response', response);
-        },
-        error => {
-          console.log('error', error);
-        }
-      );
+      await this.paymentService.createPaymentMethod(details);
       console.log('TOKEN HERE', token, details);
     });
 
@@ -160,16 +154,14 @@ export class PaymentDetailsPage {
     });
   }
 
-  validatePaymentMethod() {
-    this.loader.present().then(() => {
-      Spreedly.validate();
-    });
+  async validatePaymentMethod() {
+    await this.loader.present();
+    await Spreedly.validate();
   }
 
-  tokenizePaymentMethod() {
-    this.loader.present().then(() => {
-      Spreedly.tokenizeCreditCard(this.newCard);
-    });
+  async tokenizePaymentMethod() {
+    await this.loader.present();
+    await Spreedly.tokenizeCreditCard(this.newCard);
   }
 
   showCvvHelp() {
