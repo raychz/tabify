@@ -3,7 +3,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 // import { user, global, community } from './example-stories';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export interface Story {
   location: ILocation;
@@ -40,7 +40,7 @@ export class HomePage {
 
     this.feeds.user = userStories.map((story: any) => ({
       ...story,
-      relativeTime: moment(story.ticket.date_created).fromNow()
+      timeStamp: moment(story.ticket.date_created).format('MMMM Do YYYY, h:mm a'),
     }));
 
     console.log(this.feeds.user);

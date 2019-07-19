@@ -46,6 +46,7 @@
             <img src={{story.ticket.location.photo_url}} />
           </ion-avatar>
           <h2 (click)="openDetailedStory(story.id)">{{ story.ticket.location.name }}</h2>
+          <ion-note> {{story.timeStamp}} </ion-note>
           <h3>{{ story.ticket.location.city }}</h3>
           <p>{{ story.ticket.location.streetAddress }}</p>
           <ion-note item-end>2 mi.</ion-note>
@@ -68,9 +69,6 @@
               <div *ngIf="story.comment_count != 1; else singularComment">Comments</div>
               <ng-template #singularComment>Comment</ng-template>
             </button>
-          </ion-col>
-          <ion-col align-self-center text-center>
-            <ion-note> {{story.relativeTime}} </ion-note>
           </ion-col>
         </ion-row>
       </ion-card>

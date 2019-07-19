@@ -33,13 +33,13 @@ export class StoryService {
         const res = await this.httpClient.delete(`${config.serverUrl}/stories/${storyId}/comments/${commentId}`,
             { observe: 'response' }).toPromise();
 
-        return res.status;
+        return res;
     }
     
     async createComment(storyId: number, newComment: string) {
         const res = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/comments`,
             { newComment: newComment }, { observe: 'response' }).toPromise();
 
-        return res.status;
+        return res;
     }
 }

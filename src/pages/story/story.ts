@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { StoryService } from '../../services/story/story.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { AuthService } from '../../services/auth/auth.service';
 import { IUser } from '../../interfaces/user.interface';
 
@@ -31,10 +31,8 @@ export class StoryPage {
 
   async getStory() {
     const storyId = await this.navParams.get('storyId');
-
     this.story = await this.storyService.getStory(storyId);
-
-    this.story.relativeTime = moment(this.story.ticket.date_created).fromNow();
+    this.story.timeStamp = moment(this.story.ticket.date_created).format('MMMM Do YYYY, h:mm a');
 
     console.log(this.story);
   }
@@ -44,6 +42,11 @@ export class StoryPage {
 
     this.comments = await this.storyService.getComments(storyId);
 
+    this.comments = this.comments.map((comment: any) => ({
+      ...comment,
+      relativeTime: moment(comment.date_created).fromNow(),
+    }));
+
     console.log(this.comments);
   }
 
@@ -51,10 +54,6 @@ export class StoryPage {
     await this.storyService.createLike(this.story.id);
     // do more stuff, like update the template with an additional like
   }
-
-  // async createComment(storyId: number, uid: number, newComment: string) {
-  //   await this.storyService.createComment(storyId, uid, newComment);
-  // }
 
   async getUserDetails() {
     this.user.uid = this.authService.getUid();
@@ -66,27 +65,29 @@ export class StoryPage {
   async createComment() {
     const res = await this.storyService.createComment(this.story.id, this.newComment);
 
-    if (res == 201) {
-      let newCommentId = this.comments[this.comments.length - 1].id + 1
+    console.log(res);
+    
+    if (res.status == 200) {
+      const newComment: any = res.body;
 
-      let user = { uid: this.user.uid };
-      let comment = { id: newCommentId, text: this.newComment, user };
+      newComment.relativeTime = moment(newComment.date_created).fromNow()
 
-      this.comments.push(comment);
+      this.comments.push(newComment);
+      this.story.comment_count += 1;
     }
 
     this.newComment = '';
-    this.story.comment_count += 1;
+    console.log(this.comments);
   }
 
   async deleteComment(commentId: number) {
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res == 200) { 
+    if (res.status == 200) { 
       // remove the comment from front end
       const index = this.comments.findIndex((comment: any) => comment.id === commentId);
       this.comments.splice(index, 1);
+      this.story.comment_count -= 1;
     }
-    this.story.comment_count -= 1;
   }
 }
