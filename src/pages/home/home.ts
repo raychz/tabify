@@ -4,6 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import moment from 'moment';
+import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 
 export interface Story {
   location: ILocation;
@@ -28,7 +29,8 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    private storyService: StoryService
+    private storyService: StoryService,
+    public newsfeedService: NewsfeedService
   ) { }
 
   ionViewDidLoad() {
@@ -36,14 +38,16 @@ export class HomePage {
   }
 
   async getUserStories() {
-    const userStories = await this.storyService.getUserStories();
+    // const userStories = await this.storyService.getUserStories();
 
-    this.feeds.user = userStories.map((story: any) => ({
-      ...story,
-      timeStamp: moment(story.ticket.date_created).format('MMMM Do YYYY, h:mm a'),
-    }));
+    // this.feeds.user = userStories.map((story: any) => ({
+    //   ...story,
+    //   timeStamp: moment(story.ticket.date_created).format('MMMM Do YYYY, h:mm a'),
+    // }));
 
-    console.log(this.feeds.user);
+    // console.log(this.feeds.user);
+    await this.newsfeedService.initializeStories();
+    console.log('date night', this.newsfeedService.stories);
   }
 
   async createLike(storyId: number) {

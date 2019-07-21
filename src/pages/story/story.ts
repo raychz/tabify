@@ -21,7 +21,8 @@ export class StoryPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private storyService: StoryService,
-    private authService: AuthService) { }
+    private authService: AuthService
+    ) { }
 
   ionViewDidLoad() {
     this.getStory();

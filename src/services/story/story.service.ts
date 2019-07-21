@@ -5,12 +5,15 @@ import { observable } from "rxjs";
 
 @Injectable()
 export class StoryService {
-    constructor(
-        private readonly httpClient: HttpClient
-    ) { }
+    
+    constructor(private readonly httpClient: HttpClient) { }
 
+    // get stories that a user was part of (personal feed)
     async getUserStories(): Promise<any> {
-        return await this.httpClient.get(`${config.serverUrl}/stories`).toPromise();
+        console.log('TOOO');
+        const res = await this.httpClient.get(`${config.serverUrl}/stories`).toPromise();
+        console.log(res);
+        return res;
     }
 
     async getStory(storyId: number): Promise<any> {
