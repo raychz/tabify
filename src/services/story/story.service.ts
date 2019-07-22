@@ -29,7 +29,7 @@ export class StoryService {
         const res = await this.httpClient.post(`${config.serverUrl}/stories/${storyId}/likes`, {}, { observe: 'response' })
             .toPromise();
 
-        console.log(res);
+        return res;
     }
 
     async deleteComment(storyId: number, commentId: number) {

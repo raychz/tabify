@@ -38,21 +38,27 @@ export class HomePage {
   }
 
   async getUserStories() {
-    // const userStories = await this.storyService.getUserStories();
-
-    // this.feeds.user = userStories.map((story: any) => ({
-    //   ...story,
-    //   timeStamp: moment(story.ticket.date_created).format('MMMM Do YYYY, h:mm a'),
-    // }));
-
-    // console.log(this.feeds.user);
-    await this.newsfeedService.initializeStories();
-    console.log('date night', this.newsfeedService.stories);
+    await this.newsfeedService.initializeNewsfeed();
+    console.log(this.newsfeedService.stories);
   }
 
   async createLike(storyId: number) {
-    const response = await this.storyService.createLike(storyId);
+    const res = await this.storyService.createLike(storyId);
     // do more stuff, like update the template with an additional like
+
+    if (res.status == 200) {
+      if (res.body == false) {
+
+        // Increment comment count of story in newsfeed
+        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === storyId);
+        this.newsfeedService.stories[indexOfStory].like_count += 1;
+
+      } else {
+
+        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === storyId);
+        this.newsfeedService.stories[indexOfStory].like_count -= 1;
+      }
+    }
   }
 
   segmentChanged(event: any) {

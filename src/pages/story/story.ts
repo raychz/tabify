@@ -4,6 +4,7 @@ import { StoryService } from '../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../services/auth/auth.service';
 import { IUser } from '../../interfaces/user.interface';
+import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 
 @IonicPage()
 @Component({
@@ -21,8 +22,9 @@ export class StoryPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private storyService: StoryService,
-    private authService: AuthService
-    ) { }
+    private authService: AuthService,
+    private newsfeedService: NewsfeedService
+  ) { }
 
   ionViewDidLoad() {
     this.getStory();
@@ -52,8 +54,26 @@ export class StoryPage {
   }
 
   async createLike() {
-    await this.storyService.createLike(this.story.id);
+    const res = await this.storyService.createLike(this.story.id);
     // do more stuff, like update the template with an additional like
+
+    console.log(res);
+
+    if (res.status == 200) {
+      if (res.body == false) {
+        this.story.like_count += 1;
+
+        // Increment comment count of story in newsfeed
+        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id);
+        this.newsfeedService.stories[indexOfStory].like_count += 1;
+
+      } else {
+        this.story.like_count -= 1
+
+        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id);
+        this.newsfeedService.stories[indexOfStory].like_count -= 1;
+      }
+    }
   }
 
   async getUserDetails() {
@@ -67,28 +87,39 @@ export class StoryPage {
     const res = await this.storyService.createComment(this.story.id, this.newComment);
 
     console.log(res);
-    
+
     if (res.status == 200) {
       const newComment: any = res.body;
 
       newComment.relativeTime = moment(newComment.date_created).fromNow()
 
       this.comments.push(newComment);
+
+      // Increment comment count in detailed story view
       this.story.comment_count += 1;
+
+      // Increment comment count of story in newsfeed
+      const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id)
+      this.newsfeedService.stories[indexOfStory].comment_count += 1;
     }
 
     this.newComment = '';
-    console.log(this.comments);
   }
 
   async deleteComment(commentId: number) {
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res.status == 200) { 
+    if (res.status == 200) {
       // remove the comment from front end
       const index = this.comments.findIndex((comment: any) => comment.id === commentId);
       this.comments.splice(index, 1);
+
+      // Decrement comment count in detailed story view
       this.story.comment_count -= 1;
+
+      // Decrement comment count of story in newsfeed
+      const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id)
+      this.newsfeedService.stories[indexOfStory].comment_count -= 1;
     }
   }
 }

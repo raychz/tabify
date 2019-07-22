@@ -38,8 +38,8 @@
 
   <div class="blank-space"></div>
 
-  <div *ngIf="this.newsfeedService.stories?.length > 0; else emptyFeed">
-    <ng-container *ngFor="let story of feeds[selectedSegment]">
+  <div *ngIf="newsfeedService.stories?.length > 0; else emptyFeed">
+    <ng-container *ngFor="let story of newsfeedService.stories">
       <ion-card *ngIf="!!story">
         <ion-item>
           <ion-avatar item-start>
