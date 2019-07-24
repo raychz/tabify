@@ -10,10 +10,7 @@ export class StoryService {
 
     // get stories that a user was part of (personal feed)
     async getUserStories(): Promise<any> {
-        console.log('TOOO');
-        const res = await this.httpClient.get(`${config.serverUrl}/stories`).toPromise();
-        console.log(res);
-        return res;
+        return await this.httpClient.get(`${config.serverUrl}/stories`).toPromise();
     }
 
     async getStory(storyId: number): Promise<any> {

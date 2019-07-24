@@ -64,14 +64,12 @@ export class StoryPage {
         this.story.like_count += 1;
 
         // Increment comment count of story in newsfeed
-        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id);
-        this.newsfeedService.stories[indexOfStory].like_count += 1;
+        this.newsfeedService.incrementLikeCount(this.story.id);
 
       } else {
         this.story.like_count -= 1
 
-        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id);
-        this.newsfeedService.stories[indexOfStory].like_count -= 1;
+        this.newsfeedService.decrementLikeCount(this.story.id);
       }
     }
   }
@@ -99,8 +97,7 @@ export class StoryPage {
       this.story.comment_count += 1;
 
       // Increment comment count of story in newsfeed
-      const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id)
-      this.newsfeedService.stories[indexOfStory].comment_count += 1;
+      this.newsfeedService.incrementCommentCount(this.story.id);
     }
 
     this.newComment = '';
@@ -118,8 +115,7 @@ export class StoryPage {
       this.story.comment_count -= 1;
 
       // Decrement comment count of story in newsfeed
-      const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === this.story.id)
-      this.newsfeedService.stories[indexOfStory].comment_count -= 1;
+      this.newsfeedService.decrementCommentCount(this.story.id);
     }
   }
 }

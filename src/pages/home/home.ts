@@ -50,13 +50,10 @@ export class HomePage {
       if (res.body == false) {
 
         // Increment comment count of story in newsfeed
-        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === storyId);
-        this.newsfeedService.stories[indexOfStory].like_count += 1;
+        this.newsfeedService.incrementLikeCount(storyId);
 
       } else {
-
-        const indexOfStory = this.newsfeedService.stories.findIndex((story: any) => story.id === storyId);
-        this.newsfeedService.stories[indexOfStory].like_count -= 1;
+        this.newsfeedService.decrementLikeCount(storyId);
       }
     }
   }
