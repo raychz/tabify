@@ -10,7 +10,8 @@
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "format": "prettier --single-quote --trailing-comma es5 --write src/**/*.ts"
+    "format": "prettier --single-quote --trailing-comma es5 --write src/**/*.ts",
+    "start": "yarn ionic:serve"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
