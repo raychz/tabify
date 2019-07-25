@@ -40,12 +40,12 @@
 
   <div *ngIf="this.newsfeedService.stories?.length > 0; else emptyFeed">
     <ng-container *ngFor="let story of this.newsfeedService.stories">
-      <ion-card *ngIf="!!story">
+      <ion-card (click)="openDetailedStory(story.id)" *ngIf="!!story">
         <ion-item>
           <ion-avatar item-start>
             <img src={{story.ticket.location.photo_url}} />
           </ion-avatar>
-          <h2 (click)="openDetailedStory(story.id)">{{ story.ticket.location.name }}</h2>
+          <h2>{{ story.ticket.location.name }}</h2>
           <ion-note> {{story.timeStamp}} </ion-note>
           <h3>{{ story.ticket.location.city }}</h3>
           <p>{{ story.ticket.location.streetAddress }}</p>
@@ -55,7 +55,7 @@
         </ion-card-content>
         <ion-row>
           <ion-col>
-            <button ion-button color="primary" clear small icon-start (click)='createLike(story.id)'>
+            <button ion-button color="primary" clear small icon-start (click)='createLike(story.id); $event.stopPropagation()'>
               <ion-icon name="heart"></ion-icon>
               {{ story.like_count }}&nbsp;
               <div *ngIf="story.like_count != 1; else singularLikes">Likes</div>
@@ -63,7 +63,7 @@
             </button>
           </ion-col>
           <ion-col>
-            <button ion-button color="primary" clear small icon-start (click)="openDetailedStory(story.id)">
+            <button ion-button color="primary" clear small icon-start>
               <ion-icon name="text"></ion-icon>
               {{ story.comment_count }}&nbsp;
               <div *ngIf="story.comment_count != 1; else singularComment">Comments</div>
