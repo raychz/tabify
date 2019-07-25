@@ -21,7 +21,7 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <button ion-button color="primary" clear small icon-start (click)='createLike()'>
+        <button ion-button color="primary" clear small icon-start (click)='createLike(story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
           {{ story.like_count }}&nbsp;
           <div *ngIf="story.like_count != 1; else singularLikes">Likes</div>
