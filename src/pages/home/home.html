@@ -57,17 +57,13 @@
           <ion-col>
             <button ion-button color="primary" clear small icon-start (click)='createLike(story.id); $event.stopPropagation()'>
               <ion-icon name="heart"></ion-icon>
-              {{ story.like_count }}&nbsp;
-              <div *ngIf="story.like_count != 1; else singularLikes">Likes</div>
-              <ng-template #singularLikes>Like</ng-template>
+              {{ story.like_count }} {{story.like_count === 1 ? 'Like' : 'Likes'}}
             </button>
           </ion-col>
           <ion-col>
             <button ion-button color="primary" clear small icon-start>
               <ion-icon name="text"></ion-icon>
-              {{ story.comment_count }}&nbsp;
-              <div *ngIf="story.comment_count != 1; else singularComment">Comments</div>
-              <ng-template #singularComment>Comment</ng-template>
+              {{ story.comment_count }} {{story.comment_count === 1 ? 'Comment' : 'Comments'}}
             </button>
           </ion-col>
         </ion-row>
