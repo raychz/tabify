@@ -25,6 +25,7 @@ import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
 import { FirestoreService } from '../services/firestore/firestore.service';
+import { PaymentService } from '../services/payment/payment.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -85,7 +86,8 @@ export class MyErrorHandler implements ErrorHandler {
     SocketService,
     TicketService,
     LocationService,
-    FirestoreService
+    FirestoreService,
+    PaymentService
   ],
 })
 export class AppModule {}

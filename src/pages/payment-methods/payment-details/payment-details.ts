@@ -129,8 +129,16 @@ export class PaymentDetailsPage {
     });
 
     Spreedly.on('paymentMethod', async (token: string, details: string) => {
-      await this.loader.dismiss()
-      await this.paymentService.createPaymentMethod(details);
+      try {
+        const method = await this.paymentService.createPaymentMethod(details);
+        this.paymentService.pushPaymentMethod(method);
+        await this.navCtrl.popTo('PaymentMethodsPage');
+      } catch (e) {
+        this.paymentMethodError = 'This payment method could not be saved.';
+      } finally {
+        await this.loader.dismiss();
+      }
+
       console.log('TOKEN HERE', token, details);
     });
 
