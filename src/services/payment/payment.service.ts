@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import config from '../../config';
 
@@ -38,6 +38,10 @@ export class PaymentService {
       .toPromise();
   }
 
+  /**
+   * Sends POST request to server to create new method.
+   * @param method 
+   */
   createPaymentMethod(details: any) {
     const url = `${config.serverUrl}/payment/method`;
 
@@ -67,10 +71,40 @@ export class PaymentService {
     }
   }
 
+  /**
+   * Pushes method to local store.
+   * @param method 
+   */
   pushPaymentMethod(method: any) {
     this.paymentMethods = [
       ...this.paymentMethods,
       { ...method, card_type: this.mapCardType(method.card_type) }
     ];
+  }
+
+  /**
+   * Removes method from local store.
+   * @param method 
+   */
+  removePaymentMethod(method: any) {
+    this.paymentMethods = this.paymentMethods.filter(m => m.id !== method.id);
+  }
+
+  /**
+   * Sends DELETE request to server.
+   * @param method 
+   */
+  deletePaymentMethod(method: any) {
+    const url = `${config.serverUrl}/payment/method`;
+
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: method,
+    };
+
+    return this.http.delete(url, options)
+      .toPromise();
   }
 }
