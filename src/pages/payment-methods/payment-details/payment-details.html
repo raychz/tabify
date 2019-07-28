@@ -6,7 +6,6 @@
 
 <ion-content class="cards-bg">
   <ion-card>
-    <ion-card-header>Add New Card</ion-card-header>
     <ion-card-content>
       <label>Full Name</label>
       <div class="spf-field">
@@ -38,9 +37,7 @@
         <input [(ngModel)]="newCard.zip" type="tel" class="spf-input-text" id="zip" />
       </div>
 
-      <ng-container *ngIf="paymentMethodError">
-        <div class="payment-method-error">{{ paymentMethodError }}</div>
-      </ng-container>
+      <div *ngIf="paymentMethodError" class="payment-method-error">{{ paymentMethodError }}</div>
 
       <button (click)="validatePaymentMethod()" ion-button block [disabled]="!spreedlyReady">
         {{ saveButtonText }}

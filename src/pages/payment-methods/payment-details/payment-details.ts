@@ -62,27 +62,25 @@ export class PaymentDetailsPage {
     this.saveButtonText = this.mode === PaymentDetailsPageMode.PAY_TAB ? 'Save and Pay' : 'Save';
   }
 
-  ionViewDidLoad() {
-    const showError = () => {
+  async ionViewDidLoad() {
+    const showError = async () => {
       this.loader.dismiss();
-      this.navCtrl.popTo('PaymentMethodsPage').then(() => {
-        const alert = this.alertCtrl.create({
-          title: 'Network Error',
-          message: `Please check your connection and try again.`,
-        });
-        alert.present();
+      await this.navCtrl.popTo('PaymentMethodsPage');
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
       });
+      alert.present();
     };
-    this.loader.present({ dismissOnPageChange: false }).then(() => {
-      this.spreedlyTimeout = setTimeout(showError, 15000);
-      try {
-        this.newCard.full_name = this.auth.getDisplayName();
-        this.initializeSpreedly();
-      } catch (error) {
-        showError();
-        console.error(error);
-      }
-    });
+    await this.loader.present({ dismissOnPageChange: false });
+    this.spreedlyTimeout = setTimeout(showError, 15000);
+    try {
+      this.newCard.full_name = this.auth.getDisplayName();
+      this.initializeSpreedly();
+    } catch (error) {
+      showError();
+      console.error(error);
+    }
   }
 
   ionViewDidLeave() {
@@ -96,70 +94,10 @@ export class PaymentDetailsPage {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
     });
-
-    Spreedly.on('ready', async () => {
-      clearTimeout(this.spreedlyTimeout);
-
-      await this.loader.dismiss();
-
-      this.spreedlyReady = true;
-      Spreedly.setParam('allow_blank_name', true);
-      Spreedly.setFieldType('number', 'tel');
-      Spreedly.setFieldType('cvv', 'tel');
-      Spreedly.setStyle(
-        'number',
-        'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
-      );
-      Spreedly.setStyle(
-        'cvv',
-        'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
-      );
-      console.log('SPREEDLY READY');
-      this.changeDetectorRef.detectChanges();
-    });
-
-    Spreedly.on('errors', async (errors: Error[]) => {
-      await this.loader.dismiss();
-      this.paymentMethodError = '';
-      errors.forEach(error => {
-        console.log(error);
-        this.paymentMethodError += error.message + '. ';
-      });
-      this.changeDetectorRef.detectChanges();
-    });
-
-    Spreedly.on('paymentMethod', async (token: string, details: string) => {
-      try {
-        const method = await this.paymentService.createPaymentMethod(details);
-        this.paymentService.pushPaymentMethod(method);
-        await this.navCtrl.popTo('PaymentMethodsPage');
-      } catch (e) {
-        this.paymentMethodError = 'This payment method could not be saved.';
-      } finally {
-        await this.loader.dismiss();
-      }
-
-      console.log('TOKEN HERE', token, details);
-    });
-
-    Spreedly.on('validation', async ({ cardType, validNumber, validCvv }: ISpreedlyValidationResponse) => {
-      await this.loader.dismiss();
-      console.log(cardType, validNumber, validCvv);
-      if (
-        cardType &&
-        validNumber &&
-        validCvv &&
-        this.newCard.month &&
-        this.newCard.year
-      ) {
-        this.paymentMethodError = '';
-        this.tokenizePaymentMethod();
-      } else {
-        this.paymentMethodError =
-          'Please enter a valid credit card and CVV number.';
-      }
-      this.changeDetectorRef.detectChanges();
-    });
+    Spreedly.on('ready', this.onSpreedlyReady.bind(this));
+    Spreedly.on('errors', this.onSpreedlyError.bind(this));
+    Spreedly.on('paymentMethod', this.onSpreedlyPaymentMethod.bind(this));
+    Spreedly.on('validation', this.onSpreedlyValidation.bind(this));
   }
 
   async validatePaymentMethod() {
@@ -186,5 +124,72 @@ export class PaymentDetailsPage {
     if (this.spreedlyTimeout) {
       clearTimeout(this.spreedlyTimeout)
     }
+  }
+
+  /*
+   ************ Spreedly event handlers ************
+   */
+  async onSpreedlyReady() {
+    clearTimeout(this.spreedlyTimeout);
+
+    await this.loader.dismiss();
+
+    this.spreedlyReady = true;
+    Spreedly.setParam('allow_blank_name', true);
+    Spreedly.setFieldType('number', 'tel');
+    Spreedly.setFieldType('cvv', 'tel');
+    Spreedly.setStyle(
+      'number',
+      'width: 67%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
+    );
+    Spreedly.setStyle(
+      'cvv',
+      'width: 30%; border-radius: 3px; border: 1px solid #ccc; padding: .65em .5em; font-size: 91%; color: black; background: white;'
+    );
+    console.log('SPREEDLY READY');
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async onSpreedlyError(errors: any[]) {
+    await this.loader.dismiss();
+    this.paymentMethodError = '';
+    errors.forEach(error => {
+      console.log(error);
+      this.paymentMethodError += error.message + '. ';
+    });
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async onSpreedlyPaymentMethod(token: string, details: string) {
+    try {
+      const method = await this.paymentService.createPaymentMethod(details);
+      this.paymentService.pushPaymentMethod(method);
+      await this.navCtrl.popTo('PaymentMethodsPage');
+    } catch (e) {
+      this.paymentMethodError = 'This payment method could not be saved.';
+    } finally {
+      await this.loader.dismiss();
+    }
+
+    console.log('TOKEN HERE', token, details);
+  }
+
+  async onSpreedlyValidation({ cardType, validNumber, validCvv }: ISpreedlyValidationResponse) {
+    await this.loader.dismiss();
+    console.log(cardType, validNumber, validCvv);
+    if (
+      cardType &&
+      validNumber &&
+      validCvv &&
+      this.newCard.month &&
+      this.newCard.year
+    ) {
+      this.paymentMethodError = '';
+      this.tokenizePaymentMethod();
+    } else {
+      this.paymentMethodError =
+        'Please enter a valid credit card and CVV number.';
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }
