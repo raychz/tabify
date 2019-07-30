@@ -21,7 +21,8 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <button ion-button color="primary" clear small icon-start (click)='createLike(story.id); $event.stopPropagation()'>
+        <button ion-button color="primary" clear small icon-start
+          (click)='createLike(story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
           {{ story.like_count }}&nbsp;
           <div *ngIf="story.like_count != 1; else singularLikes">Likes</div>
@@ -45,7 +46,7 @@
             <ion-col>
               <ion-item>
                 <ion-avatar item-start>
-                  <img src='https://media.licdn.com/dms/image/C5603AQHqZDs-RCpVsg/profile-displayphoto-shrink_200_200/0?e=1568246400&v=beta&t=PZTdgn4U4MLZWZkVTR6p2_HRI9ODQIrkYOC7tYURFJI' />
+                  <img src={{comment.user.userDetail.photoURL}} />
                 </ion-avatar>
                 <ion-note>{{comment.user.userDetail.displayName}}</ion-note>
                 <div>
