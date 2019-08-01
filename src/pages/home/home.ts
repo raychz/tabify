@@ -79,7 +79,9 @@ export class HomePage {
     );
   }
 
-  refresh(refresher: any) {
+  async refresh(refresher: any) {
+    await this.newsfeedService.initializeNewsfeed();
+
     setTimeout(() => {
       refresher.complete();
     }, 2000);
