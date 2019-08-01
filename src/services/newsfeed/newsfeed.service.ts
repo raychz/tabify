@@ -6,43 +6,51 @@ import moment from 'moment';
 @Injectable()
 export class NewsfeedService {
 
-    stories: any;
+    // The data structure we get back is a uid, and a list of tickets.
+    // Inside each ticket, there is a story object
+    tickets: any;
 
     constructor(private storyService: StoryService) { }
 
     async initializeNewsfeed() {
-        await this.getUserStoriesFromServer();
+        await this.getUserticketsFromServer();
     }
 
-    async getUserStoriesFromServer() {
-        let userstories = await this.storyService.getUserStories();
+    async getUserticketsFromServer() {
+        let usertickets = await this.storyService.getUserStories();
 
-        userstories = userstories.tickets;
+        usertickets = usertickets.tickets;
 
-        this.stories = userstories.map((ticket: any) => ({
+        this.tickets = usertickets.map((ticket: any) => ({
             ...ticket,
-            timeStamp: moment(ticket.date_created).format('MMMM Do YYYY, h:mm a'),
+            story: {
+                ...ticket.story,
+                timeStamp: moment(ticket.story.date_created).format('MMMM Do YYYY, h:mm a'),
+            }
         }));
-        return this.stories;
+
+        console.log(this.tickets)
+        return this.tickets;
     }
 
-    incrementCommentCount(storyId: number) {
-        this.stories[this.findIndexOfStory(storyId)].comment_count += 1;
+    incrementCommentCount(ticketId: number, storyId: number) {
+        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.comment_count += 1;
     }
 
-    decrementCommentCount(storyId: number) {
-        this.stories[this.findIndexOfStory(storyId)].comment_count -= 1;
+    decrementCommentCount(ticketId: number, storyId: number) {
+        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.comment_count -= 1;
     }
 
-    incrementLikeCount(storyId: number) {
-        this.stories[this.findIndexOfStory(storyId)].like_count += 1;
+    incrementLikeCount(ticketId: number, storyId: number) {
+        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.like_count += 1;
     }
 
-    decrementLikeCount(storyId: number) {
-        this.stories[this.findIndexOfStory(storyId)].like_count -= 1;
+    decrementLikeCount(ticketId: number, storyId: number) {
+        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.like_count -= 1;
     }
 
-    findIndexOfStory(storyId: number) {
-       return this.stories.findIndex((story: any) => story.id === storyId);
+    findIndexOfTicket(ticketId: number, storyId: number) {
+        return this.tickets.findIndex(
+            (ticket: any) => ((ticket.id === ticketId) && (ticket.story.id === storyId)));
     }
 }
