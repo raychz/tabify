@@ -20,6 +20,7 @@ export class TabLookupPage {
   tabForm: FormGroup;
   fraudPreventionCode!: IFraudPreventionCode;
   dateTime: number = Date.now();
+  isCodeVisible = false;
 
   constructor(
     public navCtrl: NavController,
