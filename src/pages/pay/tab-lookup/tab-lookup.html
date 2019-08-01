@@ -39,8 +39,14 @@
           </ion-card-header>
           <ion-card-content id="fraud-prevention-code">
             <p>If requested, show this code to your server:</p>
-            <h2>{{fraudPreventionCode?.code}}</h2>
-            <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
+            <button ion-button block clear icon-end color="tabify" (click)="isCodeVisible = !isCodeVisible">
+              {{ isCodeVisible ? 'Hide Code' : 'Reveal Code' }}
+              <ion-icon [name]="isCodeVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
+            </button>
+            <ng-container *ngIf="isCodeVisible">
+              <h2>{{fraudPreventionCode?.code}}</h2>
+              <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
+            </ng-container>
           </ion-card-content>
         </ion-card>
       </ion-col>
