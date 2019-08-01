@@ -15,16 +15,15 @@ export class NewsfeedService {
     }
 
     async getUserStoriesFromServer() {
-        const userStories = await this.storyService.getUserStories();
-        this.stories = userStories.map((story: any) => ({
-            ...story,
-            timeStamp: moment(story.ticket.date_created).format('MMMM Do YYYY, h:mm a'),
+        let userstories = await this.storyService.getUserStories();
+
+        userstories = userstories.tickets;
+
+        this.stories = userstories.map((ticket: any) => ({
+            ...ticket,
+            timeStamp: moment(ticket.date_created).format('MMMM Do YYYY, h:mm a'),
         }));
         return this.stories;
-    }
-
-    async getUserStories() {
-        return await this.stories;
     }
 
     incrementCommentCount(storyId: number) {
