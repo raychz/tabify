@@ -35,7 +35,7 @@ export class StoryPage {
   async getStory() {
     const storyId = await this.navParams.get('storyId');
     this.story = await this.storyService.getStory(storyId);
-    this.story.timeStamp = moment(this.story.ticket.date_created).format('MMMM Do YYYY, h:mm a');
+    this.story.timeStamp = moment(this.story.date_created).format('MMMM Do YYYY, h:mm a');
 
     console.log(this.story);
   }
@@ -64,12 +64,12 @@ export class StoryPage {
         this.story.like_count += 1;
 
         // Increment comment count of story in newsfeed
-        this.newsfeedService.incrementLikeCount(this.story.id);
+        this.newsfeedService.incrementLikeCount(this.story.ticket.id, this.story.id);
 
       } else {
         this.story.like_count -= 1
 
-        this.newsfeedService.decrementLikeCount(this.story.id);
+        this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
       }
     }
   }
@@ -86,7 +86,7 @@ export class StoryPage {
 
     console.log(res);
 
-    if (res.status == 200) {
+    if (res.status === 200) {
       const newComment: any = res.body;
 
       newComment.relativeTime = moment(newComment.date_created).fromNow()
@@ -97,7 +97,7 @@ export class StoryPage {
       this.story.comment_count += 1;
 
       // Increment comment count of story in newsfeed
-      this.newsfeedService.incrementCommentCount(this.story.id);
+      this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
     }
 
     this.newComment = '';
@@ -106,7 +106,7 @@ export class StoryPage {
   async deleteComment(commentId: number) {
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res.status == 200) {
+    if (res.status === 200) {
       // remove the comment from front end
       const index = this.comments.findIndex((comment: any) => comment.id === commentId);
       this.comments.splice(index, 1);
@@ -115,7 +115,7 @@ export class StoryPage {
       this.story.comment_count -= 1;
 
       // Decrement comment count of story in newsfeed
-      this.newsfeedService.decrementCommentCount(this.story.id);
+      this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
     }
   }
 }

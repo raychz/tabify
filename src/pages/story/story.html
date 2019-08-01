@@ -11,7 +11,7 @@
   <ion-card *ngIf="!!story">
     <ion-item>
       <ion-avatar item-start>
-        <img src="{{ story.ticket.location.photoUrl }}" />
+        <img src="{{ story.ticket.location.photo_url }}" />
       </ion-avatar>
       <h2>{{ story.ticket.location.name }}</h2>
       <ion-note> {{story.timeStamp}} </ion-note>
@@ -22,7 +22,7 @@
     <ion-row class="bottom-border">
       <ion-col>
         <button ion-button color="primary" clear small icon-start
-          (click)='createLike(story.id); $event.stopPropagation()'>
+          (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
           {{ story.like_count }} {{story.like_count === 1 ? 'Like' : 'Likes'}}
         </button>
@@ -53,11 +53,11 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-label>{{comment.text}}</ion-label>
+              {{comment.text}}
             </ion-col>
             <ion-col text-right>
               <button ion-button color="primary" clear small icon-start (click)='deleteComment(comment.id)'>
-                <ion-icon *ngIf="comment.user.uid == user.uid" name="trash"></ion-icon>
+                <ion-icon *ngIf="comment.user.uid === user.uid" name="trash"></ion-icon>
               </button>
             </ion-col>
           </ion-row>
@@ -69,8 +69,8 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar text-center>
     <ion-input margin-left margin-right [(ngModel)]="newComment" placeholder="Enter a new comment!"></ion-input>
-    <button ion-button block small outline (click)='createComment()'>Post Comment</button>
+    <button ion-button small outline (click)='createComment()'>Post Comment</button>
   </ion-toolbar>
 </ion-footer>

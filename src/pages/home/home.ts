@@ -39,21 +39,22 @@ export class HomePage {
 
   async getUserStories() {
     await this.newsfeedService.initializeNewsfeed();
-    console.log(this.newsfeedService.stories);
+    console.log(this.newsfeedService.tickets);
   }
 
-  async createLike(storyId: number) {
+  async createLike(ticketId: number, storyId: number) {
+    console.log(storyId);
     const res = await this.storyService.createLike(storyId);
     // do more stuff, like update the template with an additional like
 
-    if (res.status == 200) {
-      if (res.body == false) {
+    if (res.status === 200) {
+      if (res.body === false) {
 
         // Increment comment count of story in newsfeed
-        this.newsfeedService.incrementLikeCount(storyId);
+        this.newsfeedService.incrementLikeCount(ticketId, storyId);
 
       } else {
-        this.newsfeedService.decrementLikeCount(storyId);
+        this.newsfeedService.decrementLikeCount(ticketId, storyId);
       }
     }
   }
