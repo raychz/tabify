@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-// import { user, global, community } from './example-stories';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
-import moment from 'moment';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 
 export interface Story {

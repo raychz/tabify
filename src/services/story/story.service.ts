@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import config from "../../config";
-import { observable } from "rxjs";
 
 @Injectable()
 export class StoryService {
