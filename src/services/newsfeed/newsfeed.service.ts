@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from '../story/story.service';
-import moment from 'moment';
 
 // This class holds that data structure that is used to represent content on the newsfeed
 @Injectable()
@@ -13,23 +12,12 @@ export class NewsfeedService {
     constructor(private storyService: StoryService) { }
 
     async initializeNewsfeed() {
-        await this.getUserticketsFromServer();
+        await this.getUserTicketsFromServer();
     }
 
-    async getUserticketsFromServer() {
-        let usertickets = await this.storyService.getUserStories();
-
-        usertickets = usertickets.tickets;
-
-        this.tickets = usertickets.map((ticket: any) => ({
-            ...ticket,
-            story: {
-                ...ticket.story,
-                timeStamp: moment(ticket.story.date_created).format('MMMM Do YYYY, h:mm a'),
-            }
-        }));
-
-        console.log(this.tickets)
+    async getUserTicketsFromServer() {
+        let userTickets = await this.storyService.getUserStories();
+        this.tickets = userTickets.tickets;
         return this.tickets;
     }
 

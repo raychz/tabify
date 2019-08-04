@@ -79,10 +79,7 @@ export class HomePage {
 
   async refresh(refresher: any) {
     await this.newsfeedService.initializeNewsfeed();
-
-    setTimeout(() => {
-      refresher.complete();
-    }, 2000);
+    refresher.complete();
   }
 
   showNotifications() {

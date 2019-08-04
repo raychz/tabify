@@ -46,7 +46,8 @@
             <img src={{ticket.location.photo_url}} />
           </ion-avatar>
           <h2>{{ ticket.location.name }}</h2>
-          <ion-note> {{ticket.story.timeStamp}} </ion-note>
+          <!-- Using Angular's DatePipe to format date from DB -->
+          <ion-note>{{ ticket.story.date_created | date:'mediumDate' }} {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
           <h3>{{ ticket.location.city }}</h3>
           <p>{{ ticket.location.streetAddress }}</p>
           <ion-note item-end>2 mi.</ion-note>

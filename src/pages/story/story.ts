@@ -35,9 +35,6 @@ export class StoryPage {
   async getStory() {
     const storyId = await this.navParams.get('storyId');
     this.story = await this.storyService.getStory(storyId);
-    this.story.timeStamp = moment(this.story.date_created).format('MMMM Do YYYY, h:mm a');
-
-    console.log(this.story);
   }
 
   async getComments() {
