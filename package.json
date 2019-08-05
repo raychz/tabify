@@ -33,9 +33,9 @@
     "@ultimate/ngxerrors": "1.4.0",
     "cordova-android": "6.4.0",
     "cordova-browser": "5.0.3",
-    "cordova-ios": "4.5.5",
+    "cordova-ios": "5.0.1",
     "cordova-plugin-device": "2.0.2",
-    "cordova-plugin-facebook4": "2.2.0",
+    "cordova-plugin-facebook4": "^5.0.0",
     "cordova-plugin-ionic": "4.1.7",
     "cordova-plugin-ionic-keyboard": "2.0.5",
     "cordova-plugin-ionic-webview": "^2.3.1",
@@ -44,7 +44,7 @@
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "1.3.3",
     "currency.js": "^1.1.4",
-    "firebase": "^5.8.3",
+    "firebase": "^6.3.3",
     "ionic-angular": "3.9.2",
     "ionic2-rating": "^1.2.2",
     "ionicons": "4.2.4",
@@ -68,10 +68,6 @@
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-facebook4": {
-        "APP_ID": "810366729156697",
-        "APP_NAME": "Tabify"
-      },
       "cordova-plugin-ios-keychain": {},
       "cordova-plugin-ionic": {
         "APP_ID": "66369498",
@@ -84,6 +80,12 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
+      "cordova-plugin-facebook4": {
+        "APP_ID": "810366729156697",
+        "APP_NAME": "Tabify",
+        "FACEBOOK_HYBRID_APP_EVENTS": "false",
+        "FACEBOOK_ANDROID_SDK_VERSION": "5.0.2"
       }
     },
     "platforms": [

@@ -42,7 +42,7 @@ export class PaymentDetailsPage {
   mode: PaymentDetailsPageMode;
   title: string;
   saveButtonText: string;
-  spreedlyTimeout?: number = undefined;
+  spreedlyTimeout?: any = undefined;
   paymentMethodError = '';
 
   constructor(
