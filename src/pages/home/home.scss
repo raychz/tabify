@@ -24,6 +24,7 @@ page-home {
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
+    max-width: 700px;
     box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
     &-text {
       color: map-get($colors, light);
@@ -40,8 +41,49 @@ page-home {
     font-size: 48px;
   }
 
-  .no-feed-row {
+  .no-feed {
     height: calc(100% - #{$blank-space-height});
+    position: relative;
+    &-img {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 700px;
+      background: url(../assets/imgs/home/empty-feed.png);
+      background-repeat: repeat-y;
+      background-size: contain;
+      margin: 0 auto;
+    }
+
+    &-overlay {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(37, 37, 38, 1) 5%,
+        rgba(37, 37, 38, 0.5) 150%
+      );
+    }
+
+    &-text {
+      position: absolute;
+      z-index: 3;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+      color: map-get($colors, light);
+      padding: 30px 0;
+      font-weight: 400;
+      font-size: 15px;
+      font-style: italic;
+    }
   }
 
   ion-refresher {
