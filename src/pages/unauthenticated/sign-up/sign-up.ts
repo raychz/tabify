@@ -19,10 +19,12 @@ enum SignUpStep {
 })
 export class SignUpPage {
   SignUpStep: typeof SignUpStep = SignUpStep; // Hack to expose enum to template
-  referralCode = this.navParams.get("referralCode");
+  // referralCode = this.navParams.get("referralCode");
+  referralCode: string = '';
   signUpError: string = '';
   form: FormGroup;
   showServerCodeInput = false;
+  showValidateCard = false;
   signUpStep = SignUpStep.REFERRAL_CODE_ENTRY;
 
   constructor(
@@ -82,5 +84,15 @@ export class SignUpPage {
     this.navCtrl.pop().then(() => {
       this.navCtrl.push('LoginPage');
     });
+  }
+
+  submitReferralCode() {
+    console.log(this.referralCode);
+    this.showValidateCard = true;
+  }
+
+  reEnterReferralCode() {
+    this.referralCode = '';
+    this.showValidateCard = false;
   }
 }
