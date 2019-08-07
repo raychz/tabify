@@ -28,7 +28,7 @@
             </ion-row>
             <ion-row *ngIf="showServerCodeInput">
               <ion-col col-6>
-                <button ion-button block color="tabify" float-right (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                <button ion-button block color="tabify" float-right (click)="submitReferralCode()">
                   Submit
                 </button>
               </ion-col>
@@ -52,8 +52,38 @@
             </ion-row>
           </ion-card-content>
         </ion-card>
+
+    <!-- Check with user that the code they entered is correct -->
+        <ion-card *ngIf="showValidateCard">
+          <ion-card-header text-wrap>
+            code "{{referralCode}}" corresponds To:
+
+            Server Name
+            Restaurant Name
+
+            Does this information seem correct?
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row *ngIf="showServerCodeInput">
+            </ion-row>
+            <ion-row *ngIf="showServerCodeInput">
+              <ion-col col-6>
+                <button ion-button block color="tabify" float-right (click)="submitReferralCode()">
+                  Yes, Proceed
+                </button>
+              </ion-col>
+              <ion-col col-6>
+                <button ion-button block color="tabify-alt" float-left (click)="reEnterReferralCode()">
+                  No, re-enter
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
       </ion-col>
     </ion-row>
+
     <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
       <ion-col>
         <ion-card>
