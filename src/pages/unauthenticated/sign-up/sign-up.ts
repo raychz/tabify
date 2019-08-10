@@ -87,7 +87,6 @@ export class SignUpPage {
   }
 
   submitReferralCode() {
-    console.log(this.referralCode);
     this.showValidateCard = true;
   }
 

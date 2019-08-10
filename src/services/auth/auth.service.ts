@@ -126,4 +126,8 @@ export class AuthService {
       .toPromise();
     return res;
   }
+
+  async getServerDetailsUsingCode(referralCode: string) {
+    const res = await this.http.post(`${config.serverUrl}/getServerDetailsUsingCode`, {})
+  }
 }
