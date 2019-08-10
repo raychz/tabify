@@ -118,13 +118,9 @@ export class SelectItemsPage {
     }
   }
 
-  // async viewTaxAndTip() {
-  //   this.navCtrl.push('TaxTipPage', {
-  //     tab: {
-  //       receiptItems: this.firestoreTicketItems,
-  //     },
-  //   });
-  // }
+  async viewTaxAndTip() {
+    this.navCtrl.push('TaxTipPage');
+  }
 
   async confirmSelections() {
     if (this.ticketService.userSelectedItemsCount) {
@@ -142,7 +138,7 @@ export class SelectItemsPage {
             text: 'Yes',
             handler: () => {
               confirm.dismiss().then(() => {
-                // this.viewTaxAndTip();
+                this.viewTaxAndTip();
               });
               return false;
             },

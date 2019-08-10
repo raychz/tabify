@@ -20,6 +20,10 @@ export interface FirestoreTicketItem {
   ticket_item_id: number,
   isItemOnMyTab: boolean,
   users: { name: string, price: number, uid: string }[],
+  loading?: boolean,
+  rating?: number,
+  feedback?: string,
+  userShare?: number,
 }
 
 export interface FirestoreTicket {
@@ -42,21 +46,20 @@ export class TicketService {
   public firestoreTicketItems!: FirestoreTicketItem[];
 
   // used to track number of items that current user has selected
-  userSelectedItemsCount: number = 0;
-  userSubtotal: number = 0;
-  ticketUsersDescription: string = getTicketUsersDescription();
+  public userSelectedItemsCount: number = 0;
+  public userSubtotal: number = 0;
+  public ticketUsersDescription: string = getTicketUsersDescription();
 
-  hasInitializationError = false;
+  public hasInitializationError = false;
 
   constructor(
     private readonly http: HttpClient,
     private firestoreService: FirestoreService,
     private auth: AuthService,
     public alertCtrl: AlertService,
-    // public navCtrl: NavController,
   ) { }
 
-  async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
+  public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
       const params = {
         ticket_number: tab_id,
@@ -79,15 +82,7 @@ export class TicketService {
     }
   }
 
-  getFirestoreTicket(ticketId: number) {
-    return this.firestoreService.document$(`tickets/${ticketId}/`);
-  }
-
-  getFirestoreTicketItems(ticketId: number) {
-    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
-  }
-
-  initializeFirestoreTicket(ticketId: any) {
+  public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
@@ -103,7 +98,15 @@ export class TicketService {
       .subscribe();
   }
 
-  async handleInitializationError(error: any) {
+  private getFirestoreTicket(ticketId: number) {
+    return this.firestoreService.document$(`tickets/${ticketId}/`);
+  }
+
+  private getFirestoreTicketItems(ticketId: number) {
+    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
+  }
+
+  private async handleInitializationError(error: any) {
     if (!this.hasInitializationError) {
       this.hasInitializationError = true;
       const alert = this.alertCtrl.create({
@@ -122,20 +125,20 @@ export class TicketService {
     return of(error);
   }
 
-  onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
+  private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
     this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
   }
 
-  onTicketUpdate(firestoreTicket: FirestoreTicket) {
+  private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
     this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
   }
 
-  async addUserToFirestoreTicketItem(
+  public async addUserToFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
     try {
@@ -190,7 +193,7 @@ export class TicketService {
     }
   }
 
-  async removeUserFromFirestoreTicketItem(
+  public async removeUserFromFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
     try {
@@ -240,16 +243,4 @@ export class TicketService {
       };
     }
   }
-
-  // async addAllItemsToMyTab() {
-  //   for (const item of this.ticket.firestoreTicketItems!) {
-  //     if (!this.isItemOnMyTab(item)) await this.addItemToMyTab(item);
-  //   }
-  // }
-
-  // async removeAllItemsFromMyTab() {
-  //   for (const item of this.ticket.firestoreTicketItems!) {
-  //     if (!this.isItemOnMyTab(item)) await this.removeItemFromMyTab(item);
-  //   }
-  // }
 }

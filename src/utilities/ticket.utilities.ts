@@ -66,3 +66,9 @@ export const getTicketUsersDescription = (users: any[] = []) => {
     }
     return abbreviatedNames.join(', ');
 }
+
+export const getItemsOnMyTab = (items: FirestoreTicketItem[], uid: any) => {
+    return items.filter((item: any) =>
+        item.users.find((e: any) => e.uid === uid)
+    )
+}
