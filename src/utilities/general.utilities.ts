@@ -8,3 +8,10 @@ export const abbreviateName = (name: string) => {
   const rest = nameSplit.map(v => `${v[0].toUpperCase()}.`).join('');
   return `${firstName} ${rest}`;
 };
+
+/**
+ * Returns an 's' if count !== 1
+ */
+export const plurality = (count: number) => {
+  return count !== 1 ? 's' : '';
+}

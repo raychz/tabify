@@ -15,7 +15,7 @@ import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
 import { TicketService } from '../../../services/ticket/ticket.service';
-import { abbreviateName } from '../../../utilities/general.utilities';
+import { plurality } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 
 export interface ReceiptItem {
@@ -127,11 +127,10 @@ export class SelectItemsPage {
   // }
 
   async confirmSelections() {
-    const itemCount = this.ticketService.countItemsOnMyTab(this.ticketService.firestoreTicketItems);
-    if (itemCount) {
+    if (this.ticketService.userSelectedItemsCount) {
       const confirm = this.alertCtrl.create({
         title: 'Confirm Selections',
-        message: `You've added ${itemCount} items to your tab. Is this correct?`,
+        message: `You've added ${this.ticketService.userSelectedItemsCount} item${plurality(this.ticketService.userSelectedItemsCount)} to your tab. Is this correct?`,
         buttons: [
           {
             text: 'No',
