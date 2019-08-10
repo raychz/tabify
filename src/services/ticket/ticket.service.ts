@@ -91,14 +91,14 @@ export class TicketService {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
-        tap(ticket => this.onTicketUpdate(ticket as FirestoreTicket))
+        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
       )
       .subscribe();
 
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
-        tap(items => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
       )
       .subscribe();
   }
