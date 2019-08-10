@@ -226,21 +226,29 @@ export class SelectItemsPage {
     this.subtotal = sum;
   }
 
-  async viewTaxAndTip() {
-    // await this.loader.present({
-    //   content: 'Waiting on Alice, Bob, and John to finish making selections...',
-    // });
-    // setTimeout(() => {
-    //   this.loader.setContent('Waiting on Bob to finish making selections...');
-    // }, 1500);
-    // setTimeout(() => {
-    // this.loader.dismiss();
-    this.navCtrl.push('TaxTipPage', {
+  // async viewTaxAndTip() {
+  //   // await this.loader.present({
+  //   //   content: 'Waiting on Alice, Bob, and John to finish making selections...',
+  //   // });
+  //   // setTimeout(() => {
+  //   //   this.loader.setContent('Waiting on Bob to finish making selections...');
+  //   // }, 1500);
+  //   // setTimeout(() => {
+  //   // this.loader.dismiss();
+  //   this.navCtrl.push('TaxTipPage', {
+  //     tab: {
+  //       receiptItems: this.firestoreTicketItems,
+  //     },
+  //   });
+  //   // }, 3500);
+  // }
+
+  async viewWaitingRoom() {
+    this.navCtrl.push('WaitingRoomPage', {
       tab: {
         receiptItems: this.firestoreTicketItems,
       },
     });
-    // }, 3500);
   }
 
   async confirmSelections() {
@@ -260,7 +268,7 @@ export class SelectItemsPage {
             text: 'Yes',
             handler: () => {
               confirm.dismiss().then(() => {
-                this.viewTaxAndTip();
+                this.viewWaitingRoom();
               });
               return false;
             },
