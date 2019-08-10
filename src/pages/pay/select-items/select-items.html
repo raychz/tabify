@@ -13,7 +13,7 @@
       <ion-col align-self-center text-center class="toolbar-col guests">
         <ion-icon name="people"></ion-icon>
         <b>Guests:</b>
-        <span [innerHTML]="getUsers((firestoreTicket$ | async)?.users)"></span>
+        <span [innerHTML]="ticketService.ticketUsersDescription"></span>
         <span class="invite-others">
           <ion-icon name="send"></ion-icon>
           Invite Others
@@ -24,49 +24,41 @@
   <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        {{ mySelectedItemsCount }}
+        {{ ticketService.userSelectedItemsCount }}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        ${{ (subtotal && subtotal / 100 | number: '1.2-2') || 0.0 }}
+        ${{ (ticketService.userSubtotal / 100 | number: '1.2-2') || 0.0 }}
       </ion-col>
     </ion-row>
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
-        Selected Item{{ mySelectedItemsCount === 1 ? '' : 's'}}
+        Selected Item{{ ticketService.userSelectedItemsCount === 1 ? '' : 's'}}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
         Your Subtotal
       </ion-col>
     </ion-row>
     <ion-buttons right>
-      <button ion-button icon-only (click)="presentActionSheet()"><ion-icon name="md-more"></ion-icon></button>
+      <button ion-button icon-only (click)="presentActionSheet()">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container *ngIf="(firestoreTicketItems$ | async) as items; else loading">
-    <ng-container *ngFor="let item of items">
-      <ion-card
-        [class.item-not-on-tab]="!isItemOnMyTab(item)"
-        [class.item-on-tab]="isItemOnMyTab(item)"
-      >
+  <ng-container *ngIf="ticketService.firestoreTicketItems; else loading">
+    <ng-container *ngFor="let item of ticketService.firestoreTicketItems">
+      <ion-card [class.item-not-on-tab]="!item.isItemOnMyTab" [class.item-on-tab]="item.isItemOnMyTab">
         <div>
           <ion-row (click)="addOrRemoveItem(item)">
-            <ion-col
-              class="modify-item"
-              [class.item-not-on-tab]="!isItemOnMyTab(item)"
-              [class.item-on-tab]="isItemOnMyTab(item)"
-              text-center
-              col-1
-            >
+            <ion-col class="modify-item" [class.item-not-on-tab]="!item.isItemOnMyTab"
+              [class.item-on-tab]="item.isItemOnMyTab" text-center col-1>
               <div>
-                <ion-icon
-                  *ngIf="!item.loading"
-                  [color]="isItemOnMyTab(item) ? 'light' : 'primary'"
-                  [name]="isItemOnMyTab(item) ? 'ios-checkmark' : 'ios-add'"
-                ></ion-icon>
-                <ion-spinner *ngIf="item.loading" [color]="isItemOnMyTab(item) ? 'light' : 'primary'" name="bubbles"></ion-spinner>
+                <ion-icon *ngIf="!item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'"
+                  [name]="item.isItemOnMyTab ? 'ios-checkmark' : 'ios-add'"></ion-icon>
+                <ion-spinner *ngIf="item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'" name="bubbles">
+                </ion-spinner>
               </div>
             </ion-col>
             <ion-col class="item-details">
@@ -75,12 +67,9 @@
                   <span class="name-text">{{ getName(item.name) }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
-                  <span
-                    class="my-share-text"
-                    *ngIf="
-                      item.users && item.users.length > 1 && isItemOnMyTab(item)
-                    "
-                  >
+                  <span class="my-share-text" *ngIf="
+                      item.users && item.users.length > 1 && item.isItemOnMyTab
+                    ">
                     ${{ findMyShare(item) / 100 | number: '1.2-2' }} /
                   </span>
                   <span class="total-text">
@@ -90,24 +79,12 @@
               </ion-row>
               <ion-row>
                 <ion-col class="col-payers">
-                  <ion-icon
-                    color="primary"
-                    class="payers-icon-alert"
-                    *ngIf="item.users && item.users.length === 0"
-                    name="md-warning"
-                  ></ion-icon>
-                  <ion-icon
-                    color="primary"
-                    class="payers-icon"
-                    *ngIf="item.users && item.users.length > 0"
-                    name="ios-{{
+                  <ion-icon color="primary" class="payers-icon-alert" *ngIf="item.users && item.users.length === 0"
+                    name="md-warning"></ion-icon>
+                  <ion-icon color="primary" class="payers-icon" *ngIf="item.users && item.users.length > 0" name="ios-{{
                       item.users && item.users.length > 1 ? 'people' : 'person'
-                    }}"
-                  ></ion-icon>
-                  <span
-                    class="payers-count"
-                    *ngIf="item.users && item.users.length > 1"
-                  >
+                    }}"></ion-icon>
+                  <span class="payers-count" *ngIf="item.users && item.users.length > 1">
                     {{ item.users.length }}:
                   </span>
                   <span class="payers-description-text">
