@@ -103,46 +103,6 @@ export class TicketService {
     this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
   }
 
-  private getFirestoreTicket(ticketId: number) {
-    return this.firestoreService.document$(`tickets/${ticketId}/`);
-  }
-
-  private getFirestoreTicketItems(ticketId: number) {
-    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
-  }
-
-  private async handleInitializationError(error: any) {
-    if (!this.hasInitializationError) {
-      this.hasInitializationError = true;
-      const alert = this.alertCtrl.create({
-        title: 'Error',
-        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
-          error}`,
-        buttons: [
-          {
-            text: 'Ok',
-          },
-        ],
-      });
-      await alert.present();
-      // await this.navCtrl.popTo('TabLookupPage');
-    }
-    return of(error);
-  }
-
-  private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
-    this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
-      ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
-    this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
-    this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
-  }
-
-  private onTicketUpdate(firestoreTicket: FirestoreTicket) {
-    console.log('updating the ticket', firestoreTicket)
-    this.firestoreTicket = firestoreTicket;
-    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
-  }
-
   public async addUserToFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
@@ -247,5 +207,45 @@ export class TicketService {
         message: error,
       };
     }
+  }
+
+  private getFirestoreTicket(ticketId: number) {
+    return this.firestoreService.document$(`tickets/${ticketId}/`);
+  }
+
+  private getFirestoreTicketItems(ticketId: number) {
+    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
+  }
+
+  private async handleInitializationError(error: any) {
+    if (!this.hasInitializationError) {
+      this.hasInitializationError = true;
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
+          error}`,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      await alert.present();
+      // await this.navCtrl.popTo('TabLookupPage');
+    }
+    return of(error);
+  }
+
+  private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
+    this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
+      ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
+    this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
+    this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
+  }
+
+  private onTicketUpdate(firestoreTicket: FirestoreTicket) {
+    console.log('updating the ticket', firestoreTicket)
+    this.firestoreTicket = firestoreTicket;
+    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
   }
 }
