@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonicPage,
   NavController,
@@ -13,11 +13,9 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { SocketService } from '../../../services/socket/socket.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
-import { tap, catchError } from 'rxjs/operators';
 import { user } from '../../home/example-stories';
 import { TicketService } from '../../../services/ticket/ticket.service';
-import { of } from 'rxjs';
-import { abbreviateName } from '../../../utilities/utils';
+import { plurality } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 
 export interface ReceiptItem {
@@ -39,15 +37,6 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
-  ticket: ITicket = this.navParams.data;
-  firestoreTicket$!: any;
-  firestoreTicketItems$!: any;
-
-  firestoreTicket!: any;
-  firestoreTicketItems!: any[];
-  subtotal: any;
-  hasInitializationError: boolean = false;
-  mySelectedItemsCount: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -59,83 +48,18 @@ export class SelectItemsPage {
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
     public modalCtrl: ModalController
-  ) {}
+  ) { }
 
   ionViewDidLoad() {
-    this.initializeTicket();
   }
 
   ionViewWillUnload() {
-    console.log('Unloading');
-    // this.socketService.disconnect()
-  }
-
-  getUsers(users: any[]) {
-    if (!users) return 'No users on this tab.';
-
-    const abbreviatedNames = users.map(user => abbreviateName(user.name));
-
-    const userDisplayLimit = 3;
-    if (abbreviatedNames.length > userDisplayLimit) {
-      const overflowNames = abbreviatedNames.splice(userDisplayLimit);
-      const others = `+${overflowNames.length} other${
-        overflowNames.length > 1 ? 's' : ''
-      }`;
-      const othersContainer = `<span class='plus-others'>${others}</span>`;
-      return `${abbreviatedNames.join(', ')} ${othersContainer}`;
-    }
-    return abbreviatedNames.join(', ');
-  }
-
-  initializeTicket() {
-    this.firestoreTicket$ = this.ticketService
-      .getFirestoreTicket(this.ticket.id || 8)
-      .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap(ticket => this.onTicketUpdate(ticket))
-      );
-
-    this.firestoreTicketItems$ = this.ticketService
-      .getFirestoreTicketItems(this.ticket.id || 8)
-      .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap(items => this.onTicketItemsUpdate(items))
-      );
-  }
-
-  async handleInitializationError(error: any) {
-    if (!this.hasInitializationError) {
-      this.hasInitializationError = true;
-      const alert = this.alertCtrl.create({
-        title: 'Error',
-        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
-          error}`,
-        buttons: [
-          {
-            text: 'Ok',
-          },
-        ],
-      });
-      await alert.present();
-      await this.navCtrl.popTo('TabLookupPage');
-    }
-    return of(error);
-  }
-
-  onTicketItemsUpdate(items: any) {
-    this.firestoreTicketItems = items;
-    this.updateSubTotal(items);
-    this.countItemsOnMyTab();
-  }
-
-  onTicketUpdate(ticket: any) {
-    this.firestoreTicket = ticket;
-    this.countItemsOnMyTab();
+    this.ticketService.destroySubscriptions();
   }
 
   async addOrRemoveItem(item: any) {
     if (item.loading) return;
-    if (this.isItemOnMyTab(item)) {
+    if (item.isItemOnMyTab) {
       this.removeItemFromMyTab(item);
     } else {
       this.addItemToMyTab(item);
@@ -148,7 +72,6 @@ export class SelectItemsPage {
       success,
       message,
     } = await this.ticketService.addUserToFirestoreTicketItem(
-      this.ticket.id,
       item.id
     );
     item.loading = false;
@@ -164,12 +87,6 @@ export class SelectItemsPage {
       });
       error.present();
     }
-  }
-
-  isItemOnMyTab(item: any) {
-    return !!item.users.find(
-      (e: { uid: string | null }) => e.uid === this.auth.getUid()
-    );
   }
 
   findMyShare(item: any) {
@@ -179,22 +96,12 @@ export class SelectItemsPage {
     return share || 0;
   }
 
-  countItemsOnMyTab(): number {
-    console.log('counted items!');
-    const myItems =
-      this.firestoreTicketItems &&
-      this.firestoreTicketItems.filter((item: any) => this.isItemOnMyTab(item));
-    this.mySelectedItemsCount = (myItems && myItems.length) || 0;
-    return this.mySelectedItemsCount;
-  }
-
   async removeItemFromMyTab(item: any) {
     item.loading = true;
     const {
       success,
       message,
     } = await this.ticketService.removeUserFromFirestoreTicketItem(
-      this.ticket.id,
       item.id
     );
     item.loading = false;
@@ -212,43 +119,15 @@ export class SelectItemsPage {
     }
   }
 
-  updateSubTotal(items: any[]) {
-    let sum = 0;
-    items &&
-      items.forEach(item => {
-        const payer = item.users.find(
-          (e: { uid: string | null }) => e.uid === this.auth.getUid()
-        );
-        if (payer) {
-          sum += payer.price;
-        }
-      });
-    this.subtotal = sum;
-  }
-
   async viewTaxAndTip() {
-    // await this.loader.present({
-    //   content: 'Waiting on Alice, Bob, and John to finish making selections...',
-    // });
-    // setTimeout(() => {
-    //   this.loader.setContent('Waiting on Bob to finish making selections...');
-    // }, 1500);
-    // setTimeout(() => {
-    // this.loader.dismiss();
-    this.navCtrl.push('TaxTipPage', {
-      tab: {
-        receiptItems: this.firestoreTicketItems,
-      },
-    });
-    // }, 3500);
+    this.navCtrl.push('TaxTipPage');
   }
 
   async confirmSelections() {
-    const itemCount = this.countItemsOnMyTab();
-    if (itemCount) {
+    if (this.ticketService.userSelectedItemsCount) {
       const confirm = this.alertCtrl.create({
         title: 'Confirm Selections',
-        message: `You've added ${itemCount} items to your tab. Is this correct?`,
+        message: `You've added ${this.ticketService.userSelectedItemsCount} item${plurality(this.ticketService.userSelectedItemsCount)} to your tab. Is this correct?`,
         buttons: [
           {
             text: 'No',
@@ -312,14 +191,14 @@ export class SelectItemsPage {
   }
 
   async addAllItemsToMyTab() {
-    return this.firestoreTicketItems.forEach(async item => {
-      if (!this.isItemOnMyTab(item)) await this.addItemToMyTab(item);
+    return this.ticketService.firestoreTicketItems.forEach(async item => {
+      if (!item.isItemOnMyTab) await this.addItemToMyTab(item);
     });
   }
 
   async removeAllItemsFromMyTab() {
-    return this.firestoreTicketItems.forEach(async item => {
-      if (this.isItemOnMyTab(item)) await this.removeItemFromMyTab(item);
+    return this.ticketService.firestoreTicketItems.forEach(async item => {
+      if (item.isItemOnMyTab) await this.removeItemFromMyTab(item);
     });
   }
 
@@ -334,8 +213,8 @@ export class SelectItemsPage {
 
   inviteOthers() {
     const modal = this.modalCtrl.create(InviteOthersPage, {
-      tabNumber: this.firestoreTicket.tab_id,
-      users: this.firestoreTicket.users,
+      tabNumber: this.ticketService.firestoreTicket.tab_id,
+      users: this.ticketService.firestoreTicket.users,
     });
     modal.present();
   }

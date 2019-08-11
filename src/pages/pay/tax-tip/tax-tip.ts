@@ -5,6 +5,8 @@ import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
+import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 
 @IonicPage()
 @Component({
@@ -16,34 +18,27 @@ export class TaxTipPage {
 
   tip = 18;
   tab = this.navParams.data;
-  myTabItems = [];
+  myTabItems!: FirestoreTicketItem[];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertService,
     public loader: LoaderService,
-    public auth: AuthService
-  ) {
-    this.myTabItems =
-      this.navParams.data.tab.receiptItems &&
-      this.navParams.data.tab.receiptItems
-        .filter((item: any) =>
-          item.users.find((e: any) => e.uid === this.auth.getUid())
-        )
-        .map((item: any) => ({
-          name: item.name,
-          payers: item.users,
-          rating: 0,
-          feedback: '',
-          price: item.users.find((e: any) => e.uid === this.auth.getUid()).price,
-        }));
-  }
+    public auth: AuthService,
+    public ticketService: TicketService,
+  ) { }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TaxTipPage');
-    console.log(this.tab);
-    console.log(this.myTabItems);
+    this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
+      .map(item => {
+        const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
+        const userShare = (nestedUser && nestedUser.price) || 0;
+        return {
+          ...item,
+          userShare
+        };
+      });
     this.setBackButtonAction();
   }
 
@@ -85,8 +80,8 @@ export class TaxTipPage {
   getSubtotal() {
     let sum = 0;
     this.myTabItems &&
-      this.myTabItems.forEach((item: any) => {
-        const payer = item.payers && item.payers.find((e: any) => e.uid === this.auth.getUid());
+      this.myTabItems.forEach((item: FirestoreTicketItem) => {
+        const payer = item.users && item.users.find((e: any) => e.uid === this.auth.getUid());
         if (payer) {
           sum += payer.price;
         }
