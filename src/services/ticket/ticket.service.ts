@@ -39,18 +39,18 @@ export interface FirestoreTicket {
 
 @Injectable()
 export class TicketService {
-  private firestoreTicket$!: Subscription;
-  private firestoreTicketItems$!: Subscription;
-
+  // Public class variables
+  // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
   public firestoreTicket!: FirestoreTicket;
   public firestoreTicketItems!: FirestoreTicketItem[];
-
-  // used to track number of items that current user has selected
   public userSelectedItemsCount: number = 0;
   public userSubtotal: number = 0;
   public ticketUsersDescription: string = getTicketUsersDescription();
-
   public hasInitializationError = false;
+
+  // Private class variables
+  private firestoreTicket$!: Subscription;
+  private firestoreTicketItems$!: Subscription;
 
   constructor(
     private readonly http: HttpClient,
@@ -59,6 +59,12 @@ export class TicketService {
     public alertCtrl: AlertService,
   ) { }
 
+  /**
+   * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
+   * @param tab_id 
+   * @param omnivoreLocationId 
+   * @param fraudPreventionCode 
+   */
   public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
       const params = {
@@ -82,6 +88,10 @@ export class TicketService {
     }
   }
 
+  /**
+   * Subscribes to changes made on the Firestore ticket and ticket-items objects.
+   * @param ticketId 
+   */
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
@@ -98,11 +108,18 @@ export class TicketService {
       .subscribe();
   }
 
+  /**
+   * Destroys active Firestore subscriptions.
+   */
   public destroySubscriptions() {
     this.firestoreTicket$ && this.firestoreTicket$.unsubscribe();
     this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
   }
 
+  /**
+   * Adds user to Firestore ticket item with id `ticketItemId`.
+   * @param ticketItemId 
+   */
   public async addUserToFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
@@ -158,6 +175,10 @@ export class TicketService {
     }
   }
 
+  /**
+   * Removes user from Firestore ticket item with id `ticketItemId`.
+   * @param ticketItemId 
+   */
   public async removeUserFromFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
@@ -209,14 +230,27 @@ export class TicketService {
     }
   }
 
+  /**
+   * Gets the Firestore ticket document for ticket with id `ticketId`.
+   * @param ticketId
+   */
   private getFirestoreTicket(ticketId: number) {
     return this.firestoreService.document$(`tickets/${ticketId}/`);
   }
 
+  /**
+   * Gets the Firestore ticket-item collection for ticket with id `ticketId`.
+   * @param ticketId
+   */
   private getFirestoreTicketItems(ticketId: number) {
     return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
   }
 
+  /**
+   * Called when an error is thrown during the Firestore initialization. 
+   * TODO: Make this an observable so that consumers of the ticket-service can detect and handle errors on their own.
+   * @param error 
+   */
   private async handleInitializationError(error: any) {
     if (!this.hasInitializationError) {
       this.hasInitializationError = true;
@@ -236,6 +270,10 @@ export class TicketService {
     return of(error);
   }
 
+  /**
+   * Called when a Firestore document within the Firestore ticket-items collection is updated.
+   * @param firestoreTicketItems 
+   */
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
@@ -243,6 +281,10 @@ export class TicketService {
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
   }
 
+  /**
+   * Called when the Firestore ticket document is updated.
+   * @param firestoreTicket 
+   */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
