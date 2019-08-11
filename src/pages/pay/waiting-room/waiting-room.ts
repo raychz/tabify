@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AuthService } from '../../../services/auth/auth.service';
+import { TicketService } from '../../../services/ticket/ticket.service';
+
 
 /**
  * Generated class for the WaitingRoomPage page.
@@ -14,15 +17,28 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'waiting-room.html',
 })
 export class WaitingRoomPage {
+  user: any;
+  payers: any;
+  sharedItems: any;
+  unclaimedItems: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public auth: AuthService,
+    public ticketService: TicketService,
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
+    this.initializePayers();
   }
 
-    async viewTaxAndTip() {
+  initializePayers() {
+
+  }
+
+  viewTaxAndTip() {
     this.navCtrl.push('TaxTipPage', {
       tab: {
         receiptItems: this.navParams.data.tab.receiptItems,

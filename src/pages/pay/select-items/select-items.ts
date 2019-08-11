@@ -243,7 +243,8 @@ export class SelectItemsPage {
   //   // }, 3500);
   // }
 
-  async viewWaitingRoom() {
+  viewWaitingRoom() {
+    console.log(this.firestoreTicketItems)
     this.navCtrl.push('WaitingRoomPage', {
       tab: {
         receiptItems: this.firestoreTicketItems,
