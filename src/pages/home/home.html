@@ -75,14 +75,13 @@
 
   <!-- If selected segment's feed is empty, display this template -->
   <ng-template #emptyFeed>
-    <ion-row class="no-feed-row" align-items-center>
-      <ion-col text-center>
-        <h6>No payment history (yet!)</h6>
-        <div>
-          <h6>To join a tab, hit the Pay Tab button</h6>
-        </div>
+    <div class="empty-feed">
+      <div class="empty-feed-text">
+        Your past transactions <br>will appear here
         <h1>🥂</h1>
-      </ion-col>
-    </ion-row>
+      </div>
+      <div class="empty-feed-overlay"></div>
+      <div class="empty-feed-img"></div>
+    </div>
   </ng-template>
 </ion-content>
