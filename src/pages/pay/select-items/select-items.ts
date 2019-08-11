@@ -54,6 +54,7 @@ export class SelectItemsPage {
   }
 
   ionViewWillUnload() {
+    this.ticketService.destroySubscriptions();
   }
 
   async addOrRemoveItem(item: any) {

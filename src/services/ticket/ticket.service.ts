@@ -98,6 +98,11 @@ export class TicketService {
       .subscribe();
   }
 
+  public destroySubscriptions() {
+    this.firestoreTicket$ && this.firestoreTicket$.unsubscribe();
+    this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
+  }
+
   private getFirestoreTicket(ticketId: number) {
     return this.firestoreService.document$(`tickets/${ticketId}/`);
   }
