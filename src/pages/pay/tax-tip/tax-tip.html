@@ -13,19 +13,20 @@
 <ion-content class='cards-bg'>
   <ion-card>
     <ion-card-header>
-      Selected Items
+      My Selected Items
     </ion-card-header>
     <ion-card-content>
+      <p id="rate-and-review">Optionally rate and review the items you ordered.</p>
       <ion-item class='total tab-item' *ngFor='let item of myTabItems'>
         <h2>{{item.name}}
           <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
         </h2>
         <div class="reviews">
-          <rating
-            [(ngModel)]="item.rating">
+          <rating [(ngModel)]="item.rating">
           </rating>
           <ion-item *ngIf="item.rating! > 0" class="item-feedback">
-            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on" spellcheck="on" autocorrect="on"></ion-textarea>
+            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on"
+              spellcheck="on" autocorrect="on"></ion-textarea>
           </ion-item>
         </div>
         <div item-end>
@@ -36,7 +37,7 @@
   </ion-card>
   <ion-card>
     <ion-card-header>
-      Total
+      My Total
     </ion-card-header>
     <ion-card-content>
       <ion-item class='total'>
@@ -66,6 +67,20 @@
         <div item-end>
           <h2>${{getGrandTotal() / 100 | number: '1.2-2'}}</h2>
         </div>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <!-- Leaving this commented in case we decide to add a cc icon here -->
+          <!-- <ion-icon class="linked-card-icon" name="card" item-start></ion-icon> -->
+          <span id="payment-method-title">Payment Method</span>
+        </ion-label>
+        <ion-select [(ngModel)]="selectedPaymentMethod" submitText="Ok" cancelText="Cancel">
+          <ion-option *ngFor="let method of this.paymentService.paymentMethods" [value]="method">
+            {{method.card_type}}: ****{{method.last_four_digits}}
+          </ion-option>
+          <hr>
+          <ion-option [value]="null">Add New Card</ion-option>
+        </ion-select>
       </ion-item>
     </ion-card-content>
   </ion-card>

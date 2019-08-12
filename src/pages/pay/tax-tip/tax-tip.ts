@@ -7,6 +7,7 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
+import { PaymentService } from '../../../services/payment/payment.service';
 
 @IonicPage()
 @Component({
@@ -15,7 +16,7 @@ import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar!: Navbar;
-
+  selectedPaymentMethod: any = null;
   tip = 18;
   tab = this.navParams.data;
   myTabItems!: FirestoreTicketItem[];
@@ -27,9 +28,11 @@ export class TaxTipPage {
     public loader: LoaderService,
     public auth: AuthService,
     public ticketService: TicketService,
+    public paymentService: PaymentService,
   ) { }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
+    await this.loader.present();
     this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
       .map(item => {
         const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
@@ -40,6 +43,13 @@ export class TaxTipPage {
         };
       });
     this.setBackButtonAction();
+    await this.paymentService.initializePaymentMethods();
+
+    // TODO: Auto select the user's default payment method here
+    if (this.paymentService.paymentMethods.length) {
+      this.selectedPaymentMethod = this.paymentService.paymentMethods[0];
+    }
+    await this.loader.dismiss();
   }
 
   setBackButtonAction() {

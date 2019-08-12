@@ -32,6 +32,12 @@ page-tax-tip {
 
   #grand-total {
     border-top: 1px lightgray dashed;
+    border-bottom: 1px lightgray dashed;
+  }
+
+  #rate-and-review {
+    border-bottom: 1px lightgray dashed;
+    padding-bottom: 15px;
   }
 
   .adjust-tip {
@@ -42,10 +48,29 @@ page-tax-tip {
   .line-details {
     color: gray;
   }
+
+  ion-select {
+    max-width: 100%;
+    &.select {
+      padding: unset;
+      .select-icon {
+        width: 20px;
+        .select-icon-inner {
+          color: map-get($colors, primary);
+        }
+      }
+    }
+  }
+  .linked-card-icon {
+    color: map-get($colors, primary);
+  }
+  #payment-method-title {
+    display: none;
+  }
 }
 
-div.reviews>ion-item.item-feedback {
-  border-left: 3px solid map-get($colors, primary);  
+div.reviews > ion-item.item-feedback {
+  border-left: 3px solid map-get($colors, primary);
   border-radius: 4px;
   padding-left: 0px;
   .text-input {
@@ -67,7 +92,7 @@ ul.rating {
   li {
     padding: 0px 3px !important;
     background: none;
-    color: map-get($colors, primary);;
+    color: map-get($colors, primary);
 
     ion-icon {
       font-size: 25px;
