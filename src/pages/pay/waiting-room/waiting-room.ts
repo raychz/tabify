@@ -39,11 +39,7 @@ export class WaitingRoomPage {
   }
 
   viewTaxAndTip() {
-    this.navCtrl.push('TaxTipPage', {
-      tab: {
-        receiptItems: this.navParams.data.tab.receiptItems,
-      },
-    });
+    this.navCtrl.push('TaxTipPage');
   }
 
 }

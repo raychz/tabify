@@ -46,7 +46,7 @@ export class TaxTipPage {
     this.navBar.backButtonClick = () => {
       const confirm = this.alertCtrl.create({
         title: 'Warning',
-        message: `All users on this tab will be sent back to the 'Select Items' page. Are you sure you want to continue?`,
+        message: `All users on this tab will be sent back to the 'Waiting Room' page. Are you sure you want to continue?`,
         buttons: [
           {
             text: 'No, stay on this page',
