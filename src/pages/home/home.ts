@@ -55,11 +55,12 @@ export class HomePage {
   }
 
   async createLike(ticketId: number, storyId: number) {
-    console.log(storyId);
+    this.newsfeedService.changingLikeTrue(ticketId, storyId);
     const res = await this.storyService.createLike(storyId);
-    // do more stuff, like update the template with an additional like
 
     if (res.status === 200) {
+
+      // res.body = false means that the server created a new like
       if (res.body === false) {
 
         // Increment comment count of story in newsfeed
@@ -69,6 +70,7 @@ export class HomePage {
         this.newsfeedService.decrementLikeCount(ticketId, storyId);
       }
     }
+    this.newsfeedService.changingLikeFalse(ticketId, storyId);
   }
 
   segmentChanged(event: any) {

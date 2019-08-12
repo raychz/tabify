@@ -56,7 +56,8 @@
         </ion-card-content>
         <ion-row>
           <ion-col>
-            <button ion-button color="primary" clear small icon-start
+            <ion-spinner margin-left *ngIf="ticket.changingLike" color="light" name="bubbles"></ion-spinner>
+            <button *ngIf="!ticket.changingLike" ion-button color="primary" clear small icon-start
               (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'>
               <ion-icon name="heart"></ion-icon>
               {{ ticket.story.like_count }} {{ ticket.story.like_count === 1 ? 'Like' : 'Likes' }}
