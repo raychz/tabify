@@ -119,24 +119,33 @@ export class StoryPage {
       });
       alert.present();
     }
-    
+
     this.newCommentPosting = false;
   }
 
 
   async deleteComment(commentId: number) {
+    const indexOfComment = this.comments.findIndex((comment: any) => comment.id === commentId);
+    this.comments[indexOfComment].beingDeleted = true;
+
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
     if (res.status === 200) {
       // remove the comment from front end
-      const index = this.comments.findIndex((comment: any) => comment.id === commentId);
-      this.comments.splice(index, 1);
+      this.comments.splice(indexOfComment, 1);
 
       // Decrement comment count in detailed story view
       this.story.comment_count -= 1;
 
       // Decrement comment count of story in newsfeed
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
+    } else {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+      this.comments[indexOfComment].beingDeleted = false;
     }
   }
 }

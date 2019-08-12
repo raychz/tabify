@@ -58,8 +58,10 @@
               {{comment.text}}
             </ion-col>
             <ion-col text-right>
-              <button ion-button color="primary" clear small icon-start (click)='deleteComment(comment.id)'>
-                <ion-icon *ngIf="comment.user.uid === user.uid" name="trash"></ion-icon>
+              <ion-spinner *ngIf="comment.beingDeleted" color="light" name="bubbles"></ion-spinner>
+              <button *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)" ion-button color="primary"
+                clear small icon-start (click)='deleteComment(comment.id)'>
+                <ion-icon name="trash"></ion-icon>
               </button>
             </ion-col>
           </ion-row>
@@ -75,7 +77,7 @@
     <ion-input *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
       placeholder="Enter a new comment!">
     </ion-input>
-    <ion-spinner margin *ngIf="newCommentPosting" name="bubbles"></ion-spinner>
-    <button ion-button small outline (click)='createComment()'>Post Comment</button>
+    <ion-spinner *ngIf="newCommentPosting" color="light" name="bubbles"></ion-spinner>
+    <button *ngIf="!newCommentPosting" ion-button small outline (click)='createComment()'>Post Comment</button>
   </ion-toolbar>
 </ion-footer>
