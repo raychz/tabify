@@ -38,42 +38,35 @@
 
   <div class="blank-space"></div>
 
-  <div *ngIf="feeds[selectedSegment].length > 0; else emptyFeed">
-    <ng-container *ngFor="let story of feeds[selectedSegment]">
-      <ion-card *ngIf="!!story">
+  <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
+    <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
+      <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
         <ion-item>
           <ion-avatar item-start>
-            <img src="{{ story.location.photoUrl }}" />
+            <img src={{ticket.location.photo_url}} />
           </ion-avatar>
-          <h2>{{ story.location.name }}</h2>
-          <h3>{{ story.location.city }}</h3>
-          <p>{{ story.location.streetAddress }}</p>
-          <ion-note item-end>{{ story.location.distance }} mi.</ion-note>
+          <h2>{{ ticket.location.name }}</h2>
+          <!-- Using Angular's DatePipe to format date from DB -->
+          <ion-note>{{ ticket.story.date_created | date:'mediumDate' }} {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
+          <h3>{{ ticket.location.city }}</h3>
+          <p>{{ ticket.location.streetAddress }}</p>
+          <ion-note item-end>2 mi.</ion-note>
         </ion-item>
         <ion-card-content>
-          <p>Ray and John were here.</p>
-          <div class="members-comments">
-            <p class="members-comment">Ray: "Loved the brisket!"</p>
-            <p class="members-comment">
-              John: "Best BBQ I've had in a long time. Will be back for more!"
-            </p>
-          </div>
         </ion-card-content>
         <ion-row>
           <ion-col>
-            <button ion-button color="primary" clear small icon-start>
+            <button ion-button color="primary" clear small icon-start
+              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'>
               <ion-icon name="heart"></ion-icon>
-              {{ story.likes }} Likes
+              {{ ticket.story.like_count }} {{ ticket.story.like_count === 1 ? 'Like' : 'Likes' }}
             </button>
           </ion-col>
           <ion-col>
             <button ion-button color="primary" clear small icon-start>
               <ion-icon name="text"></ion-icon>
-              {{ story.comments }} Comments
+              {{ ticket.story.comment_count }} {{ticket.story.comment_count === 1 ? 'Comment' : 'Comments'}}
             </button>
-          </ion-col>
-          <ion-col align-self-center text-center>
-            <ion-note> 11h ago </ion-note>
           </ion-col>
         </ion-row>
       </ion-card>
@@ -82,14 +75,13 @@
 
   <!-- If selected segment's feed is empty, display this template -->
   <ng-template #emptyFeed>
-    <ion-row class="no-feed-row" align-items-center>
-      <ion-col text-center>
-        <h6>No payment history (yet!)</h6>
-        <div>
-          <h6>To join a tab, hit the Pay Tab button</h6>
-        </div>
+    <div class="empty-feed">
+      <div class="empty-feed-text">
+        Your past transactions <br>will appear here
         <h1>🥂</h1>
-      </ion-col>
-    </ion-row>
+      </div>
+      <div class="empty-feed-overlay"></div>
+      <div class="empty-feed-img"></div>
+    </div>
   </ng-template>
 </ion-content>

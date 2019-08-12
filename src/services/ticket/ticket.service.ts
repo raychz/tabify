@@ -1,23 +1,71 @@
+// Stateful ticket service
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Ticket } from '../../models/Ticket';
-import { sleep } from '../../utilities/utils';
 import config from '../../config';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
-import { abbreviateName } from '../../utilities/utils';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
+import { tap, catchError } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+import { AlertService } from '../utilities/alert.service';
+import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
+
+export interface FirestoreTicketItem {
+  name: string,
+  payersDescription: string,
+  price: number,
+  ticket_item_id: number,
+  isItemOnMyTab: boolean,
+  users: { name: string, price: number, uid: string }[],
+  loading?: boolean,
+  rating?: number,
+  feedback?: string,
+  userShare?: number,
+}
+
+export interface FirestoreTicket {
+  id: number,
+  date_created: Date,
+  location: string,
+  tab_id: string,
+  ticket_number: number,
+  uids: string[],
+  users: { name: string, uid: string }[],
+  ticketItems: FirestoreTicketItem[],
+}
 
 @Injectable()
 export class TicketService {
+  // Public class variables
+  // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
+  public firestoreTicket!: FirestoreTicket;
+  public firestoreTicketItems!: FirestoreTicketItem[];
+  public userSelectedItemsCount: number = 0;
+  public userSubtotal: number = 0;
+  public ticketUsersDescription: string = getTicketUsersDescription();
+  public hasInitializationError = false;
+
+  // Private class variables
+  private firestoreTicket$!: Subscription;
+  private firestoreTicketItems$!: Subscription;
+
   constructor(
     private readonly http: HttpClient,
     private firestoreService: FirestoreService,
-    private auth: AuthService
-  ) {}
+    private auth: AuthService,
+    public alertCtrl: AlertService,
+  ) { }
 
-  async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
+  /**
+   * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
+   * @param tab_id 
+   * @param omnivoreLocationId 
+   * @param fraudPreventionCode 
+   */
+  public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
       const params = {
         ticket_number: tab_id,
@@ -40,22 +88,45 @@ export class TicketService {
     }
   }
 
-  getFirestoreTicket(ticketId: number) {
-    return this.firestoreService.document$(`tickets/${ticketId}/`);
+  /**
+   * Subscribes to changes made on the Firestore ticket and ticket-items objects.
+   * @param ticketId 
+   */
+  public initializeFirestoreTicket(ticketId: any) {
+    this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
+      )
+      .subscribe();
+
+    this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+      )
+      .subscribe();
   }
 
-  getFirestoreTicketItems(ticketId: number) {
-    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
+  /**
+   * Destroys active Firestore subscriptions.
+   */
+  public destroySubscriptions() {
+    this.firestoreTicket$ && this.firestoreTicket$.unsubscribe();
+    this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
   }
 
-  async addUserToFirestoreTicketItem(
-    ticketId: any,
+  /**
+   * Adds user to Firestore ticket item with id `ticketItemId`.
+   * @param ticketItemId 
+   */
+  public async addUserToFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
     try {
       await this.firestoreService.runTransaction(async transaction => {
         const ticketItemDocRef = this.firestoreService.document(
-          `tickets/${ticketId}/ticketItems/${ticketItemId}`
+          `tickets/${this.firestoreTicket!.id}/ticketItems/${ticketItemId}`
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
@@ -84,7 +155,7 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
-        const payersDescription = this.getPayersDescription(users);
+        const payersDescription = getPayersDescription(users);
         return transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
@@ -104,14 +175,17 @@ export class TicketService {
     }
   }
 
-  async removeUserFromFirestoreTicketItem(
-    ticketId: any,
+  /**
+   * Removes user from Firestore ticket item with id `ticketItemId`.
+   * @param ticketItemId 
+   */
+  public async removeUserFromFirestoreTicketItem(
     ticketItemId: any
   ): Promise<{ success: boolean; message: string }> {
     try {
       await this.firestoreService.runTransaction(async transaction => {
         const ticketItemDocRef = this.firestoreService.document(
-          `tickets/${ticketId}/ticketItems/${ticketItemId}`
+          `tickets/${this.firestoreTicket!.id}/ticketItems/${ticketItemId}`
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
@@ -136,7 +210,7 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
-        const payersDescription = this.getPayersDescription(users);
+        const payersDescription = getPayersDescription(users);
         return transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
@@ -156,24 +230,64 @@ export class TicketService {
     }
   }
 
-  private getPayersDescription(users: any[]) {
-    const { length: numberOfPayers } = users;
+  /**
+   * Gets the Firestore ticket document for ticket with id `ticketId`.
+   * @param ticketId
+   */
+  private getFirestoreTicket(ticketId: number) {
+    return this.firestoreService.document$(`tickets/${ticketId}/`);
+  }
 
-    let payersDescription = '';
-    switch (numberOfPayers) {
-      case 0:
-        payersDescription = 'Nobody has claimed this.';
-        break;
-      case 1:
-        payersDescription = `${abbreviateName(users[0].name)} got this.`;
-        break;
-      default: {
-        const payersNamesMap = users.map(p => abbreviateName(p.name));
-        payersDescription = `${payersNamesMap
-          .slice(0, numberOfPayers - 1)
-          .join(', ')} and ${payersNamesMap[numberOfPayers - 1]} shared this.`;
-      }
+  /**
+   * Gets the Firestore ticket-item collection for ticket with id `ticketId`.
+   * @param ticketId
+   */
+  private getFirestoreTicketItems(ticketId: number) {
+    return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
+  }
+
+  /**
+   * Called when an error is thrown during the Firestore initialization. 
+   * TODO: Make this an observable so that consumers of the ticket-service can detect and handle errors on their own.
+   * @param error 
+   */
+  private async handleInitializationError(error: any) {
+    if (!this.hasInitializationError) {
+      this.hasInitializationError = true;
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
+          error}`,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      await alert.present();
+      // await this.navCtrl.popTo('TabLookupPage');
     }
-    return payersDescription;
+    return of(error);
+  }
+
+  /**
+   * Called when a Firestore document within the Firestore ticket-items collection is updated.
+   * @param firestoreTicketItems 
+   */
+  private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
+    this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
+      ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
+    this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
+    this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
+  }
+
+  /**
+   * Called when the Firestore ticket document is updated.
+   * @param firestoreTicket 
+   */
+  private onTicketUpdate(firestoreTicket: FirestoreTicket) {
+    console.log('updating the ticket', firestoreTicket)
+    this.firestoreTicket = firestoreTicket;
+    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
   }
 }

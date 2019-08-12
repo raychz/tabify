@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { user, global, community } from './example-stories';
 import { ILocation } from '../../interfaces/location.interface';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { PaymentService } from '../../services/payment/payment.service';
 import { AlertService } from '../../services/utilities/alert.service';
+import { StoryService } from '../../services/story/story.service';
+import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 
 export interface Story {
   location: ILocation;
@@ -22,12 +23,45 @@ export interface Story {
 export class HomePage {
   selectedSegment = 'user';
   feeds = {
-    user,
-    community,
-    global,
+    user: [],
+    community: [],
+    global: [],
   };
 
-  constructor(public navCtrl: NavController, public loader: LoaderService, public paymentService: PaymentService, public alert: AlertService) { }
+  constructor(
+    public navCtrl: NavController,
+    private storyService: StoryService,
+    public newsfeedService: NewsfeedService,
+    public loader: LoaderService, 
+    public paymentService: PaymentService, 
+    public alert: AlertService,
+  ) { }
+
+  ionViewDidLoad() {
+    this.getUserStories();
+  }
+
+  async getUserStories() {
+    await this.newsfeedService.initializeNewsfeed();
+    console.log(this.newsfeedService.tickets);
+  }
+
+  async createLike(ticketId: number, storyId: number) {
+    console.log(storyId);
+    const res = await this.storyService.createLike(storyId);
+    // do more stuff, like update the template with an additional like
+
+    if (res.status === 200) {
+      if (res.body === false) {
+
+        // Increment comment count of story in newsfeed
+        this.newsfeedService.incrementLikeCount(ticketId, storyId);
+
+      } else {
+        this.newsfeedService.decrementLikeCount(ticketId, storyId);
+      }
+    }
+  }
 
   segmentChanged(event: any) {
     console.log(event);
@@ -80,10 +114,17 @@ export class HomePage {
     }
   }
 
-  refresh(refresher: any) {
-    setTimeout(() => {
-      refresher.complete();
-    }, 2000);
+  openDetailedStory(storyId: number) {
+    this.navCtrl.push(
+      'StoryPage',
+      { storyId: storyId },
+      { animate: true, direction: 'forward' }
+    );
+  }
+
+  async refresh(refresher: any) {
+    await this.newsfeedService.initializeNewsfeed();
+    refresher.complete();
   }
 
   showNotifications() {

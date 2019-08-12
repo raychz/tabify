@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -26,6 +26,8 @@ import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
 import { FirestoreService } from '../services/firestore/firestore.service';
 import { PaymentService } from '../services/payment/payment.service';
+import { StoryService } from '../services/story/story.service';
+import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -87,7 +89,9 @@ export class MyErrorHandler implements ErrorHandler {
     TicketService,
     LocationService,
     FirestoreService,
-    PaymentService
+    PaymentService,
+    StoryService,
+    NewsfeedService,
   ],
 })
 export class AppModule {}

@@ -20,6 +20,7 @@ export class TabLookupPage {
   tabForm: FormGroup;
   fraudPreventionCode!: IFraudPreventionCode;
   dateTime: number = Date.now();
+  isCodeVisible = false;
 
   constructor(
     public navCtrl: NavController,
@@ -54,9 +55,11 @@ export class TabLookupPage {
     const { tabNumber } = this.tabForm.value;
 
     this.loader.present();
-    const { error, ticket } = await this.ticketService.getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode);
+    const { error, ticket } = await
+      this.ticketService
+        .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
 
-    if (error) {
+    if (error || !ticket) {
       this.loader.dismiss();
       const alert = this.alertCtrl.create({
         title: 'Tab Not Found',
@@ -68,8 +71,9 @@ export class TabLookupPage {
     }
 
     // await this.socketService.connect()
-    this.loader.dismiss();
-    this.navCtrl.push('SelectItemsPage', ticket);
+    this.ticketService.initializeFirestoreTicket(ticket.id);
+    await this.navCtrl.push('SelectItemsPage');
+    await this.loader.dismiss();
   }
 
   async getFraudPreventionCode() {

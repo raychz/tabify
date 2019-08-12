@@ -18,18 +18,18 @@
     <ion-card-content>
       <ion-item class='total tab-item' *ngFor='let item of myTabItems'>
         <h2>{{item.name}}
-          <span class='line-details' *ngIf='item.payers.length > 1'> (shared)</span>
+          <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
         </h2>
         <div class="reviews">
           <rating
             [(ngModel)]="item.rating">
           </rating>
-          <ion-item *ngIf="item.rating > 0" class="item-feedback">
+          <ion-item *ngIf="item.rating! > 0" class="item-feedback">
             <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on" spellcheck="on" autocorrect="on"></ion-textarea>
           </ion-item>
         </div>
         <div item-end>
-          <h2>${{item.price / 100 | number:'1.2-2'}}</h2>
+          <h2>${{item.userShare! / 100 | number:'1.2-2'}}</h2>
         </div>
       </ion-item>
     </ion-card-content>

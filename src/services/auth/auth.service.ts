@@ -81,8 +81,8 @@ export class AuthService {
     );
     const photoURL = user!.photoURL;
     const displayName = `${credentials.firstName} ${credentials.lastName}`;
-    await this.saveUser();
-    return user!.updateProfile({ displayName, photoURL });
+    await user!.updateProfile({ displayName, photoURL });
+    return await this.saveUser();
   }
 
   public getToken(): Observable<string> {

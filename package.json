@@ -49,6 +49,7 @@
     "ionic-angular": "3.9.2",
     "ionic2-rating": "^1.2.2",
     "ionicons": "4.2.4",
+    "moment": "^2.24.0",
     "ng-socket-io": "^0.2.4",
     "promise-polyfill": "8.0.0",
     "rxjs": "^6.4.0",
