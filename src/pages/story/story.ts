@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { StoryService } from '../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../services/auth/auth.service';
 import { IUser } from '../../interfaces/user.interface';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
+import { LoaderService } from '../../services/utilities/loader.service';
 
 @IonicPage()
 @Component({
@@ -17,13 +18,16 @@ export class StoryPage {
   comments: any[] = [];
   user = <IUser>{};
   newComment: string = '';
+  newCommentPosting: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private storyService: StoryService,
     private authService: AuthService,
-    private newsfeedService: NewsfeedService
+    private newsfeedService: NewsfeedService,
+    public loader: LoaderService,
+    public alertCtrl: AlertController
   ) { }
 
   ionViewDidLoad() {
@@ -33,8 +37,18 @@ export class StoryPage {
   }
 
   async getStory() {
-    const storyId = await this.navParams.get('storyId');
-    this.story = await this.storyService.getStory(storyId);
+    this.loader.present();
+    try {
+      const storyId = await this.navParams.get('storyId');
+      this.story = await this.storyService.getStory(storyId);
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+    }
+    this.loader.dismiss();
   }
 
   async getComments() {
@@ -79,9 +93,10 @@ export class StoryPage {
   }
 
   async createComment() {
-    const res = await this.storyService.createComment(this.story.id, this.newComment);
 
-    console.log(res);
+    this.newCommentPosting = true;
+
+    const res = await this.storyService.createComment(this.story.id, this.newComment);
 
     if (res.status === 200) {
       const newComment: any = res.body;
@@ -95,10 +110,19 @@ export class StoryPage {
 
       // Increment comment count of story in newsfeed
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
-    }
 
-    this.newComment = '';
+      this.newComment = '';
+    } else {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+    }
+    
+    this.newCommentPosting = false;
   }
+
 
   async deleteComment(commentId: number) {
     const res = await this.storyService.deleteComment(this.story.id, commentId);
