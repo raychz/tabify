@@ -90,7 +90,7 @@ export class SignUpPage {
 
   async submitReferralCode() {
     this.showValidateCard = true;
-    this.getServerByRefCode(this.referralCode);
+    //this.getServerByRefCode(this.referralCode);
   }
 
   async getServerByRefCode(refCode: string) {
