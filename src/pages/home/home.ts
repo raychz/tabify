@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
+import { LoaderService } from '../../services/utilities/loader.service';
 
 export interface Story {
   location: ILocation;
@@ -28,7 +29,9 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private storyService: StoryService,
-    public newsfeedService: NewsfeedService
+    public newsfeedService: NewsfeedService,
+    public loader: LoaderService,
+    public alertCtrl: AlertController
   ) { }
 
   ionViewDidLoad() {
@@ -37,7 +40,18 @@ export class HomePage {
 
   async getUserStories() {
     await this.newsfeedService.initializeNewsfeed();
-    console.log(this.newsfeedService.tickets);
+
+    this.loader.present();
+    try {
+      await this.newsfeedService.initializeNewsfeed();
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+    }
+    this.loader.dismiss();
   }
 
   async createLike(ticketId: number, storyId: number) {
