@@ -23,7 +23,8 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <button ion-button color="primary" clear small icon-start
+        <ion-spinner margin-left *ngIf="story.changingLike" color="light" name="bubbles"></ion-spinner>
+        <button *ngIf="!story.changingLike" ion-button color="primary" clear small icon-start
           (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
           {{ story.like_count }} {{story.like_count === 1 ? 'Like' : 'Likes'}}

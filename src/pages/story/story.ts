@@ -65,24 +65,23 @@ export class StoryPage {
   }
 
   async createLike() {
+    this.story.changingLike = true;
     const res = await this.storyService.createLike(this.story.id);
-    // do more stuff, like update the template with an additional like
-
-    console.log(res);
 
     if (res.status == 200) {
+
+      // res.body = false means that the server created a new like
       if (res.body == false) {
         this.story.like_count += 1;
 
         // Increment comment count of story in newsfeed
         this.newsfeedService.incrementLikeCount(this.story.ticket.id, this.story.id);
-
       } else {
         this.story.like_count -= 1
-
         this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
       }
     }
+    this.story.changingLike = false;
   }
 
   async getUserDetails() {
