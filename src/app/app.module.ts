@@ -27,6 +27,7 @@ import { LocationService } from '../services/location/location.service';
 import { FirestoreService } from '../services/firestore/firestore.service';
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
+import { ServerService } from '../services/server/server.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -90,6 +91,7 @@ export class MyErrorHandler implements ErrorHandler {
     FirestoreService,
     StoryService,
     NewsfeedService,
+    ServerService
   ],
 })
 export class AppModule {}

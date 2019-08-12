@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ServerService } from '../../../services/server/server.service';
 
 enum SignUpStep {
   REFERRAL_CODE_ENTRY,
@@ -33,7 +34,8 @@ export class SignUpPage {
     private auth: AuthService,
     public alert: AlertService,
     public loader: LoaderService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private serverService: ServerService
   ) {
     this.form = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -86,8 +88,14 @@ export class SignUpPage {
     });
   }
 
-  submitReferralCode() {
+  async submitReferralCode() {
     this.showValidateCard = true;
+    this.getServerByRefCode(this.referralCode);
+  }
+
+  async getServerByRefCode(refCode: string) {
+    const server = await this.serverService.getServerByRefCode(refCode);
+    console.log(server);
   }
 
   reEnterReferralCode() {
