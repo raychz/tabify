@@ -39,8 +39,6 @@ export class HomePage {
   }
 
   async getUserStories() {
-    await this.newsfeedService.initializeNewsfeed();
-
     this.loader.present();
     try {
       await this.newsfeedService.initializeNewsfeed();
