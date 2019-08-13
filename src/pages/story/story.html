@@ -23,7 +23,7 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <ion-spinner margin-left *ngIf="story.changingLike" color="light" name="bubbles"></ion-spinner>
+        <ion-spinner margin-left *ngIf="story.changingLike" color="primary" name="bubbles"></ion-spinner>
         <button *ngIf="!story.changingLike" ion-button color="primary" clear small icon-start
           (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
@@ -59,7 +59,7 @@
               {{comment.text}}
             </ion-col>
             <ion-col text-right>
-              <ion-spinner *ngIf="comment.beingDeleted" color="light" name="bubbles"></ion-spinner>
+              <ion-spinner *ngIf="comment.beingDeleted" color='primary' name="bubbles" margin-right></ion-spinner>
               <button *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)" ion-button color="primary"
                 clear small icon-start (click)='deleteComment(comment.id)'>
                 <ion-icon name="trash"></ion-icon>
@@ -78,7 +78,7 @@
     <ion-input *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
       placeholder="Enter a new comment!">
     </ion-input>
-    <ion-spinner *ngIf="newCommentPosting" color="light" name="bubbles"></ion-spinner>
+    <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
     <button *ngIf="!newCommentPosting" ion-button small outline (click)='createComment()'>Post Comment</button>
   </ion-toolbar>
 </ion-footer>

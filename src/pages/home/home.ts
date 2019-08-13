@@ -42,10 +42,10 @@ export class HomePage {
     this.loader.present();
     try {
       await this.newsfeedService.initializeNewsfeed();
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
-        message: `Please check your connection and try again.`,
+        message: e,
       });
       alert.present();
     }
