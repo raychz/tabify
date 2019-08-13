@@ -59,6 +59,10 @@ export class TabLookupPage {
       this.ticketService
         .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
 
+        console.log(tabNumber);
+        console.log(this.location.omnivore_id);
+        console.log(this.fraudPreventionCode);
+
     if (error || !ticket) {
       this.loader.dismiss();
       const alert = this.alertCtrl.create({

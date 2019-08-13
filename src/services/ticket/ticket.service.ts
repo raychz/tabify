@@ -12,6 +12,7 @@ import { of, Subscription } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { user } from '../../pages/home/example-stories';
 
 export interface FirestoreTicketItem {
   name: string,
@@ -33,8 +34,19 @@ export interface FirestoreTicket {
   tab_id: string,
   ticket_number: number,
   uids: string[],
-  users: { name: string, uid: string }[],
+  curUser: User,
+  users: User[],
   ticketItems: FirestoreTicketItem[],
+  sharedItems: FirestoreTicketItem[],
+  unclaimedItems: FirestoreTicketItem[],
+}
+
+export interface User {
+  uid: string,
+  photoUrl: string,
+  name: string,
+  ticketItems: FirestoreTicketItem[],
+  subtotal: number,
 }
 
 @Injectable()
@@ -61,9 +73,9 @@ export class TicketService {
 
   /**
    * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
-   * @param tab_id 
-   * @param omnivoreLocationId 
-   * @param fraudPreventionCode 
+   * @param tab_id
+   * @param omnivoreLocationId
+   * @param fraudPreventionCode
    */
   public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
@@ -90,7 +102,7 @@ export class TicketService {
 
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
-   * @param ticketId 
+   * @param ticketId
    */
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
@@ -118,7 +130,7 @@ export class TicketService {
 
   /**
    * Adds user to Firestore ticket item with id `ticketItemId`.
-   * @param ticketItemId 
+   * @param ticketItemId
    */
   public async addUserToFirestoreTicketItem(
     ticketItemId: any
@@ -130,18 +142,31 @@ export class TicketService {
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
-          throw 'Document does not exist!';
+          throw 'Ticket Item Document does not exist!';
         }
+
+        const ticketDocRef = this.firestoreService.document(
+          `tickets/${this.firestoreTicket!.id}`
+        ).ref;
+        const ticket = await transaction.get(ticketDocRef);
+
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
-        let { users, price } = ticketItem.data()! as {
+        let { name, users, price } = ticketItem.data()! as {
+          name: string;
           users: any[];
           price: number;
         };
 
-        if (users.find(u => u.uid === uid))
+        const { sharedItems, unclaimedItems } = ticket.data()! as {
+          sharedItems: {name: string; users: any[]; price: number}[],
+          unclaimedItems: {name: string; users: any[]; price: number}[]
+        }
+
+        if (users.find(u => u.uid === uid)) {
           throw 'This item has already been added to your tab.';
+        }
         users.push({
           uid: this.auth.getUid(),
           name: this.auth.getDisplayName(),
@@ -155,12 +180,26 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
+
         const payersDescription = getPayersDescription(users);
-        return transaction.set(
+        transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
           { merge: true }
         );
+
+        if (numberOfPayers > 1) {
+          sharedItems.push({ name, users, price });
+        }
+
+        const newUnclaimed = unclaimedItems.filter( (item) => { item.users.length > 0 });
+        transaction.set(
+          ticketDocRef,
+          { sharedItems, unclaimedItems },
+          { merge: true }
+        );
+
+        return transaction
       });
       return {
         success: true,
@@ -177,7 +216,7 @@ export class TicketService {
 
   /**
    * Removes user from Firestore ticket item with id `ticketItemId`.
-   * @param ticketItemId 
+   * @param ticketItemId
    */
   public async removeUserFromFirestoreTicketItem(
     ticketItemId: any
@@ -247,9 +286,9 @@ export class TicketService {
   }
 
   /**
-   * Called when an error is thrown during the Firestore initialization. 
+   * Called when an error is thrown during the Firestore initialization.
    * TODO: Make this an observable so that consumers of the ticket-service can detect and handle errors on their own.
-   * @param error 
+   * @param error
    */
   private async handleInitializationError(error: any) {
     if (!this.hasInitializationError) {
@@ -272,7 +311,7 @@ export class TicketService {
 
   /**
    * Called when a Firestore document within the Firestore ticket-items collection is updated.
-   * @param firestoreTicketItems 
+   * @param firestoreTicketItems
    */
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
@@ -283,7 +322,7 @@ export class TicketService {
 
   /**
    * Called when the Firestore ticket document is updated.
-   * @param firestoreTicket 
+   * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
