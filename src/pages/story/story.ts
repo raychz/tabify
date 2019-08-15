@@ -65,7 +65,7 @@ export class StoryPage {
   }
 
   async createLike() {
-    this.story.changingLike = true;
+    this.story.loadingLike = true;
     const res = await this.storyService.createLike(this.story.id);
 
     if (res.status == 200) {
@@ -81,7 +81,7 @@ export class StoryPage {
         this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
       }
     }
-    this.story.changingLike = false;
+    this.story.loadingLike = false;
   }
 
   async getUserDetails() {

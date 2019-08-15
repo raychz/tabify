@@ -37,8 +37,8 @@ export class NewsfeedService {
         this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.like_count -= 1;
     }
 
-    changingLike(ticketId: number, storyId: number, changing: boolean) {
-        this.tickets[this.findIndexOfTicket(ticketId, storyId)].changingLike = changing;
+    loadingLike(ticketId: number, storyId: number, loading: boolean) {
+        this.tickets[this.findIndexOfTicket(ticketId, storyId)].loadingLike = loading;
     }
 
     findIndexOfTicket(ticketId: number, storyId: number) {
