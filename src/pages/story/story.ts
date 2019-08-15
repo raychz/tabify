@@ -92,14 +92,11 @@ export class StoryPage {
   }
 
   async createComment() {
-
     this.newCommentPosting = true;
 
-    const res = await this.storyService.createComment(this.story.id, this.newComment);
-
-    if (res.status === 200) {
+    try {
+      const res = await this.storyService.createComment(this.story.id, this.newComment);
       const newComment: any = res.body;
-
       newComment.relativeTime = moment(newComment.date_created).fromNow()
 
       this.comments.push(newComment);
@@ -111,7 +108,7 @@ export class StoryPage {
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
 
       this.newComment = '';
-    } else {
+    } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
@@ -125,9 +122,10 @@ export class StoryPage {
 
   async deleteComment(commentId: number, commentIndex: number) {
     this.comments[commentIndex].beingDeleted = true;
-    const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res.status === 200) {
+    try {
+      const res = await this.storyService.deleteComment(this.story.id, commentId);
+
       // remove the comment from front end
       this.comments.splice(commentIndex, 1);
 
@@ -136,12 +134,14 @@ export class StoryPage {
 
       // Decrement comment count of story in newsfeed
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
-    } else {
+    } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+
+      // if deletion of comment was unsuccessful, revert to comment not being deleted
       this.comments[commentIndex].beingDeleted = false;
     }
   }
