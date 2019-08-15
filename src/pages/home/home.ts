@@ -53,7 +53,7 @@ export class HomePage {
   }
 
   async createLike(ticketId: number, storyId: number) {
-    this.newsfeedService.changingLikeTrue(ticketId, storyId);
+    this.newsfeedService.changingLike(ticketId, storyId, true);
     const res = await this.storyService.createLike(storyId);
 
     if (res.status === 200) {
@@ -68,7 +68,7 @@ export class HomePage {
         this.newsfeedService.decrementLikeCount(ticketId, storyId);
       }
     }
-    this.newsfeedService.changingLikeFalse(ticketId, storyId);
+    this.newsfeedService.changingLike(ticketId, storyId, false);
   }
 
   segmentChanged(event: any) {
