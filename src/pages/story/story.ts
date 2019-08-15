@@ -123,15 +123,13 @@ export class StoryPage {
   }
 
 
-  async deleteComment(commentId: number) {
-    const indexOfComment = this.comments.findIndex((comment: any) => comment.id === commentId);
-    this.comments[indexOfComment].beingDeleted = true;
-
+  async deleteComment(commentId: number, commentIndex: number) {
+    this.comments[commentIndex].beingDeleted = true;
     const res = await this.storyService.deleteComment(this.story.id, commentId);
 
     if (res.status === 200) {
       // remove the comment from front end
-      this.comments.splice(indexOfComment, 1);
+      this.comments.splice(commentIndex, 1);
 
       // Decrement comment count in detailed story view
       this.story.comment_count -= 1;
@@ -144,7 +142,7 @@ export class StoryPage {
         message: `Please check your connection and try again.`,
       });
       alert.present();
-      this.comments[indexOfComment].beingDeleted = false;
+      this.comments[commentIndex].beingDeleted = false;
     }
   }
 }
