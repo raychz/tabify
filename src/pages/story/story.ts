@@ -27,8 +27,14 @@ export class StoryPage {
     private authService: AuthService,
     private newsfeedService: NewsfeedService,
     public loader: LoaderService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public auth: AuthService,
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
 
   ionViewDidLoad() {
     this.getStory();

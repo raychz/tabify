@@ -4,6 +4,7 @@ import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../services/utilities/loader.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 export interface Story {
   location: ILocation;
@@ -31,8 +32,13 @@ export class HomePage {
     private storyService: StoryService,
     public newsfeedService: NewsfeedService,
     public loader: LoaderService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public auth: AuthService,
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
 
   ionViewDidLoad() {
     this.getUserStories();
