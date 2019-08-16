@@ -3,6 +3,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 export interface Story {
   location: ILocation;
@@ -28,8 +29,13 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private storyService: StoryService,
-    public newsfeedService: NewsfeedService
+    public newsfeedService: NewsfeedService,
+    public auth: AuthService
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
 
   ionViewDidLoad() {
     this.getUserStories();

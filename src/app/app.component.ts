@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth/auth.service';
 import { AlertService } from '../services/utilities/alert.service';
 import { LoaderService } from '../services/utilities/loader.service';
+import { tap } from 'rxjs/operators';
 
 interface IPage {
   title: string;
@@ -17,7 +18,7 @@ interface IPage {
 export class Tabify {
   @ViewChild(Nav) nav!: Nav;
 
-  rootPage: any;
+  rootPage: any = 'LoadingPage';
 
   pages: Array<IPage>;
 
@@ -28,7 +29,7 @@ export class Tabify {
     public auth: AuthService,
     public menu: MenuController,
     public alertCtrl: AlertService,
-    public loader: LoaderService
+    public loader: LoaderService,
   ) {
     this.initializeApp();
 
@@ -53,24 +54,23 @@ export class Tabify {
     ];
   }
 
-  initializeApp() {
-    this.platform.ready().then((readySource: string) => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      console.log('Platform ready from', readySource);
-      this.checkAuthState();
-      this.statusBar.overlaysWebView(false);
-      this.statusBar.styleLightContent();
-      this.statusBar.hide();
-      this.platform.registerBackButtonAction(() => {
-        if (this.menu.isOpen()) {
-          this.menu.close();
-        } else if (this.nav.canGoBack()) {
-          this.nav.pop();
-        } else {
-          //don't do anything
-        }
-      });
+  async initializeApp() {
+    const readySource = await this.platform.ready();
+    console.log('Platform ready from', readySource);
+    // Okay, so the platform is ready and our plugins are available.
+    // Here you can do any higher level native things you might need.
+    await this.checkAuthState();
+    this.statusBar.overlaysWebView(false);
+    this.statusBar.styleLightContent();
+    this.statusBar.hide();
+    this.platform.registerBackButtonAction(() => {
+      if (this.menu.isOpen()) {
+        this.menu.close();
+      } else if (this.nav.canGoBack()) {
+        this.nav.pop();
+      } else {
+        //don't do anything
+      }
     });
   }
 
@@ -92,25 +92,28 @@ export class Tabify {
   async checkAuthState() {
     let loading = this.loader.create();
     await loading.present();
-    this.auth.afAuth.authState.subscribe(
-      user => {
-        console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
-        this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
-        this.splashScreen.hide();
-        loading.dismiss();
-      },
-      error => {
-        console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
-        this.rootPage = 'UnauthenticatedPage';
-        this.splashScreen.hide();
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Network Error',
-          message: `Please check your connection and try again.`,
-        });
-        alert.present();
-      }
-    );
+    this.auth
+      .checkAuthState()
+      .pipe(tap(
+        user => {
+          console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
+          this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
+          this.splashScreen.hide();
+          loading.dismiss();
+        },
+        error => {
+          console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
+          this.rootPage = 'UnauthenticatedPage';
+          this.splashScreen.hide();
+          loading.dismiss();
+          const alert = this.alertCtrl.create({
+            title: 'Network Error',
+            message: `Please check your connection and try again.`,
+          });
+          alert.present();
+        }
+      ))
+      .subscribe(); // Subscribe here only!
   }
 
   logout() {
