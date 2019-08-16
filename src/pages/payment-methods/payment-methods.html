@@ -3,13 +3,13 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Payment Methods</ion-title>
+    <ion-title>Payment</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="cards-bg">
   <ion-card>
-    <ion-card-header>Linked Cards</ion-card-header>
+    <ion-card-header>{{!this.paymentService.paymentMethods.length ? 'No' : ''}} Payment Methods</ion-card-header>
     <ion-list>
       <button ion-item *ngFor="let method of this.paymentService.paymentMethods" (click)="showMethodActions(method)">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>

@@ -69,16 +69,15 @@
         </div>
       </ion-item>
       <ion-item>
+        <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
         <ion-label>
-          <!-- Leaving this commented in case we decide to add a cc icon here -->
-          <!-- <ion-icon class="linked-card-icon" name="card" item-start></ion-icon> -->
-          <span id="payment-method-title">Payment Method</span>
         </ion-label>
-        <ion-select [(ngModel)]="selectedPaymentMethod" submitText="Ok" cancelText="Cancel">
+        <ion-select [(ngModel)]="selectedPaymentMethod" interface="alert" submitText="Ok" cancelText="Cancel"
+          [selectOptions]="selectOptions">
           <ion-option *ngFor="let method of this.paymentService.paymentMethods" [value]="method">
             {{method.card_type}}: ****{{method.last_four_digits}}
           </ion-option>
-          <ion-option [value]="null">Add New Card</ion-option>
+          <ion-option value="">Add New Card</ion-option>
         </ion-select>
       </ion-item>
     </ion-card-content>

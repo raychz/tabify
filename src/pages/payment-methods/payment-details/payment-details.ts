@@ -13,8 +13,8 @@ import { AuthService } from '../../../services/auth/auth.service';
 declare const Spreedly: any;
 
 export enum PaymentDetailsPageMode {
-  PAY_TAB = 'PAY_TAB',
-  SAVE_CARD = 'SAVE_CARD',
+  SAVE_AND_PAY,
+  SAVE_ONLY,
 }
 
 interface INewCard {
@@ -59,7 +59,7 @@ export class PaymentDetailsPage {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
     console.log('PAY MODE', this.mode);
-    this.saveButtonText = this.mode === PaymentDetailsPageMode.PAY_TAB ? 'Save and Pay' : 'Save';
+    this.saveButtonText = this.mode === PaymentDetailsPageMode.SAVE_AND_PAY ? 'Save and Pay' : 'Save';
   }
 
   async ionViewDidLoad() {

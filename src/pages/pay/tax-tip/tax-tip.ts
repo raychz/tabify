@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 import { PaymentService } from '../../../services/payment/payment.service';
+import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
 
 @IonicPage()
 @Component({
@@ -20,6 +21,11 @@ export class TaxTipPage {
   tip = 18;
   tab = this.navParams.data;
   myTabItems!: FirestoreTicketItem[];
+  selectOptions = {
+    title: 'Payment',
+    subTitle: 'Select a payment method',
+    enableBackdropDismiss: false
+  };
 
   constructor(
     public navCtrl: NavController,
@@ -43,7 +49,11 @@ export class TaxTipPage {
         };
       });
     this.setBackButtonAction();
-    await this.paymentService.initializePaymentMethods();
+    try {
+      await this.paymentService.initializePaymentMethods();
+    } catch(e) {
+      console.error('Caught in initializePaymentMethods', e);
+    }
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentService.paymentMethods.length) {
@@ -115,9 +125,12 @@ export class TaxTipPage {
   }
 
   pay() {
-    this.navCtrl.push('PaymentMethodsPage', {
-      ...this.myTabItems,
-      mode: 'PAY_TAB',
-    });
+    // If "Add New Card" was selected
+    if (!this.selectedPaymentMethod) {
+      this.navCtrl.push('PaymentDetailsPage', {
+        ...this.myTabItems,
+        mode: PaymentDetailsPageMode.SAVE_AND_PAY,
+      });
+    }
   }
 }

@@ -97,6 +97,6 @@ export const getTicketUsersDescription = (users: any[] = [], userDisplayLimit: n
  * @param items 
  * @param uid 
  */
-export const getItemsOnMyTab = (items: FirestoreTicketItem[], uid: any) => {
+export const getItemsOnMyTab = (items: FirestoreTicketItem[] = [], uid: any) => {
     return items.filter((item: FirestoreTicketItem) => item.users.find(user => user.uid === uid));
 }
