@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
+import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
 
 export interface Story {
@@ -30,7 +31,9 @@ export class HomePage {
     public navCtrl: NavController,
     private storyService: StoryService,
     public newsfeedService: NewsfeedService,
-    public auth: AuthService
+    public loader: LoaderService,
+    public alertCtrl: AlertController,
+    public auth: AuthService,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -42,16 +45,26 @@ export class HomePage {
   }
 
   async getUserStories() {
-    await this.newsfeedService.initializeNewsfeed();
-    console.log(this.newsfeedService.tickets);
+    this.loader.present();
+    try {
+      await this.newsfeedService.initializeNewsfeed();
+    } catch (e) {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: e,
+      });
+      alert.present();
+    }
+    this.loader.dismiss();
   }
 
   async createLike(ticketId: number, storyId: number) {
-    console.log(storyId);
+    this.newsfeedService.loadingLike(ticketId, storyId, true);
     const res = await this.storyService.createLike(storyId);
-    // do more stuff, like update the template with an additional like
 
     if (res.status === 200) {
+
+      // res.body = false means that the server created a new like
       if (res.body === false) {
 
         // Increment comment count of story in newsfeed
@@ -61,6 +74,7 @@ export class HomePage {
         this.newsfeedService.decrementLikeCount(ticketId, storyId);
       }
     }
+    this.newsfeedService.loadingLike(ticketId, storyId, false);
   }
 
   segmentChanged(event: any) {
