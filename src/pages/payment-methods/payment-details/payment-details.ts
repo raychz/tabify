@@ -61,6 +61,10 @@ export class PaymentDetailsPage {
     this.saveButtonText = this.mode === PaymentDetailsPageMode.PAY_TAB ? 'Save and Pay' : 'Save';
   }
 
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
   ionViewDidLoad() {
     const showError = () => {
       this.loader.dismiss();

@@ -23,8 +23,14 @@ export class StoryPage {
     public navParams: NavParams,
     private storyService: StoryService,
     private authService: AuthService,
-    private newsfeedService: NewsfeedService
+    private newsfeedService: NewsfeedService,
+    public auth: AuthService
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
 
   ionViewDidLoad() {
     this.getStory();
