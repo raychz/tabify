@@ -79,6 +79,7 @@
       placeholder="Enter a new comment!">
     </ion-input>
     <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
-    <button *ngIf="!newCommentPosting" ion-button small outline (click)='createComment()'>Post Comment</button>
+    <button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" ion-button small outline
+      (click)='createComment()'>Post Comment</button>
   </ion-toolbar>
 </ion-footer>
