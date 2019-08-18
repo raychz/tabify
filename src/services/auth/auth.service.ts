@@ -15,6 +15,7 @@ interface ISignUpCredentials {
   password: string;
   firstName: string;
   lastName: string;
+  referralCode: string;
 }
 
 interface ISignInCredentials {
@@ -26,6 +27,7 @@ interface ISignInCredentials {
 export class AuthService {
   private user: firebase.User | null = null;
   private authState$!: Observable<firebase.User | null>;
+  private referralCode: string = '';
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -94,6 +96,7 @@ export class AuthService {
     );
     const photoURL = user!.photoURL;
     const displayName = `${credentials.firstName} ${credentials.lastName}`;
+    this.referralCode = credentials.referralCode;
     await user!.updateProfile({ displayName, photoURL });
     return await this.saveUser();
   }
@@ -135,7 +138,7 @@ export class AuthService {
    */
   private async saveUser() {
     const res = await this.http
-      .post(`${config.serverUrl}/user`, {})
+      .post(`${config.serverUrl}/user`, {referralCode: this.referralCode})
       .toPromise();
     return res;
   }

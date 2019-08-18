@@ -19,7 +19,8 @@ enum SignUpStep {
 })
 export class SignUpPage {
   SignUpStep: typeof SignUpStep = SignUpStep; // Hack to expose enum to template
-  referralCode = this.navParams.get("referralCode");
+  //referralCode = this.navParams.get("referralCode");
+  referralCode: string = '';
   signUpError: string = '';
   form: FormGroup;
   showServerCodeInput = false;
@@ -72,6 +73,7 @@ export class SignUpPage {
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
+      referralCode: this.referralCode
     };
     await this.auth.signUp(credentials).catch(error => {
       this.signUpError = error.message;

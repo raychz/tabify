@@ -28,12 +28,14 @@
             </ion-row>
             <ion-row *ngIf="showServerCodeInput">
               <ion-col col-6>
-                <button ion-button block color="tabify" float-right (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                <button ion-button block color="tabify" float-right [disabled]="referralCode.length === 0"
+                  (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
                   Submit
                 </button>
               </ion-col>
               <ion-col col-6>
-                <button ion-button block color="tabify-alt" float-left (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                <button ion-button block color="tabify-alt" float-left [disabled]="referralCode.length !== 0"
+                  (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
                   Skip
                 </button>
               </ion-col>
