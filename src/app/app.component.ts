@@ -125,6 +125,9 @@ export class Tabify {
           this.rootPage = userDetailsConfirmedInDB ? 'HomePage' : 'UnauthenticatedPage';
           this.splashScreen.hide();
           loading.dismiss();
+        },
+        error => {
+          console.error('in error for user details tap', error);
         }
       ))
       .subscribe();
