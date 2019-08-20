@@ -13,8 +13,12 @@ import { AuthService } from '../../../services/auth/auth.service';
 declare const Spreedly: any;
 
 export enum PaymentDetailsPageMode {
+  /** Mode when user chooses to use a new payment method in the Totals page */
   SAVE_AND_PAY,
+  /** Mode when user manually adds payment method via sidemenu component */
   SAVE_ONLY,
+  /** Mode when a user clicks Pay Tab, but has no CC on file */
+  NO_PAYMENT_METHOD,
 }
 
 interface INewCard {
@@ -60,6 +64,9 @@ export class PaymentDetailsPage {
     this.title = navParams.get('title') || 'Payment Details';
     console.log('PAY MODE', this.mode);
     this.saveButtonText = this.mode === PaymentDetailsPageMode.SAVE_AND_PAY ? 'Save and Pay' : 'Save';
+    if (!this.mode) {
+      throw new Error('No mode specified');
+    }
   }
 
   public ionViewCanEnter(): boolean {
@@ -169,14 +176,25 @@ export class PaymentDetailsPage {
     try {
       const method = await this.paymentService.createPaymentMethod(details);
       this.paymentService.pushPaymentMethod(method);
-      await this.navCtrl.popTo('PaymentMethodsPage');
+      switch (this.mode) {
+        case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
+          await this.navCtrl.popToRoot();
+          break;
+        case PaymentDetailsPageMode.SAVE_ONLY:
+          await this.navCtrl.pop();
+          break;
+        case PaymentDetailsPageMode.SAVE_AND_PAY:
+          // TODO: Fix this
+          // await this.navCtrl.popTo('HomePage');
+          break;
+        default:
+          throw new Error('No mode specified in switch.')
+      }
     } catch (e) {
       this.paymentMethodError = 'This payment method could not be saved.';
     } finally {
       await this.loader.dismiss();
     }
-
-    console.log('TOKEN HERE', token, details);
   }
 
   async onSpreedlyValidation({ cardType, validNumber, validCvv }: ISpreedlyValidationResponse) {

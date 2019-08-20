@@ -7,6 +7,7 @@ import { AlertService } from '../../services/utilities/alert.service';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
 
 export interface Story {
   location: ILocation;
@@ -33,8 +34,8 @@ export class HomePage {
     public navCtrl: NavController,
     private storyService: StoryService,
     public newsfeedService: NewsfeedService,
-    public loader: LoaderService, 
-    public paymentService: PaymentService, 
+    public loader: LoaderService,
+    public paymentService: PaymentService,
     public alert: AlertService,
     public auth: AuthService,
   ) { }
@@ -101,8 +102,8 @@ export class HomePage {
       } else {
         await this.loader.dismiss();
         const alert = this.alert.create({
-          title: 'No Payment Method',
-          message: `To get started with paying your tab, enter a payment method on the next screen.`,
+          title: `Let's Get Started`,
+          message: `To pay your tab, enter a payment method on the next screen.`,
           buttons: [
             {
               text: 'Ok',
@@ -112,7 +113,7 @@ export class HomePage {
         await alert.present();
         this.navCtrl.push(
           'PaymentMethodsPage',
-          {},
+          { mode: PaymentDetailsPageMode.NO_PAYMENT_METHOD },
           { animate: true, animation: 'md-transition', direction: 'forward' }
         );
       }

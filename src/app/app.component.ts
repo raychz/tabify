@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { AlertService } from '../services/utilities/alert.service';
 import { LoaderService } from '../services/utilities/loader.service';
 import { tap } from 'rxjs/operators';
+import { PaymentDetailsPageMode } from '../pages/payment-methods/payment-details/payment-details';
 
 interface IPage {
   title: string;
@@ -41,11 +42,6 @@ export class Tabify {
         component: 'PaymentMethodsPage',
         icon: 'card',
       },
-      // {
-      //   title: 'Settings',
-      //   component: 'PaymentMethodsPage',
-      //   icon: 'cog',
-      // },
       {
         title: 'Help',
         component: 'HelpPage',
@@ -80,7 +76,10 @@ export class Tabify {
     if (this.nav.getActive().id === page.component) {
       this.menu.close();
     } else {
-      this.nav.setRoot(page.component);
+      if (page.component === 'PaymentMethodsPage')
+        this.nav.setRoot(page.component, { mode: PaymentDetailsPageMode.SAVE_ONLY });
+      else
+        this.nav.setRoot(page.component);
     }
   }
 
