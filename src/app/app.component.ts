@@ -97,9 +97,11 @@ export class Tabify {
       .pipe(tap(
         user => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
-          this.rootPage = user ? 'HomePage' : 'UnauthenticatedPage';
+          if (!user) {
+            this.rootPage = 'UnauthenticatedPage';
+            loading.dismiss();
+          }
           this.splashScreen.hide();
-          loading.dismiss();
         },
         error => {
           console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
@@ -114,6 +116,18 @@ export class Tabify {
         }
       ))
       .subscribe(); // Subscribe here only!
+
+    this.auth.getUserDetailsConfirmedInDB()
+      .pipe(tap(
+        userDetailsConfirmedInDB => {
+          // TODO: make sure that this doesn't get executed when behavior subject is initialized to false
+          console.log('in the tap for user details', userDetailsConfirmedInDB);
+          this.rootPage = userDetailsConfirmedInDB ? 'HomePage' : 'UnauthenticatedPage';
+          this.splashScreen.hide();
+          loading.dismiss();
+        }
+      ))
+      .subscribe();
   }
 
   logout() {

@@ -6,9 +6,10 @@ import { Platform } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { from } from 'rxjs';
+import { from, BehaviorSubject } from 'rxjs';
 import config from "../../config";
 import { tap } from 'rxjs/operators';
+import 'rxjs/add/observable/of';
 
 interface ISignUpCredentials {
   email: string;
@@ -28,6 +29,7 @@ export class AuthService {
   private user: firebase.User | null = null;
   private authState$!: Observable<firebase.User | null>;
   private referralCode: string = '';
+  private userDetailsConfirmedInDB$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -137,9 +139,23 @@ export class AuthService {
    * @param uid
    */
   private async saveUser() {
-    const res = await this.http
-      .post(`${config.serverUrl}/user`, {referralCode: this.referralCode})
+    const res: any = await this.http
+      .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
       .toPromise();
+
+    // check if res's uid is same as firebase user. If yes, set userDetailsConfirmed to true.
+    // This makes sure that user detials are stored in Tabify's DB, so
+    // we can do further API calls to the server, like get stories/tickets
+    if (this.user && this.user.uid === res.uid) {
+      this.userDetailsConfirmedInDB$.next(true);
+    }
+
+    console.log(this.userDetailsConfirmedInDB$.getValue());
+
     return res;
   }
-}
+
+  getUserDetailsConfirmedInDB(): Observable<boolean> {
+    return this.userDetailsConfirmedInDB$;
+  }
+} 
