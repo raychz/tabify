@@ -4,6 +4,7 @@ import { PaymentDetailsPageMode } from "./payment-details/payment-details";
 import { PaymentService } from '../../services/payment/payment.service';
 import { AlertService } from '../../services/utilities/alert.service';
 import { LoaderService } from '../../services/utilities/loader.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -20,12 +21,17 @@ export class PaymentMethodsPage {
     private actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertService,
     public loader: LoaderService,
+    public auth: AuthService
   ) {
     this.mode = navParams.get('mode');
   }
 
   async ionViewDidLoad() {
     await this.paymentService.initializePaymentMethods();
+  }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
   }
 
   addNewCard() {

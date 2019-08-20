@@ -62,9 +62,14 @@ export class PaymentDetailsPage {
     this.saveButtonText = this.mode === PaymentDetailsPageMode.SAVE_AND_PAY ? 'Save and Pay' : 'Save';
   }
 
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
   async ionViewDidLoad() {
     const showError = async () => {
       this.loader.dismiss();
+      // TODO: Make this work when a user gets to the details page from the Totals page
       await this.navCtrl.popTo('PaymentMethodsPage');
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -78,7 +83,7 @@ export class PaymentDetailsPage {
       this.newCard.full_name = this.auth.getDisplayName();
       this.initializeSpreedly();
     } catch (error) {
-      showError();
+      await showError();
       console.error(error);
     }
   }
