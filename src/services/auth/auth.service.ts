@@ -165,16 +165,12 @@ export class AuthService {
     try {
       const res: any = await this.http.get(`${config.serverUrl}/user/userDetails`).toPromise();
 
-      console.log('WEWEWE', res);
-      console.log('WEWEWE', this.user)
-      if (this.user !== undefined && res !== null)
-        if (this.user && this.user.uid === res.user.uid) {
-          this.userDetailsConfirmedInDB$.next(true);
-          return true;
-        } else {
-          return false;
-        }
-      return false;
+      if (this.user && res && this.user.uid === res.user.uid) {
+        this.userDetailsConfirmedInDB$.next(true);
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error('checkUserExistsInDB encountered an error', error);
       return false;
