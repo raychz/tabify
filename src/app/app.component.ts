@@ -92,14 +92,17 @@ export class Tabify {
   async checkAuthState() {
     let loading = this.loader.create();
     await loading.present();
+
     this.auth
       .checkAuthState()
       .pipe(tap(
-        user => {
+        async (user) => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
           if (!user) {
             this.rootPage = 'UnauthenticatedPage';
             loading.dismiss();
+          } else {
+            await this.auth.checkUserExistsInDB();
           }
           this.splashScreen.hide();
         },
@@ -117,17 +120,21 @@ export class Tabify {
       ))
       .subscribe(); // Subscribe here only!
 
-    this.auth.getUserDetailsConfirmedInDB()
+    this.auth.userDetailsConfirmedInDB$
       .pipe(tap(
-        userDetailsConfirmedInDB => {
+        async userDetailsConfirmedInDB => {
           // TODO: make sure that this doesn't get executed when behavior subject is initialized to false
           console.log('in the tap for user details', userDetailsConfirmedInDB);
-          this.rootPage = userDetailsConfirmedInDB ? 'HomePage' : 'UnauthenticatedPage';
-          this.splashScreen.hide();
-          loading.dismiss();
+          if (userDetailsConfirmedInDB === true) {
+            this.rootPage = 'HomePage';
+            this.splashScreen.hide();
+            loading.dismiss();
+          } else {
+            await this.auth.checkUserExistsInDB();
+          }
         },
         error => {
-          console.error('in error for user details tap', error);
+          console.error('Error in user details tap', error);
         }
       ))
       .subscribe();

@@ -29,7 +29,7 @@ export class AuthService {
   private user: firebase.User | null = null;
   private authState$!: Observable<firebase.User | null>;
   private referralCode: string = '';
-  private userDetailsConfirmedInDB$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public userDetailsConfirmedInDB$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -135,27 +135,49 @@ export class AuthService {
   }
 
   /**
-   * Saves a user id to our db.
+   * Saves a user id, and details to our db.
    * @param uid
    */
   private async saveUser() {
-    const res: any = await this.http
-      .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
-      .toPromise();
+    const userExistsInDB = await this.checkUserExistsInDB();
 
-    // check if res's uid is same as firebase user. If yes, set userDetailsConfirmed to true.
-    // This makes sure that user detials are stored in Tabify's DB, so
-    // we can do further API calls to the server, like get stories/tickets
-    if (this.user && this.user.uid === res.uid) {
-      this.userDetailsConfirmedInDB$.next(true);
+    if (this.user && userExistsInDB) {
+      return userExistsInDB;
+    } else {
+      const res: any = await this.http
+        .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
+        .toPromise();
+
+      // check if res's uid is same as firebase user. If yes, set userDetailsConfirmed to true.
+      // This makes sure that user detials are stored in Tabify's DB, so
+      // we can do further API calls to the server, like get stories/tickets
+      if (this.user && this.user.uid === res.user.uid) {
+        this.userDetailsConfirmedInDB$.next(true);
+      }
+      return res;
     }
-
-    console.log(this.userDetailsConfirmedInDB$.getValue());
-
-    return res;
   }
 
-  getUserDetailsConfirmedInDB(): Observable<boolean> {
-    return this.userDetailsConfirmedInDB$;
+  /**
+   * Check if user/userDetails exist in our DB
+   */
+  async checkUserExistsInDB(): Promise<Boolean> {
+    try {
+      const res: any = await this.http.get(`${config.serverUrl}/user/userDetails`).toPromise();
+
+      console.log('WEWEWE', res);
+      console.log('WEWEWE', this.user)
+      if (this.user !== undefined && res !== null)
+        if (this.user && this.user.uid === res.user.uid) {
+          this.userDetailsConfirmedInDB$.next(true);
+          return true;
+        } else {
+          return false;
+        }
+      return false;
+    } catch (error) {
+      console.error('checkUserExistsInDB encountered an error', error);
+      return false;
+    }
   }
 } 

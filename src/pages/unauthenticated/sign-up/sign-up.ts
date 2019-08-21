@@ -77,6 +77,7 @@ export class SignUpPage {
     };
     await this.auth.signUp(credentials).catch(error => {
       this.signUpError = error.message;
+      console.log('sign up error:', error);
     });
   }
 
