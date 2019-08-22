@@ -60,9 +60,9 @@
             </ion-col>
             <ion-col text-right>
               <ion-spinner *ngIf="comment.beingDeleted" color='primary' name="bubbles" margin-right></ion-spinner>
-              <button *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)" ion-button color="primary"
-                clear small icon-start (click)='deleteComment(comment.id, commentIndex)'>
-                <ion-icon name="trash"></ion-icon>
+              <button *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)" ion-button clear small
+                icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
+                <ion-icon name="md-more"></ion-icon>
               </button>
             </ion-col>
           </ion-row>

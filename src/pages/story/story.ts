@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ActionSheetController } from 'ionic-angular';
 import { StoryService } from '../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../services/auth/auth.service';
@@ -29,6 +29,7 @@ export class StoryPage {
     public loader: LoaderService,
     public alertCtrl: AlertController,
     public auth: AuthService,
+    private actionSheetCtrl: ActionSheetController,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -150,5 +151,25 @@ export class StoryPage {
       // if deletion of comment was unsuccessful, revert to comment not being deleted
       this.comments[commentIndex].beingDeleted = false;
     }
+  }
+
+  presentActionSheet(commentId: number, commentIndex: number) {
+    const actionSheet = this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Delete Comment',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => {
+            this.deleteComment(commentId, commentIndex);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    actionSheet.present();
   }
 }
