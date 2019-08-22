@@ -19,8 +19,25 @@
 </ion-header>
 
 
-<ion-content class='cards-bg'>
-  <ion-card>
+<ion-content class='cards-bg' *ngIf="ticketService.firestoreTicketItems; else loading">
+  <ion-content>
+      <ion-card>
+          <ion-card-content>
+              <ion-list>
+                  <ion-item *ngFor="let patron of ticketService.firestoreTicket.patrons">
+                    <ion-avatar slot="start">
+                      <ion-img [src]="patron.photoUrl"></ion-img>
+                    </ion-avatar>
+                    <ion-label> {{ patron.name }}</ion-label>
+                  </ion-item>
+               </ion-list>
+          </ion-card-content>
+        </ion-card>
+  </ion-content>
 
-  </ion-card>
+
+    <ng-template #loading>
+    <p class="muted">Loading ticket items...</p>
+    <ion-spinner class="ticket-spinner" name="dots"></ion-spinner>
+  </ng-template>
 </ion-content>

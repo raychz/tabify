@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { user } from '../../pages/home/example-stories';
+import { e } from '@angular/core/src/render3';
 
 export interface FirestoreTicketItem {
   name: string,
@@ -34,8 +35,7 @@ export interface FirestoreTicket {
   tab_id: string,
   ticket_number: number,
   uids: string[],
-  curUser: User,
-  users: User[],
+  patrons: User[],
   ticketItems: FirestoreTicketItem[],
   sharedItems: FirestoreTicketItem[],
   unclaimedItems: FirestoreTicketItem[],
@@ -45,6 +45,7 @@ export interface User {
   uid: string,
   photoUrl: string,
   name: string,
+  status: string,
   ticketItems: FirestoreTicketItem[],
   subtotal: number,
 }
@@ -149,27 +150,32 @@ export class TicketService {
           `tickets/${this.firestoreTicket!.id}`
         ).ref;
         const ticket = await transaction.get(ticketDocRef);
+        if (!ticket.exists) {
+          throw 'Ticket Document does not exist!';
+        }
 
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
-        let { name, users, price } = ticketItem.data()! as {
+        let { name, users, price, ticket_item_id } = ticketItem.data()! as {
           name: string;
           users: any[];
           price: number;
+          ticket_item_id: number;
         };
 
-        const { sharedItems, unclaimedItems } = ticket.data()! as {
-          sharedItems: {name: string; users: any[]; price: number}[],
-          unclaimedItems: {name: string; users: any[]; price: number}[]
-        }
+        let { sharedItems, unclaimedItems, patrons } = ticket.data()! as {
+          sharedItems: {name: string; users: any[]; price: number; ticket_item_id: number;}[],
+          unclaimedItems: {name: string; users: any[]; price: number; ticket_item_id: number;}[],
+          patrons: {uid: string, ticketItems: {name: string, price: number; ticket_item_id: number;}[]}[],
+        };
 
         if (users.find(u => u.uid === uid)) {
           throw 'This item has already been added to your tab.';
         }
         users.push({
-          uid: this.auth.getUid(),
-          name: this.auth.getDisplayName(),
+          uid: uid,
+          name: displayName,
           price: 0,
         });
 
@@ -188,14 +194,19 @@ export class TicketService {
           { merge: true }
         );
 
-        if (numberOfPayers > 1) {
-          sharedItems.push({ name, users, price });
+        if (users.length > 1) {
+          sharedItems.push({ name, users, price, ticket_item_id });
+        } else if (users.length === 1) {
+          const item = unclaimedItems.splice(unclaimedItems.findIndex( item => item.ticket_item_id === ticket_item_id), 1)[0];
+          item.users = users;
         }
 
-        const newUnclaimed = unclaimedItems.filter( (item) => { item.users.length > 0 });
+        const patronIndex = patrons.findIndex( user => user.uid === uid);
+        patrons[patronIndex].ticketItems.push({name, price, ticket_item_id});
+
         transaction.set(
           ticketDocRef,
-          { sharedItems, unclaimedItems },
+          { sharedItems, unclaimedItems, patrons },
           { merge: true }
         );
 
@@ -230,12 +241,28 @@ export class TicketService {
         if (!ticketItem.exists) {
           throw 'Document does not exist!';
         }
-        const uid = this.auth.getUid();
-        const displayName = this.auth.getDisplayName();
 
-        let { users, price } = ticketItem.data()! as {
+        const ticketDocRef = this.firestoreService.document(
+          `tickets/${this.firestoreTicket!.id}`
+        ).ref;
+        const ticket = await transaction.get(ticketDocRef);
+        if (!ticket.exists) {
+          throw 'Ticket Document does not exist!';
+        }
+
+        const uid = this.auth.getUid();
+
+        let { name, users, price, ticket_item_id } = ticketItem.data()! as {
+          name: string;
           users: any[];
           price: number;
+          ticket_item_id: number;
+        };
+
+        let { sharedItems, unclaimedItems, patrons } = ticket.data()! as {
+          sharedItems: {name: string; users: any[]; price: number, ticket_item_id: number}[],
+          unclaimedItems: {name: string; users: any[]; price: number, ticket_item_id: number}[],
+          patrons: {uid: string, ticketItems: {name: string, price: number, ticket_item_id: number}[]}[],
         };
 
         if (!users.find(u => u.uid === uid))
@@ -249,12 +276,29 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
+        if (users.length === 1) {
+          sharedItems.splice(sharedItems.findIndex( item => item.ticket_item_id == ticket_item_id), 1);
+        } else if (users.length < 1) {
+          unclaimedItems.push({ name, users, price, ticket_item_id });
+        }
+
+        const userIndex = patrons.findIndex( user => user.uid === uid);
+        patrons[userIndex].ticketItems.splice(patrons[userIndex].ticketItems.findIndex( item => item.ticket_item_id === ticket_item_id), 1);
+
         const payersDescription = getPayersDescription(users);
-        return transaction.set(
+        transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
           { merge: true }
         );
+
+        transaction.set(
+          ticketDocRef,
+          { sharedItems, unclaimedItems, patrons },
+          { merge: true }
+        );
+
+        return transaction
       });
       return {
         success: true,
@@ -327,6 +371,6 @@ export class TicketService {
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
-    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
+    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.patrons);
   }
 }

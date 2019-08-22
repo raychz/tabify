@@ -120,6 +120,7 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
+    this.ticketService.changeUserStatus('waiting', this.auth.getUid()!);
     this.navCtrl.push('WaitingRoomPage');
   }
 
@@ -214,7 +215,7 @@ export class SelectItemsPage {
   inviteOthers() {
     const modal = this.modalCtrl.create(InviteOthersPage, {
       tabNumber: this.ticketService.firestoreTicket.tab_id,
-      users: this.ticketService.firestoreTicket.users,
+      users: this.ticketService.firestoreTicket.patrons,
     });
     modal.present();
   }

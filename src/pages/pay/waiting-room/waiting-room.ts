@@ -32,31 +32,13 @@ export class WaitingRoomPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
-    this.initializeItems();
+    this.initializeWaitingRoom();
   }
 
-  initializeItems() {
-    this.user.picture = this.auth.getPhotoUrl() as string;
-    this.user.name = this.auth.getDisplayName();
-    this.user.status = 'waiting';
-    this.user.subtotal = this.ticketService.userSubtotal;
-
-
-    this.ticketService.firestoreTicketItems.forEach( (item) => {
-      if (item.users.length === 0) {
-        this.unclaimedItems.push(item);
-      } else if (item.users.length > 1) {
-        this.sharedItems.push(item);
-      }
-
-      item.users.forEach( (user) => {
-        if (user.uid === this.auth.getUid()) {
-          this.user.items.push(item);
-        } else {
-
-        }
-      });
-    });
+  initializeWaitingRoom() {
+    const curUser = this.ticketService.firestoreTicket.patrons.find( user => user.uid === this.auth.getUid() );
+    console.log(curUser);
+    console.log(this.ticketService.firestoreTicket);
   }
 
   viewTaxAndTip() {
