@@ -120,7 +120,7 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    this.ticketService.changeUserStatus('waiting', this.auth.getUid()!);
+    // this.ticketService.changeUserStatus('waiting', this.auth.getUid()!);
     this.navCtrl.push('WaitingRoomPage');
   }
 
