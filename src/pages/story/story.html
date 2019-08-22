@@ -23,7 +23,8 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <button ion-button color="primary" clear small icon-start
+        <ion-spinner margin-left *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
+        <button *ngIf="!story.loadingLike" ion-button color="primary" clear small icon-start
           (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
           <ion-icon name="heart"></ion-icon>
           {{ story.like_count }} {{story.like_count === 1 ? 'Like' : 'Likes'}}
@@ -38,7 +39,7 @@
     </ion-row>
 
     <ion-card-content>
-      <ng-container *ngFor="let comment of comments">
+      <ng-container *ngFor="let comment of comments; index as commentIndex">
         <ng-container *ngIf="!!comment">
           <ion-row>
             <ion-col>
@@ -54,12 +55,14 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col>
+            <ion-col margin-left>
               {{comment.text}}
             </ion-col>
             <ion-col text-right>
-              <button ion-button color="primary" clear small icon-start (click)='deleteComment(comment.id)'>
-                <ion-icon *ngIf="comment.user.uid === user.uid" name="trash"></ion-icon>
+              <ion-spinner *ngIf="comment.beingDeleted" color='primary' name="bubbles" margin-right></ion-spinner>
+              <button *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)" ion-button color="primary"
+                clear small icon-start (click)='deleteComment(comment.id, commentIndex)'>
+                <ion-icon name="trash"></ion-icon>
               </button>
             </ion-col>
           </ion-row>
@@ -72,7 +75,11 @@
 
 <ion-footer>
   <ion-toolbar text-center>
-    <ion-input margin-left margin-right [(ngModel)]="newComment" placeholder="Enter a new comment!"></ion-input>
-    <button ion-button small outline (click)='createComment()'>Post Comment</button>
+    <ion-input *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
+      placeholder="Enter a new comment!">
+    </ion-input>
+    <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
+    <button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" ion-button small outline
+      (click)='createComment()'>Post Comment</button>
   </ion-toolbar>
 </ion-footer>

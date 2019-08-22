@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { from } from 'rxjs';
 import config from "../../config";
+import { tap } from 'rxjs/operators';
+
 interface ISignUpCredentials {
   email: string;
   password: string;
@@ -23,14 +25,25 @@ interface ISignInCredentials {
 @Injectable()
 export class AuthService {
   private user: firebase.User | null = null;
+  private authState$!: Observable<firebase.User | null>;
 
   constructor(
     public afAuth: AngularFireAuth,
     private fb: Facebook,
     private platform: Platform,
     private http: HttpClient
-  ) {
-    afAuth.authState.subscribe(user => (this.user = user));
+  ) { }
+
+  /**
+   * Should only ever be consumed by and subscribed to by app.component.ts
+   */
+  public checkAuthState() {
+    this.authState$ = this.afAuth.authState.pipe(
+      tap(
+        user => this.user = user,
+        error => this.user = null,
+      ));
+    return this.authState$;
   }
 
   get authenticated(): boolean {
@@ -85,7 +98,7 @@ export class AuthService {
     return await this.saveUser();
   }
 
-  public getToken(): Observable<string> {
+  public getToken() {
     if (!this.user) {
       throw 'User not authenticated';
     }

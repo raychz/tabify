@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { StoryService } from '../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../services/auth/auth.service';
 import { IUser } from '../../interfaces/user.interface';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
+import { LoaderService } from '../../services/utilities/loader.service';
 
 @IonicPage()
 @Component({
@@ -17,14 +18,23 @@ export class StoryPage {
   comments: any[] = [];
   user = <IUser>{};
   newComment: string = '';
+  newCommentPosting: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private storyService: StoryService,
     private authService: AuthService,
-    private newsfeedService: NewsfeedService
+    private newsfeedService: NewsfeedService,
+    public loader: LoaderService,
+    public alertCtrl: AlertController,
+    public auth: AuthService,
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
 
   ionViewDidLoad() {
     this.getStory();
@@ -33,8 +43,18 @@ export class StoryPage {
   }
 
   async getStory() {
-    const storyId = await this.navParams.get('storyId');
-    this.story = await this.storyService.getStory(storyId);
+    this.loader.present();
+    try {
+      const storyId = await this.navParams.get('storyId');
+      this.story = await this.storyService.getStory(storyId);
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+    }
+    this.loader.dismiss();
   }
 
   async getComments() {
@@ -51,24 +71,23 @@ export class StoryPage {
   }
 
   async createLike() {
+    this.story.loadingLike = true;
     const res = await this.storyService.createLike(this.story.id);
-    // do more stuff, like update the template with an additional like
-
-    console.log(res);
 
     if (res.status == 200) {
+
+      // res.body = false means that the server created a new like
       if (res.body == false) {
         this.story.like_count += 1;
 
         // Increment comment count of story in newsfeed
         this.newsfeedService.incrementLikeCount(this.story.ticket.id, this.story.id);
-
       } else {
         this.story.like_count -= 1
-
         this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
       }
     }
+    this.story.loadingLike = false;
   }
 
   async getUserDetails() {
@@ -79,13 +98,11 @@ export class StoryPage {
   }
 
   async createComment() {
-    const res = await this.storyService.createComment(this.story.id, this.newComment);
+    this.newCommentPosting = true;
 
-    console.log(res);
-
-    if (res.status === 200) {
+    try {
+      const res = await this.storyService.createComment(this.story.id, this.newComment);
       const newComment: any = res.body;
-
       newComment.relativeTime = moment(newComment.date_created).fromNow()
 
       this.comments.push(newComment);
@@ -95,24 +112,43 @@ export class StoryPage {
 
       // Increment comment count of story in newsfeed
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
+
+      this.newComment = '';
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
     }
 
-    this.newComment = '';
+    this.newCommentPosting = false;
   }
 
-  async deleteComment(commentId: number) {
-    const res = await this.storyService.deleteComment(this.story.id, commentId);
 
-    if (res.status === 200) {
+  async deleteComment(commentId: number, commentIndex: number) {
+    this.comments[commentIndex].beingDeleted = true;
+
+    try {
+      const res = await this.storyService.deleteComment(this.story.id, commentId);
+
       // remove the comment from front end
-      const index = this.comments.findIndex((comment: any) => comment.id === commentId);
-      this.comments.splice(index, 1);
+      this.comments.splice(commentIndex, 1);
 
       // Decrement comment count in detailed story view
       this.story.comment_count -= 1;
 
       // Decrement comment count of story in newsfeed
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
+    } catch {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+
+      // if deletion of comment was unsuccessful, revert to comment not being deleted
+      this.comments[commentIndex].beingDeleted = false;
     }
   }
 }
