@@ -101,10 +101,9 @@ export class Tabify {
           if (!user) {
             this.rootPage = 'UnauthenticatedPage';
             loading.dismiss();
-          } else {
-            await this.auth.checkUserExistsInDB();
-          }
-          this.splashScreen.hide();
+            this.splashScreen.hide();
+          } 
+          await this.auth.checkUserExistsInDB();
         },
         error => {
           console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
@@ -120,17 +119,14 @@ export class Tabify {
       ))
       .subscribe(); // Subscribe here only!
 
+
     this.auth.userDetailsConfirmedInDB$
       .pipe(tap(
         async userDetailsConfirmedInDB => {
-          // TODO: make sure that this doesn't get executed when behavior subject is initialized to false
-          console.log('in the tap for user details', userDetailsConfirmedInDB);
-          if (userDetailsConfirmedInDB === true) {
+          if (userDetailsConfirmedInDB) {
             this.rootPage = 'HomePage';
-            this.splashScreen.hide();
             loading.dismiss();
-          } else {
-            await this.auth.checkUserExistsInDB();
+            this.splashScreen.hide();
           }
         },
         error => {
