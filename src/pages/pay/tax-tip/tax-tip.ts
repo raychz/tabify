@@ -19,7 +19,6 @@ export class TaxTipPage {
   @ViewChild(Navbar) navBar!: Navbar;
   selectedPaymentMethod: any = null;
   tip = 18;
-  tab = this.navParams.data;
   myTabItems!: FirestoreTicketItem[];
   selectOptions = {
     title: 'Payment',

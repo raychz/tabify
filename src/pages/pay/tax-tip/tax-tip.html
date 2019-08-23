@@ -13,10 +13,10 @@
 <ion-content class='cards-bg'>
   <ion-card>
     <ion-card-header>
-      My Selected Items
+      How was {{ticketService.firestoreTicket.location}}?
     </ion-card-header>
     <ion-card-content>
-      <p id="rate-and-review">Optionally rate and review the items you ordered.</p>
+      <p id="rate-and-review">Rate and review the items you ordered.</p>
       <ion-item class='total tab-item' *ngFor='let item of myTabItems'>
         <h2>{{item.name}}
           <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
@@ -25,7 +25,7 @@
           <rating [(ngModel)]="item.rating">
           </rating>
           <ion-item *ngIf="item.rating! > 0" class="item-feedback">
-            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on"
+            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback" autocomplete="on"
               spellcheck="on" autocorrect="on"></ion-textarea>
           </ion-item>
         </div>
