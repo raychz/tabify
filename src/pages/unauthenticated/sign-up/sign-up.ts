@@ -45,6 +45,11 @@ export class SignUpPage {
     });
   }
 
+  ionViewCanEnter() {
+    // Only allow unauthenticated users to enter this page
+    return !this.auth.authenticated;
+  }
+
   signUpWithFacebook() {
     this.loader.present({
       content: 'Signing up with Facebook...',

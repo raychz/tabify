@@ -33,6 +33,11 @@ export class LoginPage {
     });
   }
 
+  ionViewCanEnter() {
+    // Only allow unauthenticated users to enter this page
+    return !this.auth.authenticated;
+  }
+
   async login() {
     const { email, password } = this.loginForm.value;
 
