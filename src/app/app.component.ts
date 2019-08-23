@@ -91,6 +91,7 @@ export class Tabify {
 
   async checkAuthState() {
     let loading = this.loader.create();
+    // Present loader while the auth check is being completed.
     await loading.present();
 
     this.auth
@@ -98,14 +99,22 @@ export class Tabify {
       .pipe(tap(
         async (user) => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
-          if (!user) {
+          if (user) {
+            // If user is authenticated on Firebase, 
+            // wait until the user is created in our DB.
+            // The loader will be dismissed in the second pipe/tap below.
+            await this.auth.checkUserExistsInDB();
+          } else {
+            // Otherwise, send user back to unauthenticated screen.
+            // Loader can be dismissed.
             this.rootPage = 'UnauthenticatedPage';
             loading.dismiss();
             this.splashScreen.hide();
-          } 
-          await this.auth.checkUserExistsInDB();
+          }
         },
         error => {
+          // If an error occurs, send user back to unauthenticated screen.
+          // Loader can be dismissed.
           console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
           this.rootPage = 'UnauthenticatedPage';
           this.splashScreen.hide();
@@ -124,7 +133,15 @@ export class Tabify {
       .pipe(tap(
         async userDetailsConfirmedInDB => {
           if (userDetailsConfirmedInDB) {
+            // If user has been created in Tabify's db
+            // Loader can be dismissed.
             this.rootPage = 'HomePage';
+            loading.dismiss();
+            this.splashScreen.hide();
+          } else {
+            // If user has not been created in Tabify's db
+            // Loader can be dismissed.
+            this.rootPage = 'UnauthenticatedPage';
             loading.dismiss();
             this.splashScreen.hide();
           }
