@@ -19,7 +19,8 @@ enum SignUpStep {
 })
 export class SignUpPage {
   SignUpStep: typeof SignUpStep = SignUpStep; // Hack to expose enum to template
-  referralCode = this.navParams.get("referralCode");
+  //referralCode = this.navParams.get("referralCode");
+  referralCode: string = '';
   signUpError: string = '';
   form: FormGroup;
   showServerCodeInput = false;
@@ -44,15 +45,20 @@ export class SignUpPage {
     });
   }
 
-  signUpWithFacebook() {
-    this.loader.present({
+  ionViewCanEnter() {
+    // Only allow unauthenticated users to enter this page
+    return !this.auth.authenticated;
+  }
+
+  async signUpWithFacebook() {
+    const loading = this.loader.create({
       content: 'Signing up with Facebook...',
     });
+    await loading.present();
 
-    return this.auth
+    await this.auth
       .signInWithFacebook()
-      .then(
-        res => res,
+      .catch(
         error => {
           const alert = this.alert.create({
             title: 'Error',
@@ -61,8 +67,8 @@ export class SignUpPage {
           });
           return alert.present();
         }
-      )
-      .then(() => this.loader.dismiss());
+      );
+    await loading.dismiss();
   }
 
   async signUp() {
@@ -72,10 +78,17 @@ export class SignUpPage {
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
+      referralCode: this.referralCode
     };
+    const loading = this.loader.create({
+      content: 'Signing up...',
+    });
+    await loading.present();
     await this.auth.signUp(credentials).catch(error => {
       this.signUpError = error.message;
+      console.log('sign up error:', error);
     });
+    await loading.dismiss();
   }
 
   login() {
