@@ -42,31 +42,33 @@ export class LoginPage {
     const { email, password } = this.loginForm.value;
 
     if (email && password) {
+      const loading = this.loader.create({
+        content: 'Logging in...',
+      });
+      await loading.present();
       await this.auth
         .signInWithEmail({ email, password })
         .catch(error => (this.loginError = error.message));
+      await loading.dismiss();
     }
   }
 
-  loginWithFacebook() {
-    this.loader.present({
+  async loginWithFacebook() {
+    const loading = this.loader.create({
       content: 'Logging in with Facebook...',
     });
-
-    return this.auth
+    await loading.present();
+    await this.auth
       .signInWithFacebook()
-      .then(
-        res => res,
-        error => {
-          const alert = this.alert.create({
-            title: 'Error',
-            subTitle: 'An error occurred while logging in with Facebook.',
-            buttons: ['Ok'],
-          });
-          return alert.present();
-        }
-      )
-      .then(() => this.loader.dismiss());
+      .catch(error => {
+        const alert = this.alert.create({
+          title: 'Error',
+          subTitle: 'An error occurred while logging in with Facebook.',
+          buttons: ['Ok'],
+        });
+        return alert.present();
+      })
+    await loading.dismiss();
   }
 
   forgotPassword() {

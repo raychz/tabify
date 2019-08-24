@@ -50,15 +50,15 @@ export class SignUpPage {
     return !this.auth.authenticated;
   }
 
-  signUpWithFacebook() {
-    this.loader.present({
+  async signUpWithFacebook() {
+    const loading = this.loader.create({
       content: 'Signing up with Facebook...',
     });
+    await loading.present();
 
-    return this.auth
+    await this.auth
       .signInWithFacebook()
-      .then(
-        res => res,
+      .catch(
         error => {
           const alert = this.alert.create({
             title: 'Error',
@@ -67,8 +67,8 @@ export class SignUpPage {
           });
           return alert.present();
         }
-      )
-      .then(() => this.loader.dismiss());
+      );
+    await loading.dismiss();
   }
 
   async signUp() {
@@ -80,10 +80,15 @@ export class SignUpPage {
       lastName: data.lastName,
       referralCode: this.referralCode
     };
+    const loading = this.loader.create({
+      content: 'Signing up...',
+    });
+    await loading.present();
     await this.auth.signUp(credentials).catch(error => {
       this.signUpError = error.message;
       console.log('sign up error:', error);
     });
+    await loading.dismiss();
   }
 
   login() {

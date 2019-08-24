@@ -65,7 +65,7 @@ export class AuthService {
       credentials.email,
       credentials.password
     );
-    return this.saveUser();
+    return await this.saveUser();
   }
 
   public async signInWithFacebook() {
@@ -90,7 +90,7 @@ export class AuthService {
     if (!user) {
       throw 'No User found';
     }
-    return this.saveUser();
+    return await this.saveUser();
   }
 
   public async signUp(credentials: ISignUpCredentials) {
