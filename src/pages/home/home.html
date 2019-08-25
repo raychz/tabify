@@ -47,7 +47,8 @@
           </ion-avatar>
           <h2>{{ ticket.location.name }}</h2>
           <!-- Using Angular's DatePipe to format date from DB -->
-          <ion-note>{{ ticket.story.date_created | date:'mediumDate' }} {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
+          <ion-note>{{ ticket.story.date_created | date:'mediumDate' }}
+            {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
           <h3>{{ ticket.location.city }}</h3>
           <p>{{ ticket.location.streetAddress }}</p>
           <ion-note item-end>2 mi.</ion-note>
@@ -56,12 +57,17 @@
         </ion-card-content>
         <ion-row>
           <ion-col>
-            <ion-spinner *ngIf="ticket.loadingLike" margin-left color="primary" name="bubbles"></ion-spinner>
-            <button *ngIf="!ticket.loadingLike" ion-button color="primary" clear small icon-start
+            <button [disabled]="ticket.loadingLike" ion-button color="primary" clear small icon-start
               (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'>
-              <ion-icon name="heart"></ion-icon>
-              {{ ticket.story.like_count }} {{ ticket.story.like_count === 1 ? 'Like' : 'Likes' }}
+              <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
+
+              <ng-container *ngIf="!ticket.loadingLike">
+                <ion-icon *ngIf="!ticket.story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
+                <ion-icon #fullHeart *ngIf="ticket.story.likedByLoggedInUser" name="heart"></ion-icon>
+              </ng-container>
+              {{ ticket.story.like_count > 0 ? ticket.story.like_count : '' }}
             </button>
+
           </ion-col>
           <ion-col>
             <button ion-button color="primary" clear small icon-start>
