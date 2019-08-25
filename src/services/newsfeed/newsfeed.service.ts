@@ -22,7 +22,7 @@ export class NewsfeedService {
     }
 
     async getUserTicketsFromServer() {
-        let userTickets = await this.storyService.getUserStories();
+        const userTickets = await this.storyService.getUserStories();
         this.tickets = userTickets.tickets;
         return this.tickets;
     }

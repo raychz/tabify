@@ -20,6 +20,11 @@ export class ForgotPasswordPage {
     });
   }
 
+  ionViewCanEnter() {
+    // Only allow unauthenticated users to enter this page
+    return !this.auth.authenticated;
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad ForgotPasswordPage');
   }
