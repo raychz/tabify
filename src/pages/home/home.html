@@ -5,17 +5,7 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="global" icon-only>
-        <ion-icon name="globe"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button value="community" icon-only>
-        <ion-icon name="people"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button value="user" icon-only>
-        <ion-icon name="person"></ion-icon>
-      </ion-segment-button>
-    </ion-segment>
+    <img class="tabify-icon" src="assets/imgs/logo.png" />
     <ion-buttons right>
       <button (click)="showNotifications()" ion-button icon-only>
         <ion-icon name="notifications"></ion-icon>

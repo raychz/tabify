@@ -86,6 +86,17 @@ page-home {
     }
   }
 
+  .tabify-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto auto 0 auto;
+    height: 42px;
+    width: 119.5px;
+  }
+
   ion-refresher {
     z-index: 1000;
     background-color: map-get($colors, primary);
