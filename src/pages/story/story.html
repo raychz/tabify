@@ -23,12 +23,18 @@
     </ion-item>
     <ion-row class="bottom-border">
       <ion-col>
-        <ion-spinner margin-left *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
-        <button *ngIf="!story.loadingLike" ion-button color="primary" clear small icon-start
+
+        <button [disabled]="story.loadingLike" ion-button color="primary" clear small icon-start
           (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
-          <ion-icon name="heart"></ion-icon>
-          {{ story.like_count }} {{story.like_count === 1 ? 'Like' : 'Likes'}}
+          <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
+
+          <ng-container *ngIf="!story.loadingLike">
+            <ion-icon *ngIf="!story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
+            <ion-icon #fullHeart *ngIf="story.likedByLoggedInUser" name="heart"></ion-icon>
+          </ng-container>
+          {{ story.like_count > 0 ? story.like_count : '' }}
         </button>
+
       </ion-col>
       <ion-col>
         <button ion-button color="primary" clear small icon-start>

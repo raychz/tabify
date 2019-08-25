@@ -55,7 +55,22 @@ export class StoryPage {
       });
       alert.present();
     }
+    
+    await this.determineStoryLikedByUser();
+
     this.loader.dismiss();
+  }
+
+  async determineStoryLikedByUser() {
+    const loggedInUserId = this.authService.getUid();
+
+    for (let i = 0; i < this.story.likes.length; i++) {
+      if (this.story.likes[i].user.uid === loggedInUserId) {
+        this.story.likedByLoggedInUser = true;
+        break;
+      }
+    }
+    return this.story;
   }
 
   async getComments() {
@@ -67,8 +82,6 @@ export class StoryPage {
       ...comment,
       relativeTime: moment(comment.date_created).fromNow(),
     }));
-
-    console.log(this.comments);
   }
 
   async createLike() {
@@ -83,9 +96,11 @@ export class StoryPage {
 
         // Increment comment count of story in newsfeed
         this.newsfeedService.incrementLikeCount(this.story.ticket.id, this.story.id);
+        this.story.likedByLoggedInUser = true;
       } else {
         this.story.like_count -= 1
         this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
+        this.story.likedByLoggedInUser = false;
       }
     }
     this.story.loadingLike = false;
@@ -94,8 +109,6 @@ export class StoryPage {
   async getUserDetails() {
     this.user.uid = this.authService.getUid();
     this.user.name = this.authService.getDisplayName();
-
-    console.log(this.user);
   }
 
   async createComment() {

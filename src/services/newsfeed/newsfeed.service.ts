@@ -35,11 +35,9 @@ export class NewsfeedService {
                 if (this.tickets[i].story.likes[j].user.uid === loggedInUserId) {
                     this.tickets[i].story.likedByLoggedInUser = true;
                     break;
-                }
-                
+                }     
             }
         }
-        console.log(this.tickets);
         return this.tickets;
     }
 
@@ -52,13 +50,15 @@ export class NewsfeedService {
     }
 
     incrementLikeCount(ticketId: number, storyId: number) {
-        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.like_count += 1;
-        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.likedByLoggedInUser = true;
+        const indexOfTicket = this.findIndexOfTicket(ticketId, storyId);
+        this.tickets[indexOfTicket].story.like_count += 1;
+        this.tickets[indexOfTicket].story.likedByLoggedInUser = true;
     }
 
     decrementLikeCount(ticketId: number, storyId: number) {
-        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.like_count -= 1;
-        this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.likedByLoggedInUser = false;
+        const indexOfTicket = this.findIndexOfTicket(ticketId, storyId);
+        this.tickets[indexOfTicket].story.like_count -= 1;
+        this.tickets[indexOfTicket].story.likedByLoggedInUser = false;
 
     }
 
