@@ -103,7 +103,7 @@ export class HomePage {
         await this.loader.dismiss();
         const alert = this.alert.create({
           title: `Let's Get Started`,
-          message: `To pay your tab, enter a payment method on the next screen.`,
+          message: `To pay your tab, please enter a payment method.`,
           buttons: [
             {
               text: 'Ok',

@@ -19,12 +19,14 @@ export class TaxTipPage {
   @ViewChild(Navbar) navBar!: Navbar;
   selectedPaymentMethod: any = null;
   tip = 18;
-  myTabItems!: FirestoreTicketItem[];
+  myTabItems: FirestoreTicketItem[] = [];
   selectOptions = {
     title: 'Payment',
     subTitle: 'Select a payment method',
     enableBackdropDismiss: false
   };
+  displayAllItems = false;
+  displayLimit = 2;
 
   constructor(
     public navCtrl: NavController,
