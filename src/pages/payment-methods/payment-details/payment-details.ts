@@ -179,6 +179,11 @@ export class PaymentDetailsPage {
       switch (this.mode) {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
           await this.navCtrl.popToRoot();
+          await this.navCtrl.push(
+            'PayPage',
+            {},
+            { animate: true, animation: 'md-transition', direction: 'forward' }
+          );
           break;
         case PaymentDetailsPageMode.SAVE_ONLY:
           await this.navCtrl.pop();
