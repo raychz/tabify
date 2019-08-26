@@ -9,7 +9,7 @@ export class NewsfeedService {
 
     // The data structure we get back is a uid, and a list of tickets.
     // Inside each ticket, there is a story object
-    tickets: any;
+    tickets: any = [];
 
     constructor(
         private storyService: StoryService,
@@ -18,28 +18,27 @@ export class NewsfeedService {
 
     async initializeNewsfeed() {
         await this.getUserTicketsFromServer();
-        //await this.determineStoriesLikedByUser();
+        await this.determineStoriesLikedByUser();
     }
 
     async getUserTicketsFromServer() {
         const userTickets = await this.storyService.getUserStories();
-        console.log(userTickets);
         this.tickets = userTickets.tickets;
-
-        await this.determineStoriesLikedByUser();
-
         return this.tickets;
     }
 
     async determineStoriesLikedByUser() {
-        const loggedInUserId = this.authService.getUid();
 
-        for (let i = 0; i < this.tickets.length; i++) {
-            for (let j = 0; j < this.tickets[i].story.likes.length; j++) {
-                if (this.tickets[i].story.likes[j].user.uid === loggedInUserId) {
-                    this.tickets[i].story.likedByLoggedInUser = true;
-                    break;
-                }     
+        if (this.tickets && this.tickets.length > 0) {
+            const loggedInUserId = this.authService.getUid();
+
+            for (let i = 0; i < this.tickets.length; i++) {
+                for (let j = 0; j < this.tickets[i].story.likes.length; j++) {
+                    if (this.tickets[i].story.likes[j].user.uid === loggedInUserId) {
+                        this.tickets[i].story.likedByLoggedInUser = true;
+                        break;
+                    }
+                }
             }
         }
         return this.tickets;

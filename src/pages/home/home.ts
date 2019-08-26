@@ -45,17 +45,17 @@ export class HomePage {
   }
 
   async getUserStories() {
-    // this.loader.present();
-    // try {
-    await this.newsfeedService.initializeNewsfeed();
-    // } catch (e) {
-    //   const alert = this.alertCtrl.create({
-    //     title: 'Network Error',
-    //     message: e,
-    //   });
-    //   alert.present();
-    // }
-    // this.loader.dismiss();
+    this.loader.present();
+    try {
+      await this.newsfeedService.initializeNewsfeed();
+    } catch (e) {
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: e,
+      });
+      alert.present();
+    }
+    this.loader.dismiss();
   }
 
   async createLike(ticketId: number, storyId: number) {
