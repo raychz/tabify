@@ -18,13 +18,16 @@ export class NewsfeedService {
 
     async initializeNewsfeed() {
         await this.getUserTicketsFromServer();
-        await this.determineStoriesLikedByUser();
+        //await this.determineStoriesLikedByUser();
     }
 
     async getUserTicketsFromServer() {
         const userTickets = await this.storyService.getUserStories();
         console.log(userTickets);
         this.tickets = userTickets.tickets;
+
+        await this.determineStoriesLikedByUser();
+
         return this.tickets;
     }
 
