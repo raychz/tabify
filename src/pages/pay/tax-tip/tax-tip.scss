@@ -1,4 +1,7 @@
 page-tax-tip {
+  #nav-pay-btn {
+    color: map-get($colors, primary);
+  }
   .footer {
     height: 75px;
   }

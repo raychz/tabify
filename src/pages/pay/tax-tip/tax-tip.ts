@@ -132,6 +132,8 @@ export class TaxTipPage {
         ...this.myTabItems,
         mode: PaymentDetailsPageMode.SAVE_AND_PAY,
       });
+    } else {
+      this.navCtrl.push('PayConfirmationPage')
     }
   }
 }
