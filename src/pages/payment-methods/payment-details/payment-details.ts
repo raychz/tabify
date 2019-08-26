@@ -64,7 +64,7 @@ export class PaymentDetailsPage {
     this.title = navParams.get('title') || 'Payment Details';
     console.log('PAY MODE', this.mode);
     this.saveButtonText = this.mode === PaymentDetailsPageMode.SAVE_AND_PAY ? 'Save and Pay' : 'Save';
-    if (!this.mode) {
+    if (!(this.mode in PaymentDetailsPageMode)) {
       throw new Error('No mode specified');
     }
   }
