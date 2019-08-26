@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { AuthService } from '../../services/auth/auth.service';
 
 @IonicPage({
   priority: 'high'
@@ -12,7 +13,12 @@ export class UnauthenticatedPage {
   @ViewChild(Slides) slides!: Slides;
   activeSlideIndex = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthService) {
+  }
+
+  ionViewCanEnter() {
+    // Only allow unauthenticated users to enter this page
+    return !this.auth.authenticated;
   }
 
   ionViewDidLoad() {
