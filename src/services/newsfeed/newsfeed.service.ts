@@ -23,6 +23,7 @@ export class NewsfeedService {
 
     async getUserTicketsFromServer() {
         const userTickets = await this.storyService.getUserStories();
+        console.log(userTickets);
         this.tickets = userTickets.tickets;
         return this.tickets;
     }
