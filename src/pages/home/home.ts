@@ -65,12 +65,12 @@ export class HomePage {
     if (res.status === 200) {
 
       // res.likeCreated = true means that the server created a new like
-      if (res.body && res.body.likeCreated === true) {
+      if (res.body && res.body['likeCreated'] === true) {
 
         const likeToBeAdded =
         {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
+          id: res.body['id'],
+          user: { uid: res.body['user'].uid }
         };
 
         this.newsfeedService.addLike(ticketId, storyId, likeToBeAdded);
