@@ -25,14 +25,14 @@
       <ion-col>
 
         <button [disabled]="story.loadingLike" ion-button color="primary" clear small icon-start
-          (click)='createLike(story.ticket.id, story.id); $event.stopPropagation()'>
+          (click)='createLike(); $event.stopPropagation()'>
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
           <ng-container *ngIf="!story.loadingLike">
             <ion-icon *ngIf="!story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
             <ion-icon #fullHeart *ngIf="story.likedByLoggedInUser" name="heart"></ion-icon>
           </ng-container>
-          {{ story.like_count > 0 ? story.like_count : '' }}
+            {{ story.likes.length > 0 ? story.likes.length : '' }}
         </button>
 
       </ion-col>

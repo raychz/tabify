@@ -88,18 +88,25 @@ export class StoryPage {
     this.story.loadingLike = true;
     const res = await this.storyService.createLike(this.story.id);
 
-    if (res.status == 200) {
+    if (res.status === 200) {
 
-      // res.body = false means that the server created a new like
-      if (res.body == false) {
-        this.story.like_count += 1;
+      // res.likeCreated = true means that the server created a new like
+      if (res.body && res.body.likeCreated === true) {
 
-        // Increment comment count of story in newsfeed
-        this.newsfeedService.incrementLikeCount(this.story.ticket.id, this.story.id);
+        const likeToBeAdded =
+        {
+          id: res.body.id,
+          user: { uid: res.body.user.uid }
+        };
+
+        this.story.likes.push(likeToBeAdded);
+        this.newsfeedService.addLike(this.story.ticket.id, this.story.id, likeToBeAdded);
         this.story.likedByLoggedInUser = true;
       } else {
-        this.story.like_count -= 1
-        this.newsfeedService.decrementLikeCount(this.story.ticket.id, this.story.id);
+
+        const loggedInUserId = this.auth.getUid();
+        this.story.likes = this.story.likes.filter((like: any) => like.user.uid !== loggedInUserId);
+        this.newsfeedService.removeLike(this.story.ticket.id, this.story.id);
         this.story.likedByLoggedInUser = false;
       }
     }
@@ -138,7 +145,6 @@ export class StoryPage {
 
     this.newCommentPosting = false;
   }
-
 
   async deleteComment(commentId: number, commentIndex: number) {
     this.comments[commentIndex].beingDeleted = true;
