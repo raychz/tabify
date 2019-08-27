@@ -52,17 +52,19 @@ export class NewsfeedService {
         this.tickets[this.findIndexOfTicket(ticketId, storyId)].story.comment_count -= 1;
     }
 
-    incrementLikeCount(ticketId: number, storyId: number) {
+    addLike(ticketId: number, storyId: number, likeToBeAdded: any) {
         const indexOfTicket = this.findIndexOfTicket(ticketId, storyId);
-        this.tickets[indexOfTicket].story.like_count += 1;
+        this.tickets[indexOfTicket].story.likes.push(likeToBeAdded);
         this.tickets[indexOfTicket].story.likedByLoggedInUser = true;
     }
 
-    decrementLikeCount(ticketId: number, storyId: number) {
+    removeLike(ticketId: number, storyId: number) {
         const indexOfTicket = this.findIndexOfTicket(ticketId, storyId);
-        this.tickets[indexOfTicket].story.like_count -= 1;
-        this.tickets[indexOfTicket].story.likedByLoggedInUser = false;
+        const loggedInUserId = this.authService.getUid();
+        this.tickets[indexOfTicket].story.likes = this.tickets[indexOfTicket].story.likes
+            .filter((like: any) => like.user.uid !== loggedInUserId);
 
+        this.tickets[indexOfTicket].story.likedByLoggedInUser = false;
     }
 
     loadingLike(ticketId: number, storyId: number, loading: boolean) {

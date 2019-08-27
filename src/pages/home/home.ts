@@ -64,14 +64,19 @@ export class HomePage {
 
     if (res.status === 200) {
 
-      // res.body = false means that the server created a new like
-      if (res.body === false) {
+      // res.likeCreated = true means that the server created a new like
+      if (res.body && res.body.likeCreated === true) {
 
-        // Increment comment count of story in newsfeed
-        this.newsfeedService.incrementLikeCount(ticketId, storyId);
+        const likeToBeAdded =
+        {
+          id: res.body.id,
+          user: { uid: res.body.user.uid }
+        };
+
+        this.newsfeedService.addLike(ticketId, storyId, likeToBeAdded);
 
       } else {
-        this.newsfeedService.decrementLikeCount(ticketId, storyId);
+        this.newsfeedService.removeLike(ticketId, storyId);
       }
     }
     this.newsfeedService.loadingLike(ticketId, storyId, false);

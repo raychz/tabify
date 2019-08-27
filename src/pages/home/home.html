@@ -55,7 +55,7 @@
                 <ion-icon *ngIf="!ticket.story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
                 <ion-icon #fullHeart *ngIf="ticket.story.likedByLoggedInUser" name="heart"></ion-icon>
               </ng-container>
-              {{ ticket.story.like_count > 0 ? ticket.story.like_count : '' }}
+              {{ ticket.story.likes.length > 0 ? ticket.story.likes.length : '' }}
             </button>
 
           </ion-col>
