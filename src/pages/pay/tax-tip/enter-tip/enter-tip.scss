@@ -18,7 +18,7 @@ page-enter-tip {
     #modal {
       &-title {
         color: map-get($colors, dark);
-        font-size: 19px;
+        font-size: 17px;
         font-weight: 600;
         text-align: center;
       }
@@ -27,6 +27,7 @@ page-enter-tip {
         font-size: $alert-ios-sub-title-font-size;
         text-align: center;
         padding: 0 5px;
+        margin-top: 0;
       }
     }
   }

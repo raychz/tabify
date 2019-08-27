@@ -82,6 +82,7 @@
           <ion-option value="">Add New Card</ion-option>
         </ion-select>
       </ion-item>
+      <button id="submit-payment-btn" ion-button block (click)="pay()">Submit Payment of ${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</button>
     </ion-card-content>
   </ion-card>
 </ion-content>
