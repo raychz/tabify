@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Navbar, ModalController, } from 'ionic-angular';
 import { ReceiptItem } from '../select-items/select-items';
 import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
@@ -9,6 +9,7 @@ import { TicketService, FirestoreTicketItem } from '../../../services/ticket/tic
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
+import { EnterTipPage } from './enter-tip/enter-tip';
 
 @IonicPage()
 @Component({
@@ -36,6 +37,7 @@ export class TaxTipPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public paymentService: PaymentService,
+    public modalCtrl: ModalController,
   ) { }
 
   async ionViewDidLoad() {
@@ -52,7 +54,7 @@ export class TaxTipPage {
     this.setBackButtonAction();
     try {
       await this.paymentService.initializePaymentMethods();
-    } catch(e) {
+    } catch (e) {
       console.error('Caught in initializePaymentMethods', e);
     }
 
@@ -90,12 +92,10 @@ export class TaxTipPage {
     };
   }
 
-  adjustTip(shouldIncreaseTip: boolean) {
-    if (this.tip > 0) {
-      this.tip = shouldIncreaseTip ? this.tip + 1 : this.tip - 1;
-    } else if (shouldIncreaseTip) {
-      this.tip += 1;
-    }
+  async adjustTip() {
+    const tipModal = this.modalCtrl.create(EnterTipPage, null,
+      { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+    await tipModal.present();
   }
 
   getSubtotal() {

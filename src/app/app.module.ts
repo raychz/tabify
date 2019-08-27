@@ -60,6 +60,7 @@ export class MyErrorHandler implements ErrorHandler {
     BrowserModule,
     IonicModule.forRoot(Tabify, {
       preloadModules: true,
+      scrollPadding: false,
     }),
     AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,

@@ -1,12 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Tax, Tip, Total</ion-title>
-    <ion-buttons end>
-      <button id="nav-pay-btn" ion-button icon-end (click)="pay()">
-        Pay
-        <ion-icon name="cash"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>Checkout</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -35,7 +29,8 @@
           </div>
         </ion-item>
       </ng-container>
-      <button *ngIf="!displayAllItems && myTabItems.length > displayLimit" ion-button block clear icon-end color="tabify" (click)="displayAllItems = true">
+      <button *ngIf="!displayAllItems && myTabItems.length > displayLimit" ion-button block clear icon-end
+        color="tabify" (click)="displayAllItems = true">
         Show All
         <ion-icon name="md-arrow-dropright"></ion-icon>
       </button>
@@ -49,29 +44,30 @@
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{getSubtotal() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userSubtotal / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item class='total'>
+      <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
-          <span class='line-details'>({{tip}}%)</span>
+          <span class='line-details'>({{ticketService.userTipPercentage}}%)</span>
+          <ion-icon class="adjust-tip" name='md-create'></ion-icon>
         </h2>
         <div item-end>
-          <h2>${{getTip() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userTip / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
         <h2>Tax
-          <span class='line-details'>(6.25%)</span>
+          <span class='line-details'>({{ticketService.userTaxRate * 100 | number: '1.2-2'}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{getTax() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userTax / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{getGrandTotal() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item>
@@ -88,19 +84,4 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
-  <p class="muted">Adjust your desired tip below.</p>
-  <br>
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-title>
-      <p class='footer-title'>Tip Your Server</p>
-      <div class='footer-subtitle'>
-        <ion-icon class="adjust-tip" name='remove-circle' (click)="adjustTip(false)"></ion-icon>
-        {{tip}}%
-        <ion-icon class="adjust-tip" name='add-circle' (click)="adjustTip(true)"></ion-icon>
-      </div>
-    </ion-title>
-  </ion-toolbar>
-</ion-footer>
