@@ -86,17 +86,20 @@ export class StoryPage {
 
   async createLike() {
     this.story.loadingLike = true;
-    const res = await this.storyService.createLike(this.story.id);
+
+    let res: any = {};
+
+    res = await this.storyService.createLike(this.story.id);
 
     if (res.status === 200) {
 
       // res.likeCreated = true means that the server created a new like
-      if (res.body && res.body['likeCreated'] === true) {
+      if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
         {
-          id: res.body['id'],
-          user: { uid: res.body['user'].uid }
+          id: res.body.id,
+          user: { uid: res.body.user.uid }
         };
 
         this.story.likes.push(likeToBeAdded);
