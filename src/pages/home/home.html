@@ -43,8 +43,14 @@
           <p>{{ ticket.location.streetAddress }}</p>
           <ion-note item-end>2 mi.</ion-note>
         </ion-item>
-        <ion-card-content>
-        </ion-card-content>
+
+        <!-- Abbreviated names of users part of the ticket -->
+        <ion-row>
+          <ion-col>
+            <p margin-left>{{this.getTicketUsersDescription(ticket.users, 3)}}</p>
+          </ion-col>
+        </ion-row>
+
         <ion-row>
           <ion-col>
             <button [disabled]="ticket.loadingLike" ion-button color="primary" clear small icon-start

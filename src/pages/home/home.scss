@@ -101,4 +101,8 @@ page-home {
     z-index: 1000;
     background-color: map-get($colors, primary);
   }
+
+  .item p, .card p {
+    color: map-get($colors, light)
+  }
 }

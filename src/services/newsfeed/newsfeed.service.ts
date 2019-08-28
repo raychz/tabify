@@ -24,6 +24,8 @@ export class NewsfeedService {
     async getUserTicketsFromServer() {
         const userTickets = await this.storyService.getUserStories();
         this.tickets = userTickets.tickets;
+
+        console.log(this.tickets);
         return this.tickets;
     }
 

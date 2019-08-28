@@ -117,4 +117,44 @@ export class HomePage {
       { animate: true, animation: 'md-transition', direction: 'forward' }
     );
   }
+
+  /**
+ * Returns a string to describe the users who have joined the tab.
+ * Ex: Ray, Hassan, Sahil +3 others
+ * @param users List of users
+ * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
+ */
+  getTicketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
+    if (!users || users.length === 0) return 'No users on this tab.';
+
+    let hereClause = '';
+
+    if (users.length > 1) {
+      hereClause = 'were here'
+    } else {
+      hereClause = 'was here'
+    }
+
+    const abbreviatedNames = users.map(user => this.abbreviateName(user.userDetail.displayName));
+
+    if (abbreviatedNames.length > userDisplayLimit) {
+      const overflowNames = abbreviatedNames.splice(userDisplayLimit);
+      const others = `+${overflowNames.length} other${
+        overflowNames.length > 1 ? 's' : ''
+        }`;
+      return `${abbreviatedNames.join(', ')} ${others} ${hereClause}`;
+    }
+    return `${abbreviatedNames.join(', ')} ${hereClause}`;
+  }
+
+  /**
+ * Abbreviates a user's name. Ex: `abbreviateName('Raymond Chavez')` => `'Raymond C.'`
+ * @param name 
+ */
+  abbreviateName(name: string) {
+    const nameSplit: string[] = name.split(' ');
+    const firstName = nameSplit.shift();
+    const rest = nameSplit.map(v => `${v[0].toUpperCase()}.`).join('');
+    return `${firstName} ${rest}`;
+  };
 }
