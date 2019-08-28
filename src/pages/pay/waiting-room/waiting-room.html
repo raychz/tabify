@@ -20,23 +20,118 @@
 
 
 <ion-content class='cards-bg' *ngIf="ticketService.firestoreTicketItems; else loading">
-  <ion-content>
+  <ng-container>
+    <ion-card id='curUserCard'>
+      <ion-card-content>
+        <ion-item>
+            <ion-avatar item-start>
+              <img src="ticketService.curUser.photoUrl">
+            </ion-avatar>
+            <ion-label> {{ ticketService.curUser.name }} </ion-label>
+            <ion-icon name="checkmark-circle-outline" item-end></ion-icon>
+            <ion-icon name="arrow-dropup" item-end [hidden]="false"></ion-icon>
+            <ion-icon name="arrow-dropdown" item-end [hidden]="true"></ion-icon>
+          </ion-item>
+      </ion-card-content>
+      <ion-card-content id="curUserItems" [hidden]="false">
+        <ion-list>
+          <ion-item *ngFor="let item of ticketService.curUser.ticketItems">
+            <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
+            <div item-end>
+              <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                  {{ ticketService.findUserShareOfItem(item, ticketService.curUser.uid) / 100 | number: '1.2-2' }} /
+                </span>
+                <span class="total-text">
+                  {{ item.price / 100 | number: '1.2-2' }}
+                </span>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card id='allUsersCard'>
+      <ion-card-header>
+        Tell your freinds to pick their food already!
+      </ion-card-header>
+      <ion-card-header>
+        Your Party:
+      </ion-card-header>
+          <ion-list>
+            <ng-container *ngFor="let user of ticketService.users">
+              <ng-container *ngIf="user.uid !== ticketService.curUser.uid">
+                  <ion-card-content>
+                      <ion-item>
+                        <ion-avatar item-start>
+                          <img src="ticketService.curUser.photoUrl">
+                        </ion-avatar>
+                        <ion-label> {{ user.name }} </ion-label>
+                        <ion-icon name="checkmark-circle-outline" item-end></ion-icon>
+                        <ion-icon name="arrow-dropup" item-end [hidden]="false"></ion-icon>
+                        <ion-icon name="arrow-dropdown" item-end [hidden]="true"></ion-icon>
+                      </ion-item>
+                    </ion-card-content>
+                    <ion-card-content id="curUserItems" [hidden]="false">
+                        <ion-list>
+                            <ion-item *ngFor="let item of user.ticketItems">
+                              <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
+                              <div item-end>
+                                <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                                  {{ ticketService.findUserShareOfItem(item, user.uid) / 100 | number: '1.2-2' }} /
+                                </span>
+                                <span class="total-text">
+                                  {{ item.price / 100 | number: '1.2-2' }}
+                                </span>
+                              </div>
+                            </ion-item>
+                          </ion-list>
+                      </ion-card-content>
+              </ng-container>
+            </ng-container>
+          </ion-list>
+      </ion-card>
+
       <ion-card>
-          <ion-card-content>
-              <ion-list>
-                  <ion-item *ngFor="let patron of ticketService.firestoreTicket.patrons">
-                    <ion-avatar slot="start">
-                      <ion-img [src]="patron.photoUrl"></ion-img>
-                    </ion-avatar>
-                    <ion-label> {{ patron.name }}</ion-label>
-                  </ion-item>
-               </ion-list>
-          </ion-card-content>
-        </ion-card>
-  </ion-content>
+        <ion-card-header *ngIf="ticketService.sharedItems.length > 0">
+          Shared Items:
+        </ion-card-header>
+        <ion-list>
+          <ion-item *ngFor="let item of ticketService.sharedItems">
+            <div item-start>
+              <ion-row>
+                {{ ticketService.getTicketItemName(item.name) }}
+              </ion-row>
+              <ion-row>
+                {{ item.payersDescription }}
+              </ion-row>
+            </div>
+             <div item-end>
+                <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.isItemOnMyTab">
+                  {{ ticketService.findUserShareOfItem(item, ticketService.curUser.uid) / 100 | number: '1.2-2' }} /
+                </span>
+                <span class="total-text">
+                  {{ item.price / 100 | number: '1.2-2' }}
+                </span>
+              </div>
+          </ion-item>
+        </ion-list>
+      </ion-card>
 
+      <ion-card>
+        <ion-card-header *ngIf="ticketService.unclaimedItems.length > 0">
+          Unclaimed Items:
+        </ion-card-header>
+        <ion-list>
+          <ion-item *ngFor="let item of ticketService.unclaimedItems">
+              <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
+              <div item-end> {{ item.price / 100 | number: '1.2-2' }} </div>
+          </ion-item>
+        </ion-list>
+      </ion-card>
 
-    <ng-template #loading>
+  </ng-container>
+
+  <ng-template #loading>
     <p class="muted">Loading ticket items...</p>
     <ion-spinner class="ticket-spinner" name="dots"></ion-spinner>
   </ng-template>

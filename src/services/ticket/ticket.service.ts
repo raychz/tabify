@@ -35,10 +35,8 @@ export interface FirestoreTicket {
   tab_id: string,
   ticket_number: number,
   uids: string[],
-  patrons: User[],
+  users: { name: string, uid: string, photoUrl: string, status: string }[],
   ticketItems: FirestoreTicketItem[],
-  sharedItems: FirestoreTicketItem[],
-  unclaimedItems: FirestoreTicketItem[],
 }
 
 export interface User {
@@ -56,6 +54,10 @@ export class TicketService {
   // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
   public firestoreTicket!: FirestoreTicket;
   public firestoreTicketItems!: FirestoreTicketItem[];
+  public sharedItems: FirestoreTicketItem[] = [];
+  public unclaimedItems: FirestoreTicketItem[] = [];
+  public users: User[] = [];
+  public curUser!: User;
   public userSelectedItemsCount: number = 0;
   public userSubtotal: number = 0;
   public ticketUsersDescription: string = getTicketUsersDescription();
@@ -129,6 +131,29 @@ export class TicketService {
     this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
   }
 
+  public findUserShareOfItem(item: FirestoreTicketItem, userUid: string) {
+    const user = item.users.find( (u) => u.uid === userUid);
+    if (user) {
+      return user.price;
+    }
+    return 0;
+  }
+
+  public changeUserStatus(status: string) {
+    this.curUser.status = status;
+    const userIndex = this.users.findIndex( user => user.uid === this.auth.getUid())
+    this.users[userIndex].status = status;
+  }
+
+  public getTicketItemName(name: string) {
+    if (name.toLowerCase().includes('taco')) {
+      return `🌮 ${name}`;
+    } else if (name.toLowerCase().includes('pizza')) {
+      return `🍕 ${name}`;
+    }
+    return name;
+  }
+
   /**
    * Adds user to Firestore ticket item with id `ticketItemId`.
    * @param ticketItemId
@@ -146,14 +171,6 @@ export class TicketService {
           throw 'Ticket Item Document does not exist!';
         }
 
-        const ticketDocRef = this.firestoreService.document(
-          `tickets/${this.firestoreTicket!.id}`
-        ).ref;
-        const ticket = await transaction.get(ticketDocRef);
-        if (!ticket.exists) {
-          throw 'Ticket Document does not exist!';
-        }
-
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
@@ -162,12 +179,6 @@ export class TicketService {
           users: any[];
           price: number;
           ticket_item_id: number;
-        };
-
-        let { sharedItems, unclaimedItems, patrons } = ticket.data()! as {
-          sharedItems: {name: string; users: any[]; price: number; ticket_item_id: number;}[],
-          unclaimedItems: {name: string; users: any[]; price: number; ticket_item_id: number;}[],
-          patrons: {uid: string, ticketItems: {name: string, price: number; ticket_item_id: number;}[]}[],
         };
 
         if (users.find(u => u.uid === uid)) {
@@ -191,22 +202,6 @@ export class TicketService {
         transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
-          { merge: true }
-        );
-
-        if (users.length > 1) {
-          sharedItems.push({ name, users, price, ticket_item_id });
-        } else if (users.length === 1) {
-          const item = unclaimedItems.splice(unclaimedItems.findIndex( item => item.ticket_item_id === ticket_item_id), 1)[0];
-          item.users = users;
-        }
-
-        const patronIndex = patrons.findIndex( user => user.uid === uid);
-        patrons[patronIndex].ticketItems.push({name, price, ticket_item_id});
-
-        transaction.set(
-          ticketDocRef,
-          { sharedItems, unclaimedItems, patrons },
           { merge: true }
         );
 
@@ -242,14 +237,6 @@ export class TicketService {
           throw 'Document does not exist!';
         }
 
-        const ticketDocRef = this.firestoreService.document(
-          `tickets/${this.firestoreTicket!.id}`
-        ).ref;
-        const ticket = await transaction.get(ticketDocRef);
-        if (!ticket.exists) {
-          throw 'Ticket Document does not exist!';
-        }
-
         const uid = this.auth.getUid();
 
         let { name, users, price, ticket_item_id } = ticketItem.data()! as {
@@ -257,12 +244,6 @@ export class TicketService {
           users: any[];
           price: number;
           ticket_item_id: number;
-        };
-
-        let { sharedItems, unclaimedItems, patrons } = ticket.data()! as {
-          sharedItems: {name: string; users: any[]; price: number, ticket_item_id: number}[],
-          unclaimedItems: {name: string; users: any[]; price: number, ticket_item_id: number}[],
-          patrons: {uid: string, ticketItems: {name: string, price: number, ticket_item_id: number}[]}[],
         };
 
         if (!users.find(u => u.uid === uid))
@@ -276,25 +257,11 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
-        if (users.length === 1) {
-          sharedItems.splice(sharedItems.findIndex( item => item.ticket_item_id == ticket_item_id), 1);
-        } else if (users.length < 1) {
-          unclaimedItems.push({ name, users, price, ticket_item_id });
-        }
-
-        const userIndex = patrons.findIndex( user => user.uid === uid);
-        patrons[userIndex].ticketItems.splice(patrons[userIndex].ticketItems.findIndex( item => item.ticket_item_id === ticket_item_id), 1);
 
         const payersDescription = getPayersDescription(users);
         transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
-          { merge: true }
-        );
-
-        transaction.set(
-          ticketDocRef,
-          { sharedItems, unclaimedItems, patrons },
           { merge: true }
         );
 
@@ -362,15 +329,39 @@ export class TicketService {
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
     this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
+    // the above properties can be inferred from the below properties. ToDo: get rid of above properties
+    this.unclaimedItems = [];
+    this.sharedItems = [];
+    this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: [], subtotal: 0};
+    this.users = this.firestoreTicket.users.map( (user) =>
+      ({ ...user, ticketItems: [], subtotal: 0}));
+    this.firestoreTicketItems.forEach( (item) => {
+      if (item.users.length < 1) {
+        this.unclaimedItems.push(item);
+      } else if (item.users.length > 1) {
+        this.sharedItems.push(item);
+      }
+
+      if (item.isItemOnMyTab) {
+        this.curUser.ticketItems.push(item);
+        this.curUser.subtotal += item.price;
+      }
+
+      item.users.forEach( (user) => {
+        const userIndex = this.users.findIndex( u => u.uid === user.uid);
+        this.users[userIndex].ticketItems.push(item);
+        this.users[userIndex].subtotal += item.price;
+      });
+    });
   }
 
-  /**
+  /**S
    * Called when the Firestore ticket document is updated.
    * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
-    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.patrons);
+    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
   }
 }

@@ -89,13 +89,6 @@ export class SelectItemsPage {
     }
   }
 
-  findMyShare(item: any) {
-    const share = item.users.find(
-      (user: { uid: string | null }) => user.uid === this.auth.getUid()
-    ).price;
-    return share || 0;
-  }
-
   async removeItemFromMyTab(item: any) {
     item.loading = true;
     const {
@@ -120,7 +113,7 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    // this.ticketService.changeUserStatus('waiting', this.auth.getUid()!);
+    this.ticketService.changeUserStatus('waiting');
     this.navCtrl.push('WaitingRoomPage');
   }
 
@@ -203,19 +196,10 @@ export class SelectItemsPage {
     });
   }
 
-  getName(name: string) {
-    if (name.toLowerCase().includes('taco')) {
-      return `🌮 ${name}`;
-    } else if (name.toLowerCase().includes('pizza')) {
-      return `🍕 ${name}`;
-    }
-    return name;
-  }
-
   inviteOthers() {
     const modal = this.modalCtrl.create(InviteOthersPage, {
       tabNumber: this.ticketService.firestoreTicket.tab_id,
-      users: this.ticketService.firestoreTicket.patrons,
+      users: this.ticketService.firestoreTicket.users,
     });
     modal.present();
   }

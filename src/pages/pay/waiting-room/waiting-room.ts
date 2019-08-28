@@ -18,10 +18,7 @@ import { IUser } from '../../../interfaces/user.interface';
   templateUrl: 'waiting-room.html',
 })
 export class WaitingRoomPage {
-  user!: IUser
-  payers!: IUser[];
-  sharedItems!: FirestoreTicketItem[];
-  unclaimedItems!: FirestoreTicketItem[];
+  hideCurUserItems: boolean = true
 
   constructor(
     public navCtrl: NavController,
@@ -35,8 +32,12 @@ export class WaitingRoomPage {
     this.initializeWaitingRoom();
   }
 
+  toggleCurUserItems() {
+    this.hideCurUserItems = !this.hideCurUserItems;
+  }
+
   initializeWaitingRoom() {
-    const curUser = this.ticketService.firestoreTicket.patrons.find( user => user.uid === this.auth.getUid() );
+    const curUser = this.ticketService.firestoreTicket.users.find( user => user.uid === this.auth.getUid() );
     console.log(curUser);
     console.log(this.ticketService.firestoreTicket);
   }
