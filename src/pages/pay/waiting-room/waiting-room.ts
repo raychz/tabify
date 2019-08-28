@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
+import { TicketService, userStatus } from '../../../services/ticket/ticket.service';
 import { IUser } from '../../../interfaces/user.interface';
-
 
 /**
  * Generated class for the WaitingRoomPage page.
@@ -43,6 +42,7 @@ export class WaitingRoomPage {
   }
 
   viewTaxAndTip() {
+    this.ticketService.changeUserStatus(userStatus.waiting)
     this.navCtrl.push('TaxTipPage');
   }
 

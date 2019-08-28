@@ -6,7 +6,7 @@ import { FirestoreTicketItem } from '../services/ticket/ticket.service';
 /**
  * Returns a string to describe the users who have claimed a ticket item.
  * Ex: "Ray and Hassan shared this."
- * @param users 
+ * @param users
  */
 export const getPayersDescription = (users: any[]) => {
     const { length: numberOfPayers } = users;
@@ -63,8 +63,8 @@ export const countItemsOnMyTab = (items: FirestoreTicketItem[], uid: any): numbe
 
 /**
  * Checks whether an item is claimed by user with uid `uid`.
- * @param item 
- * @param uid 
+ * @param item
+ * @param uid
  */
 export const isItemOnMyTab = (item: FirestoreTicketItem, uid: any) => {
     return !!item.users.find(user => user.uid === uid);
@@ -94,8 +94,8 @@ export const getTicketUsersDescription = (users: any[] = [], userDisplayLimit: n
 
 /**
  * Returns the items that user with uid `uid` has claimed.
- * @param items 
- * @param uid 
+ * @param items
+ * @param uid
  */
 export const getItemsOnMyTab = (items: FirestoreTicketItem[], uid: any) => {
     return items.filter((item: FirestoreTicketItem) => item.users.find(user => user.uid === uid));

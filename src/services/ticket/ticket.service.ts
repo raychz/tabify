@@ -15,6 +15,9 @@ import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, ge
 import { user } from '../../pages/home/example-stories';
 import { e } from '@angular/core/src/render3';
 
+export enum ticketStatus { open, closed }
+export enum userStatus { selecting, waiting, confirmed, paid }
+
 export interface FirestoreTicketItem {
   name: string,
   payersDescription: string,
@@ -34,6 +37,7 @@ export interface FirestoreTicket {
   location: string,
   tab_id: string,
   ticket_number: number,
+  status: ticketStatus,
   uids: string[],
   users: { name: string, uid: string, photoUrl: string, status: string }[],
   ticketItems: FirestoreTicketItem[],
@@ -43,7 +47,7 @@ export interface User {
   uid: string,
   photoUrl: string,
   name: string,
-  status: string,
+  status: userStatus,
   ticketItems: FirestoreTicketItem[],
   subtotal: number,
 }
@@ -139,7 +143,7 @@ export class TicketService {
     return 0;
   }
 
-  public changeUserStatus(status: string) {
+  public changeUserStatus(status: userStatus) {
     this.curUser.status = status;
     const userIndex = this.users.findIndex( user => user.uid === this.auth.getUid())
     this.users[userIndex].status = status;
