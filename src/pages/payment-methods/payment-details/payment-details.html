@@ -40,7 +40,7 @@
       <div *ngIf="paymentMethodError" class="payment-method-error">{{ paymentMethodError }}</div>
 
       <button (click)="validatePaymentMethod()" ion-button block [disabled]="!spreedlyReady">
-        {{ saveButtonText }}
+        Save
       </button>
     </ion-card-content>
   </ion-card>

@@ -9,11 +9,12 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TicketService } from '../../../services/ticket/ticket.service';
 
 declare const Spreedly: any;
 
 export enum PaymentDetailsPageMode {
-  /** Mode when user chooses to use a new payment method in the Totals page */
+  /** Mode when user chooses to add a new payment method in the Checkout->Select Payment Method page */
   SAVE_AND_PAY,
   /** Mode when user manually adds payment method via sidemenu component */
   SAVE_ONLY,
@@ -46,7 +47,6 @@ export class PaymentDetailsPage {
   spreedlyReady = false;
   mode: PaymentDetailsPageMode;
   title: string;
-  saveButtonText: string;
   spreedlyTimeout?: number = undefined;
   paymentMethodError = '';
 
@@ -58,12 +58,12 @@ export class PaymentDetailsPage {
     public alertCtrl: AlertService,
     private changeDetectorRef: ChangeDetectorRef,
     private paymentService: PaymentService,
-    public auth: AuthService
+    public auth: AuthService,
+    public ticketService: TicketService
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
     console.log('PAY MODE', this.mode);
-    this.saveButtonText = this.mode === PaymentDetailsPageMode.SAVE_AND_PAY ? 'Save and Pay' : 'Save';
     if (!(this.mode in PaymentDetailsPageMode)) {
       throw new Error('No mode specified');
     }
@@ -174,7 +174,7 @@ export class PaymentDetailsPage {
 
   async onSpreedlyPaymentMethod(token: string, details: string) {
     try {
-      const method = await this.paymentService.createPaymentMethod(details);
+      const method = await this.paymentService.createPaymentMethod(details) as any;
       this.paymentService.pushPaymentMethod(method);
       switch (this.mode) {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
@@ -189,8 +189,10 @@ export class PaymentDetailsPage {
           await this.navCtrl.pop();
           break;
         case PaymentDetailsPageMode.SAVE_AND_PAY:
-          // TODO: Fix this
-          // await this.navCtrl.popTo('HomePage');
+          this.ticketService.userPaymentMethod = this.paymentService.paymentMethods.find(m => m.id === method.id);
+          // Pop twice. Once to get back to Select Payment Method page. Twice to get back to Checkout page.
+          await this.navCtrl.pop();
+          await this.navCtrl.pop();
           break;
         default:
           throw new Error('No mode specified in switch.')

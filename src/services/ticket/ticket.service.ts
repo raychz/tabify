@@ -54,6 +54,7 @@ export class TicketService {
   public userTax: number = 0;
   /** The value is represented in pennies. */
   public userGrandTotal: number = 0;
+  public userPaymentMethod: any;
   public ticketUsersDescription: string = getTicketUsersDescription();
   public hasInitializationError = false;
 

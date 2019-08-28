@@ -18,7 +18,6 @@ import { EnterTipPage } from './enter-tip/enter-tip';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar!: Navbar;
-  selectedPaymentMethod: any = null;
   tip = 18;
   myTabItems: FirestoreTicketItem[] = [];
   selectOptions = {
@@ -60,7 +59,7 @@ export class TaxTipPage {
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentService.paymentMethods.length) {
-      this.selectedPaymentMethod = this.paymentService.paymentMethods[0];
+      this.ticketService.userPaymentMethod = this.paymentService.paymentMethods[0];
     }
     await this.loader.dismiss();
   }
@@ -127,13 +126,14 @@ export class TaxTipPage {
 
   pay() {
     // If "Add New Card" was selected
-    if (!this.selectedPaymentMethod) {
-      this.navCtrl.push('PaymentDetailsPage', {
-        ...this.myTabItems,
-        mode: PaymentDetailsPageMode.SAVE_AND_PAY,
-      });
+    if (!this.ticketService.userPaymentMethod) {
+      throw new Error("No payment method selected!")
     } else {
       this.navCtrl.push('PayConfirmationPage')
     }
+  }
+
+  editPaymentMethod() {
+    this.navCtrl.push('SelectPaymentPage');
   }
 }

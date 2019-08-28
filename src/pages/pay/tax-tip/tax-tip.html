@@ -50,7 +50,7 @@
       <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
           <span class='line-details'>({{ticketService.userTipPercentage}}%)</span>
-          <ion-icon class="adjust-tip" name='md-create'></ion-icon>
+          <ion-icon class="edit-icon" name='md-create'></ion-icon>
         </h2>
         <div item-end>
           <h2>${{ticketService.userTip / 100 | number: '1.2-2'}}</h2>
@@ -70,19 +70,16 @@
           <h2>${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item>
+      <ion-item (click)="editPaymentMethod()">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
-        <ion-label>
-        </ion-label>
-        <ion-select [(ngModel)]="selectedPaymentMethod" interface="alert" submitText="Ok" cancelText="Cancel"
-          [selectOptions]="selectOptions">
-          <ion-option *ngFor="let method of this.paymentService.paymentMethods" [value]="method">
-            {{method.card_type}} ...{{method.last_four_digits}}
-          </ion-option>
-          <ion-option value="">Add New Card</ion-option>
-        </ion-select>
+        <div item-end>
+          <h2>{{ticketService.userPaymentMethod?.card_type}} ...{{ticketService.userPaymentMethod?.last_four_digits}}
+            <ion-icon name="md-create" class="edit-icon"></ion-icon>
+          </h2>
+        </div>
       </ion-item>
-      <button id="submit-payment-btn" ion-button block (click)="pay()">Submit Payment of ${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</button>
+      <button id="submit-payment-btn" ion-button block (click)="pay()">Submit Payment of
+        ${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</button>
     </ion-card-content>
   </ion-card>
 </ion-content>
