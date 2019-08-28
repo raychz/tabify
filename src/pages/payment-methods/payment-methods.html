@@ -13,7 +13,7 @@
     <ion-list>
       <button ion-item *ngFor="let method of this.paymentService.paymentMethods" (click)="showMethodActions(method)">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
-        {{method.card_type}}: ****{{method.last_four_digits}}
+        {{method.card_type}} ...{{method.last_four_digits}}
         <ion-note item-end>
           {{method.month}}/{{method.year | number | slice:-2}}
         </ion-note>

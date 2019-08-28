@@ -77,7 +77,7 @@
         <ion-select [(ngModel)]="selectedPaymentMethod" interface="alert" submitText="Ok" cancelText="Cancel"
           [selectOptions]="selectOptions">
           <ion-option *ngFor="let method of this.paymentService.paymentMethods" [value]="method">
-            {{method.card_type}}: ****{{method.last_four_digits}}
+            {{method.card_type}} ...{{method.last_four_digits}}
           </ion-option>
           <ion-option value="">Add New Card</ion-option>
         </ion-select>
