@@ -2,4 +2,18 @@ page-story {
   .bottom-border {
     border-bottom: 1px solid white;
   }
+
+  .no-left-padding {
+    padding-left: 0px;
+    background-color: unset;
+  }
+
+  .no-right-padding {
+    padding-right: 0px;
+  }
+
+  .comment-style {
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 16px;
+  }
 }

@@ -37,10 +37,11 @@ export class StoryPage {
   }
 
 
-  ionViewDidLoad() {
-    this.getStory();
-    this.getComments();
-    this.getUserDetails();
+  async ionViewDidLoad() {
+    await this.getStory();
+    await this.determineStoryLikedByUser();
+    await this.getUserDetails();
+    await this.getComments();
   }
 
   async getStory() {
@@ -55,10 +56,9 @@ export class StoryPage {
       });
       alert.present();
     }
-    
-    await this.determineStoryLikedByUser();
-
     this.loader.dismiss();
+
+    return this.story;
   }
 
   async determineStoryLikedByUser() {
@@ -70,6 +70,7 @@ export class StoryPage {
         break;
       }
     }
+
     return this.story;
   }
 
@@ -82,6 +83,8 @@ export class StoryPage {
       ...comment,
       relativeTime: moment(comment.date_created).fromNow(),
     }));
+
+    return this.comments;
   }
 
   async createLike() {
@@ -119,6 +122,7 @@ export class StoryPage {
   async getUserDetails() {
     this.user.uid = this.authService.getUid();
     this.user.name = this.authService.getDisplayName();
+    return this.user;
   }
 
   async createComment() {
