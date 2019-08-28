@@ -84,7 +84,7 @@
 
 <ion-footer>
   <ion-toolbar text-center>
-    <ion-input *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
+    <ion-input class="text-white" *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
       placeholder="Enter a new comment!">
     </ion-input>
     <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
