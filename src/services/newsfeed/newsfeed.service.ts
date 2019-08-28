@@ -75,4 +75,8 @@ export class NewsfeedService {
         return this.tickets.findIndex(
             (ticket: any) => ((ticket.id === ticketId) && (ticket.story.id === storyId)));
     }
+
+    clearFeed() {
+        this.tickets = [];
+    }
 }
