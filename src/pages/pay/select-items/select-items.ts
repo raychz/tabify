@@ -14,7 +14,7 @@ import { SocketService } from '../../../services/socket/socket.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
-import { TicketService } from '../../../services/ticket/ticket.service';
+import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { plurality } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 
@@ -113,7 +113,8 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    this.ticketService.changeUserStatus('waiting');
+    await this.ticketService.changeUserStatus(UserStatus.Waiting);
+
     this.navCtrl.push('WaitingRoomPage');
   }
 

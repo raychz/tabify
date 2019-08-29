@@ -13,10 +13,11 @@ import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { user } from '../../pages/home/example-stories';
-import { e } from '@angular/core/src/render3';
+import { e, P } from '@angular/core/src/render3';
 
-export enum ticketStatus { open, closed }
-export enum userStatus { selecting, waiting, confirmed, paid }
+// please keep the user status enum in order of execution as they are used for calculations
+export enum UserStatus { Selecting, Waiting, Confirmed, Paid }
+export enum TicketStatus { Open, Closed }
 
 export interface FirestoreTicketItem {
   name: string,
@@ -37,9 +38,10 @@ export interface FirestoreTicket {
   location: string,
   tab_id: string,
   ticket_number: number,
-  status: ticketStatus,
+  status: TicketStatus,
+  overallUsersProgress: UserStatus,
   uids: string[],
-  users: { name: string, uid: string, photoUrl: string, status: string }[],
+  users: { name: string, uid: string, photoUrl: string, status: UserStatus }[],
   ticketItems: FirestoreTicketItem[],
 }
 
@@ -47,7 +49,7 @@ export interface User {
   uid: string,
   photoUrl: string,
   name: string,
-  status: userStatus,
+  status: UserStatus,
   ticketItems: FirestoreTicketItem[],
   subtotal: number,
 }
@@ -60,7 +62,7 @@ export class TicketService {
   public firestoreTicketItems!: FirestoreTicketItem[];
   public sharedItems: FirestoreTicketItem[] = [];
   public unclaimedItems: FirestoreTicketItem[] = [];
-  public users: User[] = [];
+  public users!: User[];
   public curUser!: User;
   public userSelectedItemsCount: number = 0;
   public userSubtotal: number = 0;
@@ -143,10 +145,73 @@ export class TicketService {
     return 0;
   }
 
-  public changeUserStatus(status: userStatus) {
-    this.curUser.status = status;
-    const userIndex = this.users.findIndex( user => user.uid === this.auth.getUid())
-    this.users[userIndex].status = status;
+  public async changeUserStatus(status: UserStatus): Promise<{ success: boolean; message: string }> {
+    try {
+      await this.firestoreService.runTransaction(async transaction => {
+        const ticketDocRef = this.firestoreService.document(
+          `tickets/${this.firestoreTicket!.id}`
+        ).ref;
+        const ticket = await transaction.get(ticketDocRef);
+        if (!ticket.exists) {
+          throw 'Ticket Document does not exist!';
+        }
+
+        let { users, overallUsersProgress } = ticket.data()! as {
+          users: {status: UserStatus, uid: string}[];
+          overallUsersProgress: UserStatus;
+
+        };
+
+        let lowestStatus = overallUsersProgress;
+        let highestStatus = overallUsersProgress;
+        let highestStatusCount = 0;
+
+        for (let user of users) {
+          if (user.uid === this.auth.getUid()) {
+            user.status = status;
+          }
+
+          if (user.status > highestStatus) {
+            if (highestStatusCount === 0) {
+              highestStatus = user.status;
+            } else {
+              highestStatusCount = 0;
+            }
+          } else if (user.status < lowestStatus) {
+            lowestStatus = user.status
+          }
+
+          if (user.status === highestStatus) {
+            highestStatusCount++;
+          }
+        }
+
+        if (lowestStatus < overallUsersProgress) {
+          overallUsersProgress = lowestStatus;
+        } else if (highestStatusCount === users.length) {
+          overallUsersProgress = highestStatus;
+        }
+
+
+        transaction.set(
+          ticketDocRef,
+          { users, overallUsersProgress },
+          { merge: true }
+        );
+
+        return transaction
+      });
+      return {
+        success: true,
+        message: 'User statuses updated',
+      };
+    } catch (error) {
+      console.log('transaction failed', error);
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 
   public getTicketItemName(name: string) {
@@ -178,11 +243,9 @@ export class TicketService {
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
-        let { name, users, price, ticket_item_id } = ticketItem.data()! as {
-          name: string;
+        let { users, price } = ticketItem.data()! as {
           users: any[];
           price: number;
-          ticket_item_id: number;
         };
 
         if (users.find(u => u.uid === uid)) {
@@ -243,11 +306,9 @@ export class TicketService {
 
         const uid = this.auth.getUid();
 
-        let { name, users, price, ticket_item_id } = ticketItem.data()! as {
-          name: string;
+        let { users, price } = ticketItem.data()! as {
           users: any[];
           price: number;
-          ticket_item_id: number;
         };
 
         if (!users.find(u => u.uid === uid))
@@ -334,11 +395,14 @@ export class TicketService {
     this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
     // the above properties can be inferred from the below properties. ToDo: get rid of above properties
+    this.updateItemsAndUsers();
+  }
+
+  private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
     this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: [], subtotal: 0};
-    this.users = this.firestoreTicket.users.map( (user) =>
-      ({ ...user, ticketItems: [], subtotal: 0}));
+    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
     this.firestoreTicketItems.forEach( (item) => {
       if (item.users.length < 1) {
         this.unclaimedItems.push(item);
@@ -364,8 +428,10 @@ export class TicketService {
    * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
+    console.log(this.firestoreTicket);
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
+    console.log(this.firestoreTicket);
     this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
   }
 }

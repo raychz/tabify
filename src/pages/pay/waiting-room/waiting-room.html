@@ -21,6 +21,7 @@
 
 <ion-content class='cards-bg' *ngIf="ticketService.firestoreTicketItems; else loading">
   <ng-container>
+
     <ion-card id='curUserCard'>
       <ion-card-content>
         <ion-item>
@@ -50,7 +51,7 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card id='allUsersCard'>
+    <ion-card id='allUsersCard' *ngIf="ticketService.users.length > 1">
       <ion-card-header>
         Tell your freinds to pick their food already!
       </ion-card-header>
@@ -71,7 +72,7 @@
                         <ion-icon name="arrow-dropdown" item-end [hidden]="true"></ion-icon>
                       </ion-item>
                     </ion-card-content>
-                    <ion-card-content id="curUserItems" [hidden]="false">
+                    <ion-card-content [hidden]="false">
                         <ion-list>
                             <ion-item *ngFor="let item of user.ticketItems">
                               <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
@@ -91,8 +92,8 @@
           </ion-list>
       </ion-card>
 
-      <ion-card>
-        <ion-card-header *ngIf="ticketService.sharedItems.length > 0">
+      <ion-card *ngIf="ticketService.sharedItems.length > 0">
+        <ion-card-header>
           Shared Items:
         </ion-card-header>
         <ion-list>
@@ -117,8 +118,8 @@
         </ion-list>
       </ion-card>
 
-      <ion-card>
-        <ion-card-header *ngIf="ticketService.unclaimedItems.length > 0">
+      <ion-card *ngIf="ticketService.unclaimedItems.length > 0">
+        <ion-card-header>
           Unclaimed Items:
         </ion-card-header>
         <ion-list>
@@ -128,7 +129,6 @@
           </ion-item>
         </ion-list>
       </ion-card>
-
   </ng-container>
 
   <ng-template #loading>
@@ -136,3 +136,16 @@
     <ion-spinner class="ticket-spinner" name="dots"></ion-spinner>
   </ng-template>
 </ion-content>
+
+<ion-footer>
+  <ng-container>
+    <ion-label color="light" *ngIf="selectConfirmButton">
+      {{ checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for the rest of your party to finish...' }}
+    </ion-label>
+    <!-- change detection not working properly here -->
+    <button ion-button block (click)="toggleConfirm()"
+      [disabled]="ticketService.firestoreTicket.overallUsersProgress === userStatus.Selecting || ticketService.unclaimedItems.length > 0">
+      {{ selectConfirmButton ? 'Cancel' : 'Confirm' }}
+    </button>
+  </ng-container>
+</ion-footer>

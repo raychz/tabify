@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, userStatus } from '../../../services/ticket/ticket.service';
+import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { IUser } from '../../../interfaces/user.interface';
+import { sleep } from '../../../utilities/general.utilities';
 
 /**
  * Generated class for the WaitingRoomPage page.
@@ -17,7 +18,11 @@ import { IUser } from '../../../interfaces/user.interface';
   templateUrl: 'waiting-room.html',
 })
 export class WaitingRoomPage {
-  hideCurUserItems: boolean = true
+  @ViewChild(Navbar) navBar!: Navbar;
+
+  userStatus = UserStatus;
+  moveToTaxTip = false;
+  selectConfirmButton = false;
 
   constructor(
     public navCtrl: NavController,
@@ -29,10 +34,41 @@ export class WaitingRoomPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
     this.initializeWaitingRoom();
+    this.setBackButtonAction();
   }
 
-  toggleCurUserItems() {
-    this.hideCurUserItems = !this.hideCurUserItems;
+  checkConfirmedStatus(): boolean {
+    if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Waiting || this.ticketService.unclaimedItems.length > 0) {
+      return false;
+    } else {
+      if (!this.moveToTaxTip) {
+        this.moveToTaxTip = true;
+        this.viewTaxAndTip();
+      }
+      return true;
+    }
+  }
+
+  async viewTaxTip(): Promise<boolean> {
+    await sleep(6000000);
+    this.navCtrl.push('TabLookupPage');
+    return true;
+  }
+
+  toggleConfirm() {
+    this.selectConfirmButton = !this.selectConfirmButton;
+    if (this.selectConfirmButton) {
+      this.ticketService.changeUserStatus(UserStatus.Confirmed);
+    } else {
+      this.ticketService.changeUserStatus(UserStatus.Waiting);
+    }
+  }
+
+  setBackButtonAction() {
+    this.navBar.backButtonClick = () => {
+      this.ticketService.changeUserStatus(UserStatus.Selecting);
+      this.navCtrl.pop();
+    }
   }
 
   initializeWaitingRoom() {
@@ -42,8 +78,6 @@ export class WaitingRoomPage {
   }
 
   viewTaxAndTip() {
-    this.ticketService.changeUserStatus(userStatus.waiting)
     this.navCtrl.push('TaxTipPage');
   }
-
 }
