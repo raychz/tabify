@@ -41,4 +41,9 @@ export class StoryService {
 
         return res;
     }
+
+    async getStoryLikers(storyId: number) {
+        const res = await this.httpClient.get(`${config.serverUrl}/stories/${storyId}/likers`).toPromise();
+        return res;
+    }
 }

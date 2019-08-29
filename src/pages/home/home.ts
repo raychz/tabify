@@ -6,6 +6,7 @@ import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { abbreviateName } from '../../utilities/general.utilities';
+import { LikesPage } from './likes/likes';
 
 export interface Story {
   location: ILocation;
@@ -120,15 +121,12 @@ export class HomePage {
     );
   }
 
-  displayLikers(users: any[] = []) {
+  displayLikers(storyId: number) {
 
-    // const modal = this.modalCtrl.create(InviteOthersPage, {
-    //   tabNumber: this.ticketService.firestoreTicket.tab_id,
-    //   users: this.ticketService.firestoreTicket.users,
-    // });
-    // modal.present();
-
-    console.log('hello');
+    const modal = this.modalCtrl.create(LikesPage, {
+      storyId: storyId,
+    });
+    modal.present();
 
   }
 

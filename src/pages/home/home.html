@@ -30,7 +30,8 @@
 
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
-      <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
+      <!-- <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket"> -->
+      <ion-card *ngIf="!!ticket">
         <ion-item>
           <ion-avatar item-start>
             <img src={{ticket.location.photo_url}} />
@@ -55,7 +56,7 @@
 
         <ion-row>
           <ion-col>
-            <button [disabled]="ticket.loadingLike" ion-button color="primary" clear small icon-start
+            <button [disabled]="ticket.loadingLike" ion-button color="primary" clear icon-start
               (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'>
               <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
@@ -63,7 +64,11 @@
                 <ion-icon *ngIf="!ticket.story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
                 <ion-icon #fullHeart *ngIf="ticket.story.likedByLoggedInUser" name="heart"></ion-icon>
               </ng-container>
-              {{ ticket.story.likes.length > 0 ? ticket.story.likes.length : '' }}
+            </button>
+
+            <button ion-button color="primary" small clear (click)="this.displayLikers(ticket.story.id)">
+              {{ ticket.story.likes.length }}
+              {{ ticket.story.likes.length === 1 ? 'Like' : 'Likes' }}
             </button>
 
           </ion-col>
