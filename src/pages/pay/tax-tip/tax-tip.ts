@@ -10,6 +10,7 @@ import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
 import { EnterTipPage } from './enter-tip/enter-tip';
+import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 
 @IonicPage()
 @Component({
@@ -124,12 +125,12 @@ export class TaxTipPage {
     return grandTotal;
   }
 
-  pay() {
-    // If "Add New Card" was selected
-    if (!this.ticketService.userPaymentMethod) {
-      throw new Error("No payment method selected!")
+  async pay() {
+    if (this.ticketService.userPaymentMethod) {
+      const payConfirmationModal = this.modalCtrl.create(PayConfirmationPage)
+      await payConfirmationModal.present();
     } else {
-      this.navCtrl.push('PayConfirmationPage')
+      throw new Error("No payment method selected!")
     }
   }
 
