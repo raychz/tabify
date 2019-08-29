@@ -17,7 +17,11 @@ page-story {
     margin-bottom: 16px;
   }
 
-  .text-input {
-    color: white;
+  .new-comment-text {
+    .text-input {
+      color: lightgray;
+    }
+    color: lightgray;
+    padding: 0 10px;
   }
 }

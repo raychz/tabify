@@ -71,7 +71,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                {{comment.text}}
+                <p color="lightgray">{{comment.text}}</p>
               </ion-col>
             </ion-row>
           </div>
@@ -84,9 +84,9 @@
 
 <ion-footer>
   <ion-toolbar text-center>
-    <ion-input class="text-white" *ngIf="!newCommentPosting" margin-left margin-right [(ngModel)]="newComment"
+    <ion-textarea class="new-comment-text" *ngIf="!newCommentPosting" [(ngModel)]="newComment"
       placeholder="Enter a new comment!">
-    </ion-input>
+    </ion-textarea>
     <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
     <button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" ion-button small outline
       (click)='createComment()'>Post Comment</button>
