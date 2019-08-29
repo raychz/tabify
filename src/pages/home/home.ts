@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, ModalController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { abbreviateName } from '../../utilities/general.utilities';
 
 export interface Story {
   location: ILocation;
@@ -34,6 +35,7 @@ export class HomePage {
     public loader: LoaderService,
     public alertCtrl: AlertController,
     public auth: AuthService,
+    public modalCtrl: ModalController
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -118,6 +120,18 @@ export class HomePage {
     );
   }
 
+  displayAllUsersNames(users: any[] = []) {
+
+    // const modal = this.modalCtrl.create(InviteOthersPage, {
+    //   tabNumber: this.ticketService.firestoreTicket.tab_id,
+    //   users: this.ticketService.firestoreTicket.users,
+    // });
+    // modal.present();
+
+    console.log('hello');
+
+  }
+
   /**
  * Returns a string to describe the users who have joined the tab.
  * Ex: Ray, Hassan, Sahil +3 others
@@ -135,26 +149,17 @@ export class HomePage {
       hereClause = 'was here'
     }
 
-    const abbreviatedNames = users.map(user => this.abbreviateName(user.userDetail.displayName));
+    // abbreviateName is imported from general utilities
+    const abbreviatedNames = users.map(user => abbreviateName(user.userDetail.displayName));
 
     if (abbreviatedNames.length > userDisplayLimit) {
       const overflowNames = abbreviatedNames.splice(userDisplayLimit);
       const others = `+${overflowNames.length} other${
         overflowNames.length > 1 ? 's' : ''
         }`;
-      return `${abbreviatedNames.join(', ')} ${others} ${hereClause}`;
+      const othersContainer = `<span class='plus-others'>${others}</span>`;
+      return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
     }
     return `${abbreviatedNames.join(', ')} ${hereClause}`;
   }
-
-  /**
- * Abbreviates a user's name. Ex: `abbreviateName('Raymond Chavez')` => `'Raymond C.'`
- * @param name 
- */
-  abbreviateName(name: string) {
-    const nameSplit: string[] = name.split(' ');
-    const firstName = nameSplit.shift();
-    const rest = nameSplit.map(v => `${v[0].toUpperCase()}.`).join('');
-    return `${firstName} ${rest}`;
-  };
 }

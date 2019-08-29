@@ -102,7 +102,7 @@ page-home {
     background-color: map-get($colors, primary);
   }
 
-  .item p, .card p {
-    color: map-get($colors, light)
+  .plus-others {
+    color: map-get($colors, primary);
   }
 }
