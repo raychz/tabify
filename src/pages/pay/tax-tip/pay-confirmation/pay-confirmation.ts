@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { sleep } from '../../../../utilities/general.utilities';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 /**
  * Generated class for the PayConfirmationPage page.
@@ -16,7 +17,11 @@ import { sleep } from '../../../../utilities/general.utilities';
 })
 export class PayConfirmationPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public auth: AuthService) {
+  }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
   }
 
   async ionViewDidLoad() {

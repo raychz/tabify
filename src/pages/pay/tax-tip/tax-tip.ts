@@ -40,6 +40,10 @@ export class TaxTipPage {
     public modalCtrl: ModalController,
   ) { }
 
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
   async ionViewDidLoad() {
     await this.loader.present();
     this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())

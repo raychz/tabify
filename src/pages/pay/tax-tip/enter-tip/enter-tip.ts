@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { TicketService } from '../../../../services/ticket/ticket.service';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -15,7 +16,12 @@ export class EnterTipPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public ticketService: TicketService,
-    public viewCtrl: ViewController, ) {
+    public viewCtrl: ViewController,
+    public auth: AuthService
+  ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
   }
 
   ionViewDidLoad() {

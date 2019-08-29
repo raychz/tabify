@@ -4,6 +4,7 @@ import { PaymentService } from '../../../../services/payment/payment.service';
 import { TicketService } from '../../../../services/ticket/ticket.service';
 import { PaymentDetailsPageMode } from '../../../payment-methods/payment-details/payment-details';
 import { sleep } from '../../../../utilities/general.utilities';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -13,7 +14,15 @@ import { sleep } from '../../../../utilities/general.utilities';
 export class SelectPaymentPage {
   autoManufacturers: any;
   canSelect = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public paymentService: PaymentService, public ticketService: TicketService) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public paymentService: PaymentService,
+    public ticketService: TicketService,
+    public auth: AuthService
+  ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
   }
 
   ionViewDidLoad() {
