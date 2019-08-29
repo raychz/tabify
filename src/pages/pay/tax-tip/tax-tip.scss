@@ -2,25 +2,6 @@ page-tax-tip {
   #nav-pay-btn {
     color: map-get($colors, primary);
   }
-  .footer {
-    height: 75px;
-  }
-  ion-toolbar {
-    text-align: center;
-    height: 100%;
-  }
-  .toolbar-title {
-    .footer-title {
-      color: map-get($colors, light);
-      font-size: 14px;
-      margin: 0;
-    }
-    .footer-subtitle {
-      color: map-get($colors, light);
-      font-size: 30px;
-      margin: 0;
-    }
-  }
 
   .total {
     color: gray;
@@ -46,26 +27,8 @@ page-tax-tip {
     color: gray;
   }
 
-  ion-select {
-    max-width: 100%;
-    &.select {
-      padding: unset;
-      .select-icon {
-        width: 20px;
-        .select-icon-inner {
-          color: map-get($colors, primary);
-        }
-      }
-    }
-  }
   .linked-card-icon {
     color: map-get($colors, primary);
-  }
-  #payment-method-title {
-    display: none;
-  }
-  #submit-payment-btn {
-    margin-top: 1em;
   }
 }
 
