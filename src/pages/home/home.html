@@ -31,7 +31,6 @@
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
-      <!-- <ion-card *ngIf="!!ticket"> -->
         <ion-item>
           <ion-avatar item-start>
             <img src={{ticket.location.photo_url}} />
@@ -48,7 +47,7 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col>
-            <div (click)='displayAllUsersNames(ticket.users)'>
+            <div>
               <p margin-left [innerHTML]="this.getTicketUsersDescription(ticket.users, 3)"></p>
             </div>
           </ion-col>

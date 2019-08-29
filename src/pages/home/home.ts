@@ -120,7 +120,7 @@ export class HomePage {
     );
   }
 
-  displayAllUsersNames(users: any[] = []) {
+  displayLikers(users: any[] = []) {
 
     // const modal = this.modalCtrl.create(InviteOthersPage, {
     //   tabNumber: this.ticketService.firestoreTicket.tab_id,
@@ -160,6 +160,11 @@ export class HomePage {
       const othersContainer = `<span class='plus-others'>${others}</span>`;
       return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
     }
-    return `${abbreviatedNames.join(', ')} ${hereClause}`;
+
+    if (users.length < 3) {
+      return `${abbreviatedNames.join(' and ')} ${hereClause}`;
+    } else {
+      return `${abbreviatedNames.join(', ')} ${hereClause}`;
+    }
   }
 }
