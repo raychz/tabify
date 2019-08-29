@@ -34,12 +34,7 @@ export class LocationPage {
   }
 
   cancel() {
-    const parentNav: NavController = this.navCtrl.parent;
-    parentNav.setRoot(
-      'HomePage',
-      {},
-      { animate: true, animation: 'md-transition', direction: 'back' }
-    );
+    this.navCtrl.pop({ animate: true, animation: 'md-transition', direction: 'back' })
   }
 
   // filterItems(ev: any) {

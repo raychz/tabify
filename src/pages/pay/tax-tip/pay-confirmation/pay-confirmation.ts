@@ -21,14 +21,12 @@ export class PayConfirmationPage {
 
   async ionViewDidLoad() {
     console.log('ionViewDidLoad PayConfirmationPage');
-    await sleep(3000);
-    // const parentNav: NavController = this.navCtrl.parent;
-    // parentNav.setRoot(
-    //   'HomePage',
-    //   {},
-    //   { animate: true, animation: 'md-transition', direction: 'back' }
-    // );
+    await sleep(1000);
+    // await this.viewCtrl.dismiss();
+    console.log('nav', this.navCtrl);
     // this.navCtrl.setRoot('HomePage');
+    // this.app.getRootNav().setRoot('HomePage');
+    // await this.navCtrl.popAll();
     await this.viewCtrl.dismiss();
   }
 

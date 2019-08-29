@@ -127,8 +127,10 @@ export class TaxTipPage {
 
   async pay() {
     if (this.ticketService.userPaymentMethod) {
-      const payConfirmationModal = this.modalCtrl.create(PayConfirmationPage)
-      await payConfirmationModal.present();
+      console.log(this.navCtrl);
+      // const payConfirmationModal = this.modalCtrl.create(PayConfirmationPage)
+      // await payConfirmationModal.present();
+      await this.navCtrl.setRoot('HomePage');
     } else {
       throw new Error("No payment method selected!")
     }

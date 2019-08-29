@@ -95,7 +95,7 @@ export class HomePage {
       if (paymentMethods && paymentMethods.length > 0) {
         await this.loader.dismiss();
         this.navCtrl.push(
-          'PayPage',
+          'LocationPage',
           {},
           { animate: true, animation: 'md-transition', direction: 'forward' }
         );
