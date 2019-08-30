@@ -23,28 +23,37 @@
     <ion-row class="bottom-border">
       <ion-col>
 
-        <button [disabled]="story.loadingLike" ion-button color="primary" clear small icon-start
-          (click)='createLike(); $event.stopPropagation()'>
+        <button [disabled]="story.loadingLike" ion-button color="primary" clear icon-start
+          (click)='createLike(); $event.stopPropagation()' class="heart-padding">
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
           <ng-container *ngIf="!story.loadingLike">
             <ion-icon *ngIf="!story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
             <ion-icon #fullHeart *ngIf="story.likedByLoggedInUser" name="heart"></ion-icon>
           </ng-container>
-          {{ story.likes.length > 0 ? story.likes.length : '' }}
+        </button>
+
+        <button *ngIf="story.likes.length > 0" ion-button color="primary" clear 
+          (click)="this.displayLikers(); $event.stopPropagation()" class="like-btn-padding">
+          {{ story.likes.length }}
+          {{ story.likes.length === 1 ? 'Like' : 'Likes' }}
         </button>
 
       </ion-col>
       <ion-col text-right>
-        <button ion-button color="primary" clear small icon-start>
+        <button ion-button color="primary" clear icon-start class="comment-btn-padding">
           <ion-icon name="text"></ion-icon>
-          {{ story.comment_count }} {{story.comment_count === 1 ? 'Comment' : 'Comments'}}
+          &nbsp; {{ story.comment_count }} {{story.comment_count === 1 ? 'Comment' : 'Comments'}}
         </button>
       </ion-col>
     </ion-row>
 
     <ion-card-content>
-      Comments
+      <ion-row>
+        <ion-col>
+          Comments
+        </ion-col>
+      </ion-row>
       <ng-container *ngFor="let comment of comments; index as commentIndex">
         <ng-container *ngIf="!!comment">
           <div class="comment-style">

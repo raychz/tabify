@@ -122,12 +122,10 @@ export class HomePage {
   }
 
   displayLikers(storyId: number) {
-
     const modal = this.modalCtrl.create(LikesPage, {
       storyId: storyId,
     });
     modal.present();
-
   }
 
   /**

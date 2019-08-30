@@ -24,4 +24,23 @@ page-story {
     color: lightgray;
     padding: 0 10px;
   }
+
+  .heart-padding {
+    margin: 0px 0px 0px 0px;
+    padding-left: 16px;
+    padding-right: 0px;
+  }
+
+  .like-btn-padding {
+    margin: 0px 0px 0px 0px;
+    padding-left: 5px;
+    padding-right: 16px;
+  }
+
+  .comment-btn-padding {
+    margin: 0px 0px 0px 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 2px;
+  }
 }
