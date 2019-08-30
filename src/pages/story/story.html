@@ -47,10 +47,10 @@
       </ion-col>
     </ion-row>
 
-    <ion-card-content *ngIf="comments.length > 0">
+    <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">
       <ion-row>
         <ion-col text-center>
-          <h4>Comments</h4>
+          <p>Comments</p>
         </ion-col>
       </ion-row>
       <ng-container *ngFor="let comment of comments; index as commentIndex">
@@ -69,9 +69,9 @@
                 </ion-item>
               </ion-col>
               <ion-col text-right>
-                <ion-spinner class="no-right-padding" *ngIf="comment.beingDeleted" color='primary' name="bubbles"
+                <ion-spinner class="comment-ellipsis" *ngIf="comment.beingDeleted" color='primary' name="bubbles"
                   margin-right></ion-spinner>
-                <button class="no-right-padding" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
+                <button class="comment-ellipsis" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
                   ion-button clear small icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
                   <ion-icon name="md-more"></ion-icon>
                 </button>
@@ -86,6 +86,19 @@
         </ng-container>
       </ng-container>
     </ion-card-content>
+
+    <ng-template #emptyComments>
+      <ion-card-content class="comment-section-padding">
+        <ion-row>
+          <ion-col text-center>
+            <p>No comments yet...</p>
+            <div>
+              <p>Post your thoughts below!</p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ng-template>
   </ion-card>
 
 </ion-content>
