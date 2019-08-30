@@ -28,13 +28,12 @@
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
           <ng-container *ngIf="!story.loadingLike">
-            <ion-icon *ngIf="!story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
-            <ion-icon #fullHeart *ngIf="story.likedByLoggedInUser" name="heart"></ion-icon>
+            <ion-icon [name]="story.likedByLoggedInUser ? 'heart' : 'heart-outline'"></ion-icon>
           </ng-container>
         </button>
 
-        <button *ngIf="story.likes.length > 0" ion-button color="primary" clear 
-          (click)="this.displayLikers(); $event.stopPropagation()" class="like-btn-padding">
+        <button ion-button color="primary" clear
+          (click)="this.displayLikers(story.likes.length); $event.stopPropagation()" class="like-btn-padding">
           {{ story.likes.length }}
           {{ story.likes.length === 1 ? 'Like' : 'Likes' }}
         </button>
@@ -42,16 +41,16 @@
       </ion-col>
       <ion-col text-right>
         <button ion-button color="primary" clear icon-start class="comment-btn-padding">
-          <ion-icon name="text"></ion-icon>
+          <ion-icon [name]="story.comment_count > 0 ? 'text' : 'text-outline'"></ion-icon>
           &nbsp; {{ story.comment_count }} {{story.comment_count === 1 ? 'Comment' : 'Comments'}}
         </button>
       </ion-col>
     </ion-row>
 
-    <ion-card-content>
+    <ion-card-content *ngIf="comments.length > 0">
       <ion-row>
-        <ion-col>
-          Comments
+        <ion-col text-center>
+          <h4>Comments</h4>
         </ion-col>
       </ion-row>
       <ng-container *ngFor="let comment of comments; index as commentIndex">

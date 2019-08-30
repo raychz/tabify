@@ -61,13 +61,13 @@
               <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
               <ng-container *ngIf="!ticket.loadingLike">
-                <ion-icon *ngIf="!ticket.story.likedByLoggedInUser; else fullHeart" name="heart-outline"></ion-icon>
-                <ion-icon #fullHeart *ngIf="ticket.story.likedByLoggedInUser" name="heart"></ion-icon>
+                <ion-icon [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"></ion-icon>
               </ng-container>
             </button>
 
-            <button *ngIf="ticket.story.likes.length > 0" ion-button color="primary" clear
-              (click)="this.displayLikers(ticket.story.id); $event.stopPropagation()" class="like-btn-padding">
+            <button ion-button color="primary" clear
+              (click)="this.displayLikers(ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
+              class="like-btn-padding">
               {{ ticket.story.likes.length }}
               {{ ticket.story.likes.length === 1 ? 'Like' : 'Likes' }}
             </button>
@@ -75,7 +75,7 @@
           </ion-col>
           <ion-col text-right>
             <button ion-button color="primary" clear icon-start class="comment-btn-padding">
-              <ion-icon name="text"></ion-icon>
+              <ion-icon [name]="ticket.story.comment_count > 0 ? 'text' : 'text-outline'"></ion-icon>
               &nbsp; {{ ticket.story.comment_count }} {{ticket.story.comment_count === 1 ? 'Comment' : 'Comments'}}
             </button>
           </ion-col>

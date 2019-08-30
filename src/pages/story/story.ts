@@ -181,11 +181,13 @@ export class StoryPage {
     }
   }
 
-  displayLikers() {
-    const modal = this.modalCtrl.create(LikesPage, {
-      storyId: this.story.id,
-    });
-    modal.present();
+  displayLikers(numLikes: number) {
+    if (numLikes > 0) {
+      const modal = this.modalCtrl.create(LikesPage, {
+        storyId: this.story.id,
+      });
+      modal.present();
+    }
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {
