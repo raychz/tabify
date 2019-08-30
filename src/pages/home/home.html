@@ -30,8 +30,8 @@
 
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
-      <!-- <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket"> -->
-      <ion-card *ngIf="!!ticket">
+      <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
+        <!-- <ion-card *ngIf="!!ticket"> -->
         <ion-item>
           <ion-avatar item-start>
             <img src={{ticket.location.photo_url}} />
@@ -42,14 +42,14 @@
             {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
           <h3>{{ ticket.location.city }}</h3>
           <p>{{ ticket.location.streetAddress }}</p>
-          <ion-icon class="gray-arrow" item-end name="arrow-dropright"></ion-icon>
+          <ion-icon class="gray-arrow" item-end name="ios-arrow-forward"></ion-icon>
         </ion-item>
 
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
-          <ion-col>
+          <ion-col class="users-padding">
             <div>
-              <p margin-left [innerHTML]="this.getTicketUsersDescription(ticket.users, 3)"></p>
+              <p [innerHTML]="this.getTicketUsersDescription(ticket.users, 3)"></p>
             </div>
           </ion-col>
         </ion-row>
@@ -57,7 +57,7 @@
         <ion-row>
           <ion-col>
             <button [disabled]="ticket.loadingLike" ion-button color="primary" clear icon-start
-              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'>
+              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
               <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
               <ng-container *ngIf="!ticket.loadingLike">
@@ -66,16 +66,17 @@
               </ng-container>
             </button>
 
-            <button ion-button color="primary" small clear (click)="this.displayLikers(ticket.story.id)">
+            <button ion-button color="primary" clear
+              (click)="this.displayLikers(ticket.story.id); $event.stopPropagation()" class="like-btn-padding">
               {{ ticket.story.likes.length }}
               {{ ticket.story.likes.length === 1 ? 'Like' : 'Likes' }}
             </button>
 
           </ion-col>
           <ion-col text-right>
-            <button ion-button color="primary" clear small icon-start>
+            <button ion-button color="primary" clear icon-start class="comment-btn-padding">
               <ion-icon name="text"></ion-icon>
-              {{ ticket.story.comment_count }} {{ticket.story.comment_count === 1 ? 'Comment' : 'Comments'}}
+              &nbsp; {{ ticket.story.comment_count }} {{ticket.story.comment_count === 1 ? 'Comment' : 'Comments'}}
             </button>
           </ion-col>
         </ion-row>
