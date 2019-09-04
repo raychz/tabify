@@ -111,18 +111,26 @@ page-home {
   }
 
   .heart-padding {
+    font-size: inherit;
     margin: 0px 0px 0px 0px;
     padding-left: 16px;
     padding-right: 0px;
   }
 
+
+  .like-comment-row {
+    font-size: 1.3rem;
+  }
+
   .like-btn-padding {
+    font-size: inherit;
     margin: 0px 0px 0px 0px;
     padding-left: 5px;
     padding-right: 16px;
   }
 
   .comment-btn-padding {
+    font-size: inherit;
     margin: 0px 0px 0px 0px;
     padding-left: 16px;
     padding-right: 16px;

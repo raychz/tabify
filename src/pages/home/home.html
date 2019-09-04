@@ -54,7 +54,7 @@
           </ion-col>
         </ion-row>
 
-        <ion-row>
+        <ion-row class="like-comment-row">
           <ion-col>
             <button [disabled]="ticket.loadingLike" ion-button color="primary" clear icon-start
               (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
