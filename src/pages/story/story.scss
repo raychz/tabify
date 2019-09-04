@@ -56,6 +56,7 @@ page-story {
   .comment-text {
     color: lightgray;
     margin: 0px 16px 0px 16px;
+    white-space: pre-wrap;
   }
 
   .comment-avatar {
