@@ -20,6 +20,25 @@
       <h3>{{ story.ticket.location.city }}</h3>
       <p>{{ story.ticket.location.streetAddress }}</p>
     </ion-item>
+
+    <!-- List of users of story/ticket -->
+    <ion-list>
+      <ng-container *ngFor='let user of story.ticket.users; index as userIndex'>
+        <div *ngIf="showMoreUsers ? true : userIndex < 2">
+          <ion-item>
+            <ion-avatar class="comment-avatar" item-start>
+              <img src={{user.userDetail.photo_url}} />
+            </ion-avatar>
+            <ion-note>{{user.userDetail.displayName}}</ion-note>
+          </ion-item>
+        </div>
+      </ng-container>
+      <button ion-button block clear icon-end color="tabify" (click)="showMoreUsers = !showMoreUsers">
+        {{ showMoreUsers ? 'Hide Users' : 'Reveal Users' }}
+        <ion-icon [name]="showMoreUsers ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
+      </button>
+    </ion-list>
+
     <ion-row class="bottom-border">
       <ion-col>
 

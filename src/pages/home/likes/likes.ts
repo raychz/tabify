@@ -26,6 +26,5 @@ export class LikesPage {
 
   async getStoryLikers(storyId: number) {
     this.story = await this.storyService.getStoryLikers(storyId);
-    console.log(this.story);
   }
 }

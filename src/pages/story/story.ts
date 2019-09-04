@@ -20,6 +20,7 @@ export class StoryPage {
   user = <IUser>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
+  showMoreUsers: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -51,6 +52,7 @@ export class StoryPage {
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
+      console.log(this.story);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
