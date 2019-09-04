@@ -68,15 +68,16 @@
             <button ion-button color="primary" clear
               (click)="this.displayLikers(ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
               class="like-btn-padding">
-              {{ ticket.story.likes.length }}
-              {{ ticket.story.likes.length === 1 ? 'Like' : 'Likes' }}
+              {{ ticket.story.likes.length === 0 ? '' : ticket.story.likes.length}}
+              {{ ticket.story.likes.length <= 1 ? 'Like' : 'Likes' }}
             </button>
 
           </ion-col>
           <ion-col text-right>
             <button ion-button color="primary" clear icon-start class="comment-btn-padding">
               <ion-icon [name]="ticket.story.comment_count > 0 ? 'text' : 'text-outline'"></ion-icon>
-              &nbsp; {{ ticket.story.comment_count }} {{ticket.story.comment_count === 1 ? 'Comment' : 'Comments'}}
+              &nbsp; {{ ticket.story.comment_count === 0 ? '' : ticket.story.comment_count }}
+              {{ticket.story.comment_count <= 1 ? 'Comment' : 'Comments'}}
             </button>
           </ion-col>
         </ion-row>
