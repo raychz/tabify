@@ -2,19 +2,21 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { from } from 'rxjs';
+import { from, Subject } from 'rxjs';
 import config from "../../config";
 import { tap } from 'rxjs/operators';
+import 'rxjs/add/observable/of';
 
 interface ISignUpCredentials {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+  referralCode: string;
 }
 
 interface ISignInCredentials {
@@ -25,13 +27,17 @@ interface ISignInCredentials {
 @Injectable()
 export class AuthService {
   private user: firebase.User | null = null;
+  private userDetails: any = null; // user details as stored in our database, not firebase
   private authState$!: Observable<firebase.User | null>;
+  private referralCode: string = '';
+  public userDetailsConfirmedInDB$ = new Subject<boolean>();
 
   constructor(
     public afAuth: AngularFireAuth,
     private fb: Facebook,
     private platform: Platform,
-    private http: HttpClient
+    private http: HttpClient,
+    public alertCtrl: AlertController
   ) { }
 
   /**
@@ -47,7 +53,7 @@ export class AuthService {
   }
 
   get authenticated(): boolean {
-    return this.user !== null;
+    return !!(this.user && this.userDetails);
   }
 
   public sendPasswordResetEmail(email: string) {
@@ -59,7 +65,7 @@ export class AuthService {
       credentials.email,
       credentials.password
     );
-    return this.saveUser();
+    return await this.saveUser();
   }
 
   public async signInWithFacebook() {
@@ -84,7 +90,7 @@ export class AuthService {
     if (!user) {
       throw 'No User found';
     }
-    return this.saveUser();
+    return await this.saveUser();
   }
 
   public async signUp(credentials: ISignUpCredentials) {
@@ -94,6 +100,7 @@ export class AuthService {
     );
     const photoURL = user!.photoURL;
     const displayName = `${credentials.firstName} ${credentials.lastName}`;
+    this.referralCode = credentials.referralCode;
     await user!.updateProfile({ displayName, photoURL });
     return await this.saveUser();
   }
@@ -125,18 +132,70 @@ export class AuthService {
     return this.user && this.user.uid;
   }
 
+  /**
+   * Returns user details as represented in Tabify db
+   */
+  public getUserDetails() {
+    return this.userDetails;
+  }
+
   signOut(): Promise<void> {
     return this.afAuth.auth.signOut();
   }
 
   /**
-   * Saves a user id to our db.
+   * Saves a user id, and details to our db.
    * @param uid
    */
   private async saveUser() {
-    const res = await this.http
-      .post(`${config.serverUrl}/user`, {})
-      .toPromise();
-    return res;
+    const userExistsInDB = await this.checkUserExistsInDB();
+
+    if (this.user && userExistsInDB) {
+      return userExistsInDB;
+    } else {
+      const res: any = await this.http
+        .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
+        .toPromise();
+
+      this.userDetails = res;
+      // check if res's uid is same as firebase user. If yes, set userDetailsConfirmed to true.
+      // This makes sure that user detials are stored in Tabify's DB, so
+      // we can do further API calls to the server, like get stories/tickets
+      if (this.user && res && res.user && res.user.uid === this.user.uid) {
+        this.userDetailsConfirmedInDB$.next(true);
+      } else {
+        throw new Error("The newly created user does not match the logged in user's uid.")
+      }
+      return res;
+    }
+  }
+
+  /**
+   * Check if user/userDetails exist in our DB
+   */
+  async checkUserExistsInDB(): Promise<boolean> {
+    try {
+      const res: any = await this.http.get(`${config.serverUrl}/user/userDetails`).toPromise();
+
+      if (this.user && res && res.user && res.user.uid === this.user.uid) {
+        this.userDetails = res;
+        this.userDetailsConfirmedInDB$.next(true);
+        return true;
+      } else {
+        this.userDetails = null;
+        this.userDetailsConfirmedInDB$.next(false);
+        return false;
+      }
+    } catch (error) {
+      console.error('checkUserExistsInDB encountered an error', error);
+      this.userDetails = null;
+      this.userDetailsConfirmedInDB$.next(false);
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Please check your connection and try again.`,
+      });
+      alert.present();
+      return false;
+    }
   }
 }
