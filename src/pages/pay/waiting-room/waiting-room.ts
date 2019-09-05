@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
+import { TicketService, UserStatus, User } from '../../../services/ticket/ticket.service';
 import { IUser } from '../../../interfaces/user.interface';
 import { sleep } from '../../../utilities/general.utilities';
 
@@ -38,46 +38,42 @@ export class WaitingRoomPage {
   }
 
   checkConfirmedStatus(): boolean {
-    if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Waiting || this.ticketService.unclaimedItems.length > 0) {
+    if (this.ticketService.firestoreTicket.overallUsersProgress < UserStatus.Confirmed || this.ticketService.unclaimedItems.length > 0) {
       return false;
     } else {
       if (!this.moveToTaxTip) {
         this.moveToTaxTip = true;
-        this.viewTaxAndTip();
+        this.viewTaxTip();
       }
       return true;
     }
   }
 
-  async viewTaxTip(): Promise<boolean> {
-    await sleep(6000000);
-    this.navCtrl.push('TabLookupPage');
-    return true;
+  async viewTaxTip() {
+    await sleep(3000);
+    this.navCtrl.push('TaxTipPage');
   }
 
-  toggleConfirm() {
+  async toggleConfirm() {
     this.selectConfirmButton = !this.selectConfirmButton;
     if (this.selectConfirmButton) {
-      this.ticketService.changeUserStatus(UserStatus.Confirmed);
+      await this.ticketService.changeUserStatus(UserStatus.Confirmed);
     } else {
-      this.ticketService.changeUserStatus(UserStatus.Waiting);
+      await this.ticketService.changeUserStatus(UserStatus.Waiting);
     }
+
+    console.log('updated users: ', this.ticketService.users);
   }
 
   setBackButtonAction() {
     this.navBar.backButtonClick = () => {
       this.ticketService.changeUserStatus(UserStatus.Selecting);
+      this.ticketService.resetIsExpanded();
       this.navCtrl.pop();
     }
   }
 
   initializeWaitingRoom() {
-    const curUser = this.ticketService.firestoreTicket.users.find( user => user.uid === this.auth.getUid() );
-    console.log(curUser);
     console.log(this.ticketService.firestoreTicket);
-  }
-
-  viewTaxAndTip() {
-    this.navCtrl.push('TaxTipPage');
   }
 }

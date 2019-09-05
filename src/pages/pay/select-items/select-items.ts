@@ -114,7 +114,6 @@ export class SelectItemsPage {
 
   async viewWaitingRoom() {
     await this.ticketService.changeUserStatus(UserStatus.Waiting);
-
     this.navCtrl.push('WaitingRoomPage');
   }
 

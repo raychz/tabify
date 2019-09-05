@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { SocketService } from '../../../services/socket/socket.service';
-import { TicketService } from '../../../services/ticket/ticket.service';
+import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
@@ -76,6 +76,10 @@ export class TabLookupPage {
 
     // await this.socketService.connect()
     this.ticketService.initializeFirestoreTicket(ticket.id);
+  }
+
+  private async viewSelectItems() {
+    this.ticketService.changeUserStatus(UserStatus.Selecting);
     await this.navCtrl.push('SelectItemsPage');
     await this.loader.dismiss();
   }

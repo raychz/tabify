@@ -52,6 +52,7 @@ export interface User {
   status: UserStatus,
   ticketItems: FirestoreTicketItem[],
   subtotal: number,
+  isExpanded?: boolean,
 }
 
 @Injectable()
@@ -68,6 +69,7 @@ export class TicketService {
   public userSubtotal: number = 0;
   public ticketUsersDescription: string = getTicketUsersDescription();
   public hasInitializationError = false;
+  public isExpandedList: {[uid: string]: boolean} = {};
 
   // Private class variables
   private firestoreTicket$!: Subscription;
@@ -124,7 +126,7 @@ export class TicketService {
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
-        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+        tap((items: any) => this.onTicketItemsUpdate  (items as FirestoreTicketItem[]))
       )
       .subscribe();
   }
@@ -423,15 +425,46 @@ export class TicketService {
     });
   }
 
-  /**S
+  resetIsExpanded() {
+    for (let user of this.firestoreTicket.users) {
+      this.isExpandedList[user.uid] = false;
+    }
+  }
+
+  toggleIsExpanded(user: User) {
+    const isExpanded = this.getUserExpanded(user)
+    this.isExpandedList[user.uid] = !isExpanded;
+  }
+
+  getUserExpanded(user: User) : boolean {
+    if (!this.isExpandedList[user.uid]) {
+      this.isExpandedList[user.uid] = false;
+    }
+    return this.isExpandedList[user.uid];
+  }
+
+  /**
    * Called when the Firestore ticket document is updated.
    * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
+    if (Object.keys(this.isExpandedList).length !== firestoreTicket.users.length) {
+      for (let user of firestoreTicket.users) {
+        if (!this.isExpandedList[user.uid]!) {
+          this.isExpandedList[user.uid] = false;
+        }
+      }
+    }
+
     console.log(this.firestoreTicket);
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
     console.log(this.firestoreTicket);
     this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
+    if (this.firestoreTicketItems && this.users) {
+      this.updateItemsAndUsers();
+    } else {
+      this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
+    }
   }
 }

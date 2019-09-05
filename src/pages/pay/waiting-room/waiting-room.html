@@ -5,17 +5,9 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>Waiting Lobby</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-end (click)="viewTaxAndTip()">
-        Next
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
@@ -25,17 +17,18 @@
     <ion-card id='curUserCard'>
       <ion-card-content>
         <ion-item>
-            <ion-avatar item-start>
-              <img src="ticketService.curUser.photoUrl">
-            </ion-avatar>
-            <ion-label> {{ ticketService.curUser.name }} </ion-label>
-            <ion-icon name="checkmark-circle-outline" item-end></ion-icon>
-            <ion-icon name="arrow-dropup" item-end [hidden]="false"></ion-icon>
-            <ion-icon name="arrow-dropdown" item-end [hidden]="true"></ion-icon>
-          </ion-item>
-      </ion-card-content>
-      <ion-card-content id="curUserItems" [hidden]="false">
-        <ion-list>
+          <ion-avatar item-start>
+            <img src="{{ ticketService.curUser.photoUrl }}">
+          </ion-avatar>
+          <ion-label> {{ ticketService.curUser.name }} </ion-label>
+          <ion-spinner class="ticket-spinner" name="dots" item-end *ngIf="ticketService.curUser.status < userStatus.Confirmed"></ion-spinner>
+          <ion-icon [name]="ticketService.curUser.status > userStatus.Waiting ? 'checkmark-circle-outline' : 'timer'" item-end></ion-icon>
+          <button ion-button icon-only (click)="ticketService.toggleIsExpanded(ticketService.curUser)" item-end>
+            <ion-icon [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
+          </button>
+        </ion-item>
+
+        <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
           <ion-item *ngFor="let item of ticketService.curUser.ticketItems">
             <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
             <div item-end>
@@ -64,29 +57,30 @@
                   <ion-card-content>
                       <ion-item>
                         <ion-avatar item-start>
-                          <img src="ticketService.curUser.photoUrl">
+                          <img [src]="user.photoUrl">
                         </ion-avatar>
                         <ion-label> {{ user.name }} </ion-label>
-                        <ion-icon name="checkmark-circle-outline" item-end></ion-icon>
-                        <ion-icon name="arrow-dropup" item-end [hidden]="false"></ion-icon>
-                        <ion-icon name="arrow-dropdown" item-end [hidden]="true"></ion-icon>
+                        <ion-spinner class="ticket-spinner" name="dots" item-end *ngIf="user.status < userStatus.Confirmed"></ion-spinner>
+                        <ion-icon [name]="user.status > userStatus.Waiting ? 'checkmark-circle-outline' : 'timer'" item-end></ion-icon>
+                        <button ion-button icon-only (click)="ticketService.toggleIsExpanded(user)" item-end>
+                          <ion-icon [name]="ticketService.getUserExpanded(user) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
+                        </button>
                       </ion-item>
+
+                      <ion-list *ngIf="ticketService.getUserExpanded(user)">
+                        <ion-item *ngFor="let item of user.ticketItems">
+                          <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
+                          <div item-end>
+                            <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                              {{ ticketService.findUserShareOfItem(item, user.uid) / 100 | number: '1.2-2' }} /
+                            </span>
+                            <span class="total-text">
+                              {{ item.price / 100 | number: '1.2-2' }}
+                            </span>
+                          </div>
+                        </ion-item>
+                      </ion-list>
                     </ion-card-content>
-                    <ion-card-content [hidden]="false">
-                        <ion-list>
-                            <ion-item *ngFor="let item of user.ticketItems">
-                              <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
-                              <div item-end>
-                                <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
-                                  {{ ticketService.findUserShareOfItem(item, user.uid) / 100 | number: '1.2-2' }} /
-                                </span>
-                                <span class="total-text">
-                                  {{ item.price / 100 | number: '1.2-2' }}
-                                </span>
-                              </div>
-                            </ion-item>
-                          </ion-list>
-                      </ion-card-content>
               </ng-container>
             </ng-container>
           </ion-list>
@@ -107,20 +101,15 @@
               </ion-row>
             </div>
              <div item-end>
-                <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.isItemOnMyTab">
-                  {{ ticketService.findUserShareOfItem(item, ticketService.curUser.uid) / 100 | number: '1.2-2' }} /
-                </span>
-                <span class="total-text">
-                  {{ item.price / 100 | number: '1.2-2' }}
-                </span>
-              </div>
+                {{ item.price / 100 | number: '1.2-2' }}
+             </div>
           </ion-item>
         </ion-list>
       </ion-card>
 
       <ion-card *ngIf="ticketService.unclaimedItems.length > 0">
         <ion-card-header>
-          Unclaimed Items:
+          ⚠️Unclaimed Item - Go back to claim
         </ion-card-header>
         <ion-list>
           <ion-item *ngFor="let item of ticketService.unclaimedItems">
@@ -132,7 +121,7 @@
   </ng-container>
 
   <ng-template #loading>
-    <p class="muted">Loading ticket items...</p>
+    <p class="muted">Loading Waiting Room...</p>
     <ion-spinner class="ticket-spinner" name="dots"></ion-spinner>
   </ng-template>
 </ion-content>
@@ -142,9 +131,8 @@
     <ion-label color="light" *ngIf="selectConfirmButton">
       {{ checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for the rest of your party to finish...' }}
     </ion-label>
-    <!-- change detection not working properly here -->
     <button ion-button block (click)="toggleConfirm()"
-      [disabled]="ticketService.firestoreTicket.overallUsersProgress === userStatus.Selecting || ticketService.unclaimedItems.length > 0">
+      [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
       {{ selectConfirmButton ? 'Cancel' : 'Confirm' }}
     </button>
   </ng-container>
