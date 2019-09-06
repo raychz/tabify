@@ -11,7 +11,7 @@
   <ion-card *ngIf="!!story">
     <ion-item>
       <ion-avatar item-start>
-        <img src="{{ story.ticket.location.photo_url }}" />
+        <img [src]="story.ticket.location.photo_url" />
       </ion-avatar>
       <h2>{{ story.ticket.location.name }}</h2>
 
@@ -21,17 +21,17 @@
       <p>{{ story.ticket.location.streetAddress }}</p>
     </ion-item>
 
-    <!-- List of users of story/ticket -->
+    <!-- List of users of story/ticket
     <ion-row>
       <ion-col text-center>
         <ion-list>
           <ng-container *ngFor='let user of story.ticket.users; index as userIndex'>
             <div *ngIf="showMoreUsers ? true : userIndex < 2">
-              <ion-item>
-                <ion-avatar item-start class="comment-avatar">
-                  <img src={{user.userDetail.photo_url}} />
+              <ion-item text-center>
+                <ion-avatar item-start class="story-users-avatar">
+                  <img [src]="user.userDetail.photo_url"/>
                 </ion-avatar>
-                <ion-note>{{user.userDetail.displayName.split(' ')[0]}}</ion-note>
+                <ion-note>{{user.userDetail.displayName}}</ion-note>
               </ion-item>
             </div>
           </ng-container>
@@ -40,6 +40,15 @@
             <ion-icon [name]="showMoreUsers ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
           </button>
         </ion-list>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- Abbreviated names of users part of the ticket -->
+    <ion-row>
+      <ion-col class="users-padding">
+        <div>
+          <p [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></p>
+        </div>
       </ion-col>
     </ion-row>
 
@@ -84,7 +93,7 @@
               <ion-col col-11>
                 <ion-item class="unset-background">
                   <ion-avatar class="comment-avatar" item-start>
-                    <img src={{comment.user.userDetail.photo_url}} />
+                    <img [src]="comment.user.userDetail.photo_url" />
                   </ion-avatar>
                   <ion-note>{{comment.user.userDetail.displayName}}</ion-note>
                   <div>

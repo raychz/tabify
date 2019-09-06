@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ModalController } from 'ionic-angular';
-import { StoryService } from '../../services/story/story.service';
+import { StoryService } from '../../../services/story/story.service';
 import moment from 'moment';
-import { AuthService } from '../../services/auth/auth.service';
-import { IUser } from '../../interfaces/user.interface';
-import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
-import { LoaderService } from '../../services/utilities/loader.service';
-import { LikesPage } from '../home/likes/likes';
+import { AuthService } from '../../../services/auth/auth.service';
+import { IUser } from '../../../interfaces/user.interface';
+import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
+import { LoaderService } from '../../../services/utilities/loader.service';
+import { LikesPage } from '../likes/likes';
+import { getTicketUsersDescription } from '../../../utilities/ticket.utilities';
 
 @IonicPage()
 @Component({
@@ -190,6 +191,16 @@ export class StoryPage {
       });
       modal.present();
     }
+  }
+
+  /**
+* Returns a string to describe the users who have joined the tab.
+* Ex: Ray, Hassan, Sahil +3 others
+* @param users List of users
+* @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
+*/
+  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
+    return getTicketUsersDescription(users, userDisplayLimit);
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {

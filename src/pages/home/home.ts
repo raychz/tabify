@@ -7,6 +7,7 @@ import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { abbreviateName } from '../../utilities/general.utilities';
 import { LikesPage } from './likes/likes';
+import { getTicketUsersDescription } from '../../utilities/ticket.utilities';
 
 export interface Story {
   location: ILocation;
@@ -129,6 +130,16 @@ export class HomePage {
       modal.present();
     }
   }
+  
+  // This uses the template of LikesPage. Actually displays the users of a ticket/story
+  // displayUsers() {
+  //   if (numLikes > 0) {
+  //     const modal = this.modalCtrl.create(LikesPage, {
+  //       storyId: storyId,
+  //     });
+  //     modal.present();
+  //   }
+  // }
 
   /**
  * Returns a string to describe the users who have joined the tab.
@@ -136,33 +147,7 @@ export class HomePage {
  * @param users List of users
  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
  */
-  getTicketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    if (!users || users.length === 0) return 'No users on this tab.';
-
-    let hereClause = '';
-
-    if (users.length > 1) {
-      hereClause = 'were here'
-    } else {
-      hereClause = 'was here'
-    }
-
-    // abbreviateName is imported from general utilities
-    const abbreviatedNames = users.map(user => abbreviateName(user.userDetail.displayName));
-
-    if (abbreviatedNames.length > userDisplayLimit) {
-      const overflowNames = abbreviatedNames.splice(userDisplayLimit);
-      const others = `+${overflowNames.length} other${
-        overflowNames.length > 1 ? 's' : ''
-        }`;
-      const othersContainer = `<span class='plus-others'>${others}</span>`;
-      return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
-    }
-
-    if (users.length < 3) {
-      return `${abbreviatedNames.join(' and ')} ${hereClause}`;
-    } else {
-      return `${abbreviatedNames.join(', ')} ${hereClause}`;
-    }
+  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
+    return getTicketUsersDescription(users, userDisplayLimit);
   }
 }
