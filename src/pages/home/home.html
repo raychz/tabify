@@ -31,13 +31,6 @@
       refreshingText="Refreshing stories...">
     </ion-refresher-content>
   </ion-refresher>
-  <button ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
-    <ion-icon name="md-restaurant"></ion-icon>
-    Pay Tab
-  </button>
-
-  <div class="blank-space"></div>
-
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
@@ -73,7 +66,12 @@
       </ion-card>
     </ng-container>
   </div>
-
+  
+  <div *ngIf="this.newsfeedService.tickets?.length > 0" class="blank-space"></div>
+  <button ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
+    <ion-icon name="md-restaurant"></ion-icon>
+    Pay Tab
+  </button>
   <!-- If selected segment's feed is empty, display this template -->
   <ng-template #emptyFeed>
     <div class="empty-feed">
