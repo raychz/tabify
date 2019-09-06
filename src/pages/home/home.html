@@ -34,7 +34,7 @@
         <!-- <ion-card *ngIf="!!ticket"> -->
         <ion-item>
           <ion-avatar item-start>
-            <img [src]="ticket.location.photo_url"/>
+            <img [src]="ticket.location.photo_url" />
           </ion-avatar>
           <h2>{{ ticket.location.name }}</h2>
           <!-- Using Angular's DatePipe to format date from DB -->
@@ -48,9 +48,9 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
-            <div>
-              <p [innerHTML]="this.ticketUsersDescription(ticket.users, 3)"></p>
-            </div>
+            <p (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
+              [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
+            </p>
           </ion-col>
         </ion-row>
 

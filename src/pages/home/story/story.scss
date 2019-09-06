@@ -78,4 +78,13 @@ page-story {
   .story-users-avatar img {
     margin: auto;
   }
+
+  .plus-others {
+    color: map-get($colors, primary);
+  }
+
+  .users-padding {
+    padding: 0px 0px 0px 0px;
+    margin-left: 16px;
+  }
 }

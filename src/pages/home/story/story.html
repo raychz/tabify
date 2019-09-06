@@ -47,7 +47,8 @@
     <ion-row>
       <ion-col class="users-padding">
         <div>
-          <p [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></p>
+          <p (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()"
+            [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></p>
         </div>
       </ion-col>
     </ion-row>

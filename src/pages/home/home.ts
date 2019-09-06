@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { abbreviateName } from '../../utilities/general.utilities';
 import { LikesPage } from './likes/likes';
 import { getTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { UsersPage } from './users/users';
 
 export interface Story {
   location: ILocation;
@@ -130,23 +131,20 @@ export class HomePage {
       modal.present();
     }
   }
-  
-  // This uses the template of LikesPage. Actually displays the users of a ticket/story
-  // displayUsers() {
-  //   if (numLikes > 0) {
-  //     const modal = this.modalCtrl.create(LikesPage, {
-  //       storyId: storyId,
-  //     });
-  //     modal.present();
-  //   }
-  // }
+
+  displayUsers(users: any[]) {
+    const modal = this.modalCtrl.create(UsersPage, {
+      users: users,
+    });
+    modal.present();
+  }
 
   /**
- * Returns a string to describe the users who have joined the tab.
- * Ex: Ray, Hassan, Sahil +3 others
- * @param users List of users
- * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
- */
+  * Returns a string to describe the users who have joined the tab.
+  * Ex: Ray, Hassan, Sahil +3 others
+  * @param users List of users
+  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
+  */
   ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
     return getTicketUsersDescription(users, userDisplayLimit);
   }
