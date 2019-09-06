@@ -39,8 +39,11 @@ page-tax-tip {
     color: map-get($colors, primary);
   }
 
-  .line-details {
-    color: gray;
+  .line {
+    white-space: normal;
+    &-details {
+      color: gray;
+    }
   }
 }
 
