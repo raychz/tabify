@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ErrorService } from '../../../services/error/error.service';
 
 @IonicPage({
   priority: 'high'
@@ -23,6 +24,7 @@ export class LoginPage {
     public alert: AlertService,
     public loader: LoaderService,
     public fb: FormBuilder,
+    public errorService: ErrorService
   ) {
     this.loginForm = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -48,7 +50,7 @@ export class LoginPage {
       await loading.present();
       await this.auth
         .signInWithEmail({ email, password })
-        .catch(error => (this.loginError = error.message));
+        .catch(error => (this.loginError = this.errorService.firebaseError(error.code)));
       await loading.dismiss();
     }
   }
