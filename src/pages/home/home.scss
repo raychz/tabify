@@ -66,11 +66,7 @@ page-home {
       width: 100%;
       position: absolute;
       z-index: 2;
-      background: linear-gradient(
-        to bottom,
-        rgba(37, 37, 38, 1) 5%,
-        rgba(37, 37, 38, 0.5) 150%
-      );
+      background: linear-gradient(to bottom, rgba(37, 37, 38, 1) 5%, rgba(37, 37, 38, 0.5) 150%);
     }
 
     &-text {
@@ -113,10 +109,9 @@ page-home {
   .heart-padding {
     font-size: inherit;
     margin: 0px 0px 0px 0px;
-    padding-left: 16px;
+    padding-left: 11px;
     padding-right: 0px;
   }
-
 
   .like-comment-row {
     font-size: 1.3rem;
@@ -141,5 +136,14 @@ page-home {
   .users-padding {
     padding: 0px 0px 0px 0px;
     margin-left: 16px;
+  }
+
+  .date-padding {
+    padding-top: 12px;
+    padding-right: 16px;
+  }
+
+  .card .note-md {
+    font-size: 1.2rem;
   }
 }
