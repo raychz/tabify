@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { firebaseErrorMap } from './firebase-error-map';
+import { authErrorMap, forgotPasswordErrorMap } from './error-maps';
 
 /**
  * This service aims to translate error codes into human readable messages
@@ -7,9 +7,18 @@ import { firebaseErrorMap } from './firebase-error-map';
 @Injectable()
 export class ErrorService {
 
-    firebaseError(error: any) {
-        if (error.code in firebaseErrorMap) {
-            return firebaseErrorMap[error.code];
+    authError(error: any) {
+        console.log(error);
+        if (error.code in authErrorMap) {
+            return authErrorMap[error.code];
+        } else {
+            return "A Network Error Occured."
+        }
+    }
+
+    forgotPassowrdError(error: any) {
+        if (error.code in forgotPasswordErrorMap) {
+            return forgotPasswordErrorMap[error.code];
         } else {
             return "A Network Error Occured."
         }

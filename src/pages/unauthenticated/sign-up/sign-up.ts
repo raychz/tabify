@@ -87,7 +87,7 @@ export class SignUpPage {
     });
     await loading.present();
     await this.auth.signUp(credentials).catch(error => {
-      this.signUpError = this.errorService.firebaseError(error);
+      this.signUpError = this.errorService.authError(error);
     });
     await loading.dismiss();
   }

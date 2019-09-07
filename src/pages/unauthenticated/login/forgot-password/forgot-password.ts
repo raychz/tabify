@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { ErrorService } from '../../../../services/error/error.service';
 
 @IonicPage({
   priority: 'off'
@@ -14,7 +15,14 @@ export class ForgotPasswordPage {
   forgotPasswordError: string = '';
   forgotPasswordForm: FormGroup;
 
-  constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public fb: FormBuilder, private auth: AuthService) {
+  constructor(
+    private alertCtrl: AlertController,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public fb: FormBuilder,
+    private auth: AuthService,
+    private errorService: ErrorService
+  ) {
     this.forgotPasswordForm = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
     });
@@ -42,7 +50,7 @@ export class ForgotPasswordPage {
             });
             this.navCtrl.setRoot('UnauthenticatedPage').then(() => alert.present());
           },
-          error => this.forgotPasswordError = error.message
+          error => this.forgotPasswordError = this.errorService.forgotPassowrdError(error)
         );
     }
   }
