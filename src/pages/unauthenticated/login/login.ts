@@ -50,7 +50,9 @@ export class LoginPage {
       await loading.present();
       await this.auth
         .signInWithEmail({ email, password })
-        .catch(error => (this.loginError = this.errorService.firebaseError(error.code)));
+        .catch(error => (
+          this.loginError = this.errorService.firebaseError(error)
+        ));
       await loading.dismiss();
     }
   }

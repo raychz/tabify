@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ErrorService } from '../../../services/error/error.service';
 
 enum SignUpStep {
   REFERRAL_CODE_ENTRY,
@@ -32,7 +33,8 @@ export class SignUpPage {
     private auth: AuthService,
     public alert: AlertService,
     public loader: LoaderService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private errorService: ErrorService
   ) {
     this.form = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -85,8 +87,7 @@ export class SignUpPage {
     });
     await loading.present();
     await this.auth.signUp(credentials).catch(error => {
-      this.signUpError = error.message;
-      console.log('sign up error:', error);
+      this.signUpError = this.errorService.firebaseError(error);
     });
     await loading.dismiss();
   }

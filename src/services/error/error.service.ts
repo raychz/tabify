@@ -7,9 +7,9 @@ import { firebaseErrorMap } from './firebase-error-map';
 @Injectable()
 export class ErrorService {
 
-    firebaseError(errorCode: string) {
-        if (errorCode in firebaseErrorMap) {
-            return firebaseErrorMap[errorCode];
+    firebaseError(error: any) {
+        if (error.code in firebaseErrorMap) {
+            return firebaseErrorMap[error.code];
         } else {
             return "A Network Error Occured."
         }
