@@ -55,4 +55,9 @@ export class ForgotPasswordPage {
     }
   }
 
+  signUp() {
+    this.navCtrl.pop().then(() => {
+      this.navCtrl.push('SignUpPage');
+    });
+  }
 }
