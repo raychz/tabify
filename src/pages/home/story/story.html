@@ -13,12 +13,12 @@
       <ion-avatar item-start>
         <img [src]="story.ticket.location.photo_url" />
       </ion-avatar>
-      <h2>{{ story.ticket.location.name }}</h2>
-
-      <!-- Using Angular's DatePipe to format date from DB -->
-      <ion-note>{{ story.date_created | date:'mediumDate' }} {{ story.date_created | date:'shortTime' }} </ion-note>
-      <h3>{{ story.ticket.location.city }}</h3>
-      <p>{{ story.ticket.location.streetAddress }}</p>
+      <h2>{{ story.ticket.location.name }}
+        <ion-note>{{ story.ticket.location.city }}, {{ story.ticket.location.state }}</ion-note>
+      </h2>
+      <div>
+        <ion-note>{{ story.ticket.location.street1 }}</ion-note>
+      </div>
     </ion-item>
 
     <!-- Abbreviated names of users part of the ticket -->
@@ -32,8 +32,8 @@
     </ion-row>
 
     <ion-row class="like-comment-row bottom-border">
-      <ion-col>
 
+      <ion-col>
         <button [disabled]="story.loadingLike" ion-button color="primary" clear icon-start
           (click)='createLike(); $event.stopPropagation()' class="heart-padding">
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
@@ -45,18 +45,20 @@
 
         <button ion-button color="primary" clear
           (click)="this.displayLikers(story.likes.length); $event.stopPropagation()" class="like-btn-padding">
-          {{ story.likes.length === 0 ? '' : story.likes.length }}
-          {{ story.likes.length <= 1 ? 'Like' : 'Likes' }}
+          {{ story.likes.length === 0 ? 'Like' : story.likes.length }}
         </button>
 
-      </ion-col>
-      <ion-col text-right>
         <button ion-button color="primary" clear icon-start class="comment-btn-padding">
           <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
-          &nbsp; {{ story.comment_count === 0 ? '' : story.comment_count }}
-          {{story.comment_count <= 1 ? 'Comment' : 'Comments'}}
+          &nbsp; {{ story.comment_count === 0 ? 'Comment' : story.comment_count }}
         </button>
       </ion-col>
+
+      <ion-col text-right class="date-padding">
+        <ion-note>{{ story.date_created | date:'shortDate' }}
+          {{ story.date_created | date:'shortTime' }} </ion-note>
+      </ion-col>
+
     </ion-row>
 
     <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">

@@ -23,7 +23,7 @@ page-story {
   .heart-padding {
     font-size: inherit;
     margin: 0px 0px 0px 0px;
-    padding-left: 16px;
+    padding-left: 11px;
     padding-right: 0px;
   }
 
@@ -86,5 +86,14 @@ page-story {
   .users-padding {
     padding: 0px 0px 0px 0px;
     margin-left: 16px;
+  }
+
+  .card .note-md {
+    font-size: 1.2rem;
+  }
+
+  .date-padding {
+    padding-top: 12px;
+    padding-right: 16px;
   }
 }
