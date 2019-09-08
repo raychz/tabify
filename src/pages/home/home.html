@@ -36,7 +36,7 @@
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
         <ion-item>
           <ion-avatar item-start>
-            <img src={{ticket.location.photo_url}} />
+            <img [src]='ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
           </ion-avatar>
           <h2>{{ ticket.location.name }}</h2>
           <!-- Using Angular's DatePipe to format date from DB -->
