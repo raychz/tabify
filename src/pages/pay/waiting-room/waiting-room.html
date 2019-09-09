@@ -14,7 +14,7 @@
 <ion-content class='cards-bg' *ngIf="ticketService.firestoreTicketItems; else loading">
   <ng-container>
 
-    <ion-card id='curUserCard'>
+    <ion-card id='curUserCard' (click)="ticketService.toggleIsExpanded(ticketService.curUser)">
       <ion-card-content>
         <ion-item>
           <ion-avatar item-start>
@@ -22,10 +22,8 @@
           </ion-avatar>
           <ion-label> {{ ticketService.curUser.name }} </ion-label>
           <ion-spinner class="ticket-spinner" name="dots" item-end *ngIf="ticketService.curUser.status < userStatus.Confirmed"></ion-spinner>
-          <ion-icon [name]="ticketService.curUser.status > userStatus.Waiting ? 'checkmark-circle-outline' : 'timer'" item-end></ion-icon>
-          <button ion-button icon-only (click)="ticketService.toggleIsExpanded(ticketService.curUser)" item-end>
-            <ion-icon [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
-          </button>
+          <ion-icon name="checkmark-circle-outline" item-end *ngIf="ticketService.curUser.status >= userStatus.Confirmed"></ion-icon>
+          <ion-icon [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropdown' : 'arrow-dropup'" item-end></ion-icon>
         </ion-item>
 
         <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
@@ -45,26 +43,24 @@
     </ion-card>
 
     <ion-card id='allUsersCard' *ngIf="ticketService.users.length > 1">
-      <ion-card-header>
+      <ion-card-header class="cardHeader" id="tellYourFriends">
         Tell your freinds to pick their food already!
-      </ion-card-header>
-      <ion-card-header>
-        Your Party:
+        <ion-label id="yourParty">
+          Your Party:
+        </ion-label>
       </ion-card-header>
           <ion-list>
             <ng-container *ngFor="let user of ticketService.users">
               <ng-container *ngIf="user.uid !== ticketService.curUser.uid">
                   <ion-card-content>
-                      <ion-item>
+                      <ion-item (click)="ticketService.toggleIsExpanded(user)">
                         <ion-avatar item-start>
                           <img [src]="user.photoUrl">
                         </ion-avatar>
                         <ion-label> {{ user.name }} </ion-label>
                         <ion-spinner class="ticket-spinner" name="dots" item-end *ngIf="user.status < userStatus.Confirmed"></ion-spinner>
-                        <ion-icon [name]="user.status > userStatus.Waiting ? 'checkmark-circle-outline' : 'timer'" item-end></ion-icon>
-                        <button ion-button icon-only (click)="ticketService.toggleIsExpanded(user)" item-end>
-                          <ion-icon [name]="ticketService.getUserExpanded(user) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
-                        </button>
+                        <ion-icon name="checkmark-circle-outline" item-end *ngIf="user.status >= userStatus.Confirmed"></ion-icon>
+                        <ion-icon [name]="ticketService.getUserExpanded(user) ? 'arrow-dropdown' : 'arrow-dropup'" item-end></ion-icon>
                       </ion-item>
 
                       <ion-list *ngIf="ticketService.getUserExpanded(user)">
@@ -87,7 +83,7 @@
       </ion-card>
 
       <ion-card *ngIf="ticketService.sharedItems.length > 0">
-        <ion-card-header>
+        <ion-card-header class="cardHeader">
           Shared Items:
         </ion-card-header>
         <ion-list>
@@ -96,7 +92,7 @@
               <ion-row>
                 {{ ticketService.getTicketItemName(item.name) }}
               </ion-row>
-              <ion-row>
+              <ion-row class="payerDescription">
                 {{ item.payersDescription }}
               </ion-row>
             </div>
@@ -108,8 +104,8 @@
       </ion-card>
 
       <ion-card *ngIf="ticketService.unclaimedItems.length > 0">
-        <ion-card-header>
-          ⚠️Unclaimed Item - Go back to claim
+        <ion-card-header class="cardHeader">
+          ⚠️Unclaimed Items <span id="GoBackText">Go back to claim</span>
         </ion-card-header>
         <ion-list>
           <ion-item *ngFor="let item of ticketService.unclaimedItems">
@@ -128,7 +124,10 @@
 
 <ion-footer>
   <ng-container>
-    <ion-label color="light" *ngIf="selectConfirmButton">
+      <ion-label color="light" class="confirmText" *ngIf="selectConfirmButton && ticketService.unclaimedItems.length > 0">
+          All Items must be selected to move forward.
+        </ion-label>
+    <ion-label color="light" class="confirmText" *ngIf="selectConfirmButton">
       {{ checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for the rest of your party to finish...' }}
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"

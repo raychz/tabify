@@ -1,3 +1,24 @@
 page-waiting-room {
+  .confirmText{
+    text-align: center;
+  }
+  #tellYourFriends {
+    text-align: center;
+  }
+  #yourParty {
+    text-align: left;
+    color: darkgrey;
+  }
+  #GoBackText {
+    font-style: italic;
+    font-size: small;
+  }
+  .cardHeader {
+    font-size: medium;
+    padding-bottom: 5px;
+  }
+  .payerDescription {
+    font-size: small;
 
+  }
 }

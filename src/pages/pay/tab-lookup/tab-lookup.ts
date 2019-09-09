@@ -9,6 +9,7 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
+import { tap } from 'rxjs/operators';
 
 @IonicPage()
 @Component({
@@ -43,6 +44,11 @@ export class TabLookupPage {
     this.getDateTime();
     await this.getFraudPreventionCode();
     await this.loader.dismiss();
+    this.ticketService.firestoreStatus$.pipe(tap( (fireStoreInitializationStatus) => {
+      if (fireStoreInitializationStatus) {
+      this.viewSelectItems()
+    }
+  } )).subscribe();
   }
 
   getDateTime() {
@@ -79,9 +85,22 @@ export class TabLookupPage {
   }
 
   private async viewSelectItems() {
-    this.ticketService.changeUserStatus(UserStatus.Selecting);
-    await this.navCtrl.push('SelectItemsPage');
+      if (this.ticketService.curUser.status >= UserStatus.Selecting) {
+        this.navCtrl.push('SelectItemsPage');
+      }
+
+      if (this.ticketService.curUser.status === UserStatus.Waiting) {
+        this.navCtrl.push('WaitingRoomPage', {confirmed: false});
+      } else if (this.ticketService.curUser.status >= UserStatus.Confirmed) {
+        this.navCtrl.push('WaitingRoomPage', {confirmed: true});
+      }
+
+      if (this.ticketService.curUser.status >= UserStatus.Paying) {
+        this.navCtrl.push('TaxTipPage')
+      }
+
     await this.loader.dismiss();
+    this.ticketService.firestoreStatus$.complete();
   }
 
   async getFraudPreventionCode() {

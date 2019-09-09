@@ -43,30 +43,7 @@ export class TaxTipPage {
   }
 
   setBackButtonAction() {
-    this.navBar.backButtonClick = () => {
-      const confirm = this.alertCtrl.create({
-        title: 'Warning',
-        message: `All users on this tab will be sent back to the 'Waiting Room' page. Are you sure you want to continue?`,
-        buttons: [
-          {
-            text: 'No, stay on this page',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
-          },
-          {
-            text: 'Yes, take me back',
-            handler: () => {
-              confirm.dismiss().then(() => {
-                this.navCtrl.pop();
-              });
-              return false;
-            },
-          },
-        ],
-      });
-      confirm.present();
-    };
+    this.navBar.hideBackButton = true;
   }
 
   adjustTip(shouldIncreaseTip: boolean) {

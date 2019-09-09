@@ -9,7 +9,6 @@ import { Observable } from 'rxjs/Observable';
 import { from, Subject } from 'rxjs';
 import config from "../../config";
 import { tap } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
 
 interface ISignUpCredentials {
   email: string;

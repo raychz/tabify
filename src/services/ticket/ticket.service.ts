@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
@@ -16,7 +16,7 @@ import { user } from '../../pages/home/example-stories';
 import { e, P } from '@angular/core/src/render3';
 
 // please keep the user status enum in order of execution as they are used for calculations
-export enum UserStatus { Selecting, Waiting, Confirmed, Paid }
+export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
 export enum TicketStatus { Open, Closed }
 
 export interface FirestoreTicketItem {
@@ -70,6 +70,7 @@ export class TicketService {
   public ticketUsersDescription: string = getTicketUsersDescription();
   public hasInitializationError = false;
   public isExpandedList: {[uid: string]: boolean} = {};
+  public firestoreStatus$ = new BehaviorSubject<boolean> (false);
 
   // Private class variables
   private firestoreTicket$!: Subscription;
@@ -398,6 +399,7 @@ export class TicketService {
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
     // the above properties can be inferred from the below properties. ToDo: get rid of above properties
     this.updateItemsAndUsers();
+    this.firestoreStatus$.next(true);
   }
 
   private updateItemsAndUsers() {

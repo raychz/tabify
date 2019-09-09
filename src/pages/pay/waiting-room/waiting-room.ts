@@ -24,6 +24,7 @@ export class WaitingRoomPage {
   moveToTaxTip = false;
   selectConfirmButton = false;
 
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -50,7 +51,8 @@ export class WaitingRoomPage {
   }
 
   async viewTaxTip() {
-    await sleep(3000);
+    await sleep(1500);
+    this.ticketService.changeUserStatus(UserStatus.Paying);
     this.navCtrl.push('TaxTipPage');
   }
 
@@ -75,5 +77,9 @@ export class WaitingRoomPage {
 
   initializeWaitingRoom() {
     console.log(this.ticketService.firestoreTicket);
+    const confirmed = this.navParams.get('confirmed');
+    if (confirmed) {
+      this.selectConfirmButton = confirmed;
+    }
   }
 }
