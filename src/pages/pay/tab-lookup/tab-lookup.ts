@@ -65,10 +65,6 @@ export class TabLookupPage {
       this.ticketService
         .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
 
-        console.log(tabNumber);
-        console.log(this.location.omnivore_id);
-        console.log(this.fraudPreventionCode);
-
     if (error || !ticket) {
       this.loader.dismiss();
       const alert = this.alertCtrl.create({
@@ -85,18 +81,33 @@ export class TabLookupPage {
   }
 
   private async viewSelectItems() {
-      if (this.ticketService.curUser.status >= UserStatus.Selecting) {
-        this.navCtrl.push('SelectItemsPage');
-      }
-
-      if (this.ticketService.curUser.status === UserStatus.Waiting) {
-        this.navCtrl.push('WaitingRoomPage', {confirmed: false});
-      } else if (this.ticketService.curUser.status >= UserStatus.Confirmed) {
-        this.navCtrl.push('WaitingRoomPage', {confirmed: true});
-      }
-
-      if (this.ticketService.curUser.status >= UserStatus.Paying) {
-        this.navCtrl.push('TaxTipPage')
+      switch (this.ticketService.curUser.status) {
+        case UserStatus.Selecting:
+          this.navCtrl.push('SelectItemsPage');
+          break;
+        case UserStatus.Waiting:
+          this.navCtrl.push('WaitingRoomPage', {confirmed: false, pushSelectItemsOnBack: true});
+          break;
+        case UserStatus.Confirmed:
+          this.navCtrl.push('WaitingRoomPage', {confirmed: true, pushSelectItemsOnBack: true});
+          break;
+        case UserStatus.Paying:
+          this.navCtrl.push('TaxTipPage');
+          break;
+        case UserStatus.Paid:
+            const modal = this.alertCtrl.create({
+              title: 'Tab already paid!',
+              message: 'You have already paid your tab, no need to do anything else.',
+              buttons: [
+                {
+                  text: 'Ok',
+                },
+              ],
+            });
+            modal.present();
+          break;
+        default:
+          throw new Error('Unknown user status')
       }
 
     await this.loader.dismiss();

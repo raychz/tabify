@@ -24,7 +24,6 @@ export class WaitingRoomPage {
   moveToTaxTip = false;
   selectConfirmButton = false;
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -72,6 +71,9 @@ export class WaitingRoomPage {
       this.ticketService.changeUserStatus(UserStatus.Selecting);
       this.ticketService.resetIsExpanded();
       this.navCtrl.pop();
+      if (this.navParams.get('pushSelectItemsOnBack')) {
+        this.navCtrl.push('SelectItemsPage');
+      }
     }
   }
 
