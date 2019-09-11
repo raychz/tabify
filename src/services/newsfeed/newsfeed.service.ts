@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from '../story/story.service';
 import { AuthService } from '../auth/auth.service';
-import { _localeFactory } from '@angular/core/src/application_module';
 
 // This class holds that data structure that is used to represent content on the newsfeed
 @Injectable()
