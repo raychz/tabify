@@ -24,17 +24,15 @@
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
-        <!-- <ion-card *ngIf="!!ticket"> -->
         <ion-item>
-          <ion-avatar class='restaurant-avatar' item-start>
+          <ion-avatar item-start>
             <img [src]='ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
           </ion-avatar>
-          <h2>{{ ticket.location.name }}
-            <ion-note>{{ ticket.location.city }}, {{ ticket.location.state }}</ion-note>
-          </h2>
-          <div>
-            <ion-note>{{ ticket.location.street1 }}</ion-note>
-          </div>
+          <h2>{{ ticket.location.name }}</h2>
+          <h3 text-wrap class="restaurant-address">
+            <span text-nowrap>{{ ticket.location.street1 }},</span>
+            <span text-nowrap>{{ ticket.location.city }}, {{ ticket.location.state }}</span>
+          </h3>
           <ion-icon class="gray-arrow" item-end name="ios-arrow-forward"></ion-icon>
         </ion-item>
 

@@ -13,12 +13,11 @@
       <ion-avatar item-start>
         <img [src]='story.ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
       </ion-avatar>
-      <h2>{{ story.ticket.location.name }}
-        <ion-note>{{ story.ticket.location.city }}, {{ story.ticket.location.state }}</ion-note>
-      </h2>
-      <div>
-        <ion-note>{{ story.ticket.location.street1 }}</ion-note>
-      </div>
+      <h2>{{ story.ticket.location.name }}</h2>
+      <h3 text-wrap class="restaurant-address">
+        <span text-nowrap>{{ story.ticket.location.street1 }},</span>
+        <span text-nowrap>{{ story.ticket.location.city }}, {{ story.ticket.location.state }}</span>
+      </h3>
     </ion-item>
 
     <!-- Abbreviated names of users part of the ticket -->
