@@ -29,7 +29,7 @@
           <ion-avatar class='restaurant-avatar' item-start>
             <img [src]='ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
           </ion-avatar>
-          <h2>{{ ticket.location.name }} 
+          <h2>{{ ticket.location.name }}
             <ion-note>{{ ticket.location.city }}, {{ ticket.location.state }}</ion-note>
           </h2>
           <div>
@@ -41,46 +41,46 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
-            <p (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
+            <span (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
               [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
-            </p>
+            </span>
           </ion-col>
         </ion-row>
 
-          <ion-row class="like-comment-row">
+        <ion-row class="like-comment-row">
 
-            <ion-col>
-              <button [disabled]="ticket.loadingLike" ion-button color="primary" clear icon-start
-                (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
-                <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
+          <ion-col>
+            <button [disabled]="ticket.loadingLike" ion-button color="primary" clear icon-start
+              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
+              <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
-                <ng-container *ngIf="!ticket.loadingLike">
-                  <ion-icon [name]="ticket.story.likedByLoggedInUser ? 'ios-heart' : 'ios-heart-outline'"></ion-icon>
-                </ng-container>
-              </button>
+              <ng-container *ngIf="!ticket.loadingLike">
+                <ion-icon [name]="ticket.story.likedByLoggedInUser ? 'ios-heart' : 'ios-heart-outline'"></ion-icon>
+              </ng-container>
+            </button>
 
-              <button ion-button color="primary" clear
-                (click)="this.displayLikers(ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
-                class="like-btn-padding">
-                {{ ticket.story.likes.length === 0 ? 'Like' : ticket.story.likes.length}}
-              </button>
+            <button ion-button color="primary" clear
+              (click)="this.displayLikers(ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
+              class="like-btn-padding">
+              {{ ticket.story.likes.length === 0 ? 'Like' : ticket.story.likes.length}}
+            </button>
 
-              <button ion-button color="primary" clear icon-start class="comment-btn-padding">
-                <ion-icon [name]="ticket.story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
-                &nbsp; {{ ticket.story.comment_count === 0 ? 'Comment' : ticket.story.comment_count }}
-              </button>
-            </ion-col>
+            <button ion-button color="primary" clear icon-start class="comment-btn-padding">
+              <ion-icon [name]="ticket.story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
+              &nbsp; {{ ticket.story.comment_count === 0 ? 'Comment' : ticket.story.comment_count }}
+            </button>
+          </ion-col>
 
-            <ion-col text-right class="date-padding">
-              <ion-note>{{ ticket.story.date_created | date:'shortDate' }}
-                {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
-            </ion-col>
+          <ion-col text-right class="date-padding">
+            <ion-note>{{ ticket.story.date_created | date:'shortDate' }}
+              {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
+          </ion-col>
 
-          </ion-row>
+        </ion-row>
       </ion-card>
     </ng-container>
   </div>
-  
+
   <div *ngIf="this.newsfeedService.tickets?.length > 0" class="blank-space"></div>
   <button ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
     <ion-icon name="md-restaurant"></ion-icon>

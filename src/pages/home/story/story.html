@@ -11,7 +11,7 @@
   <ion-card *ngIf="!!story">
     <ion-item>
       <ion-avatar item-start>
-        <img [src]="story.ticket.location.photo_url" />
+        <img [src]='story.ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
       </ion-avatar>
       <h2>{{ story.ticket.location.name }}
         <ion-note>{{ story.ticket.location.city }}, {{ story.ticket.location.state }}</ion-note>
@@ -25,8 +25,8 @@
     <ion-row>
       <ion-col class="users-padding">
         <div>
-          <p (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()"
-            [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></p>
+          <span (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()"
+            [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></span>
         </div>
       </ion-col>
     </ion-row>
