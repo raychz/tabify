@@ -93,10 +93,6 @@ page-home {
     height: 42px;
   }
 
-  ion-refresher {
-    z-index: 1000;
-    background-color: map-get($colors, primary);
-  }
 
   .plus-others {
     color: map-get($colors, primary);
