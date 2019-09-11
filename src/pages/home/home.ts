@@ -123,12 +123,14 @@ export class HomePage {
     );
   }
 
-  displayLikers(storyId: number, numLikes: number) {
+  async displayLikers(ticketId: number, storyId: number, numLikes: number) {
     if (numLikes > 0) {
       const modal = this.modalCtrl.create(LikesPage, {
         storyId: storyId,
       });
       modal.present();
+    } else {
+      await this.createLike(ticketId, storyId);
     }
   }
 

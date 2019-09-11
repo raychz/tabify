@@ -60,7 +60,7 @@
             </button>
 
             <button ion-button color="primary" clear
-              (click)="this.displayLikers(ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
+              (click)="this.displayLikers(ticket.id, ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
               class="like-btn-padding">
               {{ ticket.story.likes.length === 0 ? 'Like' : ticket.story.likes.length}}
             </button>

@@ -185,12 +185,14 @@ export class StoryPage {
     }
   }
 
-  displayLikers(numLikes: number) {
+  async displayLikers(numLikes: number) {
     if (numLikes > 0) {
       const modal = this.modalCtrl.create(LikesPage, {
         storyId: this.story.id,
       });
       modal.present();
+    } else {
+      await this.createLike();
     }
   }
 
