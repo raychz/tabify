@@ -180,7 +180,7 @@ export class PaymentDetailsPage {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
           await this.navCtrl.popToRoot();
           await this.navCtrl.push(
-            'PayPage',
+            'LocationPage',
             {},
             { animate: true, animation: 'md-transition', direction: 'forward' }
           );
