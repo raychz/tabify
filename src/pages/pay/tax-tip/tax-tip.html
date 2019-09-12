@@ -13,7 +13,7 @@
       <p id="rate-and-review">Rate and review the items you ordered.</p>
       <ng-container *ngFor='let item of myTabItems; let i=index;'>
         <ion-item class='total tab-item' *ngIf="i<displayLimit || displayAllItems">
-          <h2>{{item.name}}
+          <h2 class="line">{{item.name}}
             <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
           </h2>
           <div class="reviews">
