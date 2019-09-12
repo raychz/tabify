@@ -71,12 +71,48 @@ export const isItemOnMyTab = (item: FirestoreTicketItem, uid: any) => {
 }
 
 /**
- * Returns a string to describe the users who have joined the tab.
+* For the newsfeed: Returns a string to describe the users who have are part of a ticket / story.
+* Ex: Ray, Hassan, Sahil +3 others
+* @param users List of users
+* @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
+*/
+export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: number = 3) => {
+    if (!users || users.length === 0) return 'No users on this tab.';
+
+    let hereClause = '';
+
+    if (users.length > 1) {
+        hereClause = 'were here'
+    } else {
+        hereClause = 'was here'
+    }
+
+    // abbreviateName is imported from general utilities
+    const abbreviatedNames = users.map(user => abbreviateName(user.userDetail.displayName));
+
+    if (abbreviatedNames.length > userDisplayLimit) {
+        const overflowNames = abbreviatedNames.splice(userDisplayLimit);
+        const others = `+${overflowNames.length} other${
+            overflowNames.length > 1 ? 's' : ''
+            }`;
+        const othersContainer = `<span class='plus-others'>${others}</span>`;
+        return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
+    }
+
+    if (users.length < 3) {
+        return `${abbreviatedNames.join(' and ')} ${hereClause}`;
+    } else {
+        return `${abbreviatedNames.join(', ')} ${hereClause}`;
+    }
+}
+
+/**
+ * For the select-items page: Returns a string to describe the users who have joined the ticket/story.
  * Ex: Ray, Hassan, Sahil +3 others
  * @param users List of users
  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
  */
-export const getTicketUsersDescription = (users: any[] = [], userDisplayLimit: number = 3) => {
+export const getSelectItemsTicketUsersDescription = (users: any[] = [], userDisplayLimit: number = 3) => {
     if (!users || users.length === 0) return 'No users on this tab.';
 
     const abbreviatedNames = users.map(user => abbreviateName(user.name));
