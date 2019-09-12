@@ -7,7 +7,7 @@ import { IUser } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { LikesPage } from '../likes/likes';
-import { getTicketUsersDescription } from '../../../utilities/ticket.utilities';
+import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
 import { UsersPage } from '../users/users';
 
 @IonicPage()
@@ -210,7 +210,7 @@ export class StoryPage {
   * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
   */
   ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getTicketUsersDescription(users, userDisplayLimit);
+    return getStoryUsersDescription(users, userDisplayLimit);
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {

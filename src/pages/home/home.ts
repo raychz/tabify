@@ -7,7 +7,7 @@ import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { abbreviateName } from '../../utilities/general.utilities';
 import { LikesPage } from './likes/likes';
-import { getTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
 import { UsersPage } from './users/users';
 
 export interface Story {
@@ -148,6 +148,6 @@ export class HomePage {
   * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
   */
   ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getTicketUsersDescription(users, userDisplayLimit);
+    return getStoryUsersDescription(users, userDisplayLimit);
   }
 }

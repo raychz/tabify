@@ -9,9 +9,8 @@ import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
-import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
-import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 
 export interface FirestoreTicketItem {
   name: string,
@@ -45,7 +44,7 @@ export class TicketService {
   public firestoreTicketItems!: FirestoreTicketItem[];
   public userSelectedItemsCount: number = 0;
   public userSubtotal: number = 0;
-  public ticketUsersDescription: string = getTicketUsersDescription();
+  public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
 
   // Private class variables
@@ -288,6 +287,6 @@ export class TicketService {
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
-    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
+    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(firestoreTicket.users);
   }
 }
