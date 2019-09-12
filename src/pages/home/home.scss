@@ -148,4 +148,9 @@ page-home {
     color: #aeacb4;
     font-size: 1.2rem;
   }
+
+  .list-ios > .item-block:first-child, .list-ios > .item-block:last-child {
+    border-top: none;
+    border-bottom: none;
+  }
 }
