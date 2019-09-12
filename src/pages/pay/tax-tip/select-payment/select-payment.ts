@@ -12,7 +12,6 @@ import { AuthService } from '../../../../services/auth/auth.service';
   templateUrl: 'select-payment.html',
 })
 export class SelectPaymentPage {
-  autoManufacturers: any;
   canSelect = true;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
