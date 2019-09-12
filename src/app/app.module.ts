@@ -25,6 +25,7 @@ import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
 import { FirestoreService } from '../services/firestore/firestore.service';
+import { PaymentService } from '../services/payment/payment.service';
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
@@ -61,6 +62,7 @@ export class MyErrorHandler implements ErrorHandler {
     BrowserModule,
     IonicModule.forRoot(Tabify, {
       preloadModules: true,
+      scrollPadding: false,
     }),
     AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,
@@ -90,6 +92,7 @@ export class MyErrorHandler implements ErrorHandler {
     TicketService,
     LocationService,
     FirestoreService,
+    PaymentService,
     StoryService,
     NewsfeedService,
     ErrorService

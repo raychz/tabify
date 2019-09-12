@@ -7,8 +7,11 @@ page-payment-details {
     }
   }
 
+  #zip { 
+    width: 50%;
+  }
+
   .spf {
-    background-color: map-get($colors, tabify-dark-2);
     &-field {
       &-group {
         display: inline-block;
@@ -16,6 +19,9 @@ page-payment-details {
       display: inline-block;
       width: 100%;
       margin-bottom: 1.5em;
+      &-zip {
+        width: 50%;
+      }
     }
     &-exp-divider {
       display: inline-block;
@@ -32,6 +38,7 @@ page-payment-details {
       width: 30%;
     }
     &-input-text {
+      color: map-get($colors, dark);
       display: block;
       width: 100%;
       border-radius: 3px;

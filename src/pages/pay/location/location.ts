@@ -9,6 +9,7 @@ import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @IonicPage()
 @Component({
@@ -24,8 +25,13 @@ export class LocationPage {
     public viewCtrl: ViewController,
     public loader: LoaderService,
     private locationService: LocationService,
-    public alertCtrl: AlertService
+    public alertCtrl: AlertService,
+    public auth: AuthService
   ) {
+  }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
   }
 
   ionViewDidLoad() {
@@ -34,12 +40,7 @@ export class LocationPage {
   }
 
   cancel() {
-    const parentNav: NavController = this.navCtrl.parent;
-    parentNav.setRoot(
-      'HomePage',
-      {},
-      { animate: true, animation: 'md-transition', direction: 'back' }
-    );
+    this.navCtrl.pop({ animate: true, animation: 'md-transition', direction: 'back' })
   }
 
   // filterItems(ev: any) {

@@ -1,87 +1,91 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Tax, Tip, Total</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-end (click)="pay()">
-        Pay
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>Checkout</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class='cards-bg'>
   <ion-card>
     <ion-card-header>
-      Selected Items
+      How was {{ticketService.firestoreTicket?.location}}?
     </ion-card-header>
     <ion-card-content>
-      <ion-item class='total tab-item' *ngFor='let item of myTabItems'>
-        <h2>{{item.name}}
-          <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
-        </h2>
-        <div class="reviews">
-          <rating
-            [(ngModel)]="item.rating">
-          </rating>
-          <ion-item *ngIf="item.rating! > 0" class="item-feedback">
-            <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback (optional)" autocomplete="on" spellcheck="on" autocorrect="on"></ion-textarea>
-          </ion-item>
-        </div>
-        <div item-end>
-          <h2>${{item.userShare! / 100 | number:'1.2-2'}}</h2>
-        </div>
-      </ion-item>
+      <p id="rate-and-review">Rate and review the items you ordered.</p>
+      <ng-container *ngFor='let item of myTabItems; let i=index;'>
+        <ion-item class='total tab-item' *ngIf="i<displayLimit || displayAllItems">
+          <h2 class="line">{{item.name}}
+            <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
+          </h2>
+          <div class="reviews">
+            <rating [(ngModel)]="item.rating">
+            </rating>
+            <ion-item *ngIf="item.rating! > 0" class="item-feedback">
+              <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback" autocomplete="on" spellcheck="on"
+                autocorrect="on"></ion-textarea>
+            </ion-item>
+          </div>
+          <div item-end>
+            <h2>${{item.userShare! / 100 | number:'1.2-2'}}</h2>
+          </div>
+        </ion-item>
+      </ng-container>
+      <button *ngIf="!displayAllItems && myTabItems.length > displayLimit" ion-button block clear icon-end
+        color="tabify" (click)="displayAllItems = true">
+        Show All
+        <ion-icon name="md-arrow-dropright"></ion-icon>
+      </button>
     </ion-card-content>
   </ion-card>
   <ion-card>
     <ion-card-header>
-      Total
+      My Total
     </ion-card-header>
     <ion-card-content>
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{getSubtotal() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userSubtotal / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item class='total'>
+      <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
-          <span class='line-details'>({{tip}}%)</span>
+          <span class='line-details'>({{ticketService.userTipPercentage}}%)</span>
+          <ion-icon class="edit-icon" name='md-create'></ion-icon>
         </h2>
         <div item-end>
-          <h2>${{getTip() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userTip / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
         <h2>Tax
-          <span class='line-details'>(6.25%)</span>
+          <span class='line-details'>({{ticketService.userTaxRate * 100 | number: '1.2-2'}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{getTax() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userTax / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{getGrandTotal() / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</h2>
+        </div>
+      </ion-item>
+      <ion-item (click)="editPaymentMethod()">
+        <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
+        <div item-end>
+          <h2>{{ticketService.userPaymentMethod?.card_type}} ...{{ticketService.userPaymentMethod?.last_four_digits}}
+            <ion-icon name="md-create" class="edit-icon"></ion-icon>
+          </h2>
         </div>
       </ion-item>
     </ion-card-content>
   </ion-card>
-  <p class="muted">Adjust your desired tip below.</p>
-  <br>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-title>
-      <p class='footer-title'>Tip Your Server</p>
-      <div class='footer-subtitle'>
-        <ion-icon class="adjust-tip" name='remove-circle' (click)="adjustTip(false)"></ion-icon>
-        {{tip}}%
-        <ion-icon class="adjust-tip" name='add-circle' (click)="adjustTip(true)"></ion-icon>
-      </div>
-    </ion-title>
+  <ion-toolbar border-top>
+    <button ion-button block (click)="pay()">Submit Payment of
+      ${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}
+    </button>
   </ion-toolbar>
 </ion-footer>
