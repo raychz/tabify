@@ -48,7 +48,7 @@
     "firebase": "^5.8.3",
     "ionic-angular": "3.9.2",
     "ionic2-rating": "^1.2.2",
-    "ionicons": "4.2.4",
+    "ionicons": "^3",
     "moment": "^2.24.0",
     "ng-socket-io": "^0.2.4",
     "promise-polyfill": "8.0.0",

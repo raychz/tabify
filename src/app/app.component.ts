@@ -7,6 +7,7 @@ import { AlertService } from '../services/utilities/alert.service';
 import { LoaderService } from '../services/utilities/loader.service';
 import { tap } from 'rxjs/operators';
 import { PaymentDetailsPageMode } from '../pages/payment-methods/payment-details/payment-details';
+import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 
 interface IPage {
   title: string;
@@ -31,6 +32,7 @@ export class Tabify {
     public menu: MenuController,
     public alertCtrl: AlertService,
     public loader: LoaderService,
+    public newsFeedService: NewsfeedService,
   ) {
     this.initializeApp();
 
@@ -154,6 +156,7 @@ export class Tabify {
 
   logout() {
     this.menu.close();
+    this.newsFeedService.clearFeed();
     this.auth.signOut();
   }
 }
