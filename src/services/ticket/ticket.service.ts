@@ -43,7 +43,17 @@ export class TicketService {
   public firestoreTicket!: FirestoreTicket;
   public firestoreTicketItems!: FirestoreTicketItem[];
   public userSelectedItemsCount: number = 0;
+  /** The value is represented in pennies. */
   public userSubtotal: number = 0;
+  public userTipPercentage: number = 18;
+  /** The value is represented in pennies. */
+  public userTip: number = 0;
+  public userTaxRate: number = 0.0625;
+  /** The value is represented in pennies. */
+  public userTax: number = 0;
+  /** The value is represented in pennies. */
+  public userGrandTotal: number = 0;
+  public userPaymentMethod: any;
   public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
 

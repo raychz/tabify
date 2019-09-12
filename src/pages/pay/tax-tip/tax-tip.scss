@@ -1,22 +1,6 @@
 page-tax-tip {
-  .footer {
-    height: 75px;
-  }
-  ion-toolbar {
-    text-align: center;
-    height: 100%;
-  }
-  .toolbar-title {
-    .footer-title {
-      color: map-get($colors, light);
-      font-size: 14px;
-      margin: 0;
-    }
-    .footer-subtitle {
-      color: map-get($colors, light);
-      font-size: 30px;
-      margin: 0;
-    }
+  #nav-pay-btn {
+    color: map-get($colors, primary);
   }
 
   .total {
@@ -31,10 +15,10 @@ page-tax-tip {
   }
 
   #grand-total {
-    border-top: 1px lightgray dashed;
+    border-bottom: 1px lightgray dashed;
   }
 
-  .adjust-tip {
+  .edit-icon {
     font-size: 1em;
     color: map-get($colors, primary);
   }
@@ -45,10 +29,14 @@ page-tax-tip {
       color: gray;
     }
   }
+
+  .linked-card-icon {
+    color: map-get($colors, primary);
+  }
 }
 
-div.reviews>ion-item.item-feedback {
-  border-left: 3px solid map-get($colors, primary);  
+div.reviews > ion-item.item-feedback {
+  border-left: 3px solid map-get($colors, primary);
   border-radius: 4px;
   padding-left: 0px;
   .text-input {
@@ -70,10 +58,59 @@ ul.rating {
   li {
     padding: 0px 3px !important;
     background: none;
-    color: map-get($colors, primary);;
+    color: map-get($colors, primary);
 
     ion-icon {
       font-size: 25px;
     }
+  }
+}
+
+.tip-modal {
+  @media (min-height: 500px) {
+    ion-backdrop {
+      visibility: visible;
+    }
+  }
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $z-index-overlay;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  contain: strict;
+  .modal-wrapper {
+    &,
+    .ion-page,
+    .ion-page .content,
+    .ion-page .content .scroll-content {
+      contain: content;
+      position: relative;
+      top: auto;
+      left: auto;
+      padding: 1px;
+    }
+
+    z-index: $z-index-overlay-wrapper;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    min-width: $alert-min-width;
+    max-height: $alert-max-height;
+    opacity: 0;
+    height: auto;
+    max-width: $alert-md-max-width;
+    border-radius: $alert-md-border-radius;
+    background-color: $alert-md-background-color;
+    box-shadow: $alert-md-box-shadow;
+    border-radius: 25px;
+    padding: 5px;
   }
 }

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController, ModalController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
+import { LoaderService } from '../../services/utilities/loader.service';
+import { PaymentService } from '../../services/payment/payment.service';
+import { AlertService } from '../../services/utilities/alert.service';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
-import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
 import { abbreviateName } from '../../utilities/general.utilities';
 import { LikesPage } from './likes/likes';
 import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
@@ -36,7 +39,8 @@ export class HomePage {
     private storyService: StoryService,
     public newsfeedService: NewsfeedService,
     public loader: LoaderService,
-    public alertCtrl: AlertController,
+    public paymentService: PaymentService,
+    public alert: AlertService,
     public auth: AuthService,
     public modalCtrl: ModalController
   ) { }
@@ -54,11 +58,11 @@ export class HomePage {
     try {
       await this.newsfeedService.initializeNewsfeed();
     } catch (e) {
-      const alert = this.alertCtrl.create({
+      const alert = this.alert.create({
         title: 'Network Error',
         message: e,
       });
-      alert.present();
+      await alert.present();
     }
     this.loader.dismiss();
   }
@@ -94,12 +98,51 @@ export class HomePage {
     console.log(event);
   }
 
-  payNewTab() {
-    this.navCtrl.push(
-      'PayPage',
-      {},
-      { animate: true, animation: 'md-transition', direction: 'forward' }
-    );
+  async payNewTab() {
+    await this.loader.present();
+    try {
+      const paymentMethods = await this.paymentService.getPaymentMethods();
+
+      // If user has a payment method on file, proceed to pay workflow
+      // Otherwise, take user to payment method entry page
+      if (paymentMethods && paymentMethods.length > 0) {
+        await this.loader.dismiss();
+        this.navCtrl.push(
+          'LocationPage',
+          {},
+          { animate: true, animation: 'md-transition', direction: 'forward' }
+        );
+      } else {
+        await this.loader.dismiss();
+        const alert = this.alert.create({
+          title: `Let's Get Started`,
+          message: `To pay your tab, please enter a payment method.`,
+          buttons: [
+            {
+              text: 'Ok',
+            },
+          ],
+        });
+        await alert.present();
+        this.navCtrl.push(
+          'PaymentMethodsPage',
+          { mode: PaymentDetailsPageMode.NO_PAYMENT_METHOD },
+          { animate: true, animation: 'md-transition', direction: 'forward' }
+        );
+      }
+    } catch {
+      await this.loader.dismiss();
+      const alert = this.alert.create({
+        title: 'Error',
+        message: `Whoops, something went wrong. Please try again.`,
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      await alert.present();
+    }
   }
 
   openDetailedStory(storyId: number) {

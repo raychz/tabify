@@ -1,25 +1,22 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-    <ion-title>Payment Methods</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Payment</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="cards-bg">
   <ion-card>
-    <ion-card-header>Linked Cards</ion-card-header>
+    <ion-card-header>{{!this.paymentService.paymentMethods.length ? 'No' : ''}} Payment Methods</ion-card-header>
     <ion-list>
-      <button ion-item>
+      <button ion-item *ngFor="let method of this.paymentService.paymentMethods" (click)="showMethodActions(method)">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
-        Visa: ****4673
-      </button>
-      <button ion-item>
-        <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
-        MasterCard: ****3982
-      </button>
-      <button ion-item>
-        <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
-        Visa: ****4930
+        {{method.card_type}} ...{{method.last_four_digits}}
+        <ion-note item-end>
+          {{method.month}}/{{method.year | number | slice:-2}}
+        </ion-note>
       </button>
       <button ion-item (click)="addNewCard()">
         <ion-icon class="linked-card-icon" name="add" item-start></ion-icon>
