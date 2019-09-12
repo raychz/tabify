@@ -1,16 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, UserStatus, User } from '../../../services/ticket/ticket.service';
-import { IUser } from '../../../interfaces/user.interface';
+import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
-
-/**
- * Generated class for the WaitingRoomPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({

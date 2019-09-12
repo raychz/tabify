@@ -23,6 +23,7 @@ export class TabLookupPage {
   dateTime: number = Date.now();
   isCodeVisible = false;
 
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -44,11 +45,6 @@ export class TabLookupPage {
     this.getDateTime();
     await this.getFraudPreventionCode();
     await this.loader.dismiss();
-    this.ticketService.firestoreStatus$.pipe(tap( (fireStoreInitializationStatus) => {
-      if (fireStoreInitializationStatus) {
-      this.viewSelectItems()
-    }
-  } )).subscribe();
   }
 
   getDateTime() {
@@ -77,10 +73,20 @@ export class TabLookupPage {
     }
 
     // await this.socketService.connect()
+        console.log(this.ticketService.firestoreStatus$.getValue())
+    if (this.ticketService.firestoreStatus$.getValue()) {
+      this.viewNextPage();
+    } else {
+      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
+        if (fireStoreInitializationStatus) {
+          this.viewNextPage();
+        }
+      })).subscribe();
+    }
     this.ticketService.initializeFirestoreTicket(ticket.id);
   }
 
-  private async viewSelectItems() {
+  private async viewNextPage() {
       switch (this.ticketService.curUser.status) {
         case UserStatus.Selecting:
           this.navCtrl.push('SelectItemsPage');
