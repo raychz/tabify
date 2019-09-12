@@ -175,7 +175,7 @@ export class PaymentDetailsPage {
   async onSpreedlyPaymentMethod(token: string, details: string) {
     try {
       const method = await this.paymentService.createPaymentMethod(details) as any;
-      this.paymentService.pushPaymentMethod(method);
+      await this.paymentService.initializePaymentMethods();
       switch (this.mode) {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
           await this.navCtrl.popToRoot();
