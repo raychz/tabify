@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
-import { ReceiptItem } from '../select-items/select-items';
-import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -39,11 +37,6 @@ export class TaxTipPage {
           userShare
         };
       });
-    this.setBackButtonAction();
-  }
-
-  setBackButtonAction() {
-    this.navBar.hideBackButton = true;
   }
 
   adjustTip(shouldIncreaseTip: boolean) {

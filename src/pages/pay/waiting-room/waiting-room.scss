@@ -20,4 +20,28 @@ page-waiting-room {
   .payer-description {
     font-size: small;
   }
+  .item {
+    padding: 0;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  .item-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  .item-total {
+    vertical-align: top;
+  }
+  .share-text {
+    color: map-get($colors, primary);
+    font-size: 0.9em;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  .total-text {
+    font-size: 1em;
+    vertical-align: top;
+  }
 }

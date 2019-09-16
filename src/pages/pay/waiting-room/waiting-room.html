@@ -22,9 +22,9 @@
 
         <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
           <ion-item *ngFor="let item of ticketService.curUser.ticketItems">
-            <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
-            <div item-end>
-              <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+            <div item-start class="item-name"> {{ ticketService.getTicketItemName(item.name) }} </div>
+            <div item-end class="item-total">
+              <span class="share-text" *ngIf="item.users && item.users.length > 1">
                   ${{ ticketService.findUserShareOfItem(item, ticketService.curUser.uid) / 100 | number: '1.2-2' }} /
                 </span>
                 <span class="total-text">
@@ -59,9 +59,9 @@
 
                       <ion-list *ngIf="ticketService.getUserExpanded(user)">
                         <ion-item *ngFor="let item of user.ticketItems">
-                          <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
-                          <div item-end>
-                            <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                          <div item-start class="item-name"> {{ ticketService.getTicketItemName(item.name) }} </div>
+                          <div item-end class="item-total">
+                            <span class="share-text" *ngIf="item.users && item.users.length > 1">
                               ${{ ticketService.findUserShareOfItem(item, user.uid) / 100 | number: '1.2-2' }} /
                             </span>
                             <span class="total-text">
@@ -83,14 +83,14 @@
         <ion-list>
           <ion-item *ngFor="let item of ticketService.sharedItems">
             <div item-start>
-              <ion-row>
+              <ion-row class="item-name">
                 {{ ticketService.getTicketItemName(item.name) }}
               </ion-row>
-              <ion-row class="payer-description">
+              <ion-row class="payer-description" text-wrap>
                 {{ item.payersDescription }}
               </ion-row>
             </div>
-             <div item-end>
+             <div item-end class="total-text">
                 ${{ item.price / 100 | number: '1.2-2' }}
              </div>
           </ion-item>
@@ -99,12 +99,12 @@
 
       <ion-card *ngIf="ticketService.unclaimedItems.length > 0">
         <ion-card-header class="card-header">
-          ⚠️Unclaimed Items <span id="Go-back-text">Go back to claim</span>
+          ⚠️Unclaimed Items <span id="go-back-text">Go back to claim</span>
         </ion-card-header>
         <ion-list>
           <ion-item *ngFor="let item of ticketService.unclaimedItems">
-              <div item-start> {{ ticketService.getTicketItemName(item.name) }} </div>
-              <div item-end> ${{ item.price / 100 | number: '1.2-2' }} </div>
+              <div item-start class="item-name"> {{ ticketService.getTicketItemName(item.name) }} </div>
+              <div item-end class="total-text"> ${{ item.price / 100 | number: '1.2-2' }} </div>
           </ion-item>
         </ion-list>
       </ion-card>
