@@ -20,7 +20,7 @@ page-home {
   }
 
   .pay-tab {
-    top: 10px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
@@ -42,7 +42,7 @@ page-home {
   }
 
   .empty-feed {
-    height: calc(100% - #{$blank-space-height});
+    height: 100%;
     position: relative;
     &-img {
       position: absolute;
@@ -66,11 +66,7 @@ page-home {
       width: 100%;
       position: absolute;
       z-index: 2;
-      background: linear-gradient(
-        to bottom,
-        rgba(37, 37, 38, 1) 5%,
-        rgba(37, 37, 38, 0.5) 150%
-      );
+      background: linear-gradient(to bottom, rgba(37, 37, 38, 1) 5%, rgba(37, 37, 38, 0.5) 150%);
     }
 
     &-text {
@@ -86,8 +82,75 @@ page-home {
     }
   }
 
-  ion-refresher {
-    z-index: 1000;
-    background-color: map-get($colors, primary);
+  .tabify-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 3px;
+    height: 42px;
+  }
+
+
+  .plus-others {
+    color: map-get($colors, primary);
+  }
+
+  .gray-arrow {
+    color: lightgray;
+  }
+
+  .heart-padding {
+    font-size: inherit;
+    margin: 0px 0px 0px 0px;
+    padding-left: 11px;
+    padding-right: 0px;
+  }
+
+  .like-comment-row {
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+
+  .like-btn-padding {
+    font-size: inherit;
+    margin: 0px 0px 0px 0px;
+    padding-left: 5px;
+    padding-right: 16px;
+  }
+
+  .comment-btn-padding {
+    font-size: inherit;
+    margin: 0px 0px 0px 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 2px;
+  }
+
+  .users-padding {
+    color: lightgray;
+    padding: 0px 0px 0px 0px;
+    margin-left: 16px;
+  }
+
+  .date-padding {
+    padding-top: 12px;
+    padding-right: 16px;
+  }
+
+  .card .note {
+    font-size: 1.2rem;
+  }
+
+  .restaurant-address {
+    color: #aeacb4;
+    font-size: 1.2rem;
+  }
+
+  .list-ios > .item-block:first-child, .list-ios > .item-block:last-child {
+    border-top: none;
+    border-bottom: none;
   }
 }

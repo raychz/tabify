@@ -9,11 +9,8 @@ import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
-import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getTicketUsersDescription } from '../../utilities/ticket.utilities';
-import { user } from '../../pages/home/example-stories';
-import { e, P } from '@angular/core/src/render3';
+import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
@@ -66,8 +63,18 @@ export class TicketService {
   public users!: User[];
   public curUser!: User;
   public userSelectedItemsCount: number = 0;
+  /** The value is represented in pennies. */
   public userSubtotal: number = 0;
-  public ticketUsersDescription: string = getTicketUsersDescription();
+  public userTipPercentage: number = 18;
+  /** The value is represented in pennies. */
+  public userTip: number = 0;
+  public userTaxRate: number = 0.0625;
+  /** The value is represented in pennies. */
+  public userTax: number = 0;
+  /** The value is represented in pennies. */
+  public userGrandTotal: number = 0;
+  public userPaymentMethod: any;
+  public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
   public isExpandedList: {[uid: string]: boolean} = {};
   public firestoreStatus$ = new BehaviorSubject<boolean> (false);
@@ -462,7 +469,7 @@ export class TicketService {
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
     console.log(this.firestoreTicket);
-    this.ticketUsersDescription = getTicketUsersDescription(firestoreTicket.users);
+    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(firestoreTicket.users);
     if (this.firestoreTicketItems && this.users) {
       this.updateItemsAndUsers();
     } else {

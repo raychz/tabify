@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button navPop ion-button icon-start>
+        <ion-icon name="arrow-back"></ion-icon>
+        Back
+      </button>
+    </ion-buttons>
+    <ion-title>Users</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item *ngFor="let user of users">
+      <ion-avatar item-start>
+        <img src={{user.userDetail.photo_url}} />
+      </ion-avatar>
+      <ion-label>{{user.userDetail.displayName}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

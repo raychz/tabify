@@ -40,6 +40,10 @@ export class TabLookupPage {
     });
   }
 
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
   async ionViewDidLoad() {
     await this.loader.present();
     this.getDateTime();

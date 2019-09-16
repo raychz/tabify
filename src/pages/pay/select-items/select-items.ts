@@ -47,8 +47,12 @@ export class SelectItemsPage {
     public alertCtrl: AlertService,
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
   ) { }
+
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
 
   ionViewDidLoad() {
   }
