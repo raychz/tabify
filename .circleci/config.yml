@@ -10,18 +10,9 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          name: Restore npm package cache
-          keys:
-            - v1-npm-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies
           command: npm ci
-      - save_cache:
-          name: Save npm package cache
-          key: v1-npm-deps-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
       - run:
           name: Build Ionic Application
           command: npm run build --prod
@@ -35,7 +26,7 @@ jobs:
             - node_modules
   deploy:
     docker:
-      - image: 'circleci/node:8.11.3'
+      - image: circleci/node:8.15.0
     working_directory: ~/repo
     steps:
       - attach_workspace:
