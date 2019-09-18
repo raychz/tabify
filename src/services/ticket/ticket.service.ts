@@ -8,8 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { of } from 'rxjs/observable/of';
+import { Subscription , of } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 

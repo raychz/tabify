@@ -5,12 +5,9 @@ import 'firebase/auth';
 import { Platform, AlertController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable , Subject , of , from } from 'rxjs';
 import { config } from "../../config";
-import { Subject } from 'rxjs/Subject';
 import { tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { from } from 'rxjs/observable/from';
 
 interface ISignUpCredentials {
   email: string;
