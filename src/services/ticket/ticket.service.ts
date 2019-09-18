@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { config } from '../../config';
+import { environment } from '@tabify/env';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
@@ -82,7 +82,7 @@ export class TicketService {
         fraudPreventionCodeId: String(fraudPreventionCode.id),
       };
       const ticket = await this.http
-        .get(`${config.serverUrl}/ticket`, { params })
+        .get(`${environment.serverUrl}/ticket`, { params })
         .toPromise();
 
       return {

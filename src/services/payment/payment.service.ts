@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { config } from '../../config';
+import { environment } from '@tabify/env';
 
 @Injectable()
 export class PaymentService {
@@ -19,7 +19,7 @@ export class PaymentService {
   }
 
   getPaymentMethods() {
-    const url = `${config.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment/method`;
 
     return this.http
       .get<any[]>(url)
@@ -27,7 +27,7 @@ export class PaymentService {
   }
 
   createGatewayPurchase(token: string, amount: number) {
-    const url = `${config.serverUrl}/payment`;
+    const url = `${environment.serverUrl}/payment`;
 
     return this.http
       .post(url, {
@@ -43,7 +43,7 @@ export class PaymentService {
    * @param method 
    */
   createPaymentMethod(details: any) {
-    const url = `${config.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment/method`;
 
     return this.http
       .post(url, {
@@ -95,7 +95,7 @@ export class PaymentService {
    * @param method 
    */
   deletePaymentMethod(method: any) {
-    const url = `${config.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment/method`;
 
     const options = {
       headers: new HttpHeaders({

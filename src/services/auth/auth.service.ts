@@ -6,7 +6,7 @@ import { Platform, AlertController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable , Subject , of , from } from 'rxjs';
-import { config } from "../../config";
+import { environment } from '@tabify/env';
 import { tap } from 'rxjs/operators';
 
 interface ISignUpCredentials {
@@ -152,7 +152,7 @@ export class AuthService {
       return userExistsInDB;
     } else {
       const res: any = await this.http
-        .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
+        .post(`${environment.serverUrl}/user`, { referralCode: this.referralCode })
         .toPromise();
 
       this.userDetails = res;
@@ -173,7 +173,7 @@ export class AuthService {
    */
   async checkUserExistsInDB(): Promise<boolean> {
     try {
-      const res: any = await this.http.get(`${config.serverUrl}/user/userDetails`).toPromise();
+      const res: any = await this.http.get(`${environment.serverUrl}/user/userDetails`).toPromise();
 
       if (this.user && res && res.user && res.user.uid === this.user.uid) {
         this.userDetails = res;

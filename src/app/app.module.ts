@@ -14,7 +14,7 @@ import { Pro } from '@ionic/pro';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { config } from '../config';
+import { environment } from '@tabify/env';
 import { AuthService } from '../services/auth/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 import { LoaderService } from '../services/utilities/loader.service';
@@ -61,7 +61,7 @@ export class MyErrorHandler implements ErrorHandler {
       preloadModules: false,
       scrollPadding: false,
     }),
-    AngularFireModule.initializeApp(config.firebaseConfig.fire),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
     Ionic2RatingModule,
