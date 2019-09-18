@@ -18,7 +18,7 @@ import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
   templateUrl: 'tax-tip.html',
 })
 export class TaxTipPage {
-  @ViewChild(Navbar) navBar!: Navbar;
+  @ViewChild(Navbar) navBar: Navbar;
   tip = 18;
   myTabItems: FirestoreTicketItem[] = [];
   selectOptions = {
@@ -97,7 +97,7 @@ export class TaxTipPage {
   }
 
   async adjustTip() {
-    const tipModal = this.modalCtrl.create(EnterTipPage, null,
+    const tipModal = this.modalCtrl.create('EnterTipPage', null,
       { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
     await tipModal.present();
   }
@@ -132,7 +132,7 @@ export class TaxTipPage {
   async pay() {
     if (this.ticketService.userPaymentMethod) {
       console.log(this.navCtrl);
-      // const payConfirmationModal = this.modalCtrl.create(PayConfirmationPage)
+      // const payConfirmationModal = this.modalCtrl.create('PayConfirmationPage')
       // await payConfirmationModal.present();
       await this.navCtrl.setRoot('HomePage');
     } else {

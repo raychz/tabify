@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { SocketService } from '../../../services/socket/socket.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { ILocation } from '../../../interfaces/location.interface';
@@ -18,7 +17,7 @@ import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.
 export class TabLookupPage {
   location: ILocation = this.navParams.data;
   tabForm: FormGroup;
-  fraudPreventionCode!: IFraudPreventionCode;
+  fraudPreventionCode: IFraudPreventionCode;
   dateTime: number = Date.now();
   isCodeVisible = false;
 
@@ -28,7 +27,6 @@ export class TabLookupPage {
     public fb: FormBuilder,
     public loader: LoaderService,
     public auth: AuthService,
-    public socketService: SocketService,
     public ticketService: TicketService,
     public alertCtrl: AlertService,
     public locationService: LocationService,
@@ -74,7 +72,6 @@ export class TabLookupPage {
       return;
     }
 
-    // await this.socketService.connect()
     this.ticketService.initializeFirestoreTicket(ticket.id);
     await this.navCtrl.push('SelectItemsPage');
     await this.loader.dismiss();

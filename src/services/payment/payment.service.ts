@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import config from '../../config';
+import { config } from '../../config';
 
 @Injectable()
 export class PaymentService {

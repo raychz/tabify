@@ -168,7 +168,7 @@ export class HomePage {
 
   async displayLikers(ticketId: number, storyId: number, numLikes: number) {
     if (numLikes > 0) {
-      const modal = this.modalCtrl.create(LikesPage, {
+      const modal = this.modalCtrl.create('LikesPage', {
         storyId: storyId,
       });
       modal.present();
@@ -178,7 +178,7 @@ export class HomePage {
   }
 
   displayUsers(users: any[]) {
-    const modal = this.modalCtrl.create(UsersPage, {
+    const modal = this.modalCtrl.create('UsersPage', {
       users: users,
     });
     modal.present();

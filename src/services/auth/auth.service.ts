@@ -6,10 +6,11 @@ import { Platform, AlertController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { from, Subject } from 'rxjs';
-import config from "../../config";
+import { config } from "../../config";
+import { Subject } from 'rxjs/Subject';
 import { tap } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
+import { from } from 'rxjs/observable/from';
 
 interface ISignUpCredentials {
   email: string;
@@ -28,7 +29,7 @@ interface ISignInCredentials {
 export class AuthService {
   private user: firebase.User | null = null;
   private userDetails: any = null; // user details as stored in our database, not firebase
-  private authState$!: Observable<firebase.User | null>;
+  private authState$: Observable<firebase.User | null>;
   private referralCode: string = '';
   public userDetailsConfirmedInDB$ = new Subject<boolean>();
 

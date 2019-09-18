@@ -14,13 +14,11 @@ import { Pro } from '@ionic/pro';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuth } from '@angular/fire/auth';
-import config from '../config';
+import { config } from '../config';
 import { AuthService } from '../services/auth/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 import { LoaderService } from '../services/utilities/loader.service';
 import { AlertService } from '../services/utilities/alert.service';
-import { SocketService } from '../services/socket/socket.service';
-import { SocketIoModule } from 'ng-socket-io';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
@@ -35,7 +33,7 @@ Pro.init('66369498', {
 
 @Injectable()
 export class MyErrorHandler implements ErrorHandler {
-  ionicErrorHandler!: IonicErrorHandler;
+  ionicErrorHandler: IonicErrorHandler;
 
   constructor(injector: Injector) {
     try {
@@ -59,13 +57,13 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(Tabify, {
-      preloadModules: true,
+      // TODO: Further investigate implications of not preloading modules
+      preloadModules: false,
       scrollPadding: false,
     }),
     AngularFireModule.initializeApp(config.firebaseConfig.fire),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    SocketIoModule,
     Ionic2RatingModule,
     HttpClientModule,
   ],
@@ -86,7 +84,6 @@ export class MyErrorHandler implements ErrorHandler {
     Facebook,
     LoaderService,
     AlertService,
-    SocketService,
     TicketService,
     LocationService,
     FirestoreService,

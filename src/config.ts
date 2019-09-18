@@ -1,4 +1,4 @@
-export default {
+export const config = {
   firebaseConfig: {
     fire: {
       apiKey: 'AIzaSyCyOe9TB0DTkDtX8B_3ddutEfN0nOy-WdU',
