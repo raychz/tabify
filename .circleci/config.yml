@@ -10,9 +10,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      # - run:
-      #     name: Install Ionic and Cordova
-      #     command: sudo yarn global add ionic
       - restore_cache:
           name: Restore npm package cache
           keys:
