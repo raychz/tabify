@@ -18,7 +18,7 @@ interface IPage {
   templateUrl: 'app.html',
 })
 export class Tabify {
-  @ViewChild(Nav) nav!: Nav;
+  @ViewChild(Nav) nav: Nav;
 
   rootPage: any = 'LoadingPage';
 

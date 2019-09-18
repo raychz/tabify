@@ -10,24 +10,21 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: Install Ionic and Cordova
-          command: sudo yarn global add ionic
       - restore_cache:
-          name: Restore Yarn Package Cache
+          name: Restore npm package cache
           keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+            - v1-npm-deps-{{ checksum "package-lock.json" }}
       - run:
-          name: Install Dependencies
-          command: yarn install --frozen-lockfile
+          name: Install dependencies
+          command: npm install
       - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          name: Save npm package cache
+          key: v1-npm-deps-{{ checksum "package-lock.json" }}
           paths:
-            - ~/.cache/yarn
+            - node_modules
       - run:
           name: Build Ionic Application
-          command: yarn ionic:build
+          command: npm run build --prod
       - persist_to_workspace:
           root: .
           paths:
@@ -42,9 +39,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Install Firebase
-          command: yarn add firebase-tools
+      # - run:
+      #     name: Install Firebase
+      #     command: npm install firebase-tools
       - run:
           name: Deploy to Firebase
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
