@@ -40,11 +40,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      # - run:
-      #     name: Install Firebase
-      #     command: npm install firebase-tools
-      - run: ls
-      - run: ls node_modules
       - run:
           name: Deploy to Firebase
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
