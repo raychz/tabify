@@ -65,11 +65,20 @@ export class TabLookupPage {
 
     if (error || !ticket) {
       this.loader.dismiss();
-      const alert = this.alertCtrl.create({
-        title: 'Tab Not Found',
-        message: `Please check your ticket number or location and try again.`,
-        buttons: ['Ok']
-      });
+      let alert;
+      if (error.status === 403) {
+        alert = this.alertCtrl.create({
+          title: 'Unable to join tab',
+          message: error.error.message,
+          buttons: ['Ok']
+        });
+      } else {
+        alert = this.alertCtrl.create({
+          title: 'Tab Not Found',
+          message: `Please check your ticket number or location and try again.`,
+          buttons: ['Ok']
+        });
+      }
       alert.present();
       return;
     }
@@ -88,37 +97,36 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-      switch (this.ticketService.curUser.status) {
-        case UserStatus.Selecting:
-          this.navCtrl.push('SelectItemsPage');
-          break;
-        case UserStatus.Waiting:
-          this.navCtrl.push('WaitingRoomPage', {confirmed: false, pushSelectItemsOnBack: true});
-          break;
-        case UserStatus.Confirmed:
-          this.navCtrl.push('WaitingRoomPage', {confirmed: true, pushSelectItemsOnBack: true});
-          break;
-        case UserStatus.Paying:
-          this.navCtrl.push('TaxTipPage');
-          break;
-        case UserStatus.Paid:
-            const modal = this.alertCtrl.create({
-              title: 'Tab already paid!',
-              message: 'You have already paid your tab, no need to do anything else.',
-              buttons: [
-                {
-                  text: 'Ok',
-                },
-              ],
-            });
-            modal.present();
-          break;
-        default:
-          throw new Error('Unknown user status')
-      }
-
-    await this.loader.dismiss();
-    this.ticketService.firestoreStatus$.complete();
+    switch (this.ticketService.curUser.status) {
+      case UserStatus.Selecting:
+        this.navCtrl.push('SelectItemsPage');
+        break;
+      case UserStatus.Waiting:
+        this.navCtrl.push('WaitingRoomPage', {confirmed: false, pushSelectItemsOnBack: true});
+        break;
+      case UserStatus.Confirmed:
+        this.navCtrl.push('WaitingRoomPage', {confirmed: true, pushSelectItemsOnBack: true});
+        break;
+      case UserStatus.Paying:
+        this.navCtrl.push('TaxTipPage');
+        break;
+      case UserStatus.Paid:
+          const modal = this.alertCtrl.create({
+            title: 'Tab already paid!',
+            message: 'You have already paid your tab, no need to do anything else.',
+            buttons: [
+              {
+                text: 'Ok',
+              },
+            ],
+          });
+          modal.present();
+        break;
+      default:
+        throw new Error('Unknown user status')
+    }
+  await this.loader.dismiss();
+  this.ticketService.firestoreStatus$.complete();
   }
 
   async getFraudPreventionCode() {

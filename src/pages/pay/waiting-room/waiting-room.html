@@ -118,11 +118,11 @@
 
 <ion-footer>
   <ng-container>
-      <ion-label color="light" class="confirm-text" *ngIf="selectConfirmButton && ticketService.unclaimedItems.length > 0">
-          All Items must be selected to move forward.
-        </ion-label>
-    <ion-label color="light" class="confirm-text" *ngIf="selectConfirmButton">
-      {{ checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for the rest of your party to finish...' }}
+    <ion-label text-wrap color="light" class="confirm-text" *ngIf="selectConfirmButton && ticketService.unclaimedItems.length > 0">
+      All Items must be selected to move forward.
+    </ion-label>
+    <ion-label text-wrap color="light" class="confirm-text">
+      {{ selectConfirmButton ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for the rest of your party to finish...') : 'Make sure all users have joined before confirming' }}
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"
       [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">

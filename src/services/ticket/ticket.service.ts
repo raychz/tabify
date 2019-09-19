@@ -155,11 +155,11 @@ export class TicketService {
     return 0;
   }
 
-  public async changeUserStatus(status: UserStatus): Promise<{ success: boolean; message: string }> {
+  public async changeUserStatus(status?: UserStatus): Promise<{ success: boolean; message: string }> {
     try {
       await this.firestoreService.runTransaction(async transaction => {
         const ticketDocRef = this.firestoreService.document(
-          `tickets/${this.firestoreTicket!.id}`
+          `tickets/${this.firestoreTicket.id}`
         ).ref;
         const ticket = await transaction.get(ticketDocRef);
         if (!ticket.exists) {
@@ -169,7 +169,6 @@ export class TicketService {
         let { users, overallUsersProgress } = ticket.data()! as {
           users: {status: UserStatus, uid: string}[];
           overallUsersProgress: UserStatus;
-
         };
 
         let lowestStatus = overallUsersProgress;
@@ -177,7 +176,7 @@ export class TicketService {
         let highestStatusCount = 0;
 
         for (let user of users) {
-          if (user.uid === this.auth.getUid()) {
+          if (user.uid === this.auth.getUid() && status) {
             user.status = status;
           }
 
@@ -470,6 +469,7 @@ export class TicketService {
     this.firestoreTicket = firestoreTicket;
     console.log(this.firestoreTicket);
     this.ticketUsersDescription = getSelectItemsTicketUsersDescription(firestoreTicket.users);
+    this.changeUserStatus();
     if (this.firestoreTicketItems && this.users) {
       this.updateItemsAndUsers();
     } else {
