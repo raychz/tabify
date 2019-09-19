@@ -10,7 +10,6 @@ import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { SocketService } from '../../../services/socket/socket.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
@@ -42,7 +41,6 @@ export class SelectItemsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
-    public socketService: SocketService,
     public loader: LoaderService,
     public alertCtrl: AlertService,
     public ticketService: TicketService,
@@ -201,7 +199,7 @@ export class SelectItemsPage {
   }
 
   inviteOthers() {
-    const modal = this.modalCtrl.create(InviteOthersPage, {
+    const modal = this.modalCtrl.create('InviteOthersPage', {
       tabNumber: this.ticketService.firestoreTicket.tab_id,
       users: this.ticketService.firestoreTicket.users,
     });

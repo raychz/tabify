@@ -12,14 +12,19 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "target": "es5",
-    "strict": true,
-    "skipLibCheck": true
+    "strict": false,
+    "baseUrl" : "./src",
+    "paths" : {
+      "@tabify/env" : [
+        "environments/environment"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules/**/*",
+    "node_modules",
     "src/**/*.spec.ts",
     "src/**/__tests__/*.ts"
   ],

@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import config from '../../config';
+import { environment } from '@tabify/env';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
@@ -56,12 +56,12 @@ export interface User {
 export class TicketService {
   // Public class variables
   // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
-  public firestoreTicket!: FirestoreTicket;
-  public firestoreTicketItems!: FirestoreTicketItem[];
+  public firestoreTicket: FirestoreTicket;
+  public firestoreTicketItems: FirestoreTicketItem[];
   public sharedItems: FirestoreTicketItem[] = [];
   public unclaimedItems: FirestoreTicketItem[] = [];
-  public users!: User[];
-  public curUser!: User;
+  public users: User[];
+  public curUser: User;
   public userSelectedItemsCount: number = 0;
   /** The value is represented in pennies. */
   public userSubtotal: number = 0;
@@ -80,8 +80,8 @@ export class TicketService {
   public firestoreStatus$ = new BehaviorSubject<boolean> (false);
 
   // Private class variables
-  private firestoreTicket$!: Subscription;
-  private firestoreTicketItems$!: Subscription;
+  private firestoreTicket$: Subscription;
+  private firestoreTicketItems$: Subscription;
 
   constructor(
     private readonly http: HttpClient,
@@ -104,7 +104,7 @@ export class TicketService {
         fraudPreventionCodeId: String(fraudPreventionCode.id),
       };
       const ticket = await this.http
-        .get(`${config.serverUrl}/ticket`, { params })
+        .get(`${environment.serverUrl}/ticket`, { params })
         .toPromise();
 
       return {

@@ -5,34 +5,31 @@
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
+    "start": "ionic-app-scripts serve",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
-    "lint": "ionic-app-scripts lint",
-    "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve",
-    "format": "prettier --single-quote --trailing-comma es5 --write src/**/*.ts",
-    "start": "yarn ionic:serve"
+    "lint": "ionic-app-scripts lint"
   },
   "dependencies": {
-    "@angular/animations": "5.2.10",
-    "@angular/common": "5.2.10",
-    "@angular/compiler": "5.2.10",
-    "@angular/compiler-cli": "5.2.10",
-    "@angular/core": "5.2.10",
+    "@angular/animations": "5.2.11",
+    "@angular/common": "5.2.11",
+    "@angular/compiler": "5.2.11",
+    "@angular/compiler-cli": "5.2.11",
+    "@angular/core": "5.2.11",
     "@angular/fire": "^5.1.1",
-    "@angular/forms": "5.2.10",
-    "@angular/http": "5.2.10",
-    "@angular/platform-browser": "5.2.10",
-    "@angular/platform-browser-dynamic": "5.2.10",
-    "@ionic-native/core": "^4.18.0",
+    "@angular/forms": "5.2.11",
+    "@angular/http": "5.2.11",
+    "@angular/platform-browser": "5.2.11",
+    "@angular/platform-browser-dynamic": "5.2.11",
+    "@ionic-native/core": "~4.20.0",
     "@ionic-native/facebook": "4.9.0",
     "@ionic-native/keychain": "4.9.0",
-    "@ionic-native/splash-screen": "4.7.0",
-    "@ionic-native/status-bar": "4.7.0",
+    "@ionic-native/splash-screen": "~4.20.0",
+    "@ionic-native/status-bar": "~4.20.0",
     "@ionic/pro": "1.0.20",
-    "@ionic/storage": "2.1.3",
+    "@ionic/storage": "2.2.0",
     "@ultimate/ngxerrors": "1.4.0",
-    "cordova-android": "6.4.0",
+    "cordova-android": "7.0.0",
     "cordova-browser": "5.0.3",
     "cordova-ios": "4.5.5",
     "cordova-plugin-device": "2.0.2",
@@ -44,24 +41,23 @@
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "1.3.3",
-    "currency.js": "^1.1.4",
+    "currency.js": "^1.2.2",
     "firebase": "^5.8.3",
-    "ionic-angular": "3.9.2",
+    "ionic-angular": "3.9.5",
     "ionic2-rating": "^1.2.2",
-    "ionicons": "^3",
+    "ionicons": "3.0.0",
     "moment": "^2.24.0",
-    "ng-socket-io": "^0.2.4",
     "promise-polyfill": "8.0.0",
-    "rxjs": "^6.4.0",
-    "rxjs-compat": "^6.4.0",
+    "rxjs": "6.0.0",
+    "rxjs-compat": "6.0.0",
     "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.26"
+    "zone.js": "0.8.29"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "3.1.9",
+    "@ionic/app-scripts": "3.2.4",
     "firebase-tools": "^6.1.0",
     "prettier": "1.13.7",
-    "typescript": "^3.2.2"
+    "typescript": "~2.6.2"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -95,6 +91,8 @@
     ]
   },
   "config": {
+    "ionic_aot_write_to_disk": true,
+    "ionic_optimization": "./config/webpack.config.js",
     "ionic_webpack": "./config/webpack.config.js"
   }
 }
