@@ -10,7 +10,7 @@ import { sleep } from '../../../utilities/general.utilities';
   templateUrl: 'waiting-room.html',
 })
 export class WaitingRoomPage {
-  @ViewChild(Navbar) navBar!: Navbar;
+  @ViewChild(Navbar) navBar: Navbar;
 
   userStatus = UserStatus;
   moveToTaxTip = false;
