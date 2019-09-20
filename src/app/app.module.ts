@@ -57,8 +57,7 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(Tabify, {
-      // TODO: Further investigate implications of not preloading modules
-      preloadModules: false,
+      preloadModules: true,
       scrollPadding: false,
     }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
