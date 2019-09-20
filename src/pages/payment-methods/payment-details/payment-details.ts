@@ -67,7 +67,6 @@ export class PaymentDetailsPage {
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
-    console.log('PAY MODE', this.mode);
     if (!(this.mode in PaymentDetailsPageMode)) {
       throw new Error('No mode specified');
     }
@@ -105,8 +104,6 @@ export class PaymentDetailsPage {
   }
 
   initializeSpreedly() {
-    console.log("SPREEDLY HEREEE", Spreedly);
-    // TODO: Environmentalize this
     Spreedly.init('Iu3UapkcfklJXqLJV61vbJsp1dl', {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
