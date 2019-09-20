@@ -45,7 +45,8 @@ export class TaxTipPage {
   }
 
   async ionViewDidLoad() {
-    await this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
       .map(item => {
         const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
@@ -66,7 +67,7 @@ export class TaxTipPage {
     if (this.paymentService.paymentMethods.length) {
       this.ticketService.userPaymentMethod = this.paymentService.paymentMethods[0];
     }
-    await this.loader.dismiss();
+    await loading.dismiss();
   }
 
   setBackButtonAction() {

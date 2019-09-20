@@ -41,10 +41,8 @@ export class TabLookupPage {
   }
 
   async ionViewDidLoad() {
-    await this.loader.present();
     this.getDateTime();
     await this.getFraudPreventionCode();
-    await this.loader.dismiss();
   }
 
   getDateTime() {
@@ -56,13 +54,14 @@ export class TabLookupPage {
   async findTab() {
     const { tabNumber } = this.tabForm.value;
 
-    this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     const { error, ticket } = await
       this.ticketService
         .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
 
     if (error || !ticket) {
-      this.loader.dismiss();
+      await loading.dismiss();
       const alert = this.alertCtrl.create({
         title: 'Tab Not Found',
         message: `Please check your ticket number or location and try again.`,
@@ -74,15 +73,18 @@ export class TabLookupPage {
 
     this.ticketService.initializeFirestoreTicket(ticket.id);
     await this.navCtrl.push('SelectItemsPage');
-    await this.loader.dismiss();
+    await loading.dismiss();
   }
 
   async getFraudPreventionCode() {
+    const loading = this.loader.create();
+    await loading.present();
     try {
       const result = await this.locationService.getFraudPreventionCode();
       this.fraudPreventionCode = result
     } catch (error) {
       console.log(error);
     }
+    await loading.dismiss();
   }
 }
