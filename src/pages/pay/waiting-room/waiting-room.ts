@@ -23,6 +23,10 @@ export class WaitingRoomPage {
     public ticketService: TicketService,
   ) {}
 
+  public ionViewCanEnter(): boolean {
+    return this.auth.authenticated;
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
     this.initializeWaitingRoom();
