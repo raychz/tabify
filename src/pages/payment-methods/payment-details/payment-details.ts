@@ -10,6 +10,7 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
+import { environment } from '@tabify/env';
 
 declare const Spreedly: any;
 
@@ -102,7 +103,7 @@ export class PaymentDetailsPage {
   }
 
   initializeSpreedly() {
-    Spreedly.init('Iu3UapkcfklJXqLJV61vbJsp1dl', {
+    Spreedly.init(environment.spreedlyEnvKey, {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
     });
