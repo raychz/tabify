@@ -58,6 +58,7 @@ export class LocationPage {
     this.loader.present();
     try {
       this.locations = await this.locationService.getLocations();
+      console.log('locations are', this.locations);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
