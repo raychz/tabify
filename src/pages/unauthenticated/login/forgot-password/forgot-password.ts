@@ -50,7 +50,7 @@ export class ForgotPasswordPage {
             });
             this.navCtrl.setRoot('UnauthenticatedPage').then(() => alert.present());
           },
-          error => this.forgotPasswordError = this.errorService.forgotPassowrdError(error)
+          error => this.forgotPasswordError = this.errorService.forgotPasswordError(error)
         );
     }
   }

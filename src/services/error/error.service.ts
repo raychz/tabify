@@ -16,7 +16,7 @@ export class ErrorService {
         }
     }
 
-    forgotPassowrdError(error: any) {
+    forgotPasswordError(error: any) {
         if (error.code in forgotPasswordErrorMap) {
             return forgotPasswordErrorMap[error.code];
         } else {
