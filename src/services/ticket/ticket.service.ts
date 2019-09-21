@@ -2,13 +2,13 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import config from '../../config';
+import { environment } from '@tabify/env';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { Subscription , of } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 
@@ -40,8 +40,8 @@ export interface FirestoreTicket {
 export class TicketService {
   // Public class variables
   // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
-  public firestoreTicket!: FirestoreTicket;
-  public firestoreTicketItems!: FirestoreTicketItem[];
+  public firestoreTicket: FirestoreTicket;
+  public firestoreTicketItems: FirestoreTicketItem[];
   public userSelectedItemsCount: number = 0;
   /** The value is represented in pennies. */
   public userSubtotal: number = 0;
@@ -58,8 +58,8 @@ export class TicketService {
   public hasInitializationError = false;
 
   // Private class variables
-  private firestoreTicket$!: Subscription;
-  private firestoreTicketItems$!: Subscription;
+  private firestoreTicket$: Subscription;
+  private firestoreTicketItems$: Subscription;
 
   constructor(
     private readonly http: HttpClient,
@@ -82,7 +82,7 @@ export class TicketService {
         fraudPreventionCodeId: String(fraudPreventionCode.id),
       };
       const ticket = await this.http
-        .get(`${config.serverUrl}/ticket`, { params })
+        .get(`${environment.serverUrl}/ticket`, { params })
         .toPromise();
 
       return {

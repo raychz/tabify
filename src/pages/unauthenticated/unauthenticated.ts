@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth/auth.service';
   templateUrl: 'unauthenticated.html',
 })
 export class UnauthenticatedPage {
-  @ViewChild(Slides) slides!: Slides;
+  @ViewChild(Slides) slides: Slides;
   activeSlideIndex = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthService) {

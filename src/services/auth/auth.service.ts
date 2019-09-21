@@ -5,11 +5,9 @@ import 'firebase/auth';
 import { Platform, AlertController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { from, Subject } from 'rxjs';
-import config from "../../config";
+import { Observable , Subject , of , from } from 'rxjs';
+import { environment } from '@tabify/env';
 import { tap } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
 
 interface ISignUpCredentials {
   email: string;
@@ -28,7 +26,7 @@ interface ISignInCredentials {
 export class AuthService {
   private user: firebase.User | null = null;
   private userDetails: any = null; // user details as stored in our database, not firebase
-  private authState$!: Observable<firebase.User | null>;
+  private authState$: Observable<firebase.User | null>;
   private referralCode: string = '';
   public userDetailsConfirmedInDB$ = new Subject<boolean>();
 
@@ -154,7 +152,7 @@ export class AuthService {
       return userExistsInDB;
     } else {
       const res: any = await this.http
-        .post(`${config.serverUrl}/user`, { referralCode: this.referralCode })
+        .post(`${environment.serverUrl}/user`, { referralCode: this.referralCode })
         .toPromise();
 
       this.userDetails = res;
@@ -175,7 +173,7 @@ export class AuthService {
    */
   async checkUserExistsInDB(): Promise<boolean> {
     try {
-      const res: any = await this.http.get(`${config.serverUrl}/user/userDetails`).toPromise();
+      const res: any = await this.http.get(`${environment.serverUrl}/user/userDetails`).toPromise();
 
       if (this.user && res && res.user && res.user.uid === this.user.uid) {
         this.userDetails = res;

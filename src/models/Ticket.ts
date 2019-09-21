@@ -9,7 +9,7 @@ export class Ticket implements ITicket {
   ticket_number: number;
   items: ITicketItem[];
   date_created: string;
-  date_modified!: string;
+  date_modified: string;
 
   constructor(params: ITicket) {
     this.id = params.id;
