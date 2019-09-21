@@ -6,9 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { IUser } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
-import { LikesPage } from '../likes/likes';
 import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
-import { UsersPage } from '../users/users';
 
 @IonicPage()
 @Component({
@@ -231,5 +229,12 @@ export class StoryPage {
       ],
     });
     actionSheet.present();
+  }
+
+  openTicketDetails() {
+    this.navCtrl.push(
+      'TicketDetailsPage',
+      { animate: true, direction: 'forward' }
+    );
   }
 }

@@ -58,6 +58,8 @@
           {{ story.date_created | date:'shortTime' }} </ion-note>
       </ion-col>
 
+      <button clear small ion-button (click)="openTicketDetails()">Ticket-Details</button>
+
     </ion-row>
 
     <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">
