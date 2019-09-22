@@ -12,7 +12,7 @@ export class ErrorService {
         if (error.code in authErrorMap) {
             return authErrorMap[error.code];
         } else {
-            return "A Network Error Occured."
+            return "A Network Error Occurred."
         }
     }
 
@@ -20,7 +20,7 @@ export class ErrorService {
         if (error.code in forgotPasswordErrorMap) {
             return forgotPasswordErrorMap[error.code];
         } else {
-            return "A Network Error Occured."
+            return "A Network Error Occurred."
         }
     }
 }
