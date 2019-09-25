@@ -63,13 +63,10 @@ export class WaitingRoomPage {
   }
 
   setBackButtonAction() {
-    this.navBar.backButtonClick = () => {
-      this.ticketService.changeUserStatus(UserStatus.Selecting);
+    this.navBar.backButtonClick = async () => {
+      await this.ticketService.changeUserStatus(UserStatus.Selecting);
       this.ticketService.resetIsExpanded();
       this.navCtrl.pop();
-      if (this.navParams.get('pushSelectItemsOnBack')) {
-        this.navCtrl.push('SelectItemsPage');
-      }
     }
   }
 

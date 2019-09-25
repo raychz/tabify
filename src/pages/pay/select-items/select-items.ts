@@ -121,28 +121,7 @@ export class SelectItemsPage {
 
   async confirmSelections() {
     if (this.ticketService.userSelectedItemsCount) {
-      const confirm = this.alertCtrl.create({
-        title: 'Confirm Selections',
-        message: `You've added ${this.ticketService.userSelectedItemsCount} item${plurality(this.ticketService.userSelectedItemsCount)} to your tab. Is this correct?`,
-        buttons: [
-          {
-            text: 'No',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
-          },
-          {
-            text: 'Yes',
-            handler: () => {
-              confirm.dismiss().then(() => {
-                this.viewWaitingRoom();
-              });
-              return false;
-            },
-          },
-        ],
-      });
-      confirm.present();
+      this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
         title: 'Warning',

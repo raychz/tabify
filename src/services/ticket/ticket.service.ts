@@ -176,7 +176,8 @@ export class TicketService {
         let highestStatusCount = 0;
 
         for (let user of users) {
-          if (user.uid === this.auth.getUid() && status) {
+          console.log(this.auth.getUid());
+          if (user.uid === this.auth.getUid() && status !== undefined) {
             user.status = status;
           }
 
