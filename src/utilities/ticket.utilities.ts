@@ -96,7 +96,7 @@ export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: nu
             overflowNames.length > 1 ? 's' : ''
             }`;
         const othersContainer = `<span class='plus-others'>${others}</span>`;
-        return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
+        return `${abbreviatedNames.join(', ')} ${othersContainer} ${hereClause}`;
     }
 
     if (users.length < 3) {

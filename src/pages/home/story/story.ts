@@ -234,6 +234,7 @@ export class StoryPage {
   openTicketDetails() {
     this.navCtrl.push(
       'TicketDetailsPage',
+      { ticketId: this.story.ticket.id },
       { animate: true, direction: 'forward' }
     );
   }

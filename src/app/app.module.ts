@@ -26,6 +26,7 @@ import { FirestoreService } from '../services/firestore/firestore.service';
 import { PaymentService } from '../services/payment/payment.service';
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
+import { TicketItemService } from '../services/ticket-item/ticket-item.service';
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -90,6 +91,7 @@ export class MyErrorHandler implements ErrorHandler {
     PaymentService,
     StoryService,
     NewsfeedService,
+    TicketItemService
   ],
 })
 export class AppModule {}

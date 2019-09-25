@@ -7,6 +7,13 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+
+  <ion-list>
+    <ion-item *ngFor="let item of this.ticketItems">
+      <ion-label>{{item.name}}</ion-label>
+      <ion-label>${{ item.price / 100 | number: '1.2-2' }}</ion-label>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

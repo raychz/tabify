@@ -23,6 +23,11 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
+    <ion-row>
+      <ion-col text-center>
+        <h5>Your Past transactions</h5>
+      </ion-col>
+    </ion-row>
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
         <ion-item>
