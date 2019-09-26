@@ -48,11 +48,11 @@ export class LoginPage {
         content: 'Logging in...',
       });
       await loading.present();
-      await this.auth
-        .signInWithEmail({ email, password })
-        .catch(error => (
-          this.loginError = this.errorService.authError(error)
-        ));
+      try {
+        await this.auth.signInWithEmail({ email, password })
+      } catch (error) {
+        this.loginError = this.errorService.authError(error)
+      }
       await loading.dismiss();
     }
   }
