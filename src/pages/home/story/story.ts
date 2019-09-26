@@ -7,6 +7,7 @@ import { IUser } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
+import { TicketItemService } from '../../../services/ticket-item/ticket-item.service';
 
 @IonicPage()
 @Component({
@@ -22,6 +23,7 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
+  ticketItems: any[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -32,6 +34,7 @@ export class StoryPage {
     public loader: LoaderService,
     public alertCtrl: AlertController,
     public auth: AuthService,
+    public ticketItemService: TicketItemService,
     private actionSheetCtrl: ActionSheetController,
     private modalCtrl: ModalController
   ) { }
@@ -39,7 +42,6 @@ export class StoryPage {
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
-
 
   async ionViewDidLoad() {
     await this.getStory();
@@ -53,7 +55,9 @@ export class StoryPage {
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
+      this.ticketItems = await this.ticketItemService.getTicketItems(this.story.ticket.id);
       console.log(this.story);
+      console.log(this.ticketItems);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
