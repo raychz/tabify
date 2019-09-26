@@ -40,24 +40,23 @@ export class ForgotPasswordPage {
   async sendPasswordResetEmail() {
     const { email } = this.forgotPasswordForm.value;
     if (email) {
-      await this.auth.sendPasswordResetEmail(email)
-        .then(
-          () => {
-            const alert = this.alertCtrl.create({
-              title: 'Success',
-              subTitle: `A password reset link has been sent to ${email}.`,
-              buttons: ['Ok']
-            });
-            this.navCtrl.setRoot('UnauthenticatedPage').then(() => alert.present());
-          },
-          async error => this.forgotPasswordError = await this.errorService.forgotPasswordError(error)
-        );
+      try {
+        await this.auth.sendPasswordResetEmail(email)
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          subTitle: `A password reset link has been sent to ${email}.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+        this.navCtrl.setRoot('UnauthenticatedPage');
+      } catch (error) {
+        this.forgotPasswordError = this.errorService.forgotPasswordError(error);
+      }
     }
   }
 
   async signUp() {
-    await this.navCtrl.pop().then(() => {
-      this.navCtrl.push('SignUpPage');
-    });
+    await this.navCtrl.setRoot('UnauthenticatedPage');
+    await this.navCtrl.push('SignUpPage');
   }
 }

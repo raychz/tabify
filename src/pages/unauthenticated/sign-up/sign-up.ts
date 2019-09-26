@@ -95,8 +95,7 @@ export class SignUpPage {
   }
 
   async login() {
-    await this.navCtrl.pop().then(() => {
-      this.navCtrl.push('LoginPage');
-    });
+    await this.navCtrl.setRoot('UnauthenticatedPage');
+    await this.navCtrl.push('LoginPage');
   }
 }

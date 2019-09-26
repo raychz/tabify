@@ -80,9 +80,8 @@ export class LoginPage {
     return false;
   }
 
-  signUp() {
-    this.navCtrl.pop().then(() => {
-      this.navCtrl.push('SignUpPage');
-    });
+  async signUp() {
+    await this.navCtrl.setRoot('UnauthenticatedPage');
+    await this.navCtrl.push('SignUpPage');
   }
 }
