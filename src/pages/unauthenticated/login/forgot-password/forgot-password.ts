@@ -37,10 +37,10 @@ export class ForgotPasswordPage {
     console.log('ionViewDidLoad ForgotPasswordPage');
   }
 
-  sendPasswordResetEmail() {
+  async sendPasswordResetEmail() {
     const { email } = this.forgotPasswordForm.value;
     if (email) {
-      this.auth.sendPasswordResetEmail(email)
+      await this.auth.sendPasswordResetEmail(email)
         .then(
           () => {
             const alert = this.alertCtrl.create({
@@ -50,13 +50,13 @@ export class ForgotPasswordPage {
             });
             this.navCtrl.setRoot('UnauthenticatedPage').then(() => alert.present());
           },
-          error => this.forgotPasswordError = this.errorService.forgotPasswordError(error)
+          async error => this.forgotPasswordError = await this.errorService.forgotPasswordError(error)
         );
     }
   }
 
-  signUp() {
-    this.navCtrl.pop().then(() => {
+  async signUp() {
+    await this.navCtrl.pop().then(() => {
       this.navCtrl.push('SignUpPage');
     });
   }
