@@ -120,6 +120,7 @@ export class SelectItemsPage {
   }
 
   async confirmSelections() {
+    this.loader.present();
     if (this.ticketService.userSelectedItemsCount) {
       this.viewWaitingRoom();
     } else {
@@ -137,6 +138,7 @@ export class SelectItemsPage {
       });
       warning.present();
     }
+    this.loader.dismiss();
   }
 
   presentActionSheet() {
