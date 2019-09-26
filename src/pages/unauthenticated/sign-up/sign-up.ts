@@ -86,14 +86,16 @@ export class SignUpPage {
       content: 'Signing up...',
     });
     await loading.present();
-    await this.auth.signUp(credentials).catch(error => {
+    try {
+      await this.auth.signUp(credentials)
+    } catch (error) {
       this.signUpError = this.errorService.authError(error);
-    });
+    };
     await loading.dismiss();
   }
 
-  login() {
-    this.navCtrl.pop().then(() => {
+  async login() {
+    await this.navCtrl.pop().then(() => {
       this.navCtrl.push('LoginPage');
     });
   }

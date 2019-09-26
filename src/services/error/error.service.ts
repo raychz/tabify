@@ -8,7 +8,6 @@ import { authErrorMap, forgotPasswordErrorMap } from './error-maps';
 export class ErrorService {
 
     authError(error: any) {
-        console.log(error);
         if (error.code in authErrorMap) {
             return authErrorMap[error.code];
         } else {
