@@ -15,6 +15,7 @@ import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
 })
 export class StoryPage {
 
+  selectedSegment = 'comments';
   story: any;
   comments: any[] = [];
   user = <IUser>{};
@@ -237,5 +238,10 @@ export class StoryPage {
       { ticketId: this.story.ticket.id },
       { animate: true, direction: 'forward' }
     );
+  }
+
+  segmentChanged(event: any) {
+    this.selectedSegment = event.value;
+    console.log(this.selectedSegment);
   }
 }

@@ -1,4 +1,23 @@
 page-story {
+  ion-segment.segment-ios {
+    max-width: 55%;
+    margin: auto;
+  }
+  .bar-buttons-md[right] {
+    margin-left: 2rem !important;
+  }
+  .bar-buttons-ios[right] {
+    margin-right: 0.65rem !important;
+  }
+  .members-comments {
+    .members-comment {
+      &:first-child {
+        margin-top: 0.5em;
+      }
+      color: #8e9093;
+    }
+  }
+
   .bottom-border {
     border-bottom: 1px solid gray;
   }
@@ -97,7 +116,8 @@ page-story {
     font-size: 1.2rem;
   }
 
-  .list-ios > .item-block:first-child, .list-ios > .item-block:last-child {
+  .list-ios > .item-block:first-child,
+  .list-ios > .item-block:last-child {
     border-top: none;
     border-bottom: none;
   }

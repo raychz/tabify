@@ -58,18 +58,29 @@
           {{ story.date_created | date:'shortTime' }} </ion-note>
       </ion-col>
 
-      <div>
+      <!-- <div>
         <button clear small ion-button (click)="openTicketDetails()">Ticket-Details</button>
-      </div>
+      </div> -->
 
     </ion-row>
 
     <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">
       <ion-row>
         <ion-col text-center>
-          <p>Comments</p>
+          <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+            <ion-segment-button small value="comments" icon-only>
+              <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button small value="ticket-details" icon-only>
+              <ion-icon name="list"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button small value="reviews" icon-only>
+              <ion-icon name="star"></ion-icon>
+            </ion-segment-button>
+          </ion-segment>
         </ion-col>
       </ion-row>
+
       <ng-container *ngFor="let comment of comments; index as commentIndex">
         <ng-container *ngIf="!!comment">
           <div class="comment-style">
