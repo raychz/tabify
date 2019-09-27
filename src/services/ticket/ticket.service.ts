@@ -8,9 +8,13 @@ import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
 import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
-import { Subscription , of } from 'rxjs';
+import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
+
+// please keep the user status enum in order of execution as they are used for calculations
+export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
+export enum TicketStatus { Open, Closed }
 
 export interface FirestoreTicketItem {
   name: string,
@@ -31,9 +35,21 @@ export interface FirestoreTicket {
   location: string,
   tab_id: string,
   ticket_number: number,
+  status: TicketStatus,
+  overallUsersProgress: UserStatus,
   uids: string[],
-  users: { name: string, uid: string }[],
+  users: { name: string, uid: string, photoUrl: string, status: UserStatus }[],
   ticketItems: FirestoreTicketItem[],
+}
+
+export interface User {
+  uid: string,
+  photoUrl: string,
+  name: string,
+  status: UserStatus,
+  ticketItems: FirestoreTicketItem[],
+  subtotal: number,
+  isExpanded?: boolean,
 }
 
 @Injectable()
@@ -42,6 +58,10 @@ export class TicketService {
   // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
   public firestoreTicket: FirestoreTicket;
   public firestoreTicketItems: FirestoreTicketItem[];
+  public sharedItems: FirestoreTicketItem[] = [];
+  public unclaimedItems: FirestoreTicketItem[] = [];
+  public users: User[];
+  public curUser: User;
   public userSelectedItemsCount: number = 0;
   /** The value is represented in pennies. */
   public userSubtotal: number = 0;
@@ -56,6 +76,8 @@ export class TicketService {
   public userPaymentMethod: any;
   public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
+  public isExpandedList: {[uid: string]: boolean} = {};
+  public firestoreStatus$ = new BehaviorSubject<boolean> (false);
 
   // Private class variables
   private firestoreTicket$: Subscription;
@@ -70,9 +92,9 @@ export class TicketService {
 
   /**
    * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
-   * @param tab_id 
-   * @param omnivoreLocationId 
-   * @param fraudPreventionCode 
+   * @param tab_id
+   * @param omnivoreLocationId
+   * @param fraudPreventionCode
    */
   public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
     try {
@@ -99,7 +121,7 @@ export class TicketService {
 
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
-   * @param ticketId 
+   * @param ticketId
    */
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
@@ -112,7 +134,7 @@ export class TicketService {
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
         catchError(message => this.handleInitializationError(message)),
-        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+        tap((items: any) => this.onTicketItemsUpdate  (items as FirestoreTicketItem[]))
       )
       .subscribe();
   }
@@ -125,9 +147,94 @@ export class TicketService {
     this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
   }
 
+  public findUserShareOfItem(item: FirestoreTicketItem, userUid: string) {
+    const user = item.users.find( (u) => u.uid === userUid);
+    if (user) {
+      return user.price;
+    }
+    return 0;
+  }
+
+  public async changeUserStatus(status?: UserStatus): Promise<{ success: boolean; message: string }> {
+    try {
+      await this.firestoreService.runTransaction(async transaction => {
+        const ticketDocRef = this.firestoreService.document(
+          `tickets/${this.firestoreTicket.id}`
+        ).ref;
+        const ticket = await transaction.get(ticketDocRef);
+        if (!ticket.exists) {
+          throw 'Ticket Document does not exist!';
+        }
+
+        let { users, overallUsersProgress } = ticket.data()! as {
+          users: {status: UserStatus, uid: string}[];
+          overallUsersProgress: UserStatus;
+        };
+
+        let lowestStatus = overallUsersProgress;
+        let highestStatus = overallUsersProgress;
+        let highestStatusCount = 0;
+
+        for (let user of users) {
+          if (user.uid === this.auth.getUid() && status !== undefined) {
+            user.status = status;
+          }
+
+          if (user.status > highestStatus) {
+            if (highestStatusCount === 0) {
+              highestStatus = user.status;
+            } else {
+              highestStatusCount = 0;
+            }
+          } else if (user.status < lowestStatus) {
+            lowestStatus = user.status
+          }
+
+          if (user.status === highestStatus) {
+            highestStatusCount++;
+          }
+        }
+
+        if (lowestStatus < overallUsersProgress) {
+          overallUsersProgress = lowestStatus;
+        } else if (highestStatusCount === users.length) {
+          overallUsersProgress = highestStatus;
+        }
+
+
+        transaction.set(
+          ticketDocRef,
+          { users, overallUsersProgress },
+          { merge: true }
+        );
+
+        return transaction
+      });
+      return {
+        success: true,
+        message: 'User statuses updated',
+      };
+    } catch (error) {
+      console.log('transaction failed', error);
+      return {
+        success: false,
+        message: error,
+      };
+    }
+  }
+
+  public getTicketItemName(name: string) {
+    if (name.toLowerCase().includes('taco')) {
+      return `🌮 ${name}`;
+    } else if (name.toLowerCase().includes('pizza')) {
+      return `🍕 ${name}`;
+    }
+    return name;
+  }
+
   /**
    * Adds user to Firestore ticket item with id `ticketItemId`.
-   * @param ticketItemId 
+   * @param ticketItemId
    */
   public async addUserToFirestoreTicketItem(
     ticketItemId: any
@@ -139,8 +246,9 @@ export class TicketService {
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
-          throw 'Document does not exist!';
+          throw 'Ticket Item Document does not exist!';
         }
+
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
@@ -149,11 +257,12 @@ export class TicketService {
           price: number;
         };
 
-        if (users.find(u => u.uid === uid))
+        if (users.find(u => u.uid === uid)) {
           throw 'This item has already been added to your tab.';
+        }
         users.push({
-          uid: this.auth.getUid(),
-          name: this.auth.getDisplayName(),
+          uid: uid,
+          name: displayName,
           price: 0,
         });
 
@@ -164,12 +273,15 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
+
         const payersDescription = getPayersDescription(users);
-        return transaction.set(
+        transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
           { merge: true }
         );
+
+        return transaction
       });
       return {
         success: true,
@@ -186,7 +298,7 @@ export class TicketService {
 
   /**
    * Removes user from Firestore ticket item with id `ticketItemId`.
-   * @param ticketItemId 
+   * @param ticketItemId
    */
   public async removeUserFromFirestoreTicketItem(
     ticketItemId: any
@@ -200,8 +312,8 @@ export class TicketService {
         if (!ticketItem.exists) {
           throw 'Document does not exist!';
         }
+
         const uid = this.auth.getUid();
-        const displayName = this.auth.getDisplayName();
 
         let { users, price } = ticketItem.data()! as {
           users: any[];
@@ -219,12 +331,15 @@ export class TicketService {
             users[index].price = d.intValue;
           });
 
+
         const payersDescription = getPayersDescription(users);
-        return transaction.set(
+        transaction.set(
           ticketItemDocRef,
           { payersDescription, users },
           { merge: true }
         );
+
+        return transaction
       });
       return {
         success: true,
@@ -256,9 +371,9 @@ export class TicketService {
   }
 
   /**
-   * Called when an error is thrown during the Firestore initialization. 
+   * Called when an error is thrown during the Firestore initialization.
    * TODO: Make this an observable so that consumers of the ticket-service can detect and handle errors on their own.
-   * @param error 
+   * @param error
    */
   private async handleInitializationError(error: any) {
     if (!this.hasInitializationError) {
@@ -281,22 +396,84 @@ export class TicketService {
 
   /**
    * Called when a Firestore document within the Firestore ticket-items collection is updated.
-   * @param firestoreTicketItems 
+   * @param firestoreTicketItems
    */
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
     this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
+    // the above properties can be inferred from the below properties. ToDo: get rid of above properties
+    this.updateItemsAndUsers();
+    this.firestoreStatus$.next(true);
+  }
+
+  private updateItemsAndUsers() {
+    this.unclaimedItems = [];
+    this.sharedItems = [];
+    this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: [], subtotal: 0};
+    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
+    this.firestoreTicketItems.forEach( (item) => {
+      if (item.users.length < 1) {
+        this.unclaimedItems.push(item);
+      } else if (item.users.length > 1) {
+        this.sharedItems.push(item);
+      }
+
+      if (item.isItemOnMyTab) {
+        this.curUser.ticketItems.push(item);
+        this.curUser.subtotal += item.price;
+      }
+
+      item.users.forEach( (user) => {
+        const userIndex = this.users.findIndex( u => u.uid === user.uid);
+        this.users[userIndex].ticketItems.push(item);
+        this.users[userIndex].subtotal += item.price;
+      });
+    });
+  }
+
+  resetIsExpanded() {
+    for (let user of this.firestoreTicket.users) {
+      this.isExpandedList[user.uid] = false;
+    }
+  }
+
+  toggleIsExpanded(user: User) {
+    const isExpanded = this.getUserExpanded(user)
+    this.isExpandedList[user.uid] = !isExpanded;
+  }
+
+  getUserExpanded(user: User) : boolean {
+    if (!this.isExpandedList[user.uid]) {
+      this.isExpandedList[user.uid] = false;
+    }
+    return this.isExpandedList[user.uid];
   }
 
   /**
    * Called when the Firestore ticket document is updated.
-   * @param firestoreTicket 
+   * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
+    if (Object.keys(this.isExpandedList).length !== firestoreTicket.users.length) {
+      for (let user of firestoreTicket.users) {
+        if (!this.isExpandedList[user.uid]!) {
+          this.isExpandedList[user.uid] = false;
+        }
+      }
+    }
+
+    console.log(this.firestoreTicket);
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
+    console.log(this.firestoreTicket);
     this.ticketUsersDescription = getSelectItemsTicketUsersDescription(firestoreTicket.users);
+    this.changeUserStatus();
+    if (this.firestoreTicketItems && this.users) {
+      this.updateItemsAndUsers();
+    } else {
+      this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
+    }
   }
 }
