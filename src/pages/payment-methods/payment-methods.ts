@@ -61,9 +61,9 @@ export class PaymentMethodsPage {
   }
 
   async deletePaymentMethod(method: any) {
+    const loading = this.loader.create();
+    await loading.present();
     try {
-      await this.loader.present();
-
       // Remove on server
       await this.paymentService.deletePaymentMethod(method);
 
@@ -75,8 +75,7 @@ export class PaymentMethodsPage {
         message: `This payment method could not be removed.`,
       });
       alert.present();
-    } finally {
-      await this.loader.dismiss();
     }
+    await loading.dismiss();
   }
 }
