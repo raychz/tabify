@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
+import { Platform } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -21,6 +22,7 @@ export class WaitingRoomPage {
     public navParams: NavParams,
     public auth: AuthService,
     public ticketService: TicketService,
+    public platform: Platform
   ) {}
 
   public ionViewCanEnter(): boolean {
@@ -30,7 +32,6 @@ export class WaitingRoomPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
     this.initializeWaitingRoom();
-    this.setBackButtonAction();
   }
 
   checkConfirmedStatus(): boolean {
@@ -62,12 +63,10 @@ export class WaitingRoomPage {
     console.log('updated users: ', this.ticketService.users);
   }
 
-  setBackButtonAction() {
-    this.navBar.backButtonClick = async () => {
-      await this.ticketService.changeUserStatus(UserStatus.Selecting);
-      this.ticketService.resetIsExpanded();
-      this.navCtrl.pop();
-    }
+  async backButtonAction() {
+    await this.ticketService.changeUserStatus(UserStatus.Selecting);
+    this.ticketService.resetIsExpanded();
+    this.navCtrl.pop();
   }
 
   initializeWaitingRoom() {
