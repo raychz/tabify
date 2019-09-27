@@ -23,7 +23,7 @@
         <ion-row>
           <ion-item>
             <ion-avatar item-start>
-              <img src="ticketService.curUser.photoUrl || ../../../../../assets/imgs/user-light.png">
+              <img [src]="ticketService.curUser.photoUrl || '../../../../../assets/imgs/user-light.png'">
             </ion-avatar>
             <ion-label> {{ ticketService.curUser.name }} </ion-label>
             <ion-spinner class="ticket-spinner" name="dots" item-end
@@ -66,7 +66,7 @@
             <ion-card-content>
               <ion-item (click)="ticketService.toggleIsExpanded(user)">
                 <ion-avatar item-start>
-                  <img src="user.photoUrl || ../../../../../assets/imgs/user-light.png">
+                  <img [src]="user.photoUrl || '../../../../../assets/imgs/user-light.png'">
                 </ion-avatar>
                 <ion-label> {{ user.name }} </ion-label>
                 <ion-spinner class="ticket-spinner" name="dots" item-end *ngIf="user.status < userStatus.Confirmed">
