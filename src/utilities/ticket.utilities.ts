@@ -95,7 +95,8 @@ export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: nu
         const others = `+${overflowNames.length} other${
             overflowNames.length > 1 ? 's' : ''
             }`;
-        const othersContainer = `<span class='plus-others'>${others}</span>`;
+        const othersContainer = `<span (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
+        class='plus-others'>${others}</span>`;
         return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
     }
 
