@@ -50,7 +50,8 @@ export class StoryPage {
   }
 
   async getStory() {
-    this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
@@ -62,7 +63,7 @@ export class StoryPage {
       });
       alert.present();
     }
-    this.loader.dismiss();
+    await loading.dismiss();
 
     return this.story;
   }

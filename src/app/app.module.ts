@@ -26,6 +26,8 @@ import { FirestoreService } from '../services/firestore/firestore.service';
 import { PaymentService } from '../services/payment/payment.service';
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
+import { ErrorService } from '../services/error/error.service';
+
 
 Pro.init('66369498', {
   appVersion: '0.0.1',
@@ -57,8 +59,7 @@ export class MyErrorHandler implements ErrorHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(Tabify, {
-      // TODO: Further investigate implications of not preloading modules
-      preloadModules: false,
+      preloadModules: true,
       scrollPadding: false,
     }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -90,6 +91,7 @@ export class MyErrorHandler implements ErrorHandler {
     PaymentService,
     StoryService,
     NewsfeedService,
+    ErrorService
   ],
 })
-export class AppModule {}
+export class AppModule { }

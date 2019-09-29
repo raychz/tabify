@@ -4,12 +4,14 @@ import {
   NavController,
   NavParams,
   ToastController,
+  Loading,
 } from 'ionic-angular';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
+import { environment } from '@tabify/env';
 
 declare const Spreedly: any;
 
@@ -49,6 +51,9 @@ export class PaymentDetailsPage {
   title: string;
   spreedlyTimeout?: number = undefined;
   paymentMethodError = '';
+  spreedlyInitializationLoading: Loading;
+  spreedlyValidationLoading: Loading;
+  spreedlyTokenizationLoading: Loading;
 
   constructor(
     public navCtrl: NavController,
@@ -63,7 +68,6 @@ export class PaymentDetailsPage {
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
-    console.log('PAY MODE', this.mode);
     if (!(this.mode in PaymentDetailsPageMode)) {
       throw new Error('No mode specified');
     }
@@ -72,19 +76,19 @@ export class PaymentDetailsPage {
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
-
+ 
   async ionViewDidLoad() {
+    this.spreedlyInitializationLoading = this.loader.create();
+    await this.spreedlyInitializationLoading.present();
     const showError = async () => {
-      this.loader.dismiss();
-      // TODO: Make this work when a user gets to the details page from the Totals page
-      await this.navCtrl.popTo('PaymentMethodsPage');
+      await this.spreedlyInitializationLoading.dismiss();
+      await this.navCtrl.pop();
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
     };
-    await this.loader.present({ dismissOnPageChange: false });
     this.spreedlyTimeout = setTimeout(showError, 15000);
     try {
       this.newCard.full_name = this.auth.getDisplayName();
@@ -96,13 +100,12 @@ export class PaymentDetailsPage {
   }
 
   ionViewDidLeave() {
-    this.loader.dismiss();
     Spreedly.removeHandlers();
     this.clearSpreedlyTimer();
   }
 
   initializeSpreedly() {
-    Spreedly.init('Iu3UapkcfklJXqLJV61vbJsp1dl', {
+    Spreedly.init(environment.spreedlyEnvKey, {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
     });
@@ -113,12 +116,14 @@ export class PaymentDetailsPage {
   }
 
   async validatePaymentMethod() {
-    await this.loader.present();
+    this.spreedlyValidationLoading = this.loader.create();
+    this.spreedlyValidationLoading.present();
     await Spreedly.validate();
   }
 
   async tokenizePaymentMethod() {
-    await this.loader.present();
+    this.spreedlyTokenizationLoading = this.loader.create();
+    this.spreedlyTokenizationLoading.present();
     await Spreedly.tokenizeCreditCard(this.newCard);
   }
 
@@ -143,9 +148,6 @@ export class PaymentDetailsPage {
    */
   async onSpreedlyReady() {
     clearTimeout(this.spreedlyTimeout);
-
-    await this.loader.dismiss();
-
     this.spreedlyReady = true;
     Spreedly.setParam('allow_blank_name', true);
     Spreedly.setFieldType('number', 'tel');
@@ -160,16 +162,17 @@ export class PaymentDetailsPage {
     );
     console.log('SPREEDLY READY');
     this.changeDetectorRef.detectChanges();
+    this.spreedlyInitializationLoading.dismiss();
   }
 
   async onSpreedlyError(errors: any[]) {
-    await this.loader.dismiss();
     this.paymentMethodError = '';
     errors.forEach(error => {
       console.log(error);
       this.paymentMethodError += error.message + '. ';
     });
     this.changeDetectorRef.detectChanges();
+    await this.spreedlyTokenizationLoading.dismiss();
   }
 
   async onSpreedlyPaymentMethod(token: string, details: string) {
@@ -199,13 +202,11 @@ export class PaymentDetailsPage {
       }
     } catch (e) {
       this.paymentMethodError = 'This payment method could not be saved.';
-    } finally {
-      await this.loader.dismiss();
     }
+    await this.spreedlyTokenizationLoading.dismiss();
   }
 
   async onSpreedlyValidation({ cardType, validNumber, validCvv }: ISpreedlyValidationResponse) {
-    await this.loader.dismiss();
     console.log(cardType, validNumber, validCvv);
     if (
       cardType &&
@@ -221,5 +222,6 @@ export class PaymentDetailsPage {
         'Please enter a valid credit card and CVV number.';
     }
     this.changeDetectorRef.detectChanges();
+    await this.spreedlyValidationLoading.dismiss();
   }
 }

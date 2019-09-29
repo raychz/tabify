@@ -55,7 +55,8 @@ export class LocationPage {
   // }
 
   private async getLocations() {
-    this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     try {
       this.locations = await this.locationService.getLocations();
       console.log('locations are', this.locations);
@@ -66,7 +67,7 @@ export class LocationPage {
       });
       alert.present();
     }
-    this.loader.dismiss();
+    await loading.dismiss();
   }
 
   next() {

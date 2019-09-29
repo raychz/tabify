@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ErrorService } from '../../../services/error/error.service';
 
 enum SignUpStep {
   REFERRAL_CODE_ENTRY,
@@ -32,7 +33,8 @@ export class SignUpPage {
     private auth: AuthService,
     public alert: AlertService,
     public loader: LoaderService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private errorService: ErrorService
   ) {
     this.form = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -84,16 +86,16 @@ export class SignUpPage {
       content: 'Signing up...',
     });
     await loading.present();
-    await this.auth.signUp(credentials).catch(error => {
-      this.signUpError = error.message;
-      console.log('sign up error:', error);
-    });
+    try {
+      await this.auth.signUp(credentials)
+    } catch (error) {
+      this.signUpError = this.errorService.authError(error);
+    };
     await loading.dismiss();
   }
 
-  login() {
-    this.navCtrl.pop().then(() => {
-      this.navCtrl.push('LoginPage');
-    });
+  async login() {
+    await this.navCtrl.setRoot('UnauthenticatedPage');
+    await this.navCtrl.push('LoginPage');
   }
 }

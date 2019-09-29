@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Navbar, ModalController, } from 'ionic-angular';
-import { ReceiptItem } from '../select-items/select-items';
-import currency from 'currency.js';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -45,7 +43,8 @@ export class TaxTipPage {
   }
 
   async ionViewDidLoad() {
-    await this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
       .map(item => {
         const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
@@ -55,7 +54,6 @@ export class TaxTipPage {
           userShare
         };
       });
-    this.setBackButtonAction();
     try {
       await this.paymentService.initializePaymentMethods();
     } catch (e) {
@@ -66,34 +64,7 @@ export class TaxTipPage {
     if (this.paymentService.paymentMethods.length) {
       this.ticketService.userPaymentMethod = this.paymentService.paymentMethods[0];
     }
-    await this.loader.dismiss();
-  }
-
-  setBackButtonAction() {
-    this.navBar.backButtonClick = () => {
-      const confirm = this.alertCtrl.create({
-        title: 'Warning',
-        message: `All users on this tab will be sent back to the 'Select Items' page. Are you sure you want to continue?`,
-        buttons: [
-          {
-            text: 'No, stay on this page',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
-          },
-          {
-            text: 'Yes, take me back',
-            handler: () => {
-              confirm.dismiss().then(() => {
-                this.navCtrl.pop();
-              });
-              return false;
-            },
-          },
-        ],
-      });
-      confirm.present();
-    };
+    await loading.dismiss();
   }
 
   async adjustTip() {
