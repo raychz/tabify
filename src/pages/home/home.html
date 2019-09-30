@@ -40,7 +40,14 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
-            <span [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
+            <span>
+              {{this.ticketUsersDescription(ticket.users, 3).mainUsers}}
+            </span>
+            <span class="plus-others" (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+              {{this.ticketUsersDescription(ticket.users, 3).othersNum}}
+            </span>
+            <span>
+              {{this.ticketUsersDescription(ticket.users, 3).hereClause}}
             </span>
           </ion-col>
         </ion-row>

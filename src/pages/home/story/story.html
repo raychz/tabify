@@ -23,10 +23,15 @@
     <!-- Abbreviated names of users part of the ticket -->
     <ion-row>
       <ion-col class="users-padding">
-        <div>
-          <span (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()"
-            [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></span>
-        </div>
+        <span>
+          {{this.ticketUsersDescription(story.ticket.users, 3).mainUsers}}
+        </span>
+        <span class="plus-others" (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()">
+          {{this.ticketUsersDescription(story.ticket.users, 3).othersNum}}
+        </span>
+        <span>
+          {{this.ticketUsersDescription(story.ticket.users, 3).hereClause}}
+        </span>
       </ion-col>
     </ion-row>
 
