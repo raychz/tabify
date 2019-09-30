@@ -43,16 +43,17 @@ export class LocationPage {
     this.navCtrl.pop({ animate: true, animation: 'md-transition', direction: 'back' })
   }
 
-  // filterItems(ev: any) {
-  //   this.getLocations();
-  //   const { value } = ev.target;
-  //   if (value && value.trim() !== '') {
-  //     this.locations = this.locations.filter(
-  //       location =>
-  //         location.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-  //     );
-  //   }
-  // }
+  async filterItems(ev: any) {
+    this.locations = await this.locationService.getLocations();
+    const search  = ev.target.value;
+    if (search && search.trim() !== '') {
+      const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+      this.locations = this.locations.filter((location) => {
+        const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+        return (locationName.indexOf(modifiedSearch) > -1);
+      });
+    }
+  }
 
   private async getLocations() {
     const loading = this.loader.create();
