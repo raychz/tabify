@@ -22,7 +22,7 @@ export class StoryPage {
   user = <IUser>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
-  showMoreUsers: boolean = false;
+  userNamesDisplay: any = {};
 
   constructor(
     public navCtrl: NavController,
@@ -44,9 +44,6 @@ export class StoryPage {
 
   async ionViewDidLoad() {
     await this.getStory();
-    await this.determineStoryLikedByUser();
-    await this.getUserDetails();
-    await this.getComments();
   }
 
   async getStory() {
@@ -55,7 +52,10 @@ export class StoryPage {
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
-      console.log(this.story);
+      await this.ticketUsersDescription(this.story.ticket.users, 3);
+      await this.determineStoryLikedByUser();
+      await this.getUserDetails();
+      await this.getComments();
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -205,13 +205,13 @@ export class StoryPage {
   }
 
   /**
-  * Returns a string to describe the users who have joined the tab.
+  * Returns an to describe the users who have joined the tab.
   * Ex: Ray, Hassan, Sahil +3 others
   * @param users List of users
   * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
   */
-  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getStoryUsersDescription(users, userDisplayLimit);
+  async ticketUsersDescription(users: any[] = [], userDisplayLimit: number) {
+    this.userNamesDisplay = await getStoryUsersDescription(users, userDisplayLimit);
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {
