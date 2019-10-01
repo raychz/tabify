@@ -41,13 +41,14 @@
         <ion-row>
           <ion-col class="users-padding">
             <span>
-              {{this.ticketUsersDescription(ticket.users, 3).mainUsers}}
+              {{ticket.userNamesDisplay.mainUsers}}
             </span>
-            <span class="plus-others" (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
-              {{this.ticketUsersDescription(ticket.users, 3).othersNum}}
+            <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+              (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+              {{this.ticket.userNamesDisplay.othersNum}}
             </span>
-            <span>
-              {{this.ticketUsersDescription(ticket.users, 3).hereClause}}
+            <span *ngIf="ticket.userNamesDisplay.hereClause">
+              {{ticket.userNamesDisplay.hereClause}}
             </span>
           </ion-col>
         </ion-row>
