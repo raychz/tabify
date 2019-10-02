@@ -211,7 +211,7 @@ export class StoryPage {
   * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
   */
   async ticketUsersDescription(users: any[] = [], userDisplayLimit: number) {
-    this.userNamesDisplay = await getStoryUsersDescription(users, userDisplayLimit);
+    this.userNamesDisplay = getStoryUsersDescription(users, userDisplayLimit);
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {
