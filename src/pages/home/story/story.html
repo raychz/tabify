@@ -39,7 +39,7 @@
     <ion-row class="like-comment-row bottom-border">
 
       <ion-col>
-        <button [disabled]="story.loadingLike" ion-button color="primary" clear icon-start
+        <button ion-button [disabled]="story.loadingLike" color="primary" clear
           (click)='createLike(); $event.stopPropagation()' class="heart-padding">
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
