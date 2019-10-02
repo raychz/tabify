@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { IUser } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
-import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
+import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
 
 @IonicPage()
 @Component({
@@ -20,7 +20,7 @@ export class StoryPage {
   user = <IUser>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
-  userNamesDisplay: any = {};
+  userNamesDisplay: IUsersDescription;
 
   constructor(
     public navCtrl: NavController,
