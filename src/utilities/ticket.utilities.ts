@@ -71,13 +71,28 @@ export const isItemOnMyTab = (item: FirestoreTicketItem, uid: any) => {
 }
 
 /**
+ * Interface for the object returned by getStoryUsersDescription
+ */
+export interface IUsersDescription {
+    mainUsers: string,
+    hereClause: string,
+    othersNum: string
+
+}
+
+/**
 * For the newsfeed: Returns an object to describe the users who are part of a ticket / story.
 * Ex: Ray, Hassan, Sahil +3 others
 * @param users List of users
 * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
 */
 export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: number) => {
-    const usersDescription: any = {}
+
+    const usersDescription: IUsersDescription = {
+        mainUsers: '',
+        hereClause: '',
+        othersNum: null
+    }
 
     if (!users || users.length === 0) {
         usersDescription.mainUsers = 'No users on this tab.';
