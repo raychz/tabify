@@ -71,20 +71,38 @@ export const isItemOnMyTab = (item: FirestoreTicketItem, uid: any) => {
 }
 
 /**
-* For the newsfeed: Returns a string to describe the users who have are part of a ticket / story.
+ * Interface for the object returned by getStoryUsersDescription
+ */
+export interface IUsersDescription {
+    mainUsers: string,
+    hereClause: string,
+    othersNum: string
+
+}
+
+/**
+* For the newsfeed: Returns an object to describe the users who are part of a ticket / story.
 * Ex: Ray, Hassan, Sahil +3 others
 * @param users List of users
 * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
 */
-export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: number = 3) => {
-    if (!users || users.length === 0) return 'No users on this tab.';
+export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: number) => {
 
-    let hereClause = '';
+    const usersDescription: IUsersDescription = {
+        mainUsers: '',
+        hereClause: '',
+        othersNum: null
+    }
+
+    if (!users || users.length === 0) {
+        usersDescription.mainUsers = 'No users on this tab.';
+        return usersDescription;
+    }
 
     if (users.length > 1) {
-        hereClause = 'were here'
+        usersDescription.hereClause = 'were here'
     } else {
-        hereClause = 'was here'
+        usersDescription.hereClause = 'was here'
     }
 
     // abbreviateName is imported from general utilities
@@ -92,18 +110,20 @@ export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: nu
 
     if (abbreviatedNames.length > userDisplayLimit) {
         const overflowNames = abbreviatedNames.splice(userDisplayLimit);
-        const others = `+${overflowNames.length} other${
+        const othersNum = `+${overflowNames.length} other${
             overflowNames.length > 1 ? 's' : ''
             }`;
-        const othersContainer = `<span class='plus-others'>${others}</span>`;
-        return `${abbreviatedNames.join(', ')} ${othersContainer} <div>${hereClause}</div>`;
+        usersDescription.othersNum = othersNum;
+        usersDescription.mainUsers = abbreviatedNames.join(', ');
     }
 
-    if (users.length < 3) {
-        return `${abbreviatedNames.join(' and ')} ${hereClause}`;
+    if (users.length < userDisplayLimit) {
+        usersDescription.mainUsers = abbreviatedNames.join(' and ');
     } else {
-        return `${abbreviatedNames.join(', ')} ${hereClause}`;
+        usersDescription.mainUsers = abbreviatedNames.join(', ');
     }
+
+    return usersDescription;
 }
 
 /**

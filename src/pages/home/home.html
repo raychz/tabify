@@ -40,8 +40,15 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
-            <span (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
-              [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
+            <span>
+              {{ticket.userNamesDisplay.mainUsers}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+              (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+              {{this.ticket.userNamesDisplay.othersNum}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.hereClause">
+              {{ticket.userNamesDisplay.hereClause}}
             </span>
           </ion-col>
         </ion-row>
