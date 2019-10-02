@@ -21,6 +21,7 @@ export interface FirestoreTicketItem {
   payersDescription: string,
   price: number,
   ticket_item_id: number,
+  quantity: number,
   isItemOnMyTab: boolean,
   users: { name: string, price: number, uid: string }[],
   loading?: boolean,

@@ -64,7 +64,8 @@
             <ion-col class="item-details">
               <ion-row nowrap>
                 <ion-col class="col-item-name">
-                  <span class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
+                  <span text-wrap class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
+                  <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
                   <span class="my-share-text" *ngIf="
