@@ -205,7 +205,7 @@ export class StoryPage {
   }
 
   /**
-  * Returns an to describe the users who have joined the tab.
+  * Returns an object to describe the users who have joined the tab.
   * Ex: Ray, Hassan, Sahil +3 others
   * @param users List of users
   * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
