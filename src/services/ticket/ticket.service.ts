@@ -78,6 +78,8 @@ export class TicketService {
   public hasInitializationError = false;
   public isExpandedList: {[uid: string]: boolean} = {};
   public firestoreStatus$ = new BehaviorSubject<boolean> (false);
+  public amountPaid = 0;
+  public totalBill = 0;
 
   // Private class variables
   private firestoreTicket$: Subscription;
@@ -117,6 +119,31 @@ export class TicketService {
         error: error,
       };
     }
+  }
+
+  public clearState() {
+    this.destroySubscriptions();
+
+    this.firestoreTicket = undefined;
+    this.firestoreTicketItems = undefined;
+    this.sharedItems = [];
+    this.unclaimedItems = [];
+    this.users = undefined;
+    this.curUser = undefined;
+    this.userSelectedItemsCount = 0;
+    this.userSubtotal = 0;
+    this.userTipPercentage = 18;
+    this.userTip = 0;
+    this.userTaxRate = 0.0625;
+    this.userTax = 0;
+    this.userGrandTotal = 0;
+    this.userPaymentMethod = undefined;
+    this.ticketUsersDescription = getSelectItemsTicketUsersDescription();
+    this.hasInitializationError = false;
+    this.isExpandedList = {};
+    this.firestoreStatus$ = new BehaviorSubject<boolean> (false);
+    this.amountPaid = 0;
+    this.totalBill = 0;
   }
 
   /**
@@ -413,6 +440,7 @@ export class TicketService {
     this.sharedItems = [];
     this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: [], subtotal: 0};
     this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
+    this.totalBill = 0;
     this.firestoreTicketItems.forEach( (item) => {
       if (item.users.length < 1) {
         this.unclaimedItems.push(item);
@@ -422,13 +450,15 @@ export class TicketService {
 
       if (item.isItemOnMyTab) {
         this.curUser.ticketItems.push(item);
-        this.curUser.subtotal += item.price;
+        this.curUser.subtotal += item.users.find( u => u.uid === this.curUser.uid).price;
       }
+
+      this.totalBill += item.price;
 
       item.users.forEach( (user) => {
         const userIndex = this.users.findIndex( u => u.uid === user.uid);
         this.users[userIndex].ticketItems.push(item);
-        this.users[userIndex].subtotal += item.price;
+        this.users[userIndex].subtotal += user.price;
       });
     });
   }
@@ -449,6 +479,17 @@ export class TicketService {
       this.isExpandedList[user.uid] = false;
     }
     return this.isExpandedList[user.uid];
+  }
+
+  updateAmountPaid() {
+    this.amountPaid = 0;
+    for (const user of this.users) {
+      console.log(user);
+      if (user.status === UserStatus.Paid) {
+        this.amountPaid += user.subtotal;
+      }
+    }
+    console.log(this.amountPaid);
   }
 
   /**
@@ -472,6 +513,7 @@ export class TicketService {
     this.changeUserStatus();
     if (this.firestoreTicketItems && this.users) {
       this.updateItemsAndUsers();
+      this.updateAmountPaid();
     } else {
       this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
     }
