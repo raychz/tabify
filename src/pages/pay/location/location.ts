@@ -18,6 +18,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 })
 export class LocationPage {
   locations: ILocation[] = [];
+  searchLocations: ILocation[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -44,11 +45,11 @@ export class LocationPage {
   }
 
   async filterItems(ev: any) {
-    this.locations = await this.locationService.getLocations();
+    this.searchLocations = this.locations;
     const search  = ev.target.value;
     if (search && search.trim() !== '') {
       const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
-      this.locations = this.locations.filter((location) => {
+      this.searchLocations = this.locations.filter((location) => {
         const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
         return (locationName.indexOf(modifiedSearch) > -1);
       });
@@ -60,6 +61,7 @@ export class LocationPage {
     await loading.present();
     try {
       this.locations = await this.locationService.getLocations();
+      this.searchLocations = this.locations;
       console.log('locations are', this.locations);
     } catch {
       const alert = this.alertCtrl.create({

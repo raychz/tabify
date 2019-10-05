@@ -1,7 +1,7 @@
 page-location {
   .searchbar-input {
     background-color: map-get($colors, tabify-dark-1) !important;
-    color: map-get($colors, primary) !important;
+    color: white !important;
     &::placeholder {
       color: gray !important;
       opacity: 1;
