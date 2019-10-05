@@ -121,6 +121,24 @@ export class TicketService {
     }
   }
 
+  public async closeTicket() {
+    try {
+      const response = await this.http
+        .put(`${environment.serverUrl}/ticket/${this.firestoreTicket.id}/closeTicket`, {})
+        .toPromise();
+
+      return {
+        response: response,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        response: null,
+        error: error,
+      };
+    }
+  }
+
   public clearState() {
     this.destroySubscriptions();
 

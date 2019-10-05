@@ -1,0 +1,65 @@
+page-status {
+  #openingText {
+    text-align: center;
+  }
+  #your-party {
+    text-align: left;
+    color: darkgrey;
+  }
+  .card-header {
+    font-size: medium;
+    padding-bottom: 5px;
+  }
+  .ticket-spinner {
+    display: flex;
+    margin: auto;
+  }
+
+  #total-bill-row {
+    font-size: medium;
+    color: white;
+  }
+
+  #amount-owed {
+    color: map-get($colors, primary);
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  #total-bill {
+    vertical-align: top;
+  }
+
+  ion-content {
+    padding-bottom: 10px;
+    ion-card {
+      ion-row {
+        &.item-details {
+          padding: 0;
+          overflow: hidden;
+          .col-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            .name-text {
+              font-weight: 500;
+              font-size: 1em;
+              white-space: nowrap;
+              vertical-align: top;
+            }
+          }
+          .col-item-total {
+            .my-share-text {
+              color: map-get($colors, primary);
+              font-size: 0.9em;
+              white-space: nowrap;
+              vertical-align: top;
+            }
+            .total-text {
+              font-size: 1em;
+              vertical-align: top;
+            }
+          }
+        }
+      }
+    }
+  }
+}
