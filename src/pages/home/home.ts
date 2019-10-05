@@ -8,10 +8,6 @@ import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
-import { abbreviateName } from '../../utilities/general.utilities';
-import { LikesPage } from './likes/likes';
-import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
-import { UsersPage } from './users/users';
 
 export interface Story {
   location: ILocation;
@@ -54,7 +50,8 @@ export class HomePage {
   }
 
   async getUserStories() {
-    this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     try {
       await this.newsfeedService.initializeNewsfeed();
     } catch (e) {
@@ -64,7 +61,7 @@ export class HomePage {
       });
       await alert.present();
     }
-    this.loader.dismiss();
+    await loading.dismiss();
   }
 
   async createLike(ticketId: number, storyId: number) {
@@ -99,21 +96,21 @@ export class HomePage {
   }
 
   async payNewTab() {
-    await this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     try {
       const paymentMethods = await this.paymentService.getPaymentMethods();
 
       // If user has a payment method on file, proceed to pay workflow
       // Otherwise, take user to payment method entry page
       if (paymentMethods && paymentMethods.length > 0) {
-        await this.loader.dismiss();
-        this.navCtrl.push(
+        await this.navCtrl.push(
           'LocationPage',
           {},
           { animate: true, animation: 'md-transition', direction: 'forward' }
         );
+        await loading.dismiss();
       } else {
-        await this.loader.dismiss();
         const alert = this.alert.create({
           title: `Let's Get Started`,
           message: `To pay your tab, please enter a payment method.`,
@@ -124,14 +121,15 @@ export class HomePage {
           ],
         });
         await alert.present();
-        this.navCtrl.push(
+        await this.navCtrl.push(
           'PaymentMethodsPage',
           { mode: PaymentDetailsPageMode.NO_PAYMENT_METHOD },
           { animate: true, animation: 'md-transition', direction: 'forward' }
         );
+        await loading.dismiss();
       }
     } catch {
-      await this.loader.dismiss();
+      await loading.dismiss();
       const alert = this.alert.create({
         title: 'Error',
         message: `Whoops, something went wrong. Please try again.`,
@@ -182,15 +180,5 @@ export class HomePage {
       users: users,
     });
     modal.present();
-  }
-
-  /**
-  * Returns a string to describe the users who have joined the tab.
-  * Ex: Ray, Hassan, Sahil +3 others
-  * @param users List of users
-  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
-  */
-  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getStoryUsersDescription(users, userDisplayLimit);
   }
 }

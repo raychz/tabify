@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from '../story/story.service';
 import { AuthService } from '../auth/auth.service';
+import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
 
 // This class holds that data structure that is used to represent content on the newsfeed
 @Injectable()
@@ -18,6 +19,7 @@ export class NewsfeedService {
     async initializeNewsfeed() {
         await this.getUserTicketsFromServer();
         await this.determineStoriesLikedByUser();
+        await this.userNamesDisplay();
     }
 
     async getUserTicketsFromServer() {
@@ -41,6 +43,19 @@ export class NewsfeedService {
             }
         }
         return this.tickets;
+    }
+
+    /**
+    * assigns an object to describe the users who have joined the tab.
+    * Ex: Ray, Hassan, Sahil +3 others
+    * @param users List of users
+    * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
+    */
+    async userNamesDisplay() {
+        for (let i = 0; i < this.tickets.length; i++) {
+            this.tickets[i].userNamesDisplay =
+                getStoryUsersDescription(this.tickets[i].users, 3);
+        }
     }
 
     incrementCommentCount(ticketId: number, storyId: number) {

@@ -64,13 +64,13 @@
             <ion-col class="item-details">
               <ion-row nowrap>
                 <ion-col class="col-item-name">
-                  <span class="name-text">{{ getName(item.name) }}</span>
+                  <span class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
                   <span class="my-share-text" *ngIf="
                       item.users && item.users.length > 1 && item.isItemOnMyTab
                     ">
-                    ${{ findMyShare(item) / 100 | number: '1.2-2' }} /
+                    ${{ ticketService.findUserShareOfItem(item, this.auth.getUid()) / 100 | number: '1.2-2' }} /
                   </span>
                   <span class="total-text">
                     ${{ item.price / 100 | number: '1.2-2' }}

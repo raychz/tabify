@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { IUser } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
-import { getStoryUsersDescription } from '../../../utilities/ticket.utilities';
+import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
 import { TicketItemService } from '../../../services/ticket-item/ticket-item.service';
 
 @IonicPage()
@@ -24,6 +24,7 @@ export class StoryPage {
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
   ticketItems: any[] = [];
+  userNamesDisplay: IUsersDescription;
 
   constructor(
     public navCtrl: NavController,
@@ -45,19 +46,21 @@ export class StoryPage {
 
   async ionViewDidLoad() {
     await this.getStory();
-    await this.determineStoryLikedByUser();
-    await this.getUserDetails();
-    await this.getComments();
   }
 
   async getStory() {
-    this.loader.present();
+    const loading = this.loader.create();
+    await loading.present();
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
       this.ticketItems = await this.ticketItemService.getTicketItems(this.story.ticket.id);
       console.log(this.story);
       console.log(this.ticketItems);
+      this.userNamesDisplay = getStoryUsersDescription(this.story.ticket.users, 3);
+      await this.determineStoryLikedByUser();
+      await this.getUserDetails();
+      await this.getComments();
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -65,7 +68,7 @@ export class StoryPage {
       });
       alert.present();
     }
-    this.loader.dismiss();
+    await loading.dismiss();
 
     return this.story;
   }
@@ -204,16 +207,6 @@ export class StoryPage {
       users: users,
     });
     modal.present();
-  }
-
-  /**
-  * Returns a string to describe the users who have joined the tab.
-  * Ex: Ray, Hassan, Sahil +3 others
-  * @param users List of users
-  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
-  */
-  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getStoryUsersDescription(users, userDisplayLimit);
   }
 
   presentActionSheet(commentId: number, commentIndex: number) {

@@ -13,7 +13,7 @@ import { AlertService } from '../../../services/utilities/alert.service';
 import { ITicket } from '../../../interfaces/ticket.interface';
 import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
-import { TicketService } from '../../../services/ticket/ticket.service';
+import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { plurality } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 
@@ -91,13 +91,6 @@ export class SelectItemsPage {
     }
   }
 
-  findMyShare(item: any) {
-    const share = item.users.find(
-      (user: { uid: string | null }) => user.uid === this.auth.getUid()
-    ).price;
-    return share || 0;
-  }
-
   async removeItemFromMyTab(item: any) {
     item.loading = true;
     const {
@@ -121,34 +114,16 @@ export class SelectItemsPage {
     }
   }
 
-  async viewTaxAndTip() {
-    this.navCtrl.push('TaxTipPage');
+  async viewWaitingRoom() {
+    await this.ticketService.changeUserStatus(UserStatus.Waiting);
+    this.navCtrl.push('WaitingRoomPage');
   }
 
   async confirmSelections() {
+    const loading = this.loader.create();
+    await loading.present();
     if (this.ticketService.userSelectedItemsCount) {
-      const confirm = this.alertCtrl.create({
-        title: 'Confirm Selections',
-        message: `You've added ${this.ticketService.userSelectedItemsCount} item${plurality(this.ticketService.userSelectedItemsCount)} to your tab. Is this correct?`,
-        buttons: [
-          {
-            text: 'No',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
-          },
-          {
-            text: 'Yes',
-            handler: () => {
-              confirm.dismiss().then(() => {
-                this.viewTaxAndTip();
-              });
-              return false;
-            },
-          },
-        ],
-      });
-      confirm.present();
+      this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
         title: 'Warning',
@@ -164,6 +139,7 @@ export class SelectItemsPage {
       });
       warning.present();
     }
+    await loading.dismiss();
   }
 
   presentActionSheet() {
@@ -202,15 +178,6 @@ export class SelectItemsPage {
     return this.ticketService.firestoreTicketItems.forEach(async item => {
       if (item.isItemOnMyTab) await this.removeItemFromMyTab(item);
     });
-  }
-
-  getName(name: string) {
-    if (name.toLowerCase().includes('taco')) {
-      return `🌮 ${name}`;
-    } else if (name.toLowerCase().includes('pizza')) {
-      return `🍕 ${name}`;
-    }
-    return name;
   }
 
   inviteOthers() {
