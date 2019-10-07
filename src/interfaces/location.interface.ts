@@ -12,7 +12,7 @@ export interface ILocation {
   phone: string;
   timezone: string;
   website: string;
-  photo_url?: string;
+  photo_url: string;
   zip: string;
   google_place_id?: string;
   [key: string]: any;

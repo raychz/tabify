@@ -8,10 +8,6 @@ import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
-import { abbreviateName } from '../../utilities/general.utilities';
-import { LikesPage } from './likes/likes';
-import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
-import { UsersPage } from './users/users';
 
 export interface Story {
   location: ILocation;
@@ -184,15 +180,5 @@ export class HomePage {
       users: users,
     });
     modal.present();
-  }
-
-  /**
-  * Returns a string to describe the users who have joined the tab.
-  * Ex: Ray, Hassan, Sahil +3 others
-  * @param users List of users
-  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
-  */
-  ticketUsersDescription(users: any[] = [], userDisplayLimit: number = 3) {
-    return getStoryUsersDescription(users, userDisplayLimit);
   }
 }

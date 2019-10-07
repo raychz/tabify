@@ -23,17 +23,23 @@
     <!-- Abbreviated names of users part of the ticket -->
     <ion-row>
       <ion-col class="users-padding">
-        <div>
-          <span (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()"
-            [innerHTML]="this.ticketUsersDescription(story.ticket.users, 3)"></span>
-        </div>
+        <span>
+          {{this.userNamesDisplay.mainUsers}}
+        </span>
+        <span *ngIf="this.userNamesDisplay.othersNum" class="plus-others"
+          (click)="this.displayUsers(story.ticket.users); $event.stopPropagation()">
+          {{this.userNamesDisplay.othersNum}}
+        </span>
+        <span *ngIf="this.userNamesDisplay.hereClause">
+          {{this.userNamesDisplay.hereClause}}
+        </span>
       </ion-col>
     </ion-row>
 
     <ion-row class="like-comment-row bottom-border">
 
       <ion-col>
-        <button [disabled]="story.loadingLike" ion-button color="primary" clear icon-start
+        <button ion-button [disabled]="story.loadingLike" color="primary" clear
           (click)='createLike(); $event.stopPropagation()' class="heart-padding">
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 

@@ -23,6 +23,17 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
+    <ion-card>
+      <ion-card-content>
+        <span style="font-weight: bold">
+          Hint:
+        </span>
+        View your recent transactions below
+        <span text-nowrap>
+          🥂 <ion-icon name="md-arrow-round-down"></ion-icon>
+        </span>
+      </ion-card-content>
+    </ion-card>
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
         <ion-item>
@@ -40,8 +51,15 @@
         <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
-            <span (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
-              [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
+            <span>
+              {{ticket.userNamesDisplay.mainUsers}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+              (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+              {{this.ticket.userNamesDisplay.othersNum}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.hereClause">
+              {{ticket.userNamesDisplay.hereClause}}
             </span>
           </ion-col>
         </ion-row>

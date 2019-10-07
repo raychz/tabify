@@ -49,7 +49,7 @@ export class PaymentDetailsPage {
   spreedlyReady = false;
   mode: PaymentDetailsPageMode;
   title: string;
-  spreedlyTimeout?: number = undefined;
+  spreedlyTimeout: any = undefined;
   paymentMethodError = '';
   spreedlyInitializationLoading: Loading;
   spreedlyValidationLoading: Loading;

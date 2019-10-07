@@ -18,6 +18,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 })
 export class LocationPage {
   locations: ILocation[] = [];
+  searchLocations: ILocation[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -43,22 +44,25 @@ export class LocationPage {
     this.navCtrl.pop({ animate: true, animation: 'md-transition', direction: 'back' })
   }
 
-  // filterItems(ev: any) {
-  //   this.getLocations();
-  //   const { value } = ev.target;
-  //   if (value && value.trim() !== '') {
-  //     this.locations = this.locations.filter(
-  //       location =>
-  //         location.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-  //     );
-  //   }
-  // }
+  async filterItems(ev: any) {
+    this.searchLocations = this.locations;
+    const search  = ev.target.value;
+    if (search && search.trim() !== '') {
+      const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+      this.searchLocations = this.locations.filter((location) => {
+        const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+        return (locationName.indexOf(modifiedSearch) > -1);
+      });
+    }
+  }
 
   private async getLocations() {
     const loading = this.loader.create();
     await loading.present();
     try {
       this.locations = await this.locationService.getLocations();
+      this.searchLocations = this.locations;
+      console.log('locations are', this.locations);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
