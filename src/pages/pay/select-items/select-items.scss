@@ -52,6 +52,7 @@ page-select-items {
             }
             &.item-not-on-tab {
               background-color: map-get($colors, tabify-dark-2);
+              border-right: 1px solid map-get($colors, primary);
             }
             > div {
               justify-content: center;
@@ -68,13 +69,13 @@ page-select-items {
             padding: 0;
             overflow: hidden;
             .col-item-name {
-              overflow: hidden;
-              text-overflow: ellipsis;
               .name-text {
                 font-weight: 500;
                 font-size: 1em;
-                white-space: nowrap;
-                vertical-align: top;
+              }
+              .quantity-text {
+                font-size: 0.9em;
+                color: lightgray;
               }
             }
             .col-item-total {
