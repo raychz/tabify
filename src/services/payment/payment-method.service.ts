@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@tabify/env';
 
 @Injectable()
-export class PaymentService {
+export class PaymentMethodService {
   static testGatewayToken = 'JfWM7L1pAs304dRkaQlF6qpliui';
   paymentMethods: any[] = [];
 
@@ -19,21 +19,22 @@ export class PaymentService {
   }
 
   getPaymentMethods() {
-    const url = `${environment.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment-methods`;
 
     return this.http
       .get<any[]>(url)
       .toPromise();
   }
 
-  createGatewayPurchase(token: string, amount: number) {
+  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number) {
     const url = `${environment.serverUrl}/payment`;
 
     return this.http
       .post(url, {
-        gateway: PaymentService.testGatewayToken,
-        payment_method: token,
+        ticketId,
+        paymentMethodId,
         amount,
+        tip,
       })
       .toPromise();
   }
@@ -43,7 +44,7 @@ export class PaymentService {
    * @param method 
    */
   createPaymentMethod(details: any) {
-    const url = `${environment.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment-methods`;
 
     return this.http
       .post(url, {
@@ -95,7 +96,7 @@ export class PaymentService {
    * @param method 
    */
   deletePaymentMethod(method: any) {
-    const url = `${environment.serverUrl}/payment/method`;
+    const url = `${environment.serverUrl}/payment-methods`;
 
     const options = {
       headers: new HttpHeaders({

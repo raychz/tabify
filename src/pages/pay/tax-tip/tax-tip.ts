@@ -5,7 +5,7 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
-import { PaymentService } from '../../../services/payment/payment.service';
+import { PaymentMethodService } from '../../../services/payment/payment-method.service';
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
 import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
@@ -34,7 +34,7 @@ export class TaxTipPage {
     public loader: LoaderService,
     public auth: AuthService,
     public ticketService: TicketService,
-    public paymentService: PaymentService,
+    public paymentMethodService: PaymentMethodService,
     public modalCtrl: ModalController,
   ) { }
 
@@ -55,14 +55,14 @@ export class TaxTipPage {
         };
       });
     try {
-      await this.paymentService.initializePaymentMethods();
+      await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
       console.error('Caught in initializePaymentMethods', e);
     }
 
     // TODO: Auto select the user's default payment method here
-    if (this.paymentService.paymentMethods.length) {
-      this.ticketService.userPaymentMethod = this.paymentService.paymentMethods[0];
+    if (this.paymentMethodService.paymentMethods.length) {
+      this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods[0];
     }
     await loading.dismiss();
   }
@@ -102,6 +102,13 @@ export class TaxTipPage {
 
   async pay() {
     if (this.ticketService.userPaymentMethod) {
+      // const res = await this.paymentMethodService.sendTicketPayment(
+      //   this.ticketService.firestoreTicket.id,
+      //   this.ticketService.userPaymentMethod.id,
+      //   50,
+      //   5
+      // );
+      // console.log("THE RES", res)
       console.log(this.navCtrl);
       // const payConfirmationModal = this.modalCtrl.create('PayConfirmationPage')
       // await payConfirmationModal.present();

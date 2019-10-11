@@ -11,6 +11,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { HttpParams } from '@angular/common/http/src/params';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
@@ -93,31 +94,36 @@ export class TicketService {
 
   /**
    * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
+   * @param ticket_number
+   * @param omnivoreLocationId
+   * @param fraudPreventionCode
+   */
+  public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string) {
+    const params = {
+      ticket_number: String(ticketNumber),
+      location: String(locationId), // Corresponds to location id in Tabify's db
+      ticket_status: ticketStatus
+    };
+    return await this.http
+      .get(`${environment.serverUrl}/tickets`, { params })
+      .toPromise();
+  }
+
+  /**
+   * Sends a request to create a ticket object in tabify-server's database (not Firestore).
    * @param tab_id
    * @param omnivoreLocationId
    * @param fraudPreventionCode
    */
-  public async getTicket(tab_id: string, omnivoreLocationId: string, fraudPreventionCode: IFraudPreventionCode) {
-    try {
-      const params = {
-        ticket_number: tab_id,
-        location: String(omnivoreLocationId),
-        fraudPreventionCodeId: String(fraudPreventionCode.id),
-      };
-      const ticket = await this.http
-        .get(`${environment.serverUrl}/ticket`, { params })
-        .toPromise();
-
-      return {
-        ticket: ticket,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        ticket: null,
-        error: error,
-      };
-    }
+  public async createTicket(ticketNumber: number, locationId: number, fraudPreventionCode: IFraudPreventionCode) {
+    const body = {
+      ticket_number: String(ticketNumber),
+      location: String(locationId), // Corresponds to location id in Tabify's db
+      fraudPreventionCodeId: String(fraudPreventionCode.id),
+    };
+    return await this.http
+      .post(`${environment.serverUrl}/tickets`, body)
+      .toPromise();
   }
 
   /**

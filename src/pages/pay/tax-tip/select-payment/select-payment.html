@@ -15,7 +15,7 @@
     <ion-item>
       Current Payment Methods
     </ion-item>
-    <ion-item *ngFor="let method of paymentService.paymentMethods">
+    <ion-item *ngFor="let method of paymentMethodService.paymentMethods">
       <ion-icon [color]="ticketService.userPaymentMethod === method ? 'tabify' : 'white'" name="card" item-start></ion-icon>
       <ion-label> {{method.card_type}} ...{{method.last_four_digits}}</ion-label>
       <ion-note item-end>

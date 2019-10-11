@@ -34,7 +34,7 @@ export class TabLookupPage {
     public locationService: LocationService,
   ) {
     this.tabForm = fb.group({
-      tabNumber: ['', Validators.compose([Validators.required])],
+      ticketNumber: ['', Validators.compose([Validators.required])],
     });
   }
 
@@ -54,35 +54,64 @@ export class TabLookupPage {
   }
 
   async findTab() {
-    const { tabNumber } = this.tabForm.value;
+    const { ticketNumber } = this.tabForm.value;
 
-    let loading = this.loader.create();
-    await loading.present();
-    const { error, ticket } = await
-      this.ticketService
-        .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
-    await loading.dismiss();
-
-    if (error || !ticket) {
-      let alert;
-      if (error.status === 403) {
-        alert = this.alertCtrl.create({
-          title: 'Unable to join tab',
-          message: error.error.message,
-          buttons: ['Ok']
-        });
+    const loading = this.loader.create();
+    try {
+      await loading.present();
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
+      await this.initializeFirestoreTicket(ticket.id);
+      await loading.dismiss();
+      console.log("RETRIEVED TICKET", ticket);
+    } catch (e) {
+      await loading.dismiss();
+      if (e.status === 404) {
+        // Two things could've happened here.
+        // 1. This could be the first user joining the tab, so we have to first fetch the data from Omnivore and save in our db
+        // 2. The user could've entered the wrong ticket #
+        // Let's first check for #1
+        await this.createTab(ticketNumber);
       } else {
-        alert = this.alertCtrl.create({
-          title: 'Tab Not Found',
-          message: `Please check your ticket number or location and try again.`,
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: 'Whoops, something went wrong on our end! Please try again.',
           buttons: ['Ok']
         });
+        alert.present();
       }
-      alert.present();
-      return;
     }
+  }
 
-    loading = this.loader.create();
+  async createTab(ticketNumber: number) {
+    const loading = this.loader.create();
+    try {
+      await loading.present();
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, this.fraudPreventionCode) as any;
+      await this.initializeFirestoreTicket(newTicket.id);
+      await loading.dismiss();
+    } catch (e) {
+      let alert;
+      let title;
+      let message;
+      if (e.status === 404) {
+        title = 'Ticket Not Found';
+        message = 'Please check your ticket number or location and try again.';
+      } else {
+        title = 'Error';
+        message = 'Whoops, something went wrong on our end! Please try again.';
+      }
+      alert = this.alertCtrl.create({
+        title,
+        message,
+        buttons: ['Ok']
+      });
+      alert.present();
+      await loading.dismiss();
+    }
+  }
+
+  async initializeFirestoreTicket(ticketId) {
+    const loading = this.loader.create();
     await loading.present();
     if (this.ticketService.firestoreStatus$.getValue()) {
       this.viewNextPage();
@@ -95,7 +124,7 @@ export class TabLookupPage {
         }
       })).subscribe();
     }
-    this.ticketService.initializeFirestoreTicket(ticket.id);
+    this.ticketService.initializeFirestoreTicket(ticketId);
   }
 
   private async viewNextPage() {
