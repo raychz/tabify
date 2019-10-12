@@ -94,9 +94,9 @@ export class TicketService {
 
   /**
    * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
-   * @param ticket_number
-   * @param omnivoreLocationId
-   * @param fraudPreventionCode
+   * @param ticketNumber
+   * @param locationId
+   * @param ticketStatus
    */
   public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string) {
     const params = {
@@ -111,18 +111,39 @@ export class TicketService {
 
   /**
    * Sends a request to create a ticket object in tabify-server's database (not Firestore).
-   * @param tab_id
-   * @param omnivoreLocationId
+   * @param ticketNumber
+   * @param locationId
    * @param fraudPreventionCode
    */
-  public async createTicket(ticketNumber: number, locationId: number, fraudPreventionCode: IFraudPreventionCode) {
+  public async createTicket(ticketNumber: number, locationId: number) {
     const body = {
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
-      fraudPreventionCodeId: String(fraudPreventionCode.id),
     };
     return await this.http
       .post(`${environment.serverUrl}/tickets`, body)
+      .toPromise();
+  }
+
+  public async addUserToDatabaseTicket(ticketId: number) {
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/addDatabaseUser`, {})
+      .toPromise();
+  }
+
+  public async addUserToFirestoreTicket(ticketId: number) {
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/addFirestoreUser`, {})
+      .toPromise();
+  }
+
+  public async addTicketNumberToFraudCode(ticketId: number, fraudPreventionCodeId: number) {
+    const body = {
+      fraudPreventionCodeId
+    };
+
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/fraudCode`, body)
       .toPromise();
   }
 

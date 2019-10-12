@@ -60,7 +60,16 @@ export class TabLookupPage {
     try {
       await loading.present();
       const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
-      await this.initializeFirestoreTicket(ticket.id);
+      // Add user to database ticket
+      await this.ticketService.addUserToDatabaseTicket(ticket.id);
+
+      // Add user to Firestore ticket
+      await this.ticketService.addUserToFirestoreTicket(ticket.id);
+
+      // Add ticket number to fraud code
+      await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
+
+      await this.initializeFirestoreTicketListeners(ticket.id);
       await loading.dismiss();
       console.log("RETRIEVED TICKET", ticket);
     } catch (e) {
@@ -86,8 +95,17 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, this.fraudPreventionCode) as any;
-      await this.initializeFirestoreTicket(newTicket.id);
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
+      // Add user to database ticket
+      await this.ticketService.addUserToDatabaseTicket(newTicket.id);
+
+      // Add user to Firestore ticket
+      await this.ticketService.addUserToFirestoreTicket(newTicket.id);
+
+      // Add ticket number to fraud code
+      await this.ticketService.addTicketNumberToFraudCode(newTicket.id, this.fraudPreventionCode.id);
+
+      await this.initializeFirestoreTicketListeners(newTicket.id);
       await loading.dismiss();
     } catch (e) {
       if (e.status === 404) {
@@ -109,7 +127,7 @@ export class TabLookupPage {
     }
   }
 
-  async initializeFirestoreTicket(ticketId) {
+  async initializeFirestoreTicketListeners(ticketId) {
     const loading = this.loader.create();
     await loading.present();
     if (this.ticketService.firestoreStatus$.getValue()) {
