@@ -84,28 +84,27 @@ export class TabLookupPage {
 
   async createTab(ticketNumber: number) {
     const loading = this.loader.create();
+    await loading.present();
     try {
-      await loading.present();
       const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, this.fraudPreventionCode) as any;
       await this.initializeFirestoreTicket(newTicket.id);
       await loading.dismiss();
     } catch (e) {
-      let alert;
-      let title;
-      let message;
       if (e.status === 404) {
-        title = 'Ticket Not Found';
-        message = 'Please check your ticket number or location and try again.';
+        const alert = this.alertCtrl.create({
+          title: 'Ticket Not Found',
+          message: 'Please check your ticket number or location and try again.',
+          buttons: ['Ok']
+        });
+        alert.present();
       } else {
-        title = 'Error';
-        message = 'Whoops, something went wrong on our end! Please try again.';
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: 'Whoops, something went wrong on our end! Please try again.',
+          buttons: ['Ok']
+        });
+        alert.present();
       }
-      alert = this.alertCtrl.create({
-        title,
-        message,
-        buttons: ['Ok']
-      });
-      alert.present();
       await loading.dismiss();
     }
   }
