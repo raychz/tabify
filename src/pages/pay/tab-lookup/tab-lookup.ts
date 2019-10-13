@@ -115,6 +115,13 @@ export class TabLookupPage {
           buttons: ['Ok']
         });
         alert.present();
+      } else if (e.status === 422) {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
