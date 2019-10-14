@@ -9,6 +9,7 @@ import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
+import { P } from '@angular/core/src/render3';
 
 @IonicPage()
 @Component({
@@ -95,6 +96,7 @@ export class TabLookupPage {
         }
       })).subscribe();
     }
+    console.log(ticket.id);
     this.ticketService.initializeFirestoreTicket(ticket.id);
   }
 
@@ -115,16 +117,21 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case UserStatus.Paid:
-        const modal = this.alertCtrl.create({
-          title: 'Tab already paid!',
-          message: 'You have already paid your tab, no need to do anything else.',
-          buttons: [
-            {
-              text: 'Ok',
-            },
-          ],
-        });
-        modal.present();
+        if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Paid) {
+          const modal = this.alertCtrl.create({
+            title: 'Tab already paid!',
+            message: 'You have already paid your tab, no need to do anything else.',
+            buttons: [
+              {
+                text: 'Ok',
+              },
+            ],
+          });
+          modal.present();
+          this.ticketService.clearState();
+        } else {
+          this.navCtrl.push('StatusPage');
+        }
         break;
       default:
         throw new Error('Unknown user status')

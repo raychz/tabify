@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, Navbar, ModalController, } from 'i
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
+import { TicketService, FirestoreTicketItem, UserStatus } from '../../../services/ticket/ticket.service';
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
@@ -86,7 +86,7 @@ export class TaxTipPage {
   }
 
   getTax() {
-    const tax = this.getSubtotal() * 0.0625;
+    const tax = this.getSubtotal() * 0.0625; // this should not be a hard coded value
     return tax;
   }
 
@@ -105,7 +105,10 @@ export class TaxTipPage {
       console.log(this.navCtrl);
       // const payConfirmationModal = this.modalCtrl.create('PayConfirmationPage')
       // await payConfirmationModal.present();
-      await this.navCtrl.setRoot('HomePage');
+      await this.ticketService.changeUserStatus(UserStatus.Paid);
+      this.ticketService.resetIsExpanded();
+      this.navCtrl.push('StatusPage');
+
     } else {
       throw new Error("No payment method selected!")
     }
