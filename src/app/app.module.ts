@@ -27,6 +27,7 @@ import { PaymentMethodService } from '../services/payment/payment-method.service
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
+import { PaymentService } from '../services/payment/payment.service';
 
 
 Pro.init('66369498', {
@@ -91,7 +92,8 @@ export class MyErrorHandler implements ErrorHandler {
     PaymentMethodService,
     StoryService,
     NewsfeedService,
-    ErrorService
+    ErrorService,
+    PaymentService,
   ],
 })
 export class AppModule { }

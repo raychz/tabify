@@ -26,19 +26,6 @@ export class PaymentMethodService {
       .toPromise();
   }
 
-  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number) {
-    const url = `${environment.serverUrl}/payment`;
-
-    return this.http
-      .post(url, {
-        ticketId,
-        paymentMethodId,
-        amount,
-        tip,
-      })
-      .toPromise();
-  }
-
   /**
    * Sends POST request to server to create new method.
    * @param method 

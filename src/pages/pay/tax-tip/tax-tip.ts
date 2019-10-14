@@ -9,6 +9,7 @@ import { PaymentMethodService } from '../../../services/payment/payment-method.s
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
 import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
+import { PaymentService } from '../../../services/payment/payment.service';
 
 @IonicPage()
 @Component({
@@ -35,6 +36,7 @@ export class TaxTipPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public paymentMethodService: PaymentMethodService,
+    public paymentService: PaymentService,
     public modalCtrl: ModalController,
   ) { }
 
@@ -102,12 +104,12 @@ export class TaxTipPage {
 
   async pay() {
     if (this.ticketService.userPaymentMethod) {
-      // const res = await this.paymentMethodService.sendTicketPayment(
-      //   this.ticketService.firestoreTicket.id,
-      //   this.ticketService.userPaymentMethod.id,
-      //   50,
-      //   5
-      // );
+      const res = await this.paymentService.sendTicketPayment(
+        this.ticketService.firestoreTicket.id,
+        this.ticketService.userPaymentMethod.id,
+        10000,
+        5
+      );
       // console.log("THE RES", res)
       console.log(this.navCtrl);
       // const payConfirmationModal = this.modalCtrl.create('PayConfirmationPage')
