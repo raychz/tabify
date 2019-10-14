@@ -18,10 +18,7 @@
       "@tabify/env": [
         "environments/environment"
       ]
-    },
-    "types": [
-      "node"
-    ]
+    }
   },
   "include": [
     "src/**/*.ts"
