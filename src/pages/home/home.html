@@ -30,16 +30,6 @@
     </ion-row>
     <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
       <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
-
-        <!-- Abbreviated names of users part of the ticket -->
-        <ion-row margin-top>
-          <ion-col class="users-padding">
-            <span (click)="this.displayUsers(ticket.users); $event.stopPropagation()"
-              [innerHTML]="this.ticketUsersDescription(ticket.users, 3)">
-            </span>
-          </ion-col>
-        </ion-row>
-
         <ion-item>
           <ion-avatar item-start>
             <img [src]='ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
@@ -51,6 +41,22 @@
           </h3>
           <ion-icon class="gray-arrow" item-end name="ios-arrow-forward"></ion-icon>
         </ion-item>
+
+        <!-- Abbreviated names of users part of the ticket -->
+        <ion-row>
+          <ion-col class="users-padding">
+            <span>
+              {{ticket.userNamesDisplay.mainUsers}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+              (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+              {{this.ticket.userNamesDisplay.othersNum}}
+            </span>
+            <span *ngIf="ticket.userNamesDisplay.hereClause">
+              {{ticket.userNamesDisplay.hereClause}}
+            </span>
+          </ion-col>
+        </ion-row>
 
         <ion-row class="like-comment-row">
 

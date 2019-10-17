@@ -55,6 +55,8 @@ export class NewsfeedService {
         for (let i = 0; i < this.tickets.length; i++) {
             this.tickets[i].userNamesDisplay =
                 getStoryUsersDescription(this.tickets[i].users, 3);
+
+            console.log(this.tickets[i].userNamesDisplay);
         }
     }
 
