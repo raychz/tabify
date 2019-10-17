@@ -15,7 +15,6 @@ export class WaitingRoomPage {
 
   userStatus = UserStatus;
   moveToTaxTip = false;
-  selectConfirmButton = false;
 
   constructor(
     public navCtrl: NavController,
@@ -53,8 +52,7 @@ export class WaitingRoomPage {
   }
 
   async toggleConfirm() {
-    this.selectConfirmButton = !this.selectConfirmButton;
-    if (this.selectConfirmButton) {
+    if (this.ticketService.curUser.status !== UserStatus.Confirmed) {
       await this.ticketService.changeUserStatus(UserStatus.Confirmed);
     } else {
       await this.ticketService.changeUserStatus(UserStatus.Waiting);

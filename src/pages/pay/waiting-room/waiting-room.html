@@ -105,6 +105,7 @@
         Shared Items:
       </ion-card-header>
       <ion-card-content>
+        <ion-label id="no-shared-items" *ngIf="ticketService.sharedItems.length === 0"> No items are being shared. </ion-label>
         <ion-list>
           <ng-container *ngFor="let item of ticketService.sharedItems">
 
@@ -179,7 +180,7 @@
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"
       [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
-      {{ selectConfirmButton ? 'Cancel' : 'Confirm' }}
+      {{ ticketService.curUser.status === userStatus.Confirmed ? 'Cancel' : 'Confirm' }}
     </button>
   </ng-container>
 </ion-footer>
