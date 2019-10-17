@@ -10,10 +10,6 @@ page-status {
     font-size: medium;
     padding-bottom: 5px;
   }
-  .ticket-spinner {
-    display: flex;
-    margin: auto;
-  }
 
   #total-bill-row {
     font-size: medium;
@@ -33,6 +29,48 @@ page-status {
     padding-bottom: 10px;
     ion-card {
       ion-row {
+        &.item-user {
+          .user-picture {
+            padding-left: 5px;
+            white-space: nowrap;
+            .avatar {
+              padding-top: 5px;
+              width: 40px;
+              height: 40px;
+              white-space: nowrap;
+            }
+          }
+          .user-name {
+            padding-left: 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: medium;
+          }
+          .user-total {
+            align-self: flex-end;
+            color: map-get($colors, primary);
+            text-align: right;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: medium;
+          }
+          .ticket-spinner {
+            margin: auto;
+            align-self: flex-end;
+            white-space: nowrap;
+            padding-bottom: 10px;
+
+          }
+          .user-icons {
+            align-self: flex-end;
+            white-space: nowrap;
+            padding-bottom: 10px;
+
+            .icon {
+              font-size: 30px;
+            }
+          }
+        }
         &.item-details {
           padding: 0;
           overflow: hidden;
