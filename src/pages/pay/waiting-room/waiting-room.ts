@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { Platform } from 'ionic-angular';
+import { AlertService } from '../../../services/utilities/alert.service';
 
 @IonicPage()
 @Component({
@@ -15,13 +16,15 @@ export class WaitingRoomPage {
 
   userStatus = UserStatus;
   moveToTaxTip = false;
+  firstConfirm = true;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
     public ticketService: TicketService,
-    public platform: Platform
+    public platform: Platform,
+    public alertCtrl: AlertService
   ) {}
 
   public ionViewCanEnter(): boolean {
@@ -30,7 +33,10 @@ export class WaitingRoomPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
-    this.initializeWaitingRoom();
+
+    if(this.ticketService.curUser.status === UserStatus.Confirmed) {
+      this.firstConfirm = false;
+    }
   }
 
   checkConfirmedStatus(): boolean {
@@ -52,6 +58,29 @@ export class WaitingRoomPage {
   }
 
   async toggleConfirm() {
+
+    if (this.firstConfirm) {
+      const alert = this.alertCtrl.create({
+        title: 'Confirm that everyone has joined',
+        message: `There are currently ${this.ticketService.users.length} users on this tab. Is that everyone in your party?`,
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel'
+          },
+          {
+            text: 'Yes',
+            handler: () => { this.firstConfirm = false; this.changeUserConfirmStatus() }
+          }
+        ]
+      });
+      alert.present();
+    } else {
+      this.changeUserConfirmStatus();
+    }
+  }
+
+  async changeUserConfirmStatus () {
     if (this.ticketService.curUser.status !== UserStatus.Confirmed) {
       await this.ticketService.changeUserStatus(UserStatus.Confirmed);
     } else {
@@ -65,13 +94,5 @@ export class WaitingRoomPage {
     await this.ticketService.changeUserStatus(UserStatus.Selecting);
     this.ticketService.resetIsExpanded();
     this.navCtrl.pop();
-  }
-
-  initializeWaitingRoom() {
-    console.log(this.ticketService.firestoreTicket);
-    const confirmed = this.navParams.get('confirmed');
-    if (confirmed) {
-      this.selectConfirmButton = confirmed;
-    }
   }
 }

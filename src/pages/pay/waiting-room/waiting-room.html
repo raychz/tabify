@@ -176,7 +176,7 @@
 <ion-footer>
   <ng-container>
     <ion-label text-wrap color="light" class="confirm-text">
-      {{ selectConfirmButton ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else. All items must be selected...') : 'Make sure all users have joined before confirming' }}
+      {{ ticketService.curUser.status === userStatus.Confirmed ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else. All items must be selected...') : 'Make sure all users have joined before confirming' }}
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"
       [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
