@@ -60,18 +60,9 @@ export class TabLookupPage {
     try {
       await loading.present();
       const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
-      // Add user to database ticket
-      await this.ticketService.addUserToDatabaseTicket(ticket.id);
-
-      // Add user to Firestore ticket
-      await this.ticketService.addUserToFirestoreTicket(ticket.id);
-
-      // Add ticket number to fraud code
-      await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
-
-      await this.initializeFirestoreTicketListeners(ticket.id);
+      await this.initializeTicketMetadata(ticket);
+      await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
-      console.log("RETRIEVED TICKET", ticket);
     } catch (e) {
       await loading.dismiss();
       if (e.status === 404) {
@@ -96,16 +87,8 @@ export class TabLookupPage {
     await loading.present();
     try {
       const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
-      // Add user to database ticket
-      await this.ticketService.addUserToDatabaseTicket(newTicket.id);
-
-      // Add user to Firestore ticket
-      await this.ticketService.addUserToFirestoreTicket(newTicket.id);
-
-      // Add ticket number to fraud code
-      await this.ticketService.addTicketNumberToFraudCode(newTicket.id, this.fraudPreventionCode.id);
-
-      await this.initializeFirestoreTicketListeners(newTicket.id);
+      await this.initializeTicketMetadata(newTicket);
+      await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
       if (e.status === 404) {
@@ -132,23 +115,6 @@ export class TabLookupPage {
       }
       await loading.dismiss();
     }
-  }
-
-  async initializeFirestoreTicketListeners(ticketId) {
-    const loading = this.loader.create();
-    await loading.present();
-    if (this.ticketService.firestoreStatus$.getValue()) {
-      this.viewNextPage();
-      await loading.dismiss();
-    } else {
-      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
-        if (fireStoreInitializationStatus) {
-          this.viewNextPage();
-          loading.dismiss();
-        }
-      })).subscribe();
-    }
-    this.ticketService.initializeFirestoreTicket(ticketId);
   }
 
   private async viewNextPage() {
@@ -195,5 +161,33 @@ export class TabLookupPage {
       console.log(error);
     }
     await loading.dismiss();
+  }
+
+  private async initializeFirestoreTicketListeners(ticket: any) {
+    const loading = this.loader.create();
+    await loading.present();
+    if (this.ticketService.firestoreStatus$.getValue()) {
+      this.viewNextPage();
+      await loading.dismiss();
+    } else {
+      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
+        if (fireStoreInitializationStatus) {
+          this.viewNextPage();
+          loading.dismiss();
+        }
+      })).subscribe();
+    }
+    this.ticketService.initializeFirestoreTicket(ticket.id);
+  }
+
+  private async initializeTicketMetadata(ticket: any) {
+    // Add user to database ticket
+    await this.ticketService.addUserToDatabaseTicket(ticket.id);
+
+    // Add user to Firestore ticket
+    await this.ticketService.addUserToFirestoreTicket(ticket.id);
+
+    // Add ticket number to fraud code
+    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
   }
 }
