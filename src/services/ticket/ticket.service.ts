@@ -1,5 +1,4 @@
 // Stateful ticket service
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
@@ -70,7 +69,6 @@ export class TicketService {
   public userTipPercentage: number = 18;
   /** The value is represented in pennies. */
   public userTip: number = 0;
-  public userTaxRate: number = 0.0625;
   /** The value is represented in pennies. */
   public userTax: number = 0;
   /** The value is represented in pennies. */
@@ -80,6 +78,8 @@ export class TicketService {
   public hasInitializationError = false;
   public isExpandedList: { [uid: string]: boolean } = {};
   public firestoreStatus$ = new BehaviorSubject<boolean>(false);
+  /** Database representation of ticket */
+  public ticket: any;
 
   // Private class variables
   private firestoreTicket$: Subscription;
@@ -104,9 +104,11 @@ export class TicketService {
       location: String(locationId), // Corresponds to location id in Tabify's db
       ticket_status: ticketStatus
     };
-    return await this.http
+    const ticket = await this.http
       .get(`${environment.serverUrl}/tickets`, { params })
       .toPromise();
+    this.ticket = ticket;
+    return ticket;
   }
 
   /**
@@ -120,9 +122,12 @@ export class TicketService {
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
     };
-    return await this.http
+
+    const ticket = await this.http
       .post(`${environment.serverUrl}/tickets`, body)
       .toPromise();
+    this.ticket = ticket;
+    return ticket;
   }
 
   public async addUserToDatabaseTicket(ticketId: number) {

@@ -58,7 +58,7 @@
       </ion-item>
       <ion-item class='total'>
         <h2>Tax
-          <span class='line-details'>({{ticketService.userTaxRate * 100 | number: '1.2-2'}}%)</span>
+          <span class='line-details'>({{ticketService.ticket.location.tax_rate}}%)</span>
         </h2>
         <div item-end>
           <h2>${{ticketService.userTax / 100 | number: '1.2-2'}}</h2>
