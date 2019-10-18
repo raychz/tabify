@@ -75,27 +75,27 @@
           <ng-container *ngIf="user.uid !== ticketService.curUser.uid">
             <ion-card-content>
               <ion-row class="item-user" (click)="ticketService.toggleIsExpanded(user)">
-                  <ion-col col-auto class="user-picture">
+                  <ion-col class="user-picture">
                       <ion-avatar class="avatar">
                         <img [src]="user.photoUrl || '../../../../../assets/imgs/user-light.png'">
                       </ion-avatar>
                   </ion-col>
 
-                  <ion-col col-auto class="user-name">
+                  <ion-col class="user-name">
                       <ion-label> {{ user.name }} </ion-label>
                   </ion-col>
 
-                  <ion-col col-auto class="user-total">
+                  <ion-col class="user-total">
                     <ion-label>
                       ${{ user.subtotal / 100 | number: '1.2-2' }}
                     </ion-label>
                   </ion-col>
 
-                  <ion-col col-auto class="ticket-spinner" *ngIf="user.status < userStatus.Paid">
-                      <ion-spinner name="dots"></ion-spinner>
+                  <ion-col class="ticket-spinner" *ngIf="user.status < userStatus.Paid">
+                      <ion-spinner name="bubbles" color="primary"></ion-spinner>
                   </ion-col>
 
-                  <ion-col col-auto class="user-icons">
+                  <ion-col class="user-icons">
                     <ion-icon class="icon" name="checkmark-circle-outline" *ngIf="user.status >= userStatus.Paid">
                     </ion-icon>
                     <ion-icon class="icon" [name]="ticketService.getUserExpanded(user) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
