@@ -65,6 +65,7 @@ export class TabLookupPage {
       await loading.dismiss();
     } catch (e) {
       await loading.dismiss();
+      if (e.stopErrorPropagation) return;
       if (e.status === 404) {
         // Two things could've happened here.
         // 1. This could be the first user joining the tab, so we have to first fetch the data from Omnivore and save in our db
@@ -91,6 +92,7 @@ export class TabLookupPage {
       await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
+      if (e.stopErrorPropagation) return;
       if (e.status === 404) {
         const alert = this.alertCtrl.create({
           title: 'Ticket Not Found',
@@ -185,7 +187,20 @@ export class TabLookupPage {
     await this.ticketService.addUserToDatabaseTicket(ticket.id);
 
     // Add user to Firestore ticket
-    await this.ticketService.addUserToFirestoreTicket(ticket.id);
+    try {
+      await this.ticketService.addUserToFirestoreTicket(ticket.id);
+    } catch (e) {
+      if (e.status === 403) {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+      e.stopErrorPropagation = true;
+      throw e;
+    }
 
     // Add ticket number to fraud code
     await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
