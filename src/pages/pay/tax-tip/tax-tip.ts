@@ -10,6 +10,7 @@ import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/pa
 import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
+import { sleep } from '../../../utilities/general.utilities';
 
 @IonicPage()
 @Component({
@@ -18,13 +19,7 @@ import { PaymentService } from '../../../services/payment/payment.service';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  tip = 18;
   myTabItems: FirestoreTicketItem[] = [];
-  selectOptions = {
-    title: 'Payment',
-    subTitle: 'Select a payment method',
-    enableBackdropDismiss: false
-  };
   displayAllItems = false;
   displayLimit = 2;
 
@@ -47,6 +42,17 @@ export class TaxTipPage {
   async ionViewDidLoad() {
     const loading = this.loader.create();
     await loading.present();
+    try {
+      await this.ticketService.finalizeTicketTotals(this.ticketService.ticket.id);
+    } catch (e) {
+      console.error('something went wrong, retrying', e);
+      try {
+        await sleep(1500);
+        await this.ticketService.finalizeTicketTotals(this.ticketService.ticket.id);
+      } catch {
+        console.error('something went wrong again, not retrying', e);
+      }
+    }
     this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
       .map(item => {
         const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
@@ -75,49 +81,47 @@ export class TaxTipPage {
     await tipModal.present();
   }
 
-  getSubtotal() {
-    let sum = 0;
-    this.myTabItems &&
-      this.myTabItems.forEach((item: FirestoreTicketItem) => {
-        const payer = item.users && item.users.find((e: any) => e.uid === this.auth.getUid());
-        if (payer) {
-          sum += payer.price;
-        }
-      });
-    return sum;
-  }
-
-  getTax() {
-    const tax = this.getSubtotal() * 0.0625;
-    return tax;
-  }
-
-  getTip() {
-    const tip = this.getSubtotal() * (this.tip / 100);
-    return tip;
-  }
-
-  getGrandTotal() {
-    const grandTotal = this.getSubtotal() + this.getTax() + this.getTip();
-    return grandTotal;
-  }
 
   async pay() {
-    if (this.ticketService.userPaymentMethod) {
-      const res = await this.paymentService.sendTicketPayment(
-        this.ticketService.firestoreTicket.id,
-        this.ticketService.userPaymentMethod.id,
-        10000,
-        5
-      );
-      // console.log("THE RES", res)
-      console.log(this.navCtrl);
-      // const payConfirmationModal = this.modalCtrl.create('PayConfirmationPage')
-      // await payConfirmationModal.present();
-      await this.navCtrl.setRoot('HomePage');
-    } else {
+    if (!this.ticketService.userPaymentMethod) {
       throw new Error("No payment method selected!")
     }
+    const loading = this.loader.create();
+    await loading.present();
+    try {
+      const response = await this.paymentService.sendTicketPayment(
+        this.ticketService.ticket.id,
+        this.ticketService.userPaymentMethod.id,
+        this.ticketService.curUser.totals.total,
+        this.ticketService.curUser.totals.tip,
+      ) as any;
+      if (response.ticket.ticket_status === 'closed') {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}. Sahil, this is where the pay status page goes.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+
+      await this.navCtrl.setRoot('HomePage');
+    } catch (e) {
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Whoops, something went wrong on our end! Please try again.',
+        buttons: ['Ok']
+      });
+      alert.present();
+      console.error(e);
+    }
+    await loading.dismiss();
   }
 
   editPaymentMethod() {
