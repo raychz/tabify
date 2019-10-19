@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
 import { PaymentDetailsPageMode } from "./payment-details/payment-details";
-import { PaymentService } from '../../services/payment/payment.service';
+import { PaymentMethodService } from '../../services/payment/payment-method.service';
 import { AlertService } from '../../services/utilities/alert.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { AuthService } from '../../services/auth/auth.service';
@@ -17,7 +17,7 @@ export class PaymentMethodsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public paymentService: PaymentService,
+    public paymentMethodService: PaymentMethodService,
     private actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertService,
     public loader: LoaderService,
@@ -27,7 +27,7 @@ export class PaymentMethodsPage {
   }
 
   async ionViewDidLoad() {
-    await this.paymentService.initializePaymentMethods();
+    await this.paymentMethodService.initializePaymentMethods();
   }
 
   public ionViewCanEnter(): boolean {
@@ -65,10 +65,10 @@ export class PaymentMethodsPage {
     await loading.present();
     try {
       // Remove on server
-      await this.paymentService.deletePaymentMethod(method);
+      await this.paymentMethodService.deletePaymentMethod(method);
 
       // Remove locally
-      this.paymentService.removePaymentMethod(method);
+      this.paymentMethodService.removePaymentMethod(method);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Error',

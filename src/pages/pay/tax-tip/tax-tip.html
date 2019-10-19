@@ -7,7 +7,7 @@
 <ion-content class='cards-bg'>
   <ion-card>
     <ion-card-header>
-      How was {{ticketService.firestoreTicket?.location}}?
+      How was {{ticketService.ticket.location.name}}?
     </ion-card-header>
     <ion-card-content>
       <p id="rate-and-review">Rate and review the items you ordered.</p>
@@ -44,7 +44,7 @@
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{ticketService.userSubtotal / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.curUser.totals.subtotal / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total' (click)="adjustTip()">
@@ -53,21 +53,21 @@
           <ion-icon class="edit-icon" name='md-create'></ion-icon>
         </h2>
         <div item-end>
-          <h2>${{ticketService.userTip / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.curUser.totals.tip / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
         <h2>Tax
-          <span class='line-details'>({{ticketService.userTaxRate * 100 | number: '1.2-2'}}%)</span>
+          <span class='line-details'>({{ticketService.ticket.location.tax_rate}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{ticketService.userTax / 100 | number: '1.2-2'}}</h2>
+          <h2>${{ticketService.curUser.totals.tax / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}</h2>
+          <h2>${{(ticketService.curUser.totals.total + ticketService.curUser.totals.tip) / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item (click)="editPaymentMethod()">
@@ -85,7 +85,7 @@
 <ion-footer>
   <ion-toolbar border-top>
     <button ion-button block (click)="pay()">Submit Payment of
-      ${{ticketService.userGrandTotal / 100 | number: '1.2-2'}}
+      ${{(ticketService.curUser.totals.total + ticketService.curUser.totals.tip) / 100  | number: '1.2-2'}}
     </button>
   </ion-toolbar>
 </ion-footer>

@@ -34,10 +34,15 @@ export class EnterTipPage {
     const enteredTip = Number(this.tip);
     if (isNaN(enteredTip)) {
       this.ticketService.userTipPercentage = 18;
+      this.ticketService.curUser.totals.tip =
+        Math.round(((this.ticketService.userTipPercentage / 100) * this.ticketService.curUser.totals.subtotal));
     } else if (enteredTip < 0) {
       this.ticketService.userTipPercentage = 0;
+      this.ticketService.curUser.totals.tip = 0;
     } else {
       this.ticketService.userTipPercentage = enteredTip;
+      this.ticketService.curUser.totals.tip =
+        Math.round(((this.ticketService.userTipPercentage / 100) * this.ticketService.curUser.totals.subtotal));
     }
     await this.viewCtrl.dismiss();
   }
