@@ -11,5 +11,5 @@ export const environment = {
 		messagingSenderId: '1044249255712',
 	},
 	// TODO: Update this key for production
-	spreedlyEnvKey: 'Iu3UapkcfklJXqLJV61vbJsp1dl',
+	spreedlyEnvKey: 'SDmRjD2a2xi5KE5rQ9GPBAsBnTb',
 };
