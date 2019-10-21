@@ -8,7 +8,7 @@ import {
 } from 'ionic-angular';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { PaymentService } from '../../../services/payment/payment.service';
+import { PaymentMethodService } from '../../../services/payment/payment-method.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { environment } from '@tabify/env';
@@ -49,7 +49,7 @@ export class PaymentDetailsPage {
   spreedlyReady = false;
   mode: PaymentDetailsPageMode;
   title: string;
-  spreedlyTimeout?: number = undefined;
+  spreedlyTimeout: any = undefined;
   paymentMethodError = '';
   spreedlyInitializationLoading: Loading;
   spreedlyValidationLoading: Loading;
@@ -62,7 +62,7 @@ export class PaymentDetailsPage {
     public loader: LoaderService,
     public alertCtrl: AlertService,
     private changeDetectorRef: ChangeDetectorRef,
-    private paymentService: PaymentService,
+    private paymentMethodService: PaymentMethodService,
     public auth: AuthService,
     public ticketService: TicketService
   ) {
@@ -177,8 +177,8 @@ export class PaymentDetailsPage {
 
   async onSpreedlyPaymentMethod(token: string, details: string) {
     try {
-      const method = await this.paymentService.createPaymentMethod(details) as any;
-      await this.paymentService.initializePaymentMethods();
+      const method = await this.paymentMethodService.createPaymentMethod(details) as any;
+      await this.paymentMethodService.initializePaymentMethods();
       switch (this.mode) {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
           await this.navCtrl.popToRoot();
@@ -192,7 +192,7 @@ export class PaymentDetailsPage {
           await this.navCtrl.pop();
           break;
         case PaymentDetailsPageMode.SAVE_AND_PAY:
-          this.ticketService.userPaymentMethod = this.paymentService.paymentMethods.find(m => m.id === method.id);
+          this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods.find(m => m.id === method.id);
           // Pop twice. Once to get back to Select Payment Method page. Twice to get back to Checkout page.
           await this.navCtrl.pop();
           await this.navCtrl.pop();

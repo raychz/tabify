@@ -106,7 +106,7 @@ export class StoryPage {
 
     res = await this.storyService.createLike(this.story.id);
 
-    if (res.status === 200) {
+    if (res.status === 201) {
 
       // res.likeCreated = true means that the server created a new like
       if (res.body && res.body.likeCreated === true) {

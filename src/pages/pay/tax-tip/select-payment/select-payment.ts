@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { PaymentService } from '../../../../services/payment/payment.service';
+import { PaymentMethodService } from '../../../../services/payment/payment-method.service';
 import { TicketService } from '../../../../services/ticket/ticket.service';
 import { PaymentDetailsPageMode } from '../../../payment-methods/payment-details/payment-details';
 import { sleep } from '../../../../utilities/general.utilities';
@@ -15,7 +15,7 @@ export class SelectPaymentPage {
   canSelect = true;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
-    public paymentService: PaymentService,
+    public paymentMethodService: PaymentMethodService,
     public ticketService: TicketService,
     public auth: AuthService
   ) { }

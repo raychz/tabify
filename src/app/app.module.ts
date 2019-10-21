@@ -23,11 +23,12 @@ import { TokenInterceptor } from '../interceptors/token.interceptor';
 import { TicketService } from '../services/ticket/ticket.service';
 import { LocationService } from '../services/location/location.service';
 import { FirestoreService } from '../services/firestore/firestore.service';
-import { PaymentService } from '../services/payment/payment.service';
+import { PaymentMethodService } from '../services/payment/payment-method.service';
 import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { TicketItemService } from '../services/ticket-item/ticket-item.service';
 import { ErrorService } from '../services/error/error.service';
+import { PaymentService } from '../services/payment/payment.service';
 
 
 Pro.init('66369498', {
@@ -89,11 +90,12 @@ export class MyErrorHandler implements ErrorHandler {
     TicketService,
     LocationService,
     FirestoreService,
-    PaymentService,
+    PaymentMethodService,
     StoryService,
     NewsfeedService,
     TicketItemService,
-    ErrorService
+    ErrorService,
+    PaymentService,
   ],
 })
 export class AppModule { }
