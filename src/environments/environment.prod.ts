@@ -10,6 +10,5 @@ export const environment = {
 		storageBucket: 'tabify-40746.appspot.com',
 		messagingSenderId: '1044249255712',
 	},
-	// TODO: Update this key for production
 	spreedlyEnvKey: 'SDmRjD2a2xi5KE5rQ9GPBAsBnTb',
 };
