@@ -77,7 +77,6 @@ export interface IUsersDescription {
     mainUsers: string,
     hereClause: string,
     othersNum: string
-
 }
 
 /**
