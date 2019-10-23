@@ -55,6 +55,5 @@ export class StatusPage {
   async viewHome() {
     await sleep(1500);
     await this.navCtrl.setRoot('HomePage');
-    this.ticketService.clearState();
   }
 }

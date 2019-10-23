@@ -202,25 +202,6 @@ export class TicketService {
   //   }
   // }
 
-  public clearState() {
-    this.destroySubscriptions();
-
-    this.firestoreTicket = undefined;
-    this.firestoreTicketItems = undefined;
-    this.sharedItems = [];
-    this.unclaimedItems = [];
-    this.users = undefined;
-    this.curUser = undefined;
-    this.userSelectedItemsCount = 0;
-    this.userTipPercentage = 18;
-    this.userGrandTotal = 0;
-    this.userPaymentMethod = undefined;
-    this.ticketUsersDescription = getSelectItemsTicketUsersDescription();
-    this.hasInitializationError = false;
-    this.isExpandedList = {};
-    this.firestoreStatus$ = new BehaviorSubject<boolean> (false);
-  }
-
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
    * @param ticketId
