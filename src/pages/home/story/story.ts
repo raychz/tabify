@@ -62,7 +62,6 @@ export class StoryPage {
       console.log(this.story);
       console.log(this.ticketItems);
       this.userNamesDisplay = getStoryUsersDescription(this.story.ticket.users, 3);
-      console.log(this.userNamesDisplay);
       await this.determineStoryLikedByUser();
       await this.getUserDetails();
       await this.getComments();
