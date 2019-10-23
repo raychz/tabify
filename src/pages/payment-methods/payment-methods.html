@@ -9,9 +9,9 @@
 
 <ion-content class="cards-bg">
   <ion-card>
-    <ion-card-header>{{!this.paymentService.paymentMethods.length ? 'No' : ''}} Payment Methods</ion-card-header>
+    <ion-card-header>{{!this.paymentMethodService.paymentMethods.length ? 'No' : ''}} Payment Methods</ion-card-header>
     <ion-list>
-      <button ion-item *ngFor="let method of this.paymentService.paymentMethods" (click)="showMethodActions(method)">
+      <button ion-item *ngFor="let method of this.paymentMethodService.paymentMethods" (click)="showMethodActions(method)">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
         {{method.card_type}} ...{{method.last_four_digits}}
         <ion-note item-end>

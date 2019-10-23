@@ -35,7 +35,7 @@ export class TabLookupPage {
     public locationService: LocationService,
   ) {
     this.tabForm = fb.group({
-      tabNumber: ['', Validators.compose([Validators.required])],
+      ticketNumber: ['', Validators.compose([Validators.required])],
     });
   }
 
@@ -55,49 +55,69 @@ export class TabLookupPage {
   }
 
   async findTab() {
-    const { tabNumber } = this.tabForm.value;
+    const { ticketNumber } = this.tabForm.value;
 
-    let loading = this.loader.create();
-    await loading.present();
-    const { error, ticket } = await
-      this.ticketService
-        .getTicket(tabNumber, this.location.omnivore_id, this.fraudPreventionCode) as { error: any, ticket: any };
-    await loading.dismiss();
-
-    if (error || !ticket) {
-      let alert;
-      if (error.status === 403) {
-        alert = this.alertCtrl.create({
-          title: 'Unable to join tab',
-          message: error.error.message,
-          buttons: ['Ok']
-        });
-      } else {
-        alert = this.alertCtrl.create({
-          title: 'Tab Not Found',
-          message: `Please check your ticket number or location and try again.`,
-          buttons: ['Ok']
-        });
-      }
-      alert.present();
-      return;
-    }
-
-    loading = this.loader.create();
-    await loading.present();
-    if (this.ticketService.firestoreStatus$.getValue()) {
-      this.viewNextPage();
+    const loading = this.loader.create();
+    try {
+      await loading.present();
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
+      await this.initializeTicketMetadata(ticket);
+      await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
-    } else {
-      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
-        if (fireStoreInitializationStatus) {
-          this.viewNextPage();
-          loading.dismiss();
-        }
-      })).subscribe();
+    } catch (e) {
+      await loading.dismiss();
+      if (e.stopErrorPropagation) return;
+      if (e.status === 404) {
+        // Two things could've happened here.
+        // 1. This could be the first user joining the tab, so we have to first fetch the data from Omnivore and save in our db
+        // 2. The user could've entered the wrong ticket #
+        // Let's first check for #1
+        await this.createTab(ticketNumber);
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: 'Whoops, something went wrong on our end! Please try again.',
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
     }
-    console.log(ticket.id);
-    this.ticketService.initializeFirestoreTicket(ticket.id);
+  }
+
+  async createTab(ticketNumber: number) {
+    const loading = this.loader.create();
+    await loading.present();
+    try {
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
+      await this.initializeTicketMetadata(newTicket);
+      await this.initializeFirestoreTicketListeners(newTicket);
+      await loading.dismiss();
+    } catch (e) {
+      if (e.stopErrorPropagation) return;
+      if (e.status === 404) {
+        const alert = this.alertCtrl.create({
+          title: 'Ticket Not Found',
+          message: 'Please check your ticket number or location and try again.',
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else if (e.status === 422) {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: 'Whoops, something went wrong on our end! Please try again.',
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+      await loading.dismiss();
+    }
   }
 
   private async viewNextPage() {
@@ -149,5 +169,46 @@ export class TabLookupPage {
       console.log(error);
     }
     await loading.dismiss();
+  }
+
+  private async initializeFirestoreTicketListeners(ticket: any) {
+    const loading = this.loader.create();
+    await loading.present();
+    if (this.ticketService.firestoreStatus$.getValue()) {
+      this.viewNextPage();
+      await loading.dismiss();
+    } else {
+      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
+        if (fireStoreInitializationStatus) {
+          this.viewNextPage();
+          loading.dismiss();
+        }
+      })).subscribe();
+    }
+    this.ticketService.initializeFirestoreTicket(ticket.id);
+  }
+
+  private async initializeTicketMetadata(ticket: any) {
+    // Add user to database ticket
+    await this.ticketService.addUserToDatabaseTicket(ticket.id);
+
+    // Add user to Firestore ticket
+    try {
+      await this.ticketService.addUserToFirestoreTicket(ticket.id);
+    } catch (e) {
+      if (e.status === 403) {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+      e.stopErrorPropagation = true;
+      throw e;
+    }
+
+    // Add ticket number to fraud code
+    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
   }
 }
