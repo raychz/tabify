@@ -54,19 +54,7 @@ export class StatusPage {
 
   async viewHome() {
     await sleep(1500);
-    const { error, response } = await this.ticketService.closeTicket();
-
-    if (error || !response) {
-      let alert = this.alertCtrl.create({
-        title: 'Something went wrong',
-        message: `We could not properly close out your tab, please try again.`,
-        buttons: ['Ok']
-      });
-
-      alert.present();
-    } else {
-      await this.navCtrl.setRoot('HomePage');
-      this.ticketService.clearState();
-    }
+    await this.navCtrl.setRoot('HomePage');
+    this.ticketService.clearState();
   }
 }

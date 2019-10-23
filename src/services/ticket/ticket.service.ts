@@ -9,7 +9,7 @@ import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.int
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
-import { getPayersDescription, getSubtotal, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { getPayersDescription, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
 
 // please keep the user status enum in order of execution as they are used for calculations
@@ -33,11 +33,25 @@ export interface FirestoreTicketItem {
 export interface FirestoreTicket {
   id: number,
   date_created: Date,
-  location: { name: string, id: string },
+  location: { name: string, id: string, omnivore_id: string },
   tab_id: string,
   ticket_number: number,
   status: TicketStatus,
   overallUsersProgress: UserStatus,
+  ticketTotal: {
+    date_created: string,
+    date_updated: string,
+    discounts: number,
+    due: number,
+    id: number,
+    items: number,
+    other_charges: number,
+    service_charges: number,
+    sub_total: number,
+    tax: number,
+    tips: number,
+    total: number
+  }
   uids: string[],
   users: {
     name: string,
@@ -55,12 +69,17 @@ export interface FirestoreTicket {
 }
 
 export interface User {
-  uid: string,
-  photoUrl: string,
   name: string,
-  status: UserStatus,
+    uid: string,
+    photoUrl: string,
+    status: UserStatus,
+    totals: {
+      tax: number, // user's share of the tax
+      tip: number, // user's tip
+      subtotal: number, // user's sum of the share of their selected items
+      total: number, // user's tax + tip + subtotal
+    },
   ticketItems: FirestoreTicketItem[],
-  subtotal: number,
   isExpanded?: boolean,
 }
 
@@ -73,10 +92,9 @@ export class TicketService {
   public sharedItems: FirestoreTicketItem[] = [];
   public unclaimedItems: FirestoreTicketItem[] = [];
   public users: User[];
-  public curUser: any;
+  public curUser: User;
   public userSelectedItemsCount: number = 0;
   /** The value is represented in pennies. */
-  public userSubtotal: number = 0;
   public userTipPercentage: number = 18;
   /** The value is represented in pennies. */
   public userGrandTotal: number = 0;
@@ -85,8 +103,6 @@ export class TicketService {
   public hasInitializationError = false;
   public isExpandedList: {[uid: string]: boolean} = {};
   public firestoreStatus$ = new BehaviorSubject<boolean> (false);
-  public amountPaid = 0;
-  public totalBill = 0;
 
   /** Database representation of ticket */
   public ticket: any;
@@ -168,23 +184,23 @@ export class TicketService {
       .toPromise();
   }
 
-  public async closeTicket() {
-    try {
-      const response = await this.http
-        .put(`${environment.serverUrl}/ticket/${this.firestoreTicket.id}/closeTicket`, {})
-        .toPromise();
+  // public async closeTicket() {
+  //   try {
+  //     const response = await this.http
+  //       .put(`${environment.serverUrl}/ticket/${this.firestoreTicket.id}/closeTicket`, {})
+  //       .toPromise();
 
-      return {
-        response: response,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        response: null,
-        error: error,
-      };
-    }
-  }
+  //     return {
+  //       response: response,
+  //       error: null,
+  //     };
+  //   } catch (error) {
+  //     return {
+  //       response: null,
+  //       error: error,
+  //     };
+  //   }
+  // }
 
   public clearState() {
     this.destroySubscriptions();
@@ -196,7 +212,6 @@ export class TicketService {
     this.users = undefined;
     this.curUser = undefined;
     this.userSelectedItemsCount = 0;
-    this.userSubtotal = 0;
     this.userTipPercentage = 18;
     this.userGrandTotal = 0;
     this.userPaymentMethod = undefined;
@@ -204,8 +219,6 @@ export class TicketService {
     this.hasInitializationError = false;
     this.isExpandedList = {};
     this.firestoreStatus$ = new BehaviorSubject<boolean> (false);
-    this.amountPaid = 0;
-    this.totalBill = 0;
   }
 
   /**
@@ -498,7 +511,6 @@ export class TicketService {
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
-    this.userSubtotal = getSubtotal(firestoreTicketItems, this.auth.getUid());
     this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
     // the above properties can be inferred from the below properties. ToDo: get rid of above properties
     this.updateItemsAndUsers();
@@ -508,9 +520,8 @@ export class TicketService {
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
-    this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: [], subtotal: 0};
-    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: [], subtotal: 0}));
-    this.totalBill = 0;
+    this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: []};
+    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: []}));
     this.firestoreTicketItems.forEach( (item) => {
       if (item.users.length < 1) {
         this.unclaimedItems.push(item);
@@ -520,15 +531,12 @@ export class TicketService {
 
       if (item.isItemOnMyTab) {
         this.curUser.ticketItems.push(item);
-        this.curUser.subtotal += item.users.find( u => u.uid === this.curUser.uid).price;
       }
 
-      this.totalBill += item.price;
 
       item.users.forEach( (user) => {
         const userIndex = this.users.findIndex( u => u.uid === user.uid);
         this.users[userIndex].ticketItems.push(item);
-        this.users[userIndex].subtotal += user.price;
       });
     });
   }
@@ -549,17 +557,6 @@ export class TicketService {
       this.isExpandedList[user.uid] = false;
     }
     return this.isExpandedList[user.uid];
-  }
-
-  updateAmountPaid() {
-    this.amountPaid = 0;
-    for (const user of this.users) {
-      console.log(user);
-      if (user.status === UserStatus.Paid) {
-        this.amountPaid += user.subtotal;
-      }
-    }
-    console.log(this.amountPaid);
   }
 
   /**
@@ -583,7 +580,6 @@ export class TicketService {
     this.changeUserStatus();
     if (this.firestoreTicketItems && this.users) {
       this.updateItemsAndUsers();
-      this.updateAmountPaid();
     } else {
       this.users = this.firestoreTicket.users.map((user) => ({ ...user, ticketItems: [], subtotal: 0 }));
     }

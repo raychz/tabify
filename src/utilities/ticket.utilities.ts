@@ -34,19 +34,19 @@ export const getPayersDescription = (users: any[]) => {
  * @param items All ticket items
  * @param uid Uid for the user whose subtotal is being calculated
  */
-export const getSubtotal = (items: FirestoreTicketItem[], uid: any) => {
-    let sum = 0;
-    items &&
-        items.forEach(item => {
-            const payer = item.users.find(
-                (e: { uid: string | null }) => e.uid === uid
-            );
-            if (payer) {
-                sum += payer.price;
-            }
-        });
-    return sum;
-}
+// export const getSubtotal = (items: FirestoreTicketItem[], uid: any) => {
+//     let sum = 0;
+//     items &&
+//         items.forEach(item => {
+//             const payer = item.users.find(
+//                 (e: { uid: string | null }) => e.uid === uid
+//             );
+//             if (payer) {
+//                 sum += payer.price;
+//             }
+//         });
+//     return sum;
+// }
 
 /**
  * Counts the number of items that user with uid `uid` has claimed.
