@@ -148,7 +148,6 @@ export class TabLookupPage {
             ],
           });
           modal.present();
-          this.ticketService.clearState();
         } else {
           this.navCtrl.push('StatusPage');
         }
