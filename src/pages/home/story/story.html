@@ -64,10 +64,6 @@
           {{ story.date_created | date:'shortTime' }} </ion-note>
       </ion-col>
 
-      <!-- <div>
-        <button clear small ion-button (click)="openTicketDetails()">Ticket-Details</button>
-      </div> -->
-
     </ion-row>
 
     <ion-row>
@@ -76,12 +72,12 @@
           <ion-segment-button small value="comments" icon-only>
             <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
           </ion-segment-button>
-          <ion-segment-button small value="ticket-items" icon-only>
+          <ion-segment-button small value="payment-details" icon-only>
             <ion-icon name="list"></ion-icon>
           </ion-segment-button>
-          <ion-segment-button small value="reviews" icon-only>
+          <!-- <ion-segment-button small value="reviews" icon-only>
             <ion-icon name="star"></ion-icon>
-          </ion-segment-button>
+          </ion-segment-button> -->
         </ion-segment>
       </ion-col>
     </ion-row>
@@ -142,10 +138,10 @@
 
     </ng-container>
 
-    <ng-container *ngIf="selectedSegment === 'ticket-items'">
+    <ng-container *ngIf="selectedSegment === 'payment-details'">
       <ion-row>
         <ion-col text-center>
-          <p>Ticket Items</p>
+          <p>Payment Details</p>
         </ion-col>
       </ion-row>
       <ion-card-content>
@@ -164,7 +160,7 @@
       </ion-card-content>
     </ng-container>
 
-    <ng-container *ngIf="selectedSegment === 'reviews'">
+    <!-- <ng-container *ngIf="selectedSegment === 'reviews'">
       <ion-row>
         <ion-col text-center>
           <p>Reviews</p>
@@ -189,7 +185,7 @@
           </ion-item>
         </ng-container>
       </ion-card-content>
-    </ng-container>
+    </ng-container> -->
 
   </ion-card>
 </ion-content>
