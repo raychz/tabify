@@ -198,9 +198,6 @@ export class TicketService {
     this.userSelectedItemsCount = 0;
     this.userSubtotal = 0;
     this.userTipPercentage = 18;
-    this.userTip = 0;
-    this.userTaxRate = 0.0625;
-    this.userTax = 0;
     this.userGrandTotal = 0;
     this.userPaymentMethod = undefined;
     this.ticketUsersDescription = getSelectItemsTicketUsersDescription();
