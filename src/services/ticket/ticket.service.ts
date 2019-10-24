@@ -11,7 +11,6 @@ import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
-import undefined from 'firebase/empty-import';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
