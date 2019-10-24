@@ -120,7 +120,6 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-    console.log(this.ticketService.curUser.status);
     switch (this.ticketService.curUser.status) {
       case UserStatus.Selecting:
         this.navCtrl.push('SelectItemsPage');

@@ -115,7 +115,7 @@ export class TicketService {
     private firestoreService: FirestoreService,
     private auth: AuthService,
     public alertCtrl: AlertService,
-  ) { console.log('TicketService Instance Created'); }
+  ) { }
 
   /**
    * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
