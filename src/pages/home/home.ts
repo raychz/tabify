@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController, ModalController } from 'ionic-angular';
 import { ILocation } from '../../interfaces/location.interface';
 import { LoaderService } from '../../services/utilities/loader.service';
-import { PaymentService } from '../../services/payment/payment.service';
+import { PaymentMethodService } from '../../services/payment/payment-method.service';
 import { AlertService } from '../../services/utilities/alert.service';
 import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
@@ -35,7 +35,7 @@ export class HomePage {
     private storyService: StoryService,
     public newsfeedService: NewsfeedService,
     public loader: LoaderService,
-    public paymentService: PaymentService,
+    public paymentMethodService: PaymentMethodService,
     public alert: AlertService,
     public auth: AuthService,
     public modalCtrl: ModalController
@@ -71,7 +71,7 @@ export class HomePage {
 
     res = await this.storyService.createLike(storyId);
 
-    if (res.status === 200) {
+    if (res.status === 201) {
 
       // res.likeCreated = true means that the server created a new like
       if (res.body && res.body.likeCreated === true) {
@@ -99,7 +99,7 @@ export class HomePage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const paymentMethods = await this.paymentService.getPaymentMethods();
+      const paymentMethods = await this.paymentMethodService.getPaymentMethods();
 
       // If user has a payment method on file, proceed to pay workflow
       // Otherwise, take user to payment method entry page
