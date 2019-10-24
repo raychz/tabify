@@ -126,11 +126,11 @@ export class TabLookupPage {
         break;
       case UserStatus.Waiting:
         this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage', { confirmed: false, pushSelectItemsOnBack: true });
+        this.navCtrl.push('WaitingRoomPage');
         break;
       case UserStatus.Confirmed:
         this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage', { confirmed: true, pushSelectItemsOnBack: true });
+        this.navCtrl.push('WaitingRoomPage');
         break;
       case UserStatus.Paying:
         this.navCtrl.push('TaxTipPage');
