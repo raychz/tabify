@@ -92,6 +92,7 @@ export class TabLookupPage {
       await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
+      await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
         const alert = this.alertCtrl.create({
@@ -115,11 +116,11 @@ export class TabLookupPage {
         });
         alert.present();
       }
-      await loading.dismiss();
     }
   }
 
   private async viewNextPage() {
+    console.log(this.ticketService.curUser.status);
     switch (this.ticketService.curUser.status) {
       case UserStatus.Selecting:
         this.navCtrl.push('SelectItemsPage');

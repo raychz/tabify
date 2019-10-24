@@ -35,7 +35,7 @@ export class WaitingRoomPage {
   }
 
   checkConfirmedStatus(): boolean {
-    if (this.ticketService.firestoreTicket.overallUsersProgress < UserStatus.Confirmed || this.ticketService.unclaimedItems.length > 0) {
+    if (this.ticketService.overallUsersProgress < UserStatus.Confirmed || this.ticketService.unclaimedItems.length > 0) {
       return false;
     } else {
       if (!this.moveToTaxTip) {

@@ -2,7 +2,7 @@
   <ion-navbar hideBackButton>
     <ion-buttons left>
       <button ion-button icon-start
-        [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0"
+        [disabled]="ticketService.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0"
         (click)="backButtonAction()">
         <ion-icon name="arrow-back"></ion-icon>
         <ion-label *ngIf="platform.is('ios')">
@@ -178,7 +178,7 @@
       {{ selectConfirmButton ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else. All items must be selected...') : 'Make sure all users have joined before confirming' }}
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"
-      [disabled]="ticketService.firestoreTicket.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
+      [disabled]="ticketService.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
       {{ selectConfirmButton ? 'Cancel' : 'Confirm' }}
     </button>
   </ng-container>
