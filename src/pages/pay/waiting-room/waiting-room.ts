@@ -53,7 +53,7 @@ export class WaitingRoomPage {
 
   async viewTaxTip() {
     await sleep(1500);
-    this.ticketService.changeUserStatus(UserStatus.Paying);
+    await this.ticketService.changeUserStatus(UserStatus.Paying);
     this.navCtrl.push('TaxTipPage');
   }
 
