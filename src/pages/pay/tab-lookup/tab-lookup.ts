@@ -9,7 +9,6 @@ import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
-import { P } from '@angular/core/src/render3';
 
 @IonicPage()
 @Component({

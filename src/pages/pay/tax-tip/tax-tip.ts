@@ -94,24 +94,8 @@ export class TaxTipPage {
         this.ticketService.curUser.totals.total,
         this.ticketService.curUser.totals.tip,
       ) as any;
-      if (response.ticket.ticket_status === 'closed') {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      } else {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      }
       await this.ticketService.changeUserStatus(UserStatus.Paid)
       await this.navCtrl.push('StatusPage')
-      // await this.navCtrl.setRoot('HomePage');
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',

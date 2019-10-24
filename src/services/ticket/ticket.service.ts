@@ -70,15 +70,15 @@ export interface FirestoreTicket {
 
 export interface User {
   name: string,
-    uid: string,
-    photoUrl: string,
-    status: UserStatus,
-    totals: {
-      tax: number, // user's share of the tax
-      tip: number, // user's tip
-      subtotal: number, // user's sum of the share of their selected items
-      total: number, // user's tax + tip + subtotal
-    },
+  uid: string,
+  photoUrl: string,
+  status: UserStatus,
+  totals: {
+    tax: number, // user's share of the tax
+    tip: number, // user's tip
+    subtotal: number, // user's sum of the share of their selected items
+    total: number, // user's tax + tip + subtotal
+  },
   ticketItems: FirestoreTicketItem[],
   isExpanded?: boolean,
 }
@@ -183,24 +183,6 @@ export class TicketService {
       .post(`${environment.serverUrl}/tickets/${ticketId}/fraudCode`, body)
       .toPromise();
   }
-
-  // public async closeTicket() {
-  //   try {
-  //     const response = await this.http
-  //       .put(`${environment.serverUrl}/ticket/${this.firestoreTicket.id}/closeTicket`, {})
-  //       .toPromise();
-
-  //     return {
-  //       response: response,
-  //       error: null,
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       response: null,
-  //       error: error,
-  //     };
-  //   }
-  // }
 
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
