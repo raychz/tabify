@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TabLookupPage } from './tab-lookup';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
+import { SharedPayModule } from '../shared_pay.module'
 
 @NgModule({
   declarations: [
@@ -9,7 +10,8 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
   ],
   imports: [
     IonicPageModule.forChild(TabLookupPage),
-    NgxErrorsModule
+    NgxErrorsModule,
+    SharedPayModule
   ],
 })
 export class TabLookupPageModule {}

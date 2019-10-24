@@ -122,7 +122,7 @@ export class SelectItemsPage {
   async confirmSelections() {
     const loading = this.loader.create();
     await loading.present();
-    if (this.ticketService.userSelectedItemsCount) {
+    if (this.ticketService.curUser.ticketItems.length) {
       this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({

@@ -180,7 +180,7 @@ export class TabLookupPage {
         }
       })).subscribe();
     }
-    this.ticketService.initializeFirestoreTicket(ticket.id);
+    this.ticketService.initializeFirestoreTicket(ticket.firestore_doc_id);
   }
 
   private async initializeTicketMetadata(ticket: any) {

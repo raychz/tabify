@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { SelectItemsPage } from './select-items';
+import { SharedPayModule } from '../shared_pay.module'
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { SelectItemsPage } from './select-items';
   ],
   imports: [
     IonicPageModule.forChild(SelectItemsPage),
+    SharedPayModule
   ],
 })
 export class SelectItemsPageModule {}
