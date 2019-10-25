@@ -75,9 +75,6 @@
           <ion-segment-button small value="payment-details" icon-only>
             <ion-icon name="list"></ion-icon>
           </ion-segment-button>
-          <!-- <ion-segment-button small value="reviews" icon-only>
-            <ion-icon name="star"></ion-icon>
-          </ion-segment-button> -->
         </ion-segment>
       </ion-col>
     </ion-row>
@@ -144,6 +141,38 @@
           <p>Payment Details</p>
         </ion-col>
       </ion-row>
+
+      <ion-card-content>
+
+        <ng-container *ngFor="let userPayment of organizedPayments">
+          <div class="comment-style">
+            <ion-row>
+              <ion-col col-11>
+                <ion-item class="unset-background">
+                  <ion-avatar class="comment-avatar" item-start>
+                    <img [src]="userPayment.userDetail.photo_url" />
+                  </ion-avatar>
+                  <ion-note>{{userPayment.userDetail.displayName}}</ion-note>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-list>
+                <ion-item *ngFor="let item of userPayment.items">
+                  <ion-row>
+                    <ion-col>
+                      <p>{{item.name}}</p>
+                    </ion-col>
+                    <ion-col text-right>
+                      <p>${{ item.price / 100 | number: '1.2-2' }}</p>
+                    </ion-col>
+                  </ion-row>
+                </ion-item>
+              </ion-list>
+
+          </div>
+        </ng-container>
+      </ion-card-content>
+
       <!-- <ion-card-content>
         <ion-list>
           <ion-item *ngFor="let item of this.ticketItems">
@@ -195,34 +224,6 @@
         </ion-list>
       </ion-card-content>
     </ion-card> -->
-
-    <!-- Code for reviews. Will implement in the future -->
-    <!-- <ng-container *ngIf="selectedSegment === 'reviews'">
-      <ion-row>
-        <ion-col text-center>
-          <p>Reviews</p>
-        </ion-col>
-      </ion-row>
-      <ion-card-content>
-        <p id="rate-and-review">Rate and review the items you ordered.</p>
-        <ng-container *ngFor='let item of ticketItems; let i=index;'>
-          <ion-item class='total tab-item'>
-            <h2 class="line">{{item.name}}</h2>
-            <div class="reviews">
-              <rating>
-              </rating>
-              <ion-item *ngIf="item.rating! > 0" class="item-feedback">
-                <ion-textarea [(ngModel)]="item.feedback" placeholder="Leave feedback" autocomplete="on" spellcheck="on"
-                  autocorrect="on"></ion-textarea>
-              </ion-item>
-            </div>
-            <div item-end>
-              <h2>${{item.price! / 100 | number:'1.2-2'}}</h2>
-            </div>
-          </ion-item>
-        </ng-container>
-      </ion-card-content>
-    </ng-container> -->
 
   </ion-card>
 </ion-content>
