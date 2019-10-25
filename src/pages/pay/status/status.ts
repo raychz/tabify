@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { ThrowStmt } from '@angular/compiler';
 
 /**
  * Generated class for the StatusPage page.
@@ -41,7 +42,7 @@ export class StatusPage {
   }
 
   checkPaidStatus(): boolean {
-    if (this.ticketService.firestoreTicket.overallUsersProgress < UserStatus.Paid) {
+    if (this.ticketService.overallUsersProgress < UserStatus.Paid) {
       return false;
     } else {
       if (!this.donePaying) {
@@ -55,6 +56,7 @@ export class StatusPage {
   async viewHome() {
     await sleep(1500);
     await this.navCtrl.setRoot('HomePage');
+    this.ticketService.clearState();
     const alert = this.alertCtrl.create({
       title: 'Success',
       message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,

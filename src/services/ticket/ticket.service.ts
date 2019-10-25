@@ -183,6 +183,7 @@ export class TicketService {
       .toPromise();
   }
 
+  // set service variables to their original value to clear the state of the service and destroy observable subscriptions
   public clearState() {
     this.firestoreTicket = undefined;
     this.firestoreTicketItems = undefined;
@@ -462,6 +463,7 @@ export class TicketService {
     this.firestoreStatus$.next(true);
   }
 
+  // handles setting of service variables such as unclaimed items, shared items, and users
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
@@ -484,17 +486,20 @@ export class TicketService {
     });
   }
 
+  // reset isExpanded object for expanding/collapsing user cards throught the pay work flow
   resetIsExpanded() {
     for (let user of this.firestoreTicket.users) {
       this.isExpandedList[user.uid] = false;
     }
   }
 
+  // expand/collapse the provided user's card (used in status and waiting room pages)
   toggleIsExpanded(user: User) {
     const isExpanded = this.getUserExpanded(user)
     this.isExpandedList[user.uid] = !isExpanded;
   }
 
+  // determine if the provided user's card should be expanded (used in status and waiting room)
   getUserExpanded(user: User): boolean {
     if (!this.isExpandedList[user.uid]) {
       this.isExpandedList[user.uid] = false;
@@ -502,6 +507,7 @@ export class TicketService {
     return this.isExpandedList[user.uid];
   }
 
+  // update the overallUsersProgress variable and the amount paid
   updateOverallUsersProgress() {
         this.amountPaid = 0;
 

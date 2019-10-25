@@ -136,7 +136,7 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case UserStatus.Paid:
-        if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Paid) {
+        if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
           const modal = this.alertCtrl.create({
             title: 'Tab already paid!',
             message: 'You have already paid your tab, no need to do anything else.',
