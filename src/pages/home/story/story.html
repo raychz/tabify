@@ -160,6 +160,43 @@
       </ion-card-content>
     </ng-container>
 
+    <!-- <ion-card id='curUserCard' (click)="ticketService.toggleIsExpanded(ticketService.curUser)">
+      <ion-card-content>
+        <ion-row>
+          <ion-item>
+            <ion-avatar item-start>
+              <img [src]="ticketService.curUser.photoUrl || '../../../../../assets/imgs/user-light.png'">
+            </ion-avatar>
+            <ion-label> {{ ticketService.curUser.name }} </ion-label>
+            <ion-spinner class="ticket-spinner" name="bubbles" color="primary" item-end
+              *ngIf="ticketService.curUser.status < userStatus.Confirmed"></ion-spinner>
+            <ion-icon name="checkmark-circle-outline" item-end
+              *ngIf="ticketService.curUser.status >= userStatus.Confirmed"></ion-icon>
+            <ion-icon [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropup' : 'arrow-dropdown'"
+              item-end></ion-icon>
+          </ion-item>
+        </ion-row>
+
+        <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
+          <ion-row class="item-details" *ngFor="let item of ticketService.curUser.ticketItems">
+            <ion-col class="col-item-name">
+              <span text-wrap class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
+              <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+            </ion-col>
+            <ion-col col-auto class="col-item-total">
+              <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                ${{ ticketService.findUserShareOfItem(item, this.auth.getUid()) / 100 | number: '1.2-2' }} /
+              </span>
+              <span class="total-text">
+                ${{ item.price / 100 | number: '1.2-2' }}
+              </span>
+            </ion-col>
+          </ion-row>
+        </ion-list>
+      </ion-card-content>
+    </ion-card> -->
+
+    <!-- Code for reviews. Will implement in the future -->
     <!-- <ng-container *ngIf="selectedSegment === 'reviews'">
       <ion-row>
         <ion-col text-center>
