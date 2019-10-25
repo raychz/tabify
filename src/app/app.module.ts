@@ -28,6 +28,7 @@ import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
 import { PaymentService } from '../services/payment/payment.service';
+import { SharedPayModule } from '../pages/pay/shared-pay.module';
 
 
 Pro.init('66369498', {
@@ -59,6 +60,7 @@ export class MyErrorHandler implements ErrorHandler {
   declarations: [Tabify],
   imports: [
     BrowserModule,
+    SharedPayModule.forRoot(),
     IonicModule.forRoot(Tabify, {
       preloadModules: true,
       scrollPadding: false,
@@ -86,7 +88,6 @@ export class MyErrorHandler implements ErrorHandler {
     Facebook,
     LoaderService,
     AlertService,
-    TicketService,
     LocationService,
     FirestoreService,
     PaymentMethodService,

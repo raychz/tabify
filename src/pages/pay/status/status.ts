@@ -41,7 +41,7 @@ export class StatusPage {
   }
 
   checkPaidStatus(): boolean {
-    if (this.ticketService.firestoreTicket.overallUsersProgress < UserStatus.Paid) {
+    if (this.ticketService.overallUsersProgress < UserStatus.Paid) {
       return false;
     } else {
       if (!this.donePaying) {
@@ -61,5 +61,6 @@ export class StatusPage {
       buttons: ['Ok']
     });
     alert.present();
+    this.ticketService.clearState();
   }
 }
