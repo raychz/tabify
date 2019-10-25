@@ -4,7 +4,7 @@ import { environment } from '@tabify/env';
 
 @Injectable()
 export class TicketItemService {
-    
+
     constructor(private readonly httpClient: HttpClient) { }
 
     // get stories that a user was part of (personal feed)
