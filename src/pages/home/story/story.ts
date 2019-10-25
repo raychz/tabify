@@ -23,7 +23,8 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
-  ticketItems: any[] = [];
+  ticketItems: any;
+  ticketPayments: any;
   userNamesDisplay: IUsersDescription = {
     mainUsers: '',
     hereClause: '',
@@ -243,6 +244,5 @@ export class StoryPage {
 
   segmentChanged(event: any) {
     this.selectedSegment = event.value;
-    console.log(this.selectedSegment);
   }
 }
