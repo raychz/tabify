@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, Navbar, ModalController, } from 'i
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, FirestoreTicketItem } from '../../../services/ticket/ticket.service';
+import { TicketService, FirestoreTicketItem, UserStatus } from '../../../services/ticket/ticket.service';
 import { getItemsOnMyTab } from '../../../utilities/ticket.utilities';
 import { PaymentMethodService } from '../../../services/payment/payment-method.service';
 import { PaymentDetailsPageMode } from '../../payment-methods/payment-details/payment-details';
@@ -81,7 +81,6 @@ export class TaxTipPage {
     await tipModal.present();
   }
 
-
   async pay() {
     if (!this.ticketService.userPaymentMethod) {
       throw new Error("No payment method selected!")
@@ -95,23 +94,8 @@ export class TaxTipPage {
         this.ticketService.curUser.totals.total,
         this.ticketService.curUser.totals.tip,
       ) as any;
-      if (response.ticket.ticket_status === 'closed') {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      } else {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}. Sahil, this is where the pay status page goes.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      }
-
-      await this.navCtrl.setRoot('HomePage');
+      await this.ticketService.changeUserStatus(UserStatus.Paid)
+      await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',

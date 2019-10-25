@@ -69,15 +69,15 @@ export interface FirestoreTicket {
 
 export interface User {
   name: string,
-    uid: string,
-    photoUrl: string,
-    status: UserStatus,
-    totals: {
-      tax: number, // user's share of the tax
-      tip: number, // user's tip
-      subtotal: number, // user's sum of the share of their selected items
-      total: number, // user's tax + tip + subtotal
-    },
+  uid: string,
+  photoUrl: string,
+  status: UserStatus,
+  totals: {
+    tax: number, // user's share of the tax
+    tip: number, // user's tip
+    subtotal: number, // user's sum of the share of their selected items
+    total: number, // user's tax + tip + subtotal
+  },
   ticketItems: FirestoreTicketItem[],
   isExpanded?: boolean,
 }

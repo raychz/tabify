@@ -126,26 +126,30 @@ export class TabLookupPage {
         break;
       case UserStatus.Waiting:
         this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage', { confirmed: false, pushSelectItemsOnBack: true });
+        this.navCtrl.push('WaitingRoomPage');
         break;
       case UserStatus.Confirmed:
         this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage', { confirmed: true, pushSelectItemsOnBack: true });
+        this.navCtrl.push('WaitingRoomPage');
         break;
       case UserStatus.Paying:
         this.navCtrl.push('TaxTipPage');
         break;
       case UserStatus.Paid:
-        const modal = this.alertCtrl.create({
-          title: 'Tab already paid!',
-          message: 'You have already paid your tab, no need to do anything else.',
-          buttons: [
-            {
-              text: 'Ok',
-            },
-          ],
-        });
-        modal.present();
+        if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Paid) {
+          const modal = this.alertCtrl.create({
+            title: 'Tab already paid!',
+            message: 'You have already paid your tab, no need to do anything else.',
+            buttons: [
+              {
+                text: 'Ok',
+              },
+            ],
+          });
+          modal.present();
+        } else {
+          this.navCtrl.push('StatusPage');
+        }
         break;
       default:
         throw new Error('Unknown user status')

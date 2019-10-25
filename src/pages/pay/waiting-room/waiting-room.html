@@ -105,6 +105,7 @@
         Shared Items:
       </ion-card-header>
       <ion-card-content>
+        <ion-label id="no-shared-items" *ngIf="ticketService.sharedItems.length === 0"> No items are being shared. </ion-label>
         <ion-list>
           <ng-container *ngFor="let item of ticketService.sharedItems">
 
@@ -175,11 +176,11 @@
 <ion-footer>
   <ng-container>
     <ion-label text-wrap color="light" class="confirm-text">
-      {{ selectConfirmButton ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else. All items must be selected...') : 'Make sure all users have joined before confirming' }}
+      {{ ticketService.curUser.status === userStatus.Confirmed ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else. All items must be selected...') : 'Make sure all users have joined before confirming' }}
     </ion-label>
     <button ion-button block (click)="toggleConfirm()"
       [disabled]="ticketService.overallUsersProgress > userStatus.Waiting && ticketService.unclaimedItems.length === 0">
-      {{ selectConfirmButton ? 'Cancel' : 'Confirm' }}
+      {{ ticketService.curUser.status === userStatus.Confirmed ? 'Cancel' : 'Confirm' }}
     </button>
   </ng-container>
 </ion-footer>
