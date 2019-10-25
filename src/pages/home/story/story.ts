@@ -64,7 +64,7 @@ export class StoryPage {
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
-      this.ticketUserPayments = await this.ticketItemService.getTicketItems(this.story.ticket.id, this.story.ticket.users);
+      this.ticketUserPayments = await this.ticketItemService.getTicketItems(this.story.ticket.id);
       console.log(this.story);
       console.log(this.ticketUserPayments);
       this.userNamesDisplay = getStoryUsersDescription(this.story.ticket.users, 3);
