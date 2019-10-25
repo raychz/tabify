@@ -20,11 +20,16 @@ export class StoryPage {
   story: any;
   comments: any[] = [];
   user = <IUser>{};
+  ticketUsers: any[] = [];
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
-  ticketItems: any;
-  ticketPayments: any;
+
+  // This contains items in a ticket. Each items' users, 
+  // and also payments for the associated ticket
+  ticketUserPayments: any;
+  organizedPayments: any[] = [];
+
   userNamesDisplay: IUsersDescription = {
     mainUsers: '',
     hereClause: '',
@@ -59,10 +64,12 @@ export class StoryPage {
     try {
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
-      this.ticketItems = await this.ticketItemService.getTicketItems(this.story.ticket.id);
+      this.ticketUserPayments = await this.ticketItemService.getTicketItems(this.story.ticket.id, this.story.ticket.users);
       console.log(this.story);
-      console.log(this.ticketItems);
+      console.log(this.ticketUserPayments);
       this.userNamesDisplay = getStoryUsersDescription(this.story.ticket.users, 3);
+      this.ticketUsers = this.ticketUserPayments.users;
+      this.organizePaymentDetails();
       await this.determineStoryLikedByUser();
       await this.getUserDetails();
       await this.getComments();
@@ -89,6 +96,27 @@ export class StoryPage {
     }
 
     return this.story;
+  }
+
+  async organizePaymentDetails() {
+
+    this.story.ticket.users.forEach(user => {
+      user.items = [];
+      this.organizedPayments.push(user);
+    });
+
+    for (let i = 0; i < this.organizedPayments.length; i++) {
+
+      for (let y = 0; y < this.ticketUserPayments.items.length; y++) {
+
+        for (let j = 0; j < this.ticketUserPayments.items[y].users.length; j++) {
+          if (this.ticketUserPayments.items[y].users[j].uid === this.organizedPayments[i].uid) {            
+            this.organizedPayments[i].items.push(this.ticketUserPayments.items[y]);
+          }
+        }
+      }
+    }
+    console.log(this.organizedPayments);
   }
 
   async getComments() {
