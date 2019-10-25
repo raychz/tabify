@@ -203,6 +203,10 @@ export class TicketService {
     this.destroySubscriptions();
   }
 
+  public findUserShareOfItem(item: FirestoreTicketItem, uid: string) {
+    return item.users.find( u => u.uid === uid ).price;
+  }
+
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
    * @param ticketId

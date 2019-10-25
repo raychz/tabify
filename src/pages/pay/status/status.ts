@@ -56,12 +56,12 @@ export class StatusPage {
   async viewHome() {
     await sleep(1500);
     await this.navCtrl.setRoot('HomePage');
-    this.ticketService.clearState();
     const alert = this.alertCtrl.create({
       title: 'Success',
       message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
       buttons: ['Ok']
     });
     alert.present();
+    this.ticketService.clearState();
   }
 }
