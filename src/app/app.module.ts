@@ -28,7 +28,7 @@ import { StoryService } from '../services/story/story.service';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
 import { PaymentService } from '../services/payment/payment.service';
-import { SharedPayModule } from '../pages/pay/shared_pay.module';
+import { SharedPayModule } from '../pages/pay/shared-pay.module';
 
 
 Pro.init('66369498', {

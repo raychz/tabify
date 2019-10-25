@@ -98,9 +98,9 @@ export class TicketService {
   public userPaymentMethod: any;
   public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
-  public isExpandedList: {[uid: string]: boolean} = {};
+  public isExpandedList: { [uid: string]: boolean } = {};
   public overallUsersProgress: UserStatus = UserStatus.Selecting;
-  public firestoreStatus$ = new BehaviorSubject<boolean> (false);
+  public firestoreStatus$ = new BehaviorSubject<boolean>(false);
   public amountPaid = 0;
 
   /** Database representation of ticket */
@@ -183,7 +183,7 @@ export class TicketService {
       .toPromise();
   }
 
-  // set service variables to their original value to clear the state of the service and destroy observable subscriptions
+  /** set service variables to their original value to clear the state of the service and destroy observable subscriptions */
   public clearState() {
     this.firestoreTicket = undefined;
     this.firestoreTicketItems = undefined;
@@ -195,16 +195,16 @@ export class TicketService {
     this.userPaymentMethod = undefined;
     this.ticketUsersDescription = getSelectItemsTicketUsersDescription();
     this.hasInitializationError = false;
-    this.isExpandedList =  {};
+    this.isExpandedList = {};
     this.overallUsersProgress = UserStatus.Selecting;
-    this.firestoreStatus$ = new BehaviorSubject<boolean> (false);
+    this.firestoreStatus$ = new BehaviorSubject<boolean>(false);
     this.amountPaid = 0;
     this.ticket = undefined;
     this.destroySubscriptions();
   }
 
   public findUserShareOfItem(item: FirestoreTicketItem, uid: string) {
-    return item.users.find( u => u.uid === uid ).price;
+    return item.users.find(u => u.uid === uid).price;
   }
 
   /**
@@ -214,15 +214,15 @@ export class TicketService {
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
-      catchError(message => this.handleInitializationError(message)),
-      tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
+        catchError(message => this.handleInitializationError(message)),
+        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
       )
       .subscribe();
 
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
-      catchError(message => this.handleInitializationError(message)),
-      tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+        catchError(message => this.handleInitializationError(message)),
+        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
       )
       .subscribe();
   }
@@ -237,14 +237,6 @@ export class TicketService {
 
   public async changeUserStatus(status?: UserStatus): Promise<{ success: boolean; message: string }> {
     try {
-
-      if (status < UserStatus.Confirmed && this.overallUsersProgress >= UserStatus.Confirmed) {
-        throw 'All users have already confirmed, can not set status to selecting or waiting'
-      }
-      if (status < UserStatus.Paid && this.overallUsersProgress >= UserStatus.Paid) {
-        throw 'All users have already paid, can not set status to anything other than paid'
-      }
-
       await this.firestoreService.runTransaction(async transaction => {
         const ticketDocRef = this.firestoreService.document(
           `tickets/${this.firestoreTicket.id}`
@@ -257,6 +249,13 @@ export class TicketService {
         let { users } = ticket.data()! as {
           users: { status: UserStatus, uid: string }[];
         };
+
+        if (status < UserStatus.Confirmed && users.every(user => user.status >= UserStatus.Confirmed)) {
+          throw 'All users have already confirmed, cannot set status to selecting or waiting'
+        }
+        if (status < UserStatus.Paid && users.every(user => user.status >= UserStatus.Paid)) {
+          throw 'All users have already paid, cannot set status to anything other than paid'
+        }
 
         for (let user of users) {
           if (user.uid === this.auth.getUid() && status !== undefined) {
@@ -467,43 +466,43 @@ export class TicketService {
     this.firestoreStatus$.next(true);
   }
 
-  // handles setting of service variables such as unclaimed items, shared items, and users
+  /** handles setting of service variables such as unclaimed items, shared items, and users */
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
-    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: []}));
-    this.users.forEach( u => u.totals.subtotal = 0 );
-    this.curUser = { ...this.users.find( (user) => user.uid === this.auth.getUid() )};
+    this.users = this.firestoreTicket.users.map((user) => ({ ...user, ticketItems: [] }));
+    this.users.forEach(u => u.totals.subtotal = 0);
+    this.curUser = { ...this.users.find((user) => user.uid === this.auth.getUid()) };
     this.curUser.totals.subtotal = 0;
-    this.firestoreTicketItems.forEach( (item) => {
+    this.firestoreTicketItems.forEach((item) => {
       if (item.users.length < 1) {
         this.unclaimedItems.push(item);
       } else if (item.users.length > 1) {
         this.sharedItems.push(item);
       }
 
-      item.users.forEach( (user) => {
-        const userIndex = this.users.findIndex( u => u.uid === user.uid);
+      item.users.forEach((user) => {
+        const userIndex = this.users.findIndex(u => u.uid === user.uid);
         this.users[userIndex].ticketItems.push(item);
-        this.users[userIndex].totals.subtotal += item.users.find ( u => u.uid === user.uid ).price;
+        this.users[userIndex].totals.subtotal += item.users.find(u => u.uid === user.uid).price;
       });
     });
   }
 
-  // reset isExpanded object for expanding/collapsing user cards throught the pay work flow
+  /** reset isExpanded object for expanding/collapsing user cards throught the pay work flow */
   resetIsExpanded() {
     for (let user of this.firestoreTicket.users) {
       this.isExpandedList[user.uid] = false;
     }
   }
 
-  // expand/collapse the provided user's card (used in status and waiting room pages)
+  /** expand/collapse the provided user's card (used in status and waiting room pages) */
   toggleIsExpanded(user: User) {
     const isExpanded = this.getUserExpanded(user)
     this.isExpandedList[user.uid] = !isExpanded;
   }
 
-  // determine if the provided user's card should be expanded (used in status and waiting room)
+  /** determine if the provided user's card should be expanded (used in status and waiting room) */
   getUserExpanded(user: User): boolean {
     if (!this.isExpandedList[user.uid]) {
       this.isExpandedList[user.uid] = false;
@@ -511,38 +510,38 @@ export class TicketService {
     return this.isExpandedList[user.uid];
   }
 
-  // update the overallUsersProgress variable and the amount paid
+  /** update the overallUsersProgress variable and the amount paid */
   updateOverallUsersProgress() {
-        this.amountPaid = 0;
+    this.amountPaid = 0;
 
-        let lowestStatus = this.overallUsersProgress;
-        let highestStatus = this.overallUsersProgress;
-        let highestStatusCount = 0;
+    let lowestStatus = this.overallUsersProgress;
+    let highestStatus = this.overallUsersProgress;
+    let highestStatusCount = 0;
 
-        for (let user of this.firestoreTicket.users) {
-          if (user.status === UserStatus.Paid) {
-            this.amountPaid += user.totals.subtotal + user.totals.tax;
-          }
-          if (user.status > highestStatus) {
-            if (highestStatusCount === 0) {
-              highestStatus = user.status;
-            } else {
-              highestStatusCount = 0;
-            }
-          } else if (user.status < lowestStatus) {
-            lowestStatus = user.status;
-          }
-
-          if (user.status === highestStatus) {
-            highestStatusCount++;
-          }
+    for (let user of this.firestoreTicket.users) {
+      if (user.status === UserStatus.Paid) {
+        this.amountPaid += user.totals.subtotal + user.totals.tax;
+      }
+      if (user.status > highestStatus) {
+        if (highestStatusCount === 0) {
+          highestStatus = user.status;
+        } else {
+          highestStatusCount = 0;
         }
+      } else if (user.status < lowestStatus) {
+        lowestStatus = user.status;
+      }
 
-        if (lowestStatus < this.overallUsersProgress) {
-          this.overallUsersProgress = lowestStatus;
-        } else if (highestStatusCount === this.firestoreTicket.users.length) {
-          this.overallUsersProgress = highestStatus;
-        }
+      if (user.status === highestStatus) {
+        highestStatusCount++;
+      }
+    }
+
+    if (lowestStatus < this.overallUsersProgress) {
+      this.overallUsersProgress = lowestStatus;
+    } else if (highestStatusCount === this.firestoreTicket.users.length) {
+      this.overallUsersProgress = highestStatus;
+    }
 
   }
 

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { WaitingRoomPage } from './waiting-room';
-import { SharedPayModule } from '../shared_pay.module'
+import { SharedPayModule } from '../shared-pay.module'
 
 
 @NgModule({

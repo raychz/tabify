@@ -4,7 +4,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { ThrowStmt } from '@angular/compiler';
 
 /**
  * Generated class for the StatusPage page.
