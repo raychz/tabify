@@ -1,0 +1,103 @@
+page-status {
+  #openingText {
+    text-align: center;
+  }
+  #your-party {
+    text-align: left;
+    color: darkgrey;
+  }
+  .card-header {
+    font-size: medium;
+    padding-bottom: 5px;
+  }
+
+  #total-bill-row {
+    font-size: medium;
+    color: white;
+  }
+
+  #amount-owed {
+    color: map-get($colors, primary);
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  #total-bill {
+    vertical-align: top;
+  }
+
+  ion-content {
+    padding-bottom: 10px;
+    ion-card {
+      ion-row {
+        &.item-user {
+          .user-picture {
+            padding-left: 5px;
+            white-space: nowrap;
+            .avatar {
+              padding-top: 5px;
+              width: 40px;
+              height: 40px;
+              white-space: nowrap;
+            }
+          }
+          .user-name {
+            padding-left: 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: medium;
+          }
+          .user-total {
+            align-self: flex-end;
+            color: map-get($colors, primary);
+            text-align: right;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: medium;
+          }
+          .ticket-spinner {
+            margin: auto;
+            align-self: flex-end;
+            white-space: nowrap;
+            padding-bottom: 10px;
+
+          }
+          .user-icons {
+            align-self: flex-end;
+            white-space: nowrap;
+            padding-bottom: 10px;
+
+            .icon {
+              font-size: 30px;
+            }
+          }
+        }
+        &.item-details {
+          padding: 0;
+          overflow: hidden;
+          .col-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            .name-text {
+              font-weight: 500;
+              font-size: 1em;
+              white-space: nowrap;
+              vertical-align: top;
+            }
+          }
+          .col-item-total {
+            .my-share-text {
+              color: map-get($colors, primary);
+              font-size: 0.9em;
+              white-space: nowrap;
+              vertical-align: top;
+            }
+            .total-text {
+              font-size: 1em;
+              vertical-align: top;
+            }
+          }
+        }
+      }
+    }
+  }
+}
