@@ -246,12 +246,12 @@ export class TicketService {
         //   users: { status: UserStatus, uid: string }[];
         // };
 
-        if (status < UserStatus.Confirmed && users.every(user => user.status >= UserStatus.Confirmed)) {
-          throw 'All users have already confirmed, cannot set status to selecting or waiting'
-        }
-        if (status < UserStatus.Paid && users.every(user => user.status >= UserStatus.Paid)) {
-          throw 'All users have already paid, cannot set status to anything other than paid'
-        }
+        // if (status < UserStatus.Confirmed && users.every(user => user.status >= UserStatus.Confirmed)) {
+        //   throw 'All users have already confirmed, cannot set status to selecting or waiting'
+        // }
+        // if (status < UserStatus.Paid && users.every(user => user.status >= UserStatus.Paid)) {
+        //   throw 'All users have already paid, cannot set status to anything other than paid'
+        // }
 
         const docs = userCollectionData.docs;
         for (const doc of docs) {
@@ -494,7 +494,7 @@ export class TicketService {
     } else if (highestStatusCount === this.users.length) {
       this.overallUsersProgress = highestStatus;
     }
-
+    console.log('overall progress is', this.overallUsersProgress);
   }
 
   /** handles setting of service variables such as unclaimed items, shared items, and users */
@@ -575,6 +575,7 @@ export class TicketService {
     }
 
     this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
+    this.updateOverallUsersProgress();
 
     if (this.curUser && this.curUser.totals && this.curUser.totals.tip === 0) {
       this.curUser.totals.tip =
