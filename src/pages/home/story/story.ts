@@ -100,17 +100,26 @@ export class StoryPage {
   }
 
   /**
-   * organize item payments to make it digestable for the template
+   * organize item payments to make it digestable for the template. Organize by user
    */
   async organizePaymentDetails() {
     this.story.ticket.users.forEach(user => {
       user.items = [];
+      user.payments = [];
       user.itemsVisible = false;
       this.organizedPayments.push(user);
     });
 
     for (let i = 0; i < this.organizedPayments.length; i++) {
 
+      // organize payments
+      for (let z = 0; z < this.ticketUserPayments.ticketPayments.length; z++) {
+        if (this.ticketUserPayments.ticketPayments[z].user.uid === this.organizedPayments[i].uid) {
+          this.organizedPayments[i].payments.push(this.ticketUserPayments.ticketPayments[z]);
+        }
+      }
+
+      // organize items
       for (let y = 0; y < this.ticketUserPayments.items.length; y++) {
 
         for (let j = 0; j < this.ticketUserPayments.items[y].users.length; j++) {
