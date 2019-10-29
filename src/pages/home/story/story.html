@@ -73,7 +73,7 @@
             <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
           </ion-segment-button>
           <ion-segment-button small value="payment-details" icon-only>
-            <ion-icon name="list"></ion-icon>
+            <ion-icon name="cash"></ion-icon>
           </ion-segment-button>
         </ion-segment>
       </ion-col>
@@ -144,7 +144,7 @@
 
       <ion-card-content>
 
-        <ng-container *ngFor="let userPayment of organizedPayments">
+        <ng-container *ngFor="let userPayment of organizedPayments; index as paymentIndex">
           <div class="comment-style">
             <ion-row>
               <ion-col col-11>
@@ -153,11 +153,18 @@
                     <img [src]="userPayment.userDetail.photo_url" />
                   </ion-avatar>
                   <ion-note>{{userPayment.userDetail.displayName}}</ion-note>
+                  <button ion-button clear icon-end item-end color="tabify"
+                    (click)="organizedPayments[paymentIndex].itemsVisibile = !organizedPayments[paymentIndex].itemsVisibile">
+                    <ion-icon [name]="userPayment.itemsVisibile ? 'md-arrow-dropdown' : 'md-arrow-dropright'">
+                    </ion-icon>
+                  </button>
                 </ion-item>
               </ion-col>
             </ion-row>
-            <ion-list>
-                <ion-item *ngFor="let item of userPayment.items">
+
+            <ng-container *ngIf="organizedPayments[paymentIndex].itemsVisibile">
+              <ion-list>
+                <ion-item *ngFor="let item of organizedPayments[paymentIndex].items">
                   <ion-row>
                     <ion-col>
                       <p>{{item.name}}</p>
@@ -168,6 +175,7 @@
                   </ion-row>
                 </ion-item>
               </ion-list>
+            </ng-container>
 
           </div>
         </ng-container>
