@@ -24,6 +24,7 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
+  sharedItems: any = {};
 
   // This contains items in a ticket. Each items' users, 
   // and also payments for the associated ticket
@@ -47,7 +48,7 @@ export class StoryPage {
     public auth: AuthService,
     public ticketItemService: TicketItemService,
     private actionSheetCtrl: ActionSheetController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -62,6 +63,7 @@ export class StoryPage {
     const loading = this.loader.create();
     await loading.present();
     try {
+      await this.getUserDetails();
       const storyId = await this.navParams.get('storyId');
       this.story = await this.storyService.getStory(storyId);
       this.ticketUserPayments = await this.ticketItemService.getTicketItems(this.story.ticket.id);
@@ -71,7 +73,6 @@ export class StoryPage {
       this.ticketUsers = this.ticketUserPayments.users;
       this.organizePaymentDetails();
       await this.determineStoryLikedByUser();
-      await this.getUserDetails();
       await this.getComments();
     } catch {
       const alert = this.alertCtrl.create({
@@ -109,17 +110,27 @@ export class StoryPage {
     });
 
     for (let i = 0; i < this.organizedPayments.length; i++) {
-
+      
       for (let y = 0; y < this.ticketUserPayments.items.length; y++) {
 
         for (let j = 0; j < this.ticketUserPayments.items[y].users.length; j++) {
-          if (this.ticketUserPayments.items[y].users[j].uid === this.organizedPayments[i].uid) {            
+          if (this.ticketUserPayments.items[y].users[j].uid === this.organizedPayments[i].uid) {
             this.organizedPayments[i].items.push(this.ticketUserPayments.items[y]);
           }
         }
       }
     }
+
+    // move currently loggedIn user to the top
+    this.organizedPayments.forEach((payment, index) => {
+      if (payment.uid === this.user.uid) {
+        this.organizedPayments.splice(index, 1);
+        this.organizedPayments.unshift(payment);
+      }
+    });
+
     console.log(this.organizedPayments);
+    console.log(this.ticketUserPayments);
   }
 
   async getComments() {
