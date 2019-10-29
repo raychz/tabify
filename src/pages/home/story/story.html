@@ -142,7 +142,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-card-content>
+      <ion-card-content class="comment-section-padding">
 
         <ng-container *ngFor="let userPayment of organizedPayments">
           <div class="comment-style">
@@ -162,35 +162,34 @@
 
             <ng-container *ngIf="userPayment.itemsVisible">
               <ion-list>
-                  <ion-row class="item-details" *ngFor="let item of userPayment.items">
-                    <ion-col class="col-item-name">
-                      <span text-wrap class="name-text">{{ item.name }}</span>
-                      <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
-                    </ion-col>
-                    <ion-col col-auto class="col-item-total">
-                      <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
-                        <!-- ${{ ticketService.findUserShareOfItem(item, userPayment.uid) / 100 | number: '1.2-2' }} / -->
-                      </span>
-                      <span class="total-text">
-                        ${{ item.price / 100 | number: '1.2-2' }}
-                      </span>
-                    </ion-col>
-                  </ion-row>
-                </ion-list>
+                <ion-row class="item-details" *ngFor="let item of userPayment.items">
+                  <ion-col class="col-item-name">
+                    <span text-wrap class="name-text">{{ item.name }}</span>
+                    <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+                  </ion-col>
+                  <ion-col col-auto class="col-item-total">
+                    <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                      <!-- ${{ ticketService.findUserShareOfItem(item, userPayment.uid) / 100 | number: '1.2-2' }} / -->
+                    </span>
+                    <span class="total-text">
+                      ${{ item.price / 100 | number: '1.2-2' }}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
 
-              <!-- <ion-item *ngFor="let item of organizedPayments[paymentIndex].items">
-                  <ion-row>
-                    <ion-col>
-                      <p>{{item.name}}</p>
-                    </ion-col>
-                    <ion-col text-right>
-                      <p>${{ item.price / 100 | number: '1.2-2' }}</p>
-                    </ion-col>
-                  </ion-row>
-                </ion-item> -->
+              <p>
+                Payments:
+              </p>
+              <ion-list *ngFor="let payment of userPayment.payments">
+                <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
+                <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
+                <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
+                <p>Status: {{payment.ticket_payment_status}}</p>
+                <br />
+              </ion-list>
 
             </ng-container>
-
           </div>
         </ng-container>
       </ion-card-content>
