@@ -122,4 +122,55 @@ page-story {
     border-top: none;
     border-bottom: none;
   }
+  
+  ion-content {
+    padding-bottom: 10px;
+    ion-card {
+      ion-row {
+        &.item-details {
+          padding: 0;
+          overflow: hidden;
+          .col-item-name {
+            .name-text {
+              font-weight: 500;
+              font-size: 1em;
+            }
+            .quantity-text {
+              font-size: 0.9em;
+              color: lightgray;
+            }
+          }
+          .col-item-total {
+            .my-share-text {
+              color: map-get($colors, primary);
+              font-size: 0.9em;
+              white-space: nowrap;
+              vertical-align: top;
+            }
+            .total-text {
+              font-size: 1em;
+              vertical-align: top;
+            }
+          }
+          .col-payers {
+            padding-top: 0px;
+            .payers-icon {
+              &-alert {
+                color: map-get($colors, warning);
+              }
+              vertical-align: text-bottom;
+            }
+            .payers-description-text,
+            .payers-count {
+              font-size: 0.9em;
+              color: lightgray;
+            }
+            .payers-count {
+              color: map-get($colors, primary);
+            }
+          }
+        }
+      }
+    }
+  }
 }
