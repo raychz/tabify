@@ -102,7 +102,6 @@ export class StoryPage {
    * organize item payments to make it digestable for the template
    */
   async organizePaymentDetails() {
-
     this.story.ticket.users.forEach(user => {
       user.items = [];
       user.itemsVisible = false;

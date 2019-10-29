@@ -144,27 +144,25 @@
 
       <ion-card-content>
 
-        <ng-container *ngFor="let userPayment of organizedPayments; index as paymentIndex">
+        <ng-container *ngFor="let userPayment of organizedPayments">
           <div class="comment-style">
             <ion-row>
               <ion-col col-11>
-                <ion-item class="unset-background">
+                <ion-item (click)="userPayment.itemsVisible = !userPayment.itemsVisible" class="unset-background">
                   <ion-avatar class="comment-avatar" item-start>
                     <img [src]="userPayment.userDetail.photo_url" />
                   </ion-avatar>
                   <ion-note>{{userPayment.userDetail.displayName}}</ion-note>
-                  <button ion-button clear icon-end item-end color="tabify"
-                    (click)="organizedPayments[paymentIndex].itemsVisibile = !organizedPayments[paymentIndex].itemsVisibile">
-                    <ion-icon [name]="userPayment.itemsVisibile ? 'md-arrow-dropdown' : 'md-arrow-dropright'">
-                    </ion-icon>
-                  </button>
+                  <ion-icon clear icon-end item-end color="tabify"
+                    [name]="userPayment.itemsVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'">
+                  </ion-icon>
                 </ion-item>
               </ion-col>
             </ion-row>
 
-            <ng-container *ngIf="organizedPayments[paymentIndex].itemsVisibile">
+            <ng-container *ngIf="userPayment.itemsVisible">
               <ion-list>
-                <ion-item *ngFor="let item of organizedPayments[paymentIndex].items">
+                <ion-item class="unset-background" *ngFor="let item of userPayment.items">
                   <ion-row>
                     <ion-col>
                       <p>{{item.name}}</p>
@@ -175,63 +173,24 @@
                   </ion-row>
                 </ion-item>
               </ion-list>
+
+              <!-- <ion-item *ngFor="let item of organizedPayments[paymentIndex].items">
+                  <ion-row>
+                    <ion-col>
+                      <p>{{item.name}}</p>
+                    </ion-col>
+                    <ion-col text-right>
+                      <p>${{ item.price / 100 | number: '1.2-2' }}</p>
+                    </ion-col>
+                  </ion-row>
+                </ion-item> -->
+
             </ng-container>
 
           </div>
         </ng-container>
       </ion-card-content>
-
-      <!-- <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let item of this.ticketItems">
-            <ion-row>
-              <ion-col>
-                <p>{{item.name}}</p>
-              </ion-col>
-              <ion-col text-right>
-                <p>${{ item.price / 100 | number: '1.2-2' }}</p>
-              </ion-col>
-            </ion-row>
-          </ion-item>
-        </ion-list>
-      </ion-card-content> -->
     </ng-container>
-
-    <!-- <ion-card id='curUserCard' (click)="ticketService.toggleIsExpanded(ticketService.curUser)">
-      <ion-card-content>
-        <ion-row>
-          <ion-item>
-            <ion-avatar item-start>
-              <img [src]="ticketService.curUser.photoUrl || '../../../../../assets/imgs/user-light.png'">
-            </ion-avatar>
-            <ion-label> {{ ticketService.curUser.name }} </ion-label>
-            <ion-spinner class="ticket-spinner" name="bubbles" color="primary" item-end
-              *ngIf="ticketService.curUser.status < userStatus.Confirmed"></ion-spinner>
-            <ion-icon name="checkmark-circle-outline" item-end
-              *ngIf="ticketService.curUser.status >= userStatus.Confirmed"></ion-icon>
-            <ion-icon [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropup' : 'arrow-dropdown'"
-              item-end></ion-icon>
-          </ion-item>
-        </ion-row>
-
-        <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
-          <ion-row class="item-details" *ngFor="let item of ticketService.curUser.ticketItems">
-            <ion-col class="col-item-name">
-              <span text-wrap class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
-              <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
-            </ion-col>
-            <ion-col col-auto class="col-item-total">
-              <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
-                ${{ ticketService.findUserShareOfItem(item, this.auth.getUid()) / 100 | number: '1.2-2' }} /
-              </span>
-              <span class="total-text">
-                ${{ item.price / 100 | number: '1.2-2' }}
-              </span>
-            </ion-col>
-          </ion-row>
-        </ion-list>
-      </ion-card-content>
-    </ion-card> -->
 
   </ion-card>
 </ion-content>
