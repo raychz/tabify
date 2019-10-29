@@ -110,10 +110,11 @@ export class StoryPage {
     });
 
     for (let i = 0; i < this.organizedPayments.length; i++) {
-      
+
       for (let y = 0; y < this.ticketUserPayments.items.length; y++) {
 
         for (let j = 0; j < this.ticketUserPayments.items[y].users.length; j++) {
+
           if (this.ticketUserPayments.items[y].users[j].uid === this.organizedPayments[i].uid) {
             this.organizedPayments[i].items.push(this.ticketUserPayments.items[y]);
           }
@@ -122,12 +123,16 @@ export class StoryPage {
     }
 
     // move currently loggedIn user to the top
+    // also set currently logged In users details open by default
     this.organizedPayments.forEach((payment, index) => {
       if (payment.uid === this.user.uid) {
         this.organizedPayments.splice(index, 1);
         this.organizedPayments.unshift(payment);
+        this.organizedPayments[index].itemsVisible = true;
       }
     });
+
+
 
     console.log(this.organizedPayments);
     console.log(this.ticketUserPayments);
