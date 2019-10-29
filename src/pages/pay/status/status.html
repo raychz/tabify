@@ -153,7 +153,7 @@
         </ion-col>
         <ion-col col-auto>
           <span id="amount-owed">
-            ${{ ticketService.firestoreTicket.ticketTotal.due / 100 | number: '1.2-2' }} /
+            ${{ (ticketService.firestoreTicket.ticketTotal.total - ticketService.amountPaid) / 100 | number: '1.2-2' }} /
           </span>
           <span id="total-bill">
             ${{ ticketService.firestoreTicket.ticketTotal.total / 100 | number: '1.2-2' }}

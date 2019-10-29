@@ -30,19 +30,6 @@ export const getPayersDescription = (users: any[]) => {
 }
 
 /**
- * Counts the number of items that user with uid `uid` has claimed.
- * @param items All ticket items
- * @param uid Uid for the user whose items are being counted
- */
-export const countItemsOnMyTab = (items: FirestoreTicketItem[], uid: any): number => {
-    console.log('counted items!');
-    const myItems =
-        items &&
-        items.filter((item) => isItemOnMyTab(item, uid));
-    return (myItems && myItems.length) || 0;
-}
-
-/**
  * Checks whether an item is claimed by user with uid `uid`.
  * @param item
  * @param uid

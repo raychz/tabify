@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { WaitingRoomPage } from './waiting-room';
+import { SharedPayModule } from '../shared-pay.module'
+
 
 @NgModule({
   declarations: [
@@ -8,6 +10,7 @@ import { WaitingRoomPage } from './waiting-room';
   ],
   imports: [
     IonicPageModule.forChild(WaitingRoomPage),
+    SharedPayModule
   ],
 })
 export class WaitingRoomPageModule {}

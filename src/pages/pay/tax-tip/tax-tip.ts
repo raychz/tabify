@@ -15,7 +15,7 @@ import { sleep } from '../../../utilities/general.utilities';
 @IonicPage()
 @Component({
   selector: 'page-tax-tip',
-  templateUrl: 'tax-tip.html',
+  templateUrl: 'tax-tip.html'
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;

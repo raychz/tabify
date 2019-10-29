@@ -92,6 +92,7 @@ export class TabLookupPage {
       await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
+      await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
         const alert = this.alertCtrl.create({
@@ -115,7 +116,6 @@ export class TabLookupPage {
         });
         alert.present();
       }
-      await loading.dismiss();
     }
   }
 
@@ -136,7 +136,7 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case UserStatus.Paid:
-        if (this.ticketService.firestoreTicket.overallUsersProgress === UserStatus.Paid) {
+        if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
           const modal = this.alertCtrl.create({
             title: 'Tab already paid!',
             message: 'You have already paid your tab, no need to do anything else.',
@@ -183,7 +183,7 @@ export class TabLookupPage {
         }
       })).subscribe();
     }
-    this.ticketService.initializeFirestoreTicket(ticket.id);
+    this.ticketService.initializeFirestoreTicket(ticket.firestore_doc_id);
   }
 
   private async initializeTicketMetadata(ticket: any) {

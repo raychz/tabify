@@ -9,7 +9,7 @@ import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.int
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
-import { getPayersDescription, countItemsOnMyTab, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
 
 // please keep the user status enum in order of execution as they are used for calculations
@@ -37,7 +37,6 @@ export interface FirestoreTicket {
   tab_id: string,
   ticket_number: number,
   status: TicketStatus,
-  overallUsersProgress: UserStatus,
   ticketTotal: {
     date_created: string,
     date_updated: string,
@@ -53,18 +52,6 @@ export interface FirestoreTicket {
     total: number
   }
   uids: string[],
-  users: {
-    name: string,
-    uid: string,
-    photoUrl: string,
-    status: UserStatus,
-    totals: {
-      tax: number, // user's share of the tax
-      tip: number, // user's tip
-      subtotal: number, // user's sum of the share of their selected items
-      total: number, // user's tax + tip + subtotal
-    },
-  }[],
   ticketItems: FirestoreTicketItem[],
 }
 
@@ -93,16 +80,16 @@ export class TicketService {
   public unclaimedItems: FirestoreTicketItem[] = [];
   public users: User[];
   public curUser: User;
-  public userSelectedItemsCount: number = 0;
   /** The value is represented in pennies. */
   public userTipPercentage: number = 18;
   /** The value is represented in pennies. */
-  public userGrandTotal: number = 0;
   public userPaymentMethod: any;
   public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
   public hasInitializationError = false;
-  public isExpandedList: {[uid: string]: boolean} = {};
-  public firestoreStatus$ = new BehaviorSubject<boolean> (false);
+  public isExpandedList: { [uid: string]: boolean } = {};
+  public overallUsersProgress: UserStatus = UserStatus.Selecting;
+  public firestoreStatus$ = new BehaviorSubject<boolean>(false);
+  public amountPaid = 0;
 
   /** Database representation of ticket */
   public ticket: any;
@@ -110,6 +97,7 @@ export class TicketService {
   // Private class variables
   private firestoreTicket$: Subscription;
   private firestoreTicketItems$: Subscription;
+  private firestoreUsers$: Subscription;
 
   constructor(
     private readonly http: HttpClient,
@@ -184,6 +172,30 @@ export class TicketService {
       .toPromise();
   }
 
+  /** set service variables to their original value to clear the state of the service and destroy observable subscriptions */
+  public clearState() {
+    this.firestoreTicket = undefined;
+    this.firestoreTicketItems = undefined;
+    this.sharedItems = [];
+    this.unclaimedItems = [];
+    this.users = undefined;
+    this.curUser = undefined;
+    this.userTipPercentage = 18;
+    this.userPaymentMethod = undefined;
+    this.ticketUsersDescription = getSelectItemsTicketUsersDescription();
+    this.hasInitializationError = false;
+    this.isExpandedList = {};
+    this.overallUsersProgress = UserStatus.Selecting;
+    this.firestoreStatus$ = new BehaviorSubject<boolean>(false);
+    this.amountPaid = 0;
+    this.ticket = undefined;
+    this.destroySubscriptions();
+  }
+
+  public findUserShareOfItem(item: FirestoreTicketItem, uid: string) {
+    return item.users.find(u => u.uid === uid).price;
+  }
+
   /**
    * Subscribes to changes made on the Firestore ticket and ticket-items objects.
    * @param ticketId
@@ -191,15 +203,22 @@ export class TicketService {
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
-      catchError(message => this.handleInitializationError(message)),
-      tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
+        catchError(message => this.handleInitializationError(message)),
+        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
       )
       .subscribe();
 
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
-      catchError(message => this.handleInitializationError(message)),
-      tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+        catchError(message => this.handleInitializationError(message)),
+        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+      )
+      .subscribe();
+
+      this.firestoreUsers$ = this.getFirestoreUsers(ticketId)
+      .pipe(
+        catchError(message => this.handleInitializationError(message)),
+        tap((users: any) => this.onTicketUsersUpdate(users as User[]))
       )
       .subscribe();
   }
@@ -210,76 +229,47 @@ export class TicketService {
   public destroySubscriptions() {
     this.firestoreTicket$ && this.firestoreTicket$.unsubscribe();
     this.firestoreTicketItems$ && this.firestoreTicketItems$.unsubscribe();
+    this.firestoreUsers$ && this.firestoreUsers$.unsubscribe();
   }
 
-  public findUserShareOfItem(item: FirestoreTicketItem, userUid: string) {
-    const user = item.users.find((u) => u.uid === userUid);
-    if (user) {
-      return user.price;
-    }
-    return 0;
-  }
-
-  public async changeUserStatus(status?: UserStatus): Promise<{ success: boolean; message: string }> {
+  public async changeUserStatus(status: UserStatus): Promise<{ success: boolean; message: string }> {
     try {
       await this.firestoreService.runTransaction(async transaction => {
-        const ticketDocRef = this.firestoreService.document(
-          `tickets/${this.firestoreTicket.id}`
+        const ticketUsersRef = this.firestoreService.collection(
+          `tickets/${this.firestoreTicket.id}/users`
         ).ref;
-        const ticket = await transaction.get(ticketDocRef);
-        if (!ticket.exists) {
-          throw 'Ticket Document does not exist!';
-        }
+        const userCollectionData = await ticketUsersRef.get();
+        const users = userCollectionData.docs.map(doc => doc.data()) as User[];
 
-        let { users, overallUsersProgress } = ticket.data()! as {
-          users: { status: UserStatus, uid: string }[];
-          overallUsersProgress: UserStatus;
-        };
 
-        // TODO: Coordinate with Sahil to figure out if the below makes sense
-        // /**
-        //  * If we are attempting to set a status of Selecting or Waiting and all users are already Confirmed or greater,
-        //  * throw an error!
-        //  */
+        // let { users } = ticket.data()! as {
+        //   users: { status: UserStatus, uid: string }[];
+        // };
+
         // if (status < UserStatus.Confirmed && users.every(user => user.status >= UserStatus.Confirmed)) {
-        //   throw 'All users have confirmed their selections already.';
+        //   throw 'All users have already confirmed, cannot set status to selecting or waiting'
         // }
-        let lowestStatus = overallUsersProgress;
-        let highestStatus = overallUsersProgress;
-        let highestStatusCount = 0;
+        // if (status < UserStatus.Paid && users.every(user => user.status >= UserStatus.Paid)) {
+        //   throw 'All users have already paid, cannot set status to anything other than paid'
+        // }
 
-        for (let user of users) {
-          if (user.uid === this.auth.getUid() && status !== undefined) {
-            user.status = status;
-          }
-
-          if (user.status > highestStatus) {
-            if (highestStatusCount === 0) {
-              highestStatus = user.status;
-            } else {
-              highestStatusCount = 0;
+        const docs = userCollectionData.docs;
+        for (const doc of docs) {
+          const userUid = doc.get('uid');
+          const authUid = this.auth.getUid();
+          if (userUid === authUid) {
+            const user = users.find( u => u.uid === authUid);
+            if (user) {
+              user.status = status;
+              transaction.set(
+                doc.ref,
+                user,
+                { merge: true },
+              );
             }
-          } else if (user.status < lowestStatus) {
-            lowestStatus = user.status
-          }
-
-          if (user.status === highestStatus) {
-            highestStatusCount++;
+            break;
           }
         }
-
-        if (lowestStatus < overallUsersProgress) {
-          overallUsersProgress = lowestStatus;
-        } else if (highestStatusCount === users.length) {
-          overallUsersProgress = highestStatus;
-        }
-
-
-        transaction.set(
-          ticketDocRef,
-          { users, overallUsersProgress },
-          { merge: true }
-        );
 
         return transaction;
       });
@@ -443,6 +433,92 @@ export class TicketService {
     return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
   }
 
+    /**
+   * Gets the Firestore users collection for ticket with id `ticketId`.
+   * @param ticketId
+   */
+  private getFirestoreUsers(ticketId: number) {
+    return this.firestoreService.collection$(`tickets/${ticketId}/users`);
+  }
+
+  /** reset isExpanded object for expanding/collapsing user cards throught the pay work flow */
+  resetIsExpanded() {
+    for (let user of this.users) {
+      this.isExpandedList[user.uid] = false;
+    }
+  }
+
+  /** expand/collapse the provided user's card (used in status and waiting room pages) */
+  toggleIsExpanded(user: User) {
+    const isExpanded = this.getUserExpanded(user)
+    this.isExpandedList[user.uid] = !isExpanded;
+  }
+
+  /** determine if the provided user's card should be expanded (used in status and waiting room) */
+  getUserExpanded(user: User): boolean {
+    if (!this.isExpandedList[user.uid]) {
+      this.isExpandedList[user.uid] = false;
+    }
+    return this.isExpandedList[user.uid];
+  }
+
+  /** update the overallUsersProgress variable and the amount paid */
+  updateOverallUsersProgress() {
+    this.amountPaid = 0;
+
+    let lowestStatus = this.overallUsersProgress;
+    let highestStatus = this.overallUsersProgress;
+    let highestStatusCount = 0;
+
+    for (let user of this.users) {
+      if (user.status === UserStatus.Paid) {
+        this.amountPaid += user.totals.subtotal + user.totals.tax;
+      }
+      if (user.status > highestStatus) {
+        if (highestStatusCount === 0) {
+          highestStatus = user.status;
+        } else {
+          highestStatusCount = 0;
+        }
+      } else if (user.status < lowestStatus) {
+        lowestStatus = user.status;
+      }
+
+      if (user.status === highestStatus) {
+        highestStatusCount++;
+      }
+    }
+
+    if (lowestStatus < this.overallUsersProgress) {
+      this.overallUsersProgress = lowestStatus;
+    } else if (highestStatusCount === this.users.length) {
+      this.overallUsersProgress = highestStatus;
+    }
+    console.log('overall progress is', this.overallUsersProgress);
+  }
+
+  /** handles setting of service variables such as unclaimed items, shared items, and users */
+  private updateItemsAndUsers() {
+    this.unclaimedItems = [];
+    this.sharedItems = [];
+    this.users.forEach(u => {u.totals.subtotal = 0; u.ticketItems = []});
+    this.curUser = { ...this.users.find((user) => user.uid === this.auth.getUid()) };
+    this.firestoreTicketItems.forEach((item) => {
+      if (item.users.length < 1) {
+        this.unclaimedItems.push(item);
+      } else if (item.users.length > 1) {
+        this.sharedItems.push(item);
+      }
+
+      item.users.forEach((user) => {
+        const userIndex = this.users.findIndex(u => u.uid === user.uid);
+        this.users[userIndex].ticketItems.push(item);
+        this.users[userIndex].totals.subtotal += item.users.find(u => u.uid === user.uid).price;
+      });
+    });
+    this.firestoreStatus$.next(true);
+  }
+
   /**
    * Called when an error is thrown during the Firestore initialization.
    * TODO: Make this an observable so that consumers of the ticket-service can detect and handle errors on their own.
@@ -474,52 +550,37 @@ export class TicketService {
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
     this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
       ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
-    this.userSelectedItemsCount = countItemsOnMyTab(firestoreTicketItems, this.auth.getUid());
-    // the above properties can be inferred from the below properties. ToDo: get rid of above properties
-    this.updateItemsAndUsers();
-    this.firestoreStatus$.next(true);
-  }
-
-  private updateItemsAndUsers() {
-    this.unclaimedItems = [];
-    this.sharedItems = [];
-    this.curUser = { ...this.firestoreTicket.users.find( (user) => user.uid === this.auth.getUid() )!, ticketItems: []};
-    this.users = this.firestoreTicket.users.map( (user) => ({ ...user, ticketItems: []}));
-    this.firestoreTicketItems.forEach( (item) => {
-      if (item.users.length < 1) {
-        this.unclaimedItems.push(item);
-      } else if (item.users.length > 1) {
-        this.sharedItems.push(item);
-      }
-
-      if (item.isItemOnMyTab) {
-        this.curUser.ticketItems.push(item);
-      }
-
-
-      item.users.forEach( (user) => {
-        const userIndex = this.users.findIndex( u => u.uid === user.uid);
-        this.users[userIndex].ticketItems.push(item);
-      });
-    });
-  }
-
-  resetIsExpanded() {
-    for (let user of this.firestoreTicket.users) {
-      this.isExpandedList[user.uid] = false;
+    if (this.users) {
+      this.updateItemsAndUsers();
     }
   }
 
-  toggleIsExpanded(user: User) {
-    const isExpanded = this.getUserExpanded(user)
-    this.isExpandedList[user.uid] = !isExpanded;
-  }
-
-  getUserExpanded(user: User): boolean {
-    if (!this.isExpandedList[user.uid]) {
-      this.isExpandedList[user.uid] = false;
+    /**
+   * Called when a Firestore document within the Firestore ticket-items collection is updated.
+   * @param firestoreTicketItems
+   */
+  private onTicketUsersUpdate(firestoreUsers: User[]) {
+    if (Object.keys(this.isExpandedList).length !== firestoreUsers.length) {
+      for (let user of firestoreUsers) {
+        if (!this.isExpandedList[user.uid]!) {
+          this.isExpandedList[user.uid] = false;
+        }
+      }
     }
-    return this.isExpandedList[user.uid];
+
+    this.users = firestoreUsers.map((user) => ({ ...user, ticketItems: [] }));
+
+    if (this.firestoreTicketItems) {
+      this.updateItemsAndUsers();
+    }
+
+    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
+    this.updateOverallUsersProgress();
+
+    if (this.curUser && this.curUser.totals && this.curUser.totals.tip === 0) {
+      this.curUser.totals.tip =
+        Math.round(((this.userTipPercentage / 100) * this.curUser.totals.subtotal));
+    }
   }
 
   /**
@@ -527,29 +588,9 @@ export class TicketService {
    * @param firestoreTicket
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
-    if (Object.keys(this.isExpandedList).length !== firestoreTicket.users.length) {
-      for (let user of firestoreTicket.users) {
-        if (!this.isExpandedList[user.uid]!) {
-          this.isExpandedList[user.uid] = false;
-        }
-      }
-    }
-
     console.log(this.firestoreTicket);
     console.log('updating the ticket', firestoreTicket)
     this.firestoreTicket = firestoreTicket;
     console.log(this.firestoreTicket);
-    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(firestoreTicket.users);
-    this.changeUserStatus();
-    if (this.firestoreTicketItems && this.users) {
-      this.updateItemsAndUsers();
-    } else {
-      this.users = this.firestoreTicket.users.map((user) => ({ ...user, ticketItems: [], subtotal: 0 }));
-    }
-
-    if (this.curUser && this.curUser.totals && this.curUser.totals.tip === 0) {
-      this.curUser.totals.tip =
-        Math.round(((this.userTipPercentage / 100) * this.curUser.totals.subtotal));
-    }
   }
 }
