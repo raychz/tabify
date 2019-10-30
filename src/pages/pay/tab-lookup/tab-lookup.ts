@@ -9,6 +9,7 @@ import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
+import { AblyService } from '../../../services/ticket/ably.service';
 
 @IonicPage()
 @Component({
@@ -32,6 +33,7 @@ export class TabLookupPage {
     public ticketService: TicketService,
     public alertCtrl: AlertService,
     public locationService: LocationService,
+    public ablyService: AblyService
   ) {
     this.tabForm = fb.group({
       ticketNumber: ['', Validators.compose([Validators.required])],
@@ -45,6 +47,12 @@ export class TabLookupPage {
   async ionViewDidLoad() {
     this.getDateTime();
     await this.getFraudPreventionCode();
+    this.ablyService.connect();
+  }
+
+  async ionViewWillUnload() {
+    this.ablyService.disconnect();
+    console.log("ion view will unload tab-lookup!");
   }
 
   getDateTime() {
