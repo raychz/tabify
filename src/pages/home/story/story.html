@@ -188,15 +188,32 @@
                   <br />
                 </ion-list>
                 <br />
-
               </div>
+
+              <ion-list margin>
+                <ion-row class="item-details" *ngFor="let item of sharedItems">
+                  <ion-col class="col-item-name">
+                    <span text-wrap class="name-text">{{ item.name }}</span>
+                    <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+                  </ion-col>
+                  <ion-col col-auto class="col-item-total">
+                    <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                      <!-- ${{ ticketService.findUserShareOfItem(item, userPayment.uid) / 100 | number: '1.2-2' }} / -->
+                    </span>
+                    <span class="total-text">
+                      ${{ item.price / 100 | number: '1.2-2' }}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+
 
             </ng-container>
           </div>
         </ng-container>
       </ion-card-content>
-    </ng-container>
 
+    </ng-container>
   </ion-card>
 </ion-content>
 
