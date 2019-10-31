@@ -24,7 +24,7 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
-  sharedItems: any = {};
+  sharedItems: any = [];
 
   // This contains items in a ticket. Each items' users, 
   // and also payments for the associated ticket
@@ -74,6 +74,7 @@ export class StoryPage {
       this.organizePaymentDetails();
       await this.determineStoryLikedByUser();
       await this.getComments();
+      await this.getSharedItems();
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -145,6 +146,17 @@ export class StoryPage {
 
     console.log(this.organizedPayments);
     console.log(this.ticketUserPayments);
+  }
+
+  async getSharedItems() {
+    // populate shared items
+    this.ticketUserPayments.items.forEach(item => {
+      if (item.users.length > 1) {
+        this.sharedItems.push(item);
+      }
+    });
+
+    console.log(this.sharedItems);
   }
 
   async getComments() {
