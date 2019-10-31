@@ -161,7 +161,7 @@
             </ion-row>
 
             <ng-container *ngIf="userPayment.itemsVisible">
-              <ion-list>
+              <ion-list margin>
                 <ion-row class="item-details" *ngFor="let item of userPayment.items">
                   <ion-col class="col-item-name">
                     <span text-wrap class="name-text">{{ item.name }}</span>
@@ -178,16 +178,18 @@
                 </ion-row>
               </ion-list>
 
-              <p>
-                Payments:
-              </p>
-              <ion-list *ngFor="let payment of userPayment.payments">
-                <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
-                <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
-                <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
-                <p>Status: {{payment.ticket_payment_status}}</p>
+              <div margin>
+                <h2>Payments:</h2>
+                <ion-list *ngFor="let payment of userPayment.payments">
+                  <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
+                  <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
+                  <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
+                  <p>Status: {{payment.ticket_payment_status}}</p>
+                  <br />
+                </ion-list>
                 <br />
-              </ion-list>
+
+              </div>
 
             </ng-container>
           </div>
