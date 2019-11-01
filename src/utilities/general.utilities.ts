@@ -12,7 +12,10 @@ export const sleep = async (t: number) => new Promise(r => setTimeout(r, t));
  */
 export const abbreviateName = (name: string) => {
   // get rid of multiple spaces. Then split using single space
-  const nameSplit: string[] = name.replace(/\s\s+/g, ' ').split(' ');
+  const nameSplit: string[] = name
+    .trim()
+    .replace(/\s\s+/g, ' ')
+    .split(' ');
   const firstName = nameSplit.shift();
   const rest = nameSplit.map(v => `${v[0].toUpperCase()}.`).join('');
   return `${firstName} ${rest}`;
