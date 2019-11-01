@@ -24,7 +24,7 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   showMoreUsers: boolean = false;
-  sharedItems: any = [];
+  sharedItems: any = {};
 
   // This contains items in a ticket. Each items' users, 
   // and also payments for the associated ticket
@@ -142,17 +142,20 @@ export class StoryPage {
       }
     });
 
-
-
     console.log(this.organizedPayments);
     console.log(this.ticketUserPayments);
   }
 
   async getSharedItems() {
     // populate shared items
+    this.sharedItems = {
+      isVisible: false,
+      items: []
+    }
+
     this.ticketUserPayments.items.forEach(item => {
       if (item.users.length > 1) {
-        this.sharedItems.push(item);
+        this.sharedItems.items.push(item);
       }
     });
 
