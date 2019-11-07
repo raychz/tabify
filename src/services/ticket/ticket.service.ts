@@ -152,7 +152,7 @@ export class TicketService {
 
   public async addUserToDatabaseTicket(ticketId: number) {
     return await this.http
-      .post(`${environment.serverUrl}/tickets/${ticketId}/addDatabaseUser`, {})
+      .post(`${environment.serverUrl}/tickets/${ticketId}/users`, {})
       .toPromise();
   }
 
