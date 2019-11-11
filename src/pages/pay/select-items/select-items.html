@@ -1,6 +1,15 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Select Items</ion-title>
+    <ion-buttons left>
+      <button ion-button icon-start
+        (click)="backButtonAction()">
+        <ion-icon name="arrow-back"></ion-icon>
+        <ion-label *ngIf="platform.is('ios')">
+          Back
+        </ion-label>
+      </button>
+    </ion-buttons>
     <ion-buttons end>
       <button ion-button icon-end (click)="confirmSelections()">
         Next
@@ -24,7 +33,7 @@
   <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        {{ ticketService.userSelectedItemsCount }}
+        {{ ticketService.curUser.ticketItems.length }}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
         ${{ (ticketService.curUser.totals.subtotal / 100 | number: '1.2-2') || 0.0 }}
@@ -32,7 +41,7 @@
     </ion-row>
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
-        Selected Item{{ ticketService.userSelectedItemsCount === 1 ? '' : 's'}}
+        Selected Item{{ ticketService.curUser.ticketItems.length === 1 ? '' : 's'}}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
         Your Subtotal

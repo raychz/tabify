@@ -55,8 +55,10 @@
     </ion-card>
 
     <ion-card id='allUsersCard' *ngIf="ticketService.users.length > 1">
-      <ion-card-header class="card-header" id="tell-your-friends">
-        Tell your friends to pick their food already!
+      <ion-card-header class="card-header">
+        <ion-label id="tell-your-friends" text-wrap>
+            Tell your friends to pick their food already!
+        </ion-label>
         <ion-label id="your-party">
           Your Party:
         </ion-label>

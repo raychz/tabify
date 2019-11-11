@@ -6,16 +6,11 @@ import {
   ActionSheetController,
   ModalController,
 } from 'ionic-angular';
-import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { ITicket } from '../../../interfaces/ticket.interface';
-import { ITicketItem } from '../../../interfaces/ticket-item.interface';
-import { user } from '../../home/example-stories';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
-import { plurality } from '../../../utilities/general.utilities';
-import { InviteOthersPage } from './invite-others/invite-others';
+import { Platform } from 'ionic-angular';
 
 export interface ReceiptItem {
   id: number;
@@ -42,6 +37,7 @@ export class SelectItemsPage {
     public navParams: NavParams,
     public auth: AuthService,
     public loader: LoaderService,
+    public platform: Platform,
     public alertCtrl: AlertService,
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
@@ -186,5 +182,10 @@ export class SelectItemsPage {
       users: this.ticketService.users,
     });
     modal.present();
+  }
+
+  async backButtonAction() {
+    await this.navCtrl.pop();
+    this.ticketService.clearState();
   }
 }
