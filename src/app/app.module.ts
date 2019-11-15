@@ -29,6 +29,7 @@ import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
 import { PaymentService } from '../services/payment/payment.service';
 import { SharedPayModule } from '../pages/pay/shared-pay.module';
+import { CouponService } from '../services/coupon/coupon.service';
 
 
 Pro.init('66369498', {
@@ -92,6 +93,7 @@ export class MyErrorHandler implements ErrorHandler {
     FirestoreService,
     PaymentMethodService,
     StoryService,
+    CouponService,
     NewsfeedService,
     ErrorService,
     PaymentService,

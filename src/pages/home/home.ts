@@ -158,7 +158,7 @@ export class HomePage {
 
   showNotifications() {
     this.navCtrl.push(
-      'NotificationsPage',
+      'CouponsPage',
       {},
       { animate: true, animation: 'md-transition', direction: 'forward' }
     );
