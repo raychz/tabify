@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { AuthService } from '../../services/auth/auth.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
+import { ICoupon } from '../../interfaces/coupon.interface';
+
 
 @IonicPage()
 @Component({
@@ -11,7 +13,8 @@ import { CouponService } from '../../services/coupon/coupon.service';
 })
 export class CouponsPage {
 
-  coupons: any;
+  coupons: ICoupon[];
+  expandedCouponId: number;
 
   constructor(
     public navCtrl: NavController,
@@ -31,11 +34,17 @@ export class CouponsPage {
     await this.getCoupons();
   }
 
+  expandCoupon(coupon: ICoupon) {
+    this.expandedCouponId = coupon.id;
+  }
+
   async getCoupons() {
     const loading = this.loader.create();
     await loading.present();
     try {
-      this.coupons = this.couponService.getCoupons();
+      this.coupons = await this.couponService.getCoupons() as ICoupon[];
+      this.expandedCouponId = -1;
+      console.log(this.coupons);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -47,6 +56,10 @@ export class CouponsPage {
 
     console.log(this.coupons);
     return this.coupons;
+  }
+
+  redeemCoupon(coupon: ICoupon) {
+    this.navCtrl.push('TabLookupPage', coupon.location);
   }
 
   cancel() {

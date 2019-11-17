@@ -11,12 +11,51 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-
-  <!-- <ion-card>
+  <ion-card>
     <ion-card-content>
-      <p>
-        No new notifications.
-      </p>
+      <ion-row>
+        Exclusive Coupons, Deals, and Promos
+      </ion-row>
+      <ion-row>
+        Only on Tabify!
+      </ion-row>
     </ion-card-content>
-  </ion-card> -->
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let coupon of coupons">
+      <ion-card (click)="expandCoupon(coupon)">
+        <ion-card-content>
+          <ion-row>
+            <ion-col>
+              <ion-avatar class="avatar">
+                <img [src]="coupon.location.photo_url">
+              </ion-avatar>
+            </ion-col>
+            <ion-col>
+              <ion-row>
+                {{ coupon.location.name }}
+              </ion-row>
+              <ion-row>
+                {{ coupon.header }}
+              </ion-row>
+            </ion-col>
+          </ion-row>
+
+          <ng-container *ngIf="coupon.id === expandedCouponId">
+              <ion-row>
+                <p>
+                  {{ coupon.description }}
+                </p>
+              </ion-row>
+              <ion-row>
+                <button (click)="redeemCoupon(coupon)">
+                  Redeem
+                </button>
+              </ion-row>
+          </ng-container>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
 </ion-content>
