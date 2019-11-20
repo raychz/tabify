@@ -156,6 +156,20 @@ export class TicketService {
       .toPromise();
   }
 
+  public async addUserToTicketItem(ticketId: number, itemId: number) {
+    console.log("CALLING ADD USER TO TICKET ITEM");
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
+      .toPromise();
+  }
+
+  public async removeUserFromTicketItem(ticketId: number, itemId: number) {
+    console.log("CALLING ADD USER TO TICKET ITEM");
+    return await this.http
+      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
+      .toPromise();
+  }
+
   public async addUserToFirestoreTicket(ticketId: number) {
     return await this.http
       .post(`${environment.serverUrl}/tickets/${ticketId}/addFirestoreUser`, {})
@@ -203,22 +217,22 @@ export class TicketService {
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
+      catchError(message => this.handleInitializationError(message)),
+      tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
       )
       .subscribe();
 
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+      catchError(message => this.handleInitializationError(message)),
+      tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
       )
       .subscribe();
 
-      this.firestoreUsers$ = this.getFirestoreUsers(ticketId)
+    this.firestoreUsers$ = this.getFirestoreUsers(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((users: any) => this.onTicketUsersUpdate(users as User[]))
+      catchError(message => this.handleInitializationError(message)),
+      tap((users: any) => this.onTicketUsersUpdate(users as User[]))
       )
       .subscribe();
   }
@@ -433,10 +447,10 @@ export class TicketService {
     return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
   }
 
-    /**
-   * Gets the Firestore users collection for ticket with id `ticketId`.
-   * @param ticketId
-   */
+  /**
+ * Gets the Firestore users collection for ticket with id `ticketId`.
+ * @param ticketId
+ */
   private getFirestoreUsers(ticketId: number) {
     return this.firestoreService.collection$(`tickets/${ticketId}/users`);
   }
@@ -555,10 +569,10 @@ export class TicketService {
     }
   }
 
-    /**
-   * Called when a Firestore document within the Firestore ticket-items collection is updated.
-   * @param firestoreTicketItems
-   */
+  /**
+ * Called when a Firestore document within the Firestore ticket-items collection is updated.
+ * @param firestoreTicketItems
+ */
   private onTicketUsersUpdate(firestoreUsers: User[]) {
     if (Object.keys(this.isExpandedList).length !== firestoreUsers.length) {
       for (let user of firestoreUsers) {
