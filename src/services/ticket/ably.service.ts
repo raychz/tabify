@@ -2,33 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import * as Ably from 'ably';
+import * as AblyPromises from 'ably/promises';
 import { AblyTicketService } from './ably-ticket.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Injectable()
 export class AblyService {
-  private realtime: Ably.Realtime;
+  private realtime: AblyPromises.Realtime;
 
   constructor(
-    public ablyTicketService: AblyTicketService
+    public auth: AuthService,
   ) { }
 
   connect() {
     if (!this.realtime) {
-      this.realtime = new Ably.Realtime({ key: environment.ablyKey });
+      this.realtime = new AblyPromises.Realtime.Promise({ key: environment.ablyKey, clientId: this.auth.getUid() });
 
-      // await this.realtime.connection.once('connected');
       this.realtime.connection.on((stateChange) => {
         console.log('New Ably connection state is ' + stateChange.current);
       });
 
       this.realtime.connection.on('failed', this.onFailure.bind(this));
-      // this.realtime.channels
-      //   .get('test-ticket-id')
-      //   .subscribe('ticket-item-added', (payload) => {
-      //     this.ablyTicketService.onTicketUpdate(payload)
-      //     console.log('CALLED ticket-item-added', payload);
-      //   });
-      // this.realtime.channels.
     } else {
       throw 'The Ably client is already connected, but a request to connect was attempted.';
     }
@@ -41,6 +35,10 @@ export class AblyService {
     } else {
       throw 'The Ably client is already disconnected, but a request to disconnect was attempted.';
     }
+  }
+
+  getChannel(channel: string, channelOptions?: Ably.Types.ChannelOptions) {
+    return this.realtime.channels.get(channel, channelOptions);
   }
 
   private onFailure() {
