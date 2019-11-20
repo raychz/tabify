@@ -1,15 +1,12 @@
-import { User } from 'firebase';
+import { Ticket } from "./ticket.interface";
+import { TicketItemUser } from "./ticket-item-user.interface";
 
-export interface ITicketItem {
-  /**
-   * Unique id from Tabify server
-   */
-  id: number;
-  /**
-   * A ticket item number a restaurant's receipt
-   */
-  ticket_item_id: number;
-  name: string;
-  price: number;
-  quantity: number;
+export interface TicketItem {
+  id?: number;
+  ticket_item_id?: number;
+  ticket?: Ticket;
+  name?: string;
+  price?: number;
+  quantity?: number;
+  users?: TicketItemUser[];
 }
