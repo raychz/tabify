@@ -10,25 +10,11 @@ import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { ITicket } from '../../../interfaces/ticket.interface';
-import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { plurality } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
-
-export interface ReceiptItem {
-  id: number;
-  name: string;
-  price: number;
-  payers: {
-    uid?: string | null;
-    firstName: string;
-    price: number;
-  }[];
-  payersDescription?: string;
-  isHidden?: boolean;
-}
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 
 @IonicPage()
 @Component({
@@ -46,6 +32,7 @@ export class SelectItemsPage {
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
     public modalCtrl: ModalController,
+    public ablyTicketService: AblyTicketService
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -60,12 +47,14 @@ export class SelectItemsPage {
   }
 
   async addOrRemoveItem(item: any) {
-    if (item.loading) return;
-    if (item.isItemOnMyTab) {
-      this.removeItemFromMyTab(item);
-    } else {
-      this.addItemToMyTab(item);
-    }
+    // await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, item.id);
+    await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, item.id);
+    // if (item.loading) return;
+    // if (item.isItemOnMyTab) {
+    //   this.removeItemFromMyTab(item);
+    // } else {
+    //   this.addItemToMyTab(item);
+    // }
   }
 
   async addItemToMyTab(item: any) {
@@ -182,8 +171,8 @@ export class SelectItemsPage {
 
   inviteOthers() {
     const modal = this.modalCtrl.create('InviteOthersPage', {
-      tabNumber: this.ticketService.firestoreTicket.tab_id,
-      users: this.ticketService.users,
+      tabNumber: this.ablyTicketService.ticket.ticket_number,
+      users: this.ablyTicketService.ticket.users,
     });
     modal.present();
   }

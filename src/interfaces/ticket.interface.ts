@@ -8,7 +8,7 @@ import { TicketTotal } from './ticket-total.interface';
 import { TicketPayment } from './ticket-payment.interface';
 
 // Keep up to date with tabify-server/src/entity/ticket.entity.ts
-export interface Ticket {
+export interface Ticket extends FrontendTicket {
   id?: number;
   firestore_doc_id?: string;
   ticket_number?: number;
@@ -22,4 +22,8 @@ export interface Ticket {
   ticket_status?: TicketStatus;
   ticketTotal?: TicketTotal;
   ticketPayments?: TicketPayment[];
+}
+
+interface FrontendTicket {
+  ticketUsersDescription?: string;
 }

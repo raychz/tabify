@@ -3,11 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
 import { TicketUpdates } from '../../enums/';
+import { Ticket } from '../../interfaces/ticket.interface';
+import { TicketUser } from '../../interfaces/ticket-user.interface';
+import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
+import { getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
 @Injectable()
 export class AblyTicketService {
-  ticket: any;
+  ticket: Ticket;
 
   constructor(
     public ablyService: AblyService,
@@ -37,8 +41,13 @@ export class AblyTicketService {
           this.onTicketUserRemoved(message.data);
           console.log("TICKET_USER_REMOVED", message);
           break;
-        case TicketUpdates.TICKET_ITEM_USERS_UPDATED:
+        case TicketUpdates.TICKET_USERS_UPDATED:
+          this.onTicketUsersUpdated(message.data);
           console.log("TICKET_ITEM_USERS_UPDATED", message);
+          break;
+        case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
+          this.onTicketItemUsersReplaced(message.data);
+          console.log("TICKET_ITEM_USERS_REPLACED", message);
           break;
         case TicketUpdates.TICKET_PAYMENTS_UPDATED:
           console.log("TICKET_PAYMENTS_UPDATED", message);
@@ -62,31 +71,31 @@ export class AblyTicketService {
     return ticket;
   }
 
-  private onTicketUserAdded(message: any) {
+  private onTicketUserAdded(addedTicketUser: TicketUser) {
     if (!this.ticket) {
       console.error('The ticket is falsy, but an Ably message was received.')
       return;
     }
 
-    const ticketUserIndex = this.ticket.users.findIndex(ticketUser => ticketUser.id === message.id);
+    const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === addedTicketUser.id);
     if (ticketUserIndex > -1) {
       console.log("This ticket user already exists in the ticket. Replacing...");
-      this.ticket.users[ticketUserIndex] = message;
+      this.ticket.users[ticketUserIndex] = addedTicketUser;
     } else {
       console.log("A new ticket user was added.");
-      this.ticket.users.push(message);
+      this.ticket.users.push(addedTicketUser);
     }
 
     console.log('Updated ticket', this.ticket);
   }
 
-  private onTicketUserRemoved(message: any) {
+  private onTicketUserRemoved(removedTicketUser: TicketUser) {
     if (!this.ticket) {
       console.error('The ticket is falsy, but an Ably message was received.')
       return;
     }
 
-    const ticketUserIndex = this.ticket.users.findIndex(ticketUser => ticketUser.id === message.id);
+    const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === removedTicketUser.id);
     if (ticketUserIndex > -1) {
       console.log("A ticket user was removed.");
       this.ticket.users.splice(ticketUserIndex, 1);
@@ -95,5 +104,28 @@ export class AblyTicketService {
     }
 
     console.log('Updated ticket', this.ticket);
+  }
+
+  private onTicketUsersUpdated(updatedTicketUsers: TicketUser[]) {
+    // Merge the properties of each user in this.ticket.users that is also in updatedTicketUsers
+    updatedTicketUsers.forEach(updatedTicketUser => {
+      const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === updatedTicketUser.id);
+      if (ticketUserIndex > -1) {
+        this.ticket.users[ticketUserIndex] = {
+          ...this.ticket.users[ticketUserIndex],
+          ...updatedTicketUser
+        };
+      } else {
+        console.error('The updated ticket user could not be found.')
+      }
+    });
+  }
+
+  private onTicketItemUsersReplaced(ticketItemUsers: TicketItemUser[]) {
+
+  }
+
+  synchronizeFrontendTicket() {
+    this.ticket.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.ticket.users);
   }
 }

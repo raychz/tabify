@@ -11,6 +11,7 @@ import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
+import { TicketItem } from '../../interfaces/ticket-item.interface';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
@@ -206,8 +207,9 @@ export class TicketService {
     this.destroySubscriptions();
   }
 
-  public findUserShareOfItem(item: FirestoreTicketItem, uid: string) {
-    return item.users.find(u => u.uid === uid).price;
+  public findUserShareOfItem(item: TicketItem, uid: string) {
+    console.log("CALLING", item, uid);
+    return item.users.find(u => u.user.uid === uid).price;
   }
 
   /**

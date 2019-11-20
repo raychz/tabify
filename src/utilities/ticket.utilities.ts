@@ -2,6 +2,7 @@
 
 import { abbreviateName } from './general.utilities';
 import { FirestoreTicketItem } from '../services/ticket/ticket.service';
+import { TicketUser } from '../interfaces/ticket-user.interface';
 
 /**
  * Returns a string to describe the users who have claimed a ticket item.
@@ -100,10 +101,10 @@ export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: nu
  * @param users List of users
  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
  */
-export const getSelectItemsTicketUsersDescription = (users: any[] = [], userDisplayLimit: number = 3) => {
+export const getSelectItemsTicketUsersDescription = (users: TicketUser[] = [], userDisplayLimit: number = 3) => {
     if (!users || users.length === 0) return 'No users on this tab.';
 
-    const abbreviatedNames = users.map(user => abbreviateName(user.name));
+    const abbreviatedNames = users.map(u => abbreviateName(u.user.userDetail.displayName));
 
     if (abbreviatedNames.length > userDisplayLimit) {
         const overflowNames = abbreviatedNames.splice(userDisplayLimit);

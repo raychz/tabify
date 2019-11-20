@@ -1,7 +1,10 @@
 import { Ticket } from "./ticket.interface";
 import { TicketItemUser } from "./ticket-item-user.interface";
 
-export interface TicketItem {
+/**
+ * The properties in this interface are representative of a backend TicketItem
+ */
+export interface TicketItem extends FrontendTicketItem {
   id?: number;
   ticket_item_id?: number;
   ticket?: Ticket;
@@ -9,4 +12,14 @@ export interface TicketItem {
   price?: number;
   quantity?: number;
   users?: TicketItemUser[];
+}
+
+/**
+ * The properties in this interface are specific to the frontend
+ */
+interface FrontendTicketItem {
+  isItemOnMyTab?: boolean;
+  payersDescription?: string;
+  loading?: boolean;
+  userShareOfItem?: number;
 }
