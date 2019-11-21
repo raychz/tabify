@@ -590,7 +590,7 @@ export class TicketService {
       this.updateItemsAndUsers();
     }
 
-    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
+    // this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
     this.updateOverallUsersProgress();
 
     if (this.curUser && this.curUser.totals && this.curUser.totals.tip === 0) {
