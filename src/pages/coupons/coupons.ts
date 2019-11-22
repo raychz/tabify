@@ -44,7 +44,6 @@ export class CouponsPage {
     try {
       this.coupons = await this.couponService.getCoupons() as ICoupon[];
       this.expandedCouponId = -1;
-      console.log(this.coupons);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
