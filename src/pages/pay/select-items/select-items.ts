@@ -12,9 +12,10 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { user } from '../../home/example-stories';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
-import { plurality } from '../../../utilities/general.utilities';
+import { plurality, sleep } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketItem } from '../../../interfaces/ticket-item.interface';
 
 @IonicPage()
 @Component({
@@ -22,6 +23,7 @@ import { AblyTicketService } from '../../../services/ticket/ably-ticket.service'
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
+  userUid = this.auth.getUid();
 
   constructor(
     public navCtrl: NavController,
@@ -46,50 +48,26 @@ export class SelectItemsPage {
     this.ticketService.destroySubscriptions();
   }
 
-  async addOrRemoveItem(item: any) {
-    // await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, item.id);
-    await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, item.id);
-    // if (item.loading) return;
-    // if (item.isItemOnMyTab) {
-    //   this.removeItemFromMyTab(item);
-    // } else {
-    //   this.addItemToMyTab(item);
-    // }
-  }
-
-  async addItemToMyTab(item: any) {
+  async addOrRemoveItem(item: TicketItem) {
+    if (item.loading) return;
     item.loading = true;
-    const {
-      success,
-      message,
-    } = await this.ticketService.addUserToFirestoreTicketItem(
-      item.id
-    );
-    item.loading = false;
-    if (!success) {
-      const error = this.alertCtrl.create({
-        title: 'Error',
-        message,
-        buttons: [
-          {
-            text: 'Ok',
-          },
-        ],
-      });
-      error.present();
-    }
-  }
-
-  async removeItemFromMyTab(item: any) {
-    item.loading = true;
-    const {
-      success,
-      message,
-    } = await this.ticketService.removeUserFromFirestoreTicketItem(
-      item.id
-    );
-    item.loading = false;
-    if (!success) {
+    try {
+      // Loading is set to false in `synchronizeFrontendTicketItems`
+      if (item.usersMap[this.userUid]) {
+        await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, item.id);
+      } else {
+        await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, item.id);
+      }
+    } catch (e) {
+      console.error(e);
+      item.loading = false;
+      let message;
+      if (e.error && e.error.message) {
+        message = e.error.message;
+      } else {
+        // TODO: Consider reloading the ticket here
+        message = `An unknown error occurred. Please try again. ${e}`
+      }
       const error = this.alertCtrl.create({
         title: 'Error',
         message,
@@ -157,16 +135,18 @@ export class SelectItemsPage {
     actionSheet.present();
   }
 
+  // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
-    return this.ticketService.firestoreTicketItems.forEach(async item => {
-      if (!item.isItemOnMyTab) await this.addItemToMyTab(item);
-    });
+    for (const item of this.ablyTicketService.ticket.items) {
+      if (!item.usersMap[this.userUid]) this.addOrRemoveItem(item);
+    }
   }
 
+  // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
-    return this.ticketService.firestoreTicketItems.forEach(async item => {
-      if (item.isItemOnMyTab) await this.removeItemFromMyTab(item);
-    });
+    for (const item of this.ablyTicketService.ticket.items) {
+      if (item.usersMap[this.userUid]) await this.addOrRemoveItem(item);
+    }
   }
 
   inviteOthers() {

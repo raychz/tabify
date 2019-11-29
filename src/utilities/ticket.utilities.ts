@@ -3,14 +3,16 @@
 import { abbreviateName } from './general.utilities';
 import { FirestoreTicketItem } from '../services/ticket/ticket.service';
 import { TicketUser } from '../interfaces/ticket-user.interface';
+import { TicketItem } from '../interfaces/ticket-item.interface';
+import { TicketItemUser } from '../interfaces/ticket-item-user.interface';
 
 /**
  * Returns a string to describe the users who have claimed a ticket item.
  * Ex: "Ray and Hassan shared this."
- * @param users
+ * @param ticketItemUsers
  */
-export const getPayersDescription = (users: any[]) => {
-    const { length: numberOfPayers } = users;
+export const getPayersDescription = (ticketItemUsers: TicketItemUser[]) => {
+    const { length: numberOfPayers } = ticketItemUsers;
 
     let payersDescription = '';
     switch (numberOfPayers) {
@@ -18,10 +20,10 @@ export const getPayersDescription = (users: any[]) => {
             payersDescription = 'Nobody has claimed this.';
             break;
         case 1:
-            payersDescription = `${abbreviateName(users[0].name)} got this.`;
+            payersDescription = `${abbreviateName(ticketItemUsers[0].user.userDetail.displayName)} got this.`;
             break;
         default: {
-            const payersNamesMap = users.map(p => abbreviateName(p.name));
+            const payersNamesMap = ticketItemUsers.map(p => abbreviateName(p.user.userDetail.displayName));
             payersDescription = `${payersNamesMap
                 .slice(0, numberOfPayers - 1)
                 .join(', ')} and ${payersNamesMap[numberOfPayers - 1]} shared this.`;
@@ -35,8 +37,8 @@ export const getPayersDescription = (users: any[]) => {
  * @param item
  * @param uid
  */
-export const isItemOnMyTab = (item: FirestoreTicketItem, uid: any) => {
-    return !!item.users.find(user => user.uid === uid);
+export const isItemOnMyTab = (item: TicketItem, uid: any) => {
+    return !!item.users.find(u => u.user.uid === uid);
 }
 
 /**
@@ -124,4 +126,10 @@ export const getSelectItemsTicketUsersDescription = (users: TicketUser[] = [], u
  */
 export const getItemsOnMyTab = (items: FirestoreTicketItem[] = [], uid: any) => {
     return items.filter((item: FirestoreTicketItem) => item.users.find(user => user.uid === uid));
+}
+
+export const findUserShareOfItem = (item: TicketItem, uid: string) => {
+    const ticketItemUser = item.users.find(u => u.user.uid === uid);
+    if (ticketItemUser) return ticketItemUser.price;
+    return 0;
 }

@@ -18,8 +18,7 @@ export interface TicketItem extends FrontendTicketItem {
  * The properties in this interface are specific to the frontend
  */
 interface FrontendTicketItem {
-  isItemOnMyTab?: boolean;
+  usersMap: { [uid: string]: TicketItemUser };
   payersDescription?: string;
   loading?: boolean;
-  userShareOfItem?: number;
 }

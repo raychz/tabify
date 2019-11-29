@@ -6,7 +6,10 @@ import { TicketUpdates } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
-import { getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
+import { getSelectItemsTicketUsersDescription, isItemOnMyTab, getPayersDescription, findUserShareOfItem } from '../../utilities/ticket.utilities';
+import { TicketItem } from '../../interfaces/ticket-item.interface';
+import { AuthService } from '../../services/auth/auth.service';
+import { keyBy, resolveByString } from '../../utilities/general.utilities';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
 @Injectable()
@@ -17,6 +20,7 @@ export class AblyTicketService {
     public ablyService: AblyService,
     // public ablyTicketUsersService: AblyTicketUsersService,
     private readonly http: HttpClient,
+    private auth: AuthService,
   ) { }
 
   onTicketUpdate(data) {
@@ -86,7 +90,8 @@ export class AblyTicketService {
       this.ticket.users.push(addedTicketUser);
     }
 
-    console.log('Updated ticket', this.ticket);
+    this.synchronizeFrontendTicket();
+    console.log("Updated ticket", this.ticket);
   }
 
   private onTicketUserRemoved(removedTicketUser: TicketUser) {
@@ -103,6 +108,7 @@ export class AblyTicketService {
       console.log("The removed ticket user does not exist in the ticket. Skipping...");
     }
 
+    this.synchronizeFrontendTicket();
     console.log('Updated ticket', this.ticket);
   }
 
@@ -119,13 +125,39 @@ export class AblyTicketService {
         console.error('The updated ticket user could not be found.')
       }
     });
+    this.synchronizeFrontendTicket();
   }
 
-  private onTicketItemUsersReplaced(ticketItemUsers: TicketItemUser[]) {
-
+  private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem["id"] }) {
+    const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
+    ticketItem.users = newTicketItemUsers;
+    this.synchronizeFrontendTicketItems([ticketItem]);
   }
 
+  /** 
+   * Updates the properties in the FrontendTicket interface, including:
+   * - ticketUsersDescription
+   * - usersMap
+   */
   synchronizeFrontendTicket() {
     this.ticket.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.ticket.users);
+    this.ticket.usersMap = keyBy(this.ticket.users, 'user.uid');
+    console.log("THE USER MAP", this.ticket.usersMap);
+  }
+
+  /** 
+   * Updates the properties in the FrontendTicketItem interface, including:
+   * - isItemOnMyTab
+   * - payersDescription
+   * - loading
+   * - userShareOfItem
+   */
+  synchronizeFrontendTicketItems(items: TicketItem[] = this.ticket.items) {
+    items.forEach(item => {
+      item.usersMap = keyBy(item.users, 'user.uid');
+      item.payersDescription = getPayersDescription(item.users);
+      item.loading = false;
+      console.log("ITEM USERS MAP", item.usersMap);
+    });
   }
 }

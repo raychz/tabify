@@ -24,15 +24,15 @@
   <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        <!-- {{ ticketService.userSelectedItemsCount }} -->
+        {{ ablyTicketService.ticket.usersMap[userUid].selectedItemsCount }}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        <!-- ${{ (ticketService.curUser.totals.subtotal / 100 | number: '1.2-2') || 0.0 }} -->
+        ${{ (ablyTicketService.ticket.usersMap[userUid].sub_total / 100 | number: '1.2-2') || 0.0 }}
       </ion-col>
     </ion-row>
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
-        <!-- Selected Item{{ ticketService.userSelectedItemsCount === 1 ? '' : 's'}} -->
+        Selected Item{{ ablyTicketService.ticket.usersMap[userUid].selectedItemsCount === 1 ? '' : 's'}}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
         Your Subtotal
@@ -49,15 +49,15 @@
 <ion-content class="cards-bg">
   <ng-container *ngIf="ablyTicketService.ticket; else loading">
     <ng-container *ngFor="let item of ablyTicketService.ticket.items">
-      <ion-card [class.item-not-on-tab]="!item.isItemOnMyTab" [class.item-on-tab]="item.isItemOnMyTab">
+      <ion-card [class.item-not-on-tab]="!item.usersMap[userUid]" [class.item-on-tab]="item.usersMap[userUid]">
         <div>
           <ion-row (click)="addOrRemoveItem(item)">
-            <ion-col class="modify-item" [class.item-not-on-tab]="!item.isItemOnMyTab"
-              [class.item-on-tab]="item.isItemOnMyTab" text-center col-1>
+            <ion-col class="modify-item" [class.item-not-on-tab]="!item.usersMap[userUid]"
+              [class.item-on-tab]="item.usersMap[userUid]" text-center col-1>
               <div>
-                <ion-icon *ngIf="!item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'"
-                  [name]="item.isItemOnMyTab ? 'ios-checkmark' : 'ios-add'"></ion-icon>
-                <ion-spinner *ngIf="item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'" name="bubbles">
+                <ion-icon *ngIf="!item.loading" [color]="item.usersMap[userUid] ? 'light' : 'primary'"
+                  [name]="item.usersMap[userUid] ? 'ios-checkmark' : 'ios-add'"></ion-icon>
+                <ion-spinner *ngIf="item.loading" [color]="item.usersMap[userUid] ? 'light' : 'primary'" name="bubbles">
                 </ion-spinner>
               </div>
             </ion-col>
@@ -68,8 +68,8 @@
                   <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
-                  <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.isItemOnMyTab">
-                    ${{ item.userShareOfItem / 100 | number: '1.2-2' }} /
+                  <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.usersMap[userUid]">
+                    ${{ item.usersMap[userUid].price / 100 | number: '1.2-2' }} /
                   </span>
                   <span class="total-text">
                     ${{ item.price / 100 | number: '1.2-2' }}

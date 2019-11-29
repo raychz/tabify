@@ -202,6 +202,7 @@ export class TabLookupPage {
   private async initializeTicketMetadata(ticket: any) {
     this.ablyTicketService.ticket = ticket;
     this.ablyTicketService.synchronizeFrontendTicket();
+    this.ablyTicketService.synchronizeFrontendTicketItems();
 
     // Subscribe to Ably ticket channel
     await this.ablyTicketService.subscribeToTicketUpdates(ticket.id);

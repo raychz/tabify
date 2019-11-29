@@ -26,4 +26,5 @@ export interface Ticket extends FrontendTicket {
 
 interface FrontendTicket {
   ticketUsersDescription?: string;
+  usersMap: { [uid: string]: TicketUser };
 }

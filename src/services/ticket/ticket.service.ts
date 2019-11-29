@@ -158,14 +158,12 @@ export class TicketService {
   }
 
   public async addUserToTicketItem(ticketId: number, itemId: number) {
-    console.log("CALLING ADD USER TO TICKET ITEM");
     return await this.http
       .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
       .toPromise();
   }
 
   public async removeUserFromTicketItem(ticketId: number, itemId: number) {
-    console.log("CALLING ADD USER TO TICKET ITEM");
     return await this.http
       .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
       .toPromise();
@@ -564,11 +562,11 @@ export class TicketService {
    * @param firestoreTicketItems
    */
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
-    this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
-      ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
-    if (this.users) {
-      this.updateItemsAndUsers();
-    }
+    // this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
+    //   ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
+    // if (this.users) {
+    //   this.updateItemsAndUsers();
+    // }
   }
 
   /**
