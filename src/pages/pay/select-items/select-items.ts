@@ -150,10 +150,7 @@ export class SelectItemsPage {
   }
 
   inviteOthers() {
-    const modal = this.modalCtrl.create('InviteOthersPage', {
-      tabNumber: this.ablyTicketService.ticket.ticket_number,
-      users: this.ablyTicketService.ticket.users,
-    });
+    const modal = this.modalCtrl.create('InviteOthersPage');
     modal.present();
   }
 }

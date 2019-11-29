@@ -103,7 +103,7 @@ export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: nu
  * @param users List of users
  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
  */
-export const getSelectItemsTicketUsersDescription = (users: TicketUser[] = [], userDisplayLimit: number = 3) => {
+export const getSelectItemsTicketUsersDescription = (users: TicketUser[] = [], userDisplayLimit: number = 2) => {
     if (!users || users.length === 0) return 'No users on this tab.';
 
     const abbreviatedNames = users.map(u => abbreviateName(u.user.userDetail.displayName));

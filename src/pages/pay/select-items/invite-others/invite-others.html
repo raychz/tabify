@@ -19,7 +19,7 @@
       <p>
         Ask others in the party to download Tabify on the App Store, or visit
         our mobile site at m.tabifyapp.com. Then, enter tab
-        <b>{{ tabNumber }}</b> on the "Join Tab" page.
+        <b>{{ ablyTicketService.ticket.ticket_number }}</b> on the "Join Tab" page.
       </p>
     </ion-card-content>
   </ion-card>
@@ -29,19 +29,19 @@
       color="primary"
       class="payers-icon"
       name="ios-{{
-        users && users.length > 1 ? 'people' : 'person'
+        ablyTicketService.ticket.users && ablyTicketService.ticket.users.length > 1 ? 'people' : 'person'
       }}"
     ></ion-icon>
     <span
       class="payers-count"
     >
-      {{ users.length }}:
+      {{ ablyTicketService.ticket.users.length }}:
     </span>
     Current Guests
     </ion-card-header>
     <ion-card-content>
-      <p *ngFor="let user of users">
-        {{ user.name }}
+      <p *ngFor="let u of ablyTicketService.ticket.users">
+        {{ u.user.userDetail.displayName }}
       </p>
     </ion-card-content>
   </ion-card>
