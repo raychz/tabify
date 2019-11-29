@@ -36,28 +36,36 @@ export class AblyTicketService {
     });
     await ticketChannel.subscribe((message) => {
       console.log("RECEIVED A MESSAGE", message);
-      switch (message.name) {
-        case TicketUpdates.TICKET_USER_ADDED:
-          this.onTicketUserAdded(message.data);
-          console.log("TICKET_USER_ADDED", message);
-          break;
-        case TicketUpdates.TICKET_USER_REMOVED:
-          this.onTicketUserRemoved(message.data);
-          console.log("TICKET_USER_REMOVED", message);
-          break;
-        case TicketUpdates.TICKET_USERS_UPDATED:
-          this.onTicketUsersUpdated(message.data);
-          console.log("TICKET_ITEM_USERS_UPDATED", message);
-          break;
-        case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
-          this.onTicketItemUsersReplaced(message.data);
-          console.log("TICKET_ITEM_USERS_REPLACED", message);
-          break;
-        case TicketUpdates.TICKET_PAYMENTS_UPDATED:
-          console.log("TICKET_PAYMENTS_UPDATED", message);
-          break;
-        default:
-          throw "Message name does not correspond to a handler";
+      const messages = [];
+      if (message.name === TicketUpdates.MULTIPLE_UPDATES) {
+        messages.push(...message.data);
+      } else {
+        messages.push(message);
+      }
+      for (const _message of messages) {
+        switch (_message.name) {
+          case TicketUpdates.TICKET_USER_ADDED:
+            this.onTicketUserAdded(_message.data);
+            console.log("TICKET_USER_ADDED", _message);
+            break;
+          case TicketUpdates.TICKET_USER_REMOVED:
+            this.onTicketUserRemoved(_message.data);
+            console.log("TICKET_USER_REMOVED", _message);
+            break;
+          case TicketUpdates.TICKET_USERS_UPDATED:
+            this.onTicketUsersUpdated(_message.data);
+            console.log("TICKET_ITEM_USERS_UPDATED", _message);
+            break;
+          case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
+            this.onTicketItemUsersReplaced(_message.data);
+            console.log("TICKET_ITEM_USERS_REPLACED", _message);
+            break;
+          case TicketUpdates.TICKET_PAYMENTS_UPDATED:
+            console.log("TICKET_PAYMENTS_UPDATED", _message);
+            break;
+          default:
+            throw "Message name does not correspond to a handler";
+        }
       }
     });
   }
