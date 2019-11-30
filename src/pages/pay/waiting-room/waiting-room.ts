@@ -5,6 +5,7 @@ import { TicketService, UserStatus } from '../../../services/ticket/ticket.servi
 import { sleep } from '../../../utilities/general.utilities';
 import { Platform } from 'ionic-angular';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 
 @IonicPage()
 @Component({
@@ -17,6 +18,7 @@ export class WaitingRoomPage {
   userStatus = UserStatus;
   moveToTaxTip = false;
   firstConfirm = true;
+  currentUserUid = this.auth.getUid();
 
   constructor(
     public navCtrl: NavController,
@@ -24,19 +26,30 @@ export class WaitingRoomPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public platform: Platform,
-    public alertCtrl: AlertService
-  ) {}
+    public alertCtrl: AlertService,
+    public ablyTicketService: AblyTicketService,
+  ) { }
 
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
 
+  /** Returns true if at least one item on the ticket is shared by multiple users */
+  areTicketItemsShared() {
+    return this.ablyTicketService.ticket.items.some(item => item.users.length > 1);
+  }
+
+  /** Returns true if at least one item on the ticket is unclaimed */
+  areTicketItemsUnclaimed() {
+    return this.ablyTicketService.ticket.items.some(item => item.users.length === 0);
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
 
-    if(this.ticketService.curUser.status === UserStatus.Confirmed) {
-      this.firstConfirm = false;
-    }
+    // if(this.ticketService.curUser.status === UserStatus.Confirmed) {
+    //   this.firstConfirm = false;
+    // }
   }
 
   checkConfirmedStatus(): boolean {
@@ -80,7 +93,7 @@ export class WaitingRoomPage {
     }
   }
 
-  async changeUserConfirmStatus () {
+  async changeUserConfirmStatus() {
     if (this.ticketService.curUser.status !== UserStatus.Confirmed) {
       await this.ticketService.changeUserStatus(UserStatus.Confirmed);
     } else {

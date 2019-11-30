@@ -53,7 +53,7 @@ export class SelectItemsPage {
     item.loading = true;
     try {
       // Loading is set to false in `synchronizeFrontendTicketItems`
-      if (item.usersMap[this.userUid]) {
+      if (item.usersMap.has(this.userUid)) {
         await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, item.id);
       } else {
         await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, item.id);
@@ -82,14 +82,14 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    await this.ticketService.changeUserStatus(UserStatus.Waiting);
+    // await this.ticketService.changeUserStatus(UserStatus.Waiting);
     this.navCtrl.push('WaitingRoomPage');
   }
 
   async confirmSelections() {
     const loading = this.loader.create();
     await loading.present();
-    if (this.ticketService.curUser.ticketItems.length) {
+    if (this.ablyTicketService.ticket.usersMap.get(this.userUid).selectedItemsCount) {
       this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
@@ -138,14 +138,14 @@ export class SelectItemsPage {
   // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
     for (const item of this.ablyTicketService.ticket.items) {
-      if (!item.usersMap[this.userUid]) this.addOrRemoveItem(item);
+      if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
     }
   }
 
   // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
     for (const item of this.ablyTicketService.ticket.items) {
-      if (item.usersMap[this.userUid]) await this.addOrRemoveItem(item);
+      if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
     }
   }
 

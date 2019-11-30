@@ -18,7 +18,7 @@ export interface TicketItem extends FrontendTicketItem {
  * The properties in this interface are specific to the frontend
  */
 interface FrontendTicketItem {
-  usersMap: { [uid: string]: TicketItemUser };
+  usersMap: Map<string, TicketItemUser>;
   payersDescription?: string;
   loading?: boolean;
 }

@@ -6,7 +6,7 @@ import { TicketUpdates } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
-import { getSelectItemsTicketUsersDescription, isItemOnMyTab, getPayersDescription, findUserShareOfItem } from '../../utilities/ticket.utilities';
+import { getSelectItemsTicketUsersDescription, isItemOnMyTab, getPayersDescription, findUserShareOfItem, getTicketItemName } from '../../utilities/ticket.utilities';
 import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { keyBy, resolveByString } from '../../utilities/general.utilities';
@@ -165,7 +165,6 @@ export class AblyTicketService {
       item.usersMap = keyBy(item.users, 'user.uid');
       item.payersDescription = getPayersDescription(item.users);
       item.loading = false;
-      console.log("ITEM USERS MAP", item.usersMap);
     });
   }
 }

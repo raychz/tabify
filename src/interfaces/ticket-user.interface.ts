@@ -1,7 +1,7 @@
 import { Ticket } from "./ticket.interface";
 import { User } from "./user.interface";
 
-export interface TicketUser {
+export interface TicketUser extends FrontendTicketUser {
   id: number;
   ticket: Ticket;
   user: User;
@@ -15,4 +15,9 @@ export interface TicketUser {
   total: number;
   /** Selected items count */
   selectedItemsCount: number;
+}
+
+interface FrontendTicketUser {
+  /** Controls whether the waiting room card for this user is expanded */
+  isWaitingRoomExpanded: boolean;
 }

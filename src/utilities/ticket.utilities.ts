@@ -133,3 +133,12 @@ export const findUserShareOfItem = (item: TicketItem, uid: string) => {
     if (ticketItemUser) return ticketItemUser.price;
     return 0;
 }
+
+export const getTicketItemName = (name: string) => {
+    if (name.toLowerCase().includes('taco')) {
+        return `🌮 ${name}`;
+    } else if (name.toLowerCase().includes('pizza')) {
+        return `🍕 ${name}`;
+    }
+    return name;
+}
