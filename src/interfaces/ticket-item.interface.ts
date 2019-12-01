@@ -21,4 +21,8 @@ interface FrontendTicketItem {
   usersMap: Map<string, TicketItemUser>;
   payersDescription?: string;
   loading?: boolean;
+
+  // TODO: Replace the following with actual review/feedback containers
+  rating: number;
+  feedback: string;
 }

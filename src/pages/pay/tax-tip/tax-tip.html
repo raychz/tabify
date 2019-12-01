@@ -7,12 +7,12 @@
 <ion-content class='cards-bg'>
   <ion-card>
     <ion-card-header>
-      How was {{ticketService.ticket.location.name}}?
+      How was {{ablyTicketService.ticket.location.name}}?
     </ion-card-header>
     <ion-card-content>
       <p id="rate-and-review">Rate and review the items you ordered.</p>
       <ng-container *ngFor='let item of myTabItems; let i=index;'>
-        <ion-item class='total tab-item' *ngIf="i<displayLimit || displayAllItems">
+        <ion-item class='total tab-item' *ngIf="(i<displayLimit) || displayAllItems">
           <h2 class="line">{{item.name}}
             <span class='line-details' *ngIf='item.users.length > 1'> (shared)</span>
           </h2>
@@ -25,7 +25,7 @@
             </ion-item>
           </div>
           <div item-end>
-            <h2>${{item.userShare! / 100 | number:'1.2-2'}}</h2>
+            <h2>${{item.usersMap.get(auth.getUid()).price / 100 | number:'1.2-2'}}</h2>
           </div>
         </ion-item>
       </ng-container>
@@ -44,36 +44,36 @@
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{ticketService.curUser.totals.subtotal / 100 | number: '1.2-2'}}</h2>
+          <h2>${{currentUser.sub_total / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
-          <span class='line-details'>({{ticketService.userTipPercentage}}%)</span>
+          <span class='line-details'>({{currentUser.tipPercentage}}%)</span>
           <ion-icon class="edit-icon" name='md-create'></ion-icon>
         </h2>
         <div item-end>
-          <h2>${{ticketService.curUser.totals.tip / 100 | number: '1.2-2'}}</h2>
+          <h2>${{currentUser.tips / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
         <h2>Tax
-          <span class='line-details'>({{ticketService.ticket.location.tax_rate}}%)</span>
+          <span class='line-details'>({{ablyTicketService.ticket.location.tax_rate}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{ticketService.curUser.totals.tax / 100 | number: '1.2-2'}}</h2>
+          <h2>${{currentUser.tax / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{(ticketService.curUser.totals.total + ticketService.curUser.totals.tip) / 100 | number: '1.2-2'}}</h2>
+          <h2>${{(currentUser.total + currentUser.tips) / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item (click)="editPaymentMethod()">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
         <div item-end>
-          <h2>{{ticketService.userPaymentMethod?.card_type}} ...{{ticketService.userPaymentMethod?.last_four_digits}}
+          <h2>{{currentUser.paymentMethod?.card_type}} ...{{currentUser.paymentMethod?.last_four_digits}}
             <ion-icon name="md-create" class="edit-icon"></ion-icon>
           </h2>
         </div>
@@ -85,7 +85,7 @@
 <ion-footer>
   <ion-toolbar border-top>
     <button ion-button block (click)="pay()">Submit Payment of
-      ${{(ticketService.curUser.totals.total + ticketService.curUser.totals.tip) / 100  | number: '1.2-2'}}
+      ${{(currentUser.total + currentUser.tips) / 100  | number: '1.2-2'}}
     </button>
   </ion-toolbar>
 </ion-footer>

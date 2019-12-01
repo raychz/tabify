@@ -1,5 +1,6 @@
 import { Ticket } from "./ticket.interface";
 import { User } from "./user.interface";
+import { PaymentMethod } from "./payment-method.interface";
 
 export interface TicketUser extends FrontendTicketUser {
   id: number;
@@ -20,4 +21,8 @@ export interface TicketUser extends FrontendTicketUser {
 interface FrontendTicketUser {
   /** Controls whether the waiting room card for this user is expanded */
   isWaitingRoomExpanded: boolean;
+  /** Selected payment method */
+  paymentMethod: PaymentMethod;
+  /** Selected tip percentage */
+  tipPercentage: number;
 }

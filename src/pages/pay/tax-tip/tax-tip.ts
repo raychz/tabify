@@ -11,6 +11,8 @@ import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketItem } from '../../../interfaces/ticket-item.interface';
 
 @IonicPage()
 @Component({
@@ -19,7 +21,8 @@ import { sleep } from '../../../utilities/general.utilities';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  myTabItems: FirestoreTicketItem[] = [];
+  currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+  myTabItems: TicketItem[] = [];
   displayAllItems = false;
   displayLimit = 2;
 
@@ -33,6 +36,7 @@ export class TaxTipPage {
     public paymentMethodService: PaymentMethodService,
     public paymentService: PaymentService,
     public modalCtrl: ModalController,
+    public ablyTicketService: AblyTicketService,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -53,15 +57,11 @@ export class TaxTipPage {
         console.error('something went wrong again, not retrying', e);
       }
     }
-    this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
-      .map(item => {
-        const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
-        const userShare = (nestedUser && nestedUser.price) || 0;
-        return {
-          ...item,
-          userShare
-        };
-      });
+    this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
+    // TODO: Enter the user's default tip percentage here
+    this.currentUser.tipPercentage = 18;
+    this.currentUser.tips =
+      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.sub_total));
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
@@ -70,7 +70,7 @@ export class TaxTipPage {
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentMethodService.paymentMethods.length) {
-      this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods[0];
+      this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
     await loading.dismiss();
   }

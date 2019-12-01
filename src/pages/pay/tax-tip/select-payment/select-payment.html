@@ -11,12 +11,12 @@
 
 
 <ion-content padding>
-  <ion-list radio-group [(ngModel)]="ticketService.userPaymentMethod">
+  <ion-list radio-group [(ngModel)]="ablyTicketService.ticket.usersMap.get(auth.getUid()).paymentMethod">
     <ion-item>
       Current Payment Methods
     </ion-item>
     <ion-item *ngFor="let method of paymentMethodService.paymentMethods">
-      <ion-icon [color]="ticketService.userPaymentMethod === method ? 'tabify' : 'white'" name="card" item-start></ion-icon>
+      <ion-icon [color]="ablyTicketService.ticket.usersMap.get(auth.getUid()).paymentMethod === method ? 'tabify' : 'white'" name="card" item-start></ion-icon>
       <ion-label> {{method.card_type}} ...{{method.last_four_digits}}</ion-label>
       <ion-note item-end>
         {{method.month}}/{{method.year | number | slice:-2}}
