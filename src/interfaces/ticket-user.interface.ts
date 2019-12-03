@@ -1,6 +1,7 @@
 import { Ticket } from "./ticket.interface";
 import { User } from "./user.interface";
 import { PaymentMethod } from "./payment-method.interface";
+import { TicketUserStatus } from "../enums";
 
 export interface TicketUser extends FrontendTicketUser {
   id: number;
@@ -16,6 +17,8 @@ export interface TicketUser extends FrontendTicketUser {
   total: number;
   /** Selected items count */
   selectedItemsCount: number;
+  /** Ticket user status */
+  status?: TicketUserStatus;
 }
 
 interface FrontendTicketUser {

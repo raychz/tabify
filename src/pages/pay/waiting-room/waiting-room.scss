@@ -27,6 +27,15 @@ page-waiting-room {
     margin: auto;
   }
 
+  .waiting-user {
+    &-col {
+      padding: 0px;
+      .item {
+        padding-left: 0px;
+      }
+    }
+  }
+
   ion-content {
     padding-bottom: 10px;
     ion-card {

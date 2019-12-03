@@ -157,15 +157,15 @@ export class TicketService {
       .toPromise();
   }
 
-  public async addUserToTicketItem(ticketId: number, itemId: number) {
+  public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
     return await this.http
-      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, { })
       .toPromise();
   }
 
-  public async removeUserFromTicketItem(ticketId: number, itemId: number) {
+  public async removeUserFromTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
     return await this.http
-      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users`, {})
+      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`)
       .toPromise();
   }
 
@@ -272,7 +272,7 @@ export class TicketService {
           const userUid = doc.get('uid');
           const authUid = this.auth.getUid();
           if (userUid === authUid) {
-            const user = users.find( u => u.uid === authUid);
+            const user = users.find(u => u.uid === authUid);
             if (user) {
               user.status = status;
               transaction.set(
@@ -515,7 +515,7 @@ export class TicketService {
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
-    this.users.forEach(u => {u.totals.subtotal = 0; u.ticketItems = []});
+    this.users.forEach(u => { u.totals.subtotal = 0; u.ticketItems = [] });
     this.curUser = { ...this.users.find((user) => user.uid === this.auth.getUid()) };
     this.firestoreTicketItems.forEach((item) => {
       if (item.users.length < 1) {

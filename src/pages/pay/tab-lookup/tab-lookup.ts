@@ -11,6 +11,7 @@ import { FraudPreventionCode } from '../../../interfaces/fraud-prevention-code.i
 import { tap } from 'rxjs/operators';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketUserStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -132,42 +133,43 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-    this.navCtrl.push('SelectItemsPage');
-    // switch (this.ticketService.curUser.status) {
-    //   case UserStatus.Selecting:
-    //     this.navCtrl.push('SelectItemsPage');
-    //     break;
-    //   case UserStatus.Waiting:
-    //     this.navCtrl.push('SelectItemsPage');
-    //     this.navCtrl.push('WaitingRoomPage');
-    //     break;
-    //   case UserStatus.Confirmed:
-    //     this.navCtrl.push('SelectItemsPage');
-    //     this.navCtrl.push('WaitingRoomPage');
-    //     break;
-    //   case UserStatus.Paying:
-    //     this.navCtrl.push('TaxTipPage');
-    //     break;
-    //   case UserStatus.Paid:
-    //     if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
-    //       const modal = this.alertCtrl.create({
-    //         title: 'Tab already paid!',
-    //         message: 'You have already paid your tab, no need to do anything else.',
-    //         buttons: [
-    //           {
-    //             text: 'Ok',
-    //           },
-    //         ],
-    //       });
-    //       modal.present();
-    //     } else {
-    //       this.navCtrl.push('StatusPage');
-    //     }
-    //     break;
-    //   default:
-    //     throw new Error('Unknown user status')
-    // }
-    // this.ticketService.firestoreStatus$.complete();
+    // TODO: Make the following compatible with guards at the component level. For example,
+    // if the user status is WAITING, the SelectItemsPage guard wouldn't allow the page to be created
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    switch (currentUser.status) {
+      case TicketUserStatus.SELECTING:
+        this.navCtrl.push('SelectItemsPage');
+        break;
+      case TicketUserStatus.WAITING:
+        this.navCtrl.push('SelectItemsPage');
+        this.navCtrl.push('WaitingRoomPage');
+        break;
+      case TicketUserStatus.CONFIRMED:
+        this.navCtrl.push('SelectItemsPage');
+        this.navCtrl.push('WaitingRoomPage');
+        break;
+      case TicketUserStatus.PAYING:
+        this.navCtrl.push('TaxTipPage');
+        break;
+      case TicketUserStatus.PAID:
+        // if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
+        //   const modal = this.alertCtrl.create({
+        //     title: 'Tab already paid!',
+        //     message: 'You have already paid your tab, no need to do anything else.',
+        //     buttons: [
+        //       {
+        //         text: 'Ok',
+        //       },
+        //     ],
+        //   });
+        //   modal.present();
+        // } else {
+        //   this.navCtrl.push('StatusPage');
+        // }
+        break;
+      default:
+        throw new Error('Unknown user status')
+    }
   }
 
   async getFraudPreventionCode() {
@@ -208,7 +210,20 @@ export class TabLookupPage {
     await this.ablyTicketService.subscribeToTicketUpdates(ticket.id);
 
     // Add user to database ticket
-    await this.ticketService.addUserToDatabaseTicket(ticket.id);
+    try {
+      await this.ticketService.addUserToDatabaseTicket(ticket.id);
+    } catch (e) {
+      if (e.status === 403) {
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+      e.stopErrorPropagation = true;
+      throw e;
+    }
 
     // Add user to Firestore ticket
     // try {

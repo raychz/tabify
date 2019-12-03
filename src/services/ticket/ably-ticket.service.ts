@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
-import { TicketUpdates } from '../../enums/';
+import { TicketUpdates, TicketUserStatus } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
 import { getSelectItemsTicketUsersDescription, isItemOnMyTab, getPayersDescription, findUserShareOfItem, getTicketItemName } from '../../utilities/ticket.utilities';
 import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
-import { keyBy, resolveByString } from '../../utilities/general.utilities';
+import { keyBy, resolveByString, abbreviateName } from '../../utilities/general.utilities';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
 @Injectable()
@@ -83,6 +83,12 @@ export class AblyTicketService {
     return ticket;
   }
 
+  async setTicketUserStatus(ticketId: number, ticketUserId: number, status: TicketUserStatus) {
+    const res = await this.http
+      .patch(`${environment.serverUrl}/tickets/${ticketId}/users`, { status, ticketUserId })
+      .toPromise();
+  }
+
   private onTicketUserAdded(addedTicketUser: TicketUser) {
     if (!this.ticket) {
       console.error('The ticket is falsy, but an Ably message was received.')
@@ -149,12 +155,14 @@ export class AblyTicketService {
    */
   synchronizeFrontendTicket() {
     this.ticket.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.ticket.users);
+    // TODO: Consider moving this to the backend
+    this.ticket.users.forEach(u => u.user.userDetail.abbreviatedName = abbreviateName(u.user.userDetail.displayName));
     this.ticket.usersMap = keyBy(this.ticket.users, 'user.uid');
     console.log("THE USER MAP", this.ticket.usersMap);
   }
 
   /** 
-   * Updates the properties in the FrontendTicketItem interface, including:
+   * Updates the properties in the FrontendTicketItem interface for the given items, including:
    * - isItemOnMyTab
    * - payersDescription
    * - loading

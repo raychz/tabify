@@ -13,6 +13,7 @@ import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketItem } from '../../../interfaces/ticket-item.interface';
+import { TicketStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -82,20 +83,39 @@ export class TaxTipPage {
   }
 
   async pay() {
-    if (!this.ticketService.userPaymentMethod) {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    if (!currentUser.paymentMethod) {
       throw new Error("No payment method selected!")
     }
     const loading = this.loader.create();
     await loading.present();
     try {
       const response = await this.paymentService.sendTicketPayment(
-        this.ticketService.ticket.id,
-        this.ticketService.userPaymentMethod.id,
-        this.ticketService.curUser.totals.total,
-        this.ticketService.curUser.totals.tip,
+        this.ablyTicketService.ticket.id,
+        this.currentUser.paymentMethod.id,
+        this.currentUser.total,
+        this.currentUser.tips,
       ) as any;
-      await this.ticketService.changeUserStatus(UserStatus.Paid)
-      await this.navCtrl.push('StatusPage')
+      if (response.ticket.ticket_status === TicketStatus.CLOSED) {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+
+      await this.navCtrl.setRoot('HomePage');
+      // TODO: Reintegrate the status page here
+      // await this.ticketService.changeUserStatus(UserStatus.Paid)
+      // await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',

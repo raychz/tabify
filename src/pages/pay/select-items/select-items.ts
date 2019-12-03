@@ -16,6 +16,7 @@ import { plurality, sleep } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketItem } from '../../../interfaces/ticket-item.interface';
+import { TicketUserStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -53,10 +54,11 @@ export class SelectItemsPage {
     item.loading = true;
     try {
       // Loading is set to false in `synchronizeFrontendTicketItems`
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       if (item.usersMap.has(this.userUid)) {
-        await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, item.id);
+        await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, currentUser.id, item.id);
       } else {
-        await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, item.id);
+        await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, currentUser.id, item.id);
       }
     } catch (e) {
       console.error(e);
@@ -82,7 +84,8 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    // await this.ticketService.changeUserStatus(UserStatus.Waiting);
+    const currentTicketUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentTicketUser.id, TicketUserStatus.WAITING);
     this.navCtrl.push('WaitingRoomPage');
   }
 
