@@ -11,5 +11,5 @@ export const environment = {
 		messagingSenderId: '1044249255712',
 	},
 	spreedlyEnvKey: 'SDmRjD2a2xi5KE5rQ9GPBAsBnTb',
-	ablyKey: 'N0WaAg.cYTfTg:XJnXR07hwbcc6Sxz',
+	ablyKey: 'bce9aQ.gOB9Dg:v8yQAtcsP-zq0tls',
 };
