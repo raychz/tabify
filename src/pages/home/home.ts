@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController, ModalController } from 'ionic-angular';
-import { ILocation } from '../../interfaces/location.interface';
+import { Location } from '../../interfaces/location.interface';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { PaymentMethodService } from '../../services/payment/payment-method.service';
 import { AlertService } from '../../services/utilities/alert.service';
@@ -8,14 +8,6 @@ import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
-
-export interface Story {
-  location: ILocation;
-  members: string[];
-  timestamp: number | string;
-  likes: number;
-  comments: number;
-}
 
 @IonicPage()
 @Component({
@@ -46,7 +38,8 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.getUserStories();
+    // TODO: Remove once newsfeed is fixed
+    // this.getUserStories();
   }
 
   async getUserStories() {

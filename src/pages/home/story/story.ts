@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController, ActionSheetContro
 import { StoryService } from '../../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../../services/auth/auth.service';
-import { IUser } from '../../../interfaces/user.interface';
+import { User } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
@@ -17,7 +17,7 @@ export class StoryPage {
 
   story: any;
   comments: any[] = [];
-  user = <IUser>{};
+  user = <any>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
   userNamesDisplay: IUsersDescription;

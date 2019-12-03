@@ -11,6 +11,9 @@ import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketItem } from '../../../interfaces/ticket-item.interface';
+import { TicketStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -19,7 +22,8 @@ import { sleep } from '../../../utilities/general.utilities';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  myTabItems: FirestoreTicketItem[] = [];
+  currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+  myTabItems: TicketItem[] = [];
   displayAllItems = false;
   displayLimit = 2;
 
@@ -33,6 +37,7 @@ export class TaxTipPage {
     public paymentMethodService: PaymentMethodService,
     public paymentService: PaymentService,
     public modalCtrl: ModalController,
+    public ablyTicketService: AblyTicketService,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -53,15 +58,11 @@ export class TaxTipPage {
         console.error('something went wrong again, not retrying', e);
       }
     }
-    this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
-      .map(item => {
-        const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
-        const userShare = (nestedUser && nestedUser.price) || 0;
-        return {
-          ...item,
-          userShare
-        };
-      });
+    this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
+    // TODO: Enter the user's default tip percentage here
+    this.currentUser.tipPercentage = 18;
+    this.currentUser.tips =
+      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.sub_total));
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
@@ -70,7 +71,7 @@ export class TaxTipPage {
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentMethodService.paymentMethods.length) {
-      this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods[0];
+      this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
     await loading.dismiss();
   }
@@ -82,20 +83,39 @@ export class TaxTipPage {
   }
 
   async pay() {
-    if (!this.ticketService.userPaymentMethod) {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    if (!currentUser.paymentMethod) {
       throw new Error("No payment method selected!")
     }
     const loading = this.loader.create();
     await loading.present();
     try {
       const response = await this.paymentService.sendTicketPayment(
-        this.ticketService.ticket.id,
-        this.ticketService.userPaymentMethod.id,
-        this.ticketService.curUser.totals.total,
-        this.ticketService.curUser.totals.tip,
+        this.ablyTicketService.ticket.id,
+        this.currentUser.paymentMethod.id,
+        this.currentUser.total,
+        this.currentUser.tips,
       ) as any;
-      await this.ticketService.changeUserStatus(UserStatus.Paid)
-      await this.navCtrl.push('StatusPage')
+      if (response.ticket.ticket_status === TicketStatus.CLOSED) {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+
+      await this.navCtrl.setRoot('HomePage');
+      // TODO: Reintegrate the status page here
+      // await this.ticketService.changeUserStatus(UserStatus.Paid)
+      // await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',

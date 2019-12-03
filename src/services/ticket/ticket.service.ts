@@ -5,12 +5,13 @@ import { environment } from '@tabify/env';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 import currency from 'currency.js';
-import { IFraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
+import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
+import { TicketItem } from '../../interfaces/ticket-item.interface';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
@@ -152,7 +153,19 @@ export class TicketService {
 
   public async addUserToDatabaseTicket(ticketId: number) {
     return await this.http
-      .post(`${environment.serverUrl}/tickets/${ticketId}/addDatabaseUser`, {})
+      .post(`${environment.serverUrl}/tickets/${ticketId}/users`, {})
+      .toPromise();
+  }
+
+  public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, { })
+      .toPromise();
+  }
+
+  public async removeUserFromTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`)
       .toPromise();
   }
 
@@ -192,8 +205,9 @@ export class TicketService {
     this.destroySubscriptions();
   }
 
-  public findUserShareOfItem(item: FirestoreTicketItem, uid: string) {
-    return item.users.find(u => u.uid === uid).price;
+  public findUserShareOfItem(item: TicketItem, uid: string) {
+    console.log("CALLING", item, uid);
+    return item.users.find(u => u.user.uid === uid).price;
   }
 
   /**
@@ -203,22 +217,22 @@ export class TicketService {
   public initializeFirestoreTicket(ticketId: any) {
     this.firestoreTicket$ = this.getFirestoreTicket(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
+      catchError(message => this.handleInitializationError(message)),
+      tap((ticket: any) => this.onTicketUpdate(ticket as FirestoreTicket))
       )
       .subscribe();
 
     this.firestoreTicketItems$ = this.getFirestoreTicketItems(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
+      catchError(message => this.handleInitializationError(message)),
+      tap((items: any) => this.onTicketItemsUpdate(items as FirestoreTicketItem[]))
       )
       .subscribe();
 
-      this.firestoreUsers$ = this.getFirestoreUsers(ticketId)
+    this.firestoreUsers$ = this.getFirestoreUsers(ticketId)
       .pipe(
-        catchError(message => this.handleInitializationError(message)),
-        tap((users: any) => this.onTicketUsersUpdate(users as User[]))
+      catchError(message => this.handleInitializationError(message)),
+      tap((users: any) => this.onTicketUsersUpdate(users as User[]))
       )
       .subscribe();
   }
@@ -258,7 +272,7 @@ export class TicketService {
           const userUid = doc.get('uid');
           const authUid = this.auth.getUid();
           if (userUid === authUid) {
-            const user = users.find( u => u.uid === authUid);
+            const user = users.find(u => u.uid === authUid);
             if (user) {
               user.status = status;
               transaction.set(
@@ -433,10 +447,10 @@ export class TicketService {
     return this.firestoreService.collection$(`tickets/${ticketId}/ticketItems`);
   }
 
-    /**
-   * Gets the Firestore users collection for ticket with id `ticketId`.
-   * @param ticketId
-   */
+  /**
+ * Gets the Firestore users collection for ticket with id `ticketId`.
+ * @param ticketId
+ */
   private getFirestoreUsers(ticketId: number) {
     return this.firestoreService.collection$(`tickets/${ticketId}/users`);
   }
@@ -501,7 +515,7 @@ export class TicketService {
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
-    this.users.forEach(u => {u.totals.subtotal = 0; u.ticketItems = []});
+    this.users.forEach(u => { u.totals.subtotal = 0; u.ticketItems = [] });
     this.curUser = { ...this.users.find((user) => user.uid === this.auth.getUid()) };
     this.firestoreTicketItems.forEach((item) => {
       if (item.users.length < 1) {
@@ -548,17 +562,17 @@ export class TicketService {
    * @param firestoreTicketItems
    */
   private onTicketItemsUpdate(firestoreTicketItems: FirestoreTicketItem[]) {
-    this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
-      ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
-    if (this.users) {
-      this.updateItemsAndUsers();
-    }
+    // this.firestoreTicketItems = firestoreTicketItems.map((item: FirestoreTicketItem) =>
+    //   ({ ...item, isItemOnMyTab: isItemOnMyTab(item, this.auth.getUid()), }));
+    // if (this.users) {
+    //   this.updateItemsAndUsers();
+    // }
   }
 
-    /**
-   * Called when a Firestore document within the Firestore ticket-items collection is updated.
-   * @param firestoreTicketItems
-   */
+  /**
+ * Called when a Firestore document within the Firestore ticket-items collection is updated.
+ * @param firestoreTicketItems
+ */
   private onTicketUsersUpdate(firestoreUsers: User[]) {
     if (Object.keys(this.isExpandedList).length !== firestoreUsers.length) {
       for (let user of firestoreUsers) {
@@ -574,7 +588,7 @@ export class TicketService {
       this.updateItemsAndUsers();
     }
 
-    this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
+    // this.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.users);
     this.updateOverallUsersProgress();
 
     if (this.curUser && this.curUser.totals && this.curUser.totals.tip === 0) {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { AblyTicketService } from '../../../../services/ticket/ably-ticket.service';
 
 @IonicPage()
 @Component({
@@ -8,13 +9,11 @@ import { AuthService } from '../../../../services/auth/auth.service';
   templateUrl: 'invite-others.html',
 })
 export class InviteOthersPage {
-  tabNumber: string;
-  users: any[];
-
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthService) {
-    this.tabNumber = navParams.data.tabNumber;
-    this.users = navParams.data.users;
+  constructor(
+    public navCtrl: NavController,
+    public auth: AuthService,
+    public ablyTicketService: AblyTicketService
+  ) {
   }
 
   public ionViewCanEnter(): boolean {
@@ -22,7 +21,6 @@ export class InviteOthersPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad InviteOthersPage', this.navParams);
   }
 
 }

@@ -5,10 +5,13 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { ILocation } from '../../../interfaces/location.interface';
+import { Location } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
-import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
+import { FraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
+import { AblyService } from '../../../services/ticket/ably.service';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketUserStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -16,9 +19,9 @@ import { tap } from 'rxjs/operators';
   templateUrl: 'tab-lookup.html',
 })
 export class TabLookupPage {
-  location: ILocation = this.navParams.data;
+  location: Location = this.navParams.data;
   tabForm: FormGroup;
-  fraudPreventionCode: IFraudPreventionCode;
+  fraudPreventionCode: FraudPreventionCode;
   dateTime: number = Date.now();
   isCodeVisible = false;
 
@@ -32,6 +35,8 @@ export class TabLookupPage {
     public ticketService: TicketService,
     public alertCtrl: AlertService,
     public locationService: LocationService,
+    public ablyService: AblyService,
+    public ablyTicketService: AblyTicketService,
   ) {
     this.tabForm = fb.group({
       ticketNumber: ['', Validators.compose([Validators.required])],
@@ -45,6 +50,12 @@ export class TabLookupPage {
   async ionViewDidLoad() {
     this.getDateTime();
     await this.getFraudPreventionCode();
+    this.ablyService.connect();
+  }
+
+  async ionViewWillUnload() {
+    this.ablyService.disconnect();
+    console.log("ion view will unload tab-lookup!");
   }
 
   getDateTime() {
@@ -61,9 +72,10 @@ export class TabLookupPage {
       await loading.present();
       const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
       await this.initializeTicketMetadata(ticket);
-      await this.initializeFirestoreTicketListeners(ticket);
+      // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
     } catch (e) {
+      console.error('CAUGHT ERROR IN FIND TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -89,9 +101,10 @@ export class TabLookupPage {
     try {
       const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
       await this.initializeTicketMetadata(newTicket);
-      await this.initializeFirestoreTicketListeners(newTicket);
+      // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
+      console.error('CAUGHT ERROR IN CREATE TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -120,41 +133,43 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-    switch (this.ticketService.curUser.status) {
-      case UserStatus.Selecting:
+    // TODO: Make the following compatible with guards at the component level. For example,
+    // if the user status is WAITING, the SelectItemsPage guard wouldn't allow the page to be created
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    switch (currentUser.status) {
+      case TicketUserStatus.SELECTING:
         this.navCtrl.push('SelectItemsPage');
         break;
-      case UserStatus.Waiting:
+      case TicketUserStatus.WAITING:
         this.navCtrl.push('SelectItemsPage');
         this.navCtrl.push('WaitingRoomPage');
         break;
-      case UserStatus.Confirmed:
+      case TicketUserStatus.CONFIRMED:
         this.navCtrl.push('SelectItemsPage');
         this.navCtrl.push('WaitingRoomPage');
         break;
-      case UserStatus.Paying:
+      case TicketUserStatus.PAYING:
         this.navCtrl.push('TaxTipPage');
         break;
-      case UserStatus.Paid:
-        if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
-          const modal = this.alertCtrl.create({
-            title: 'Tab already paid!',
-            message: 'You have already paid your tab, no need to do anything else.',
-            buttons: [
-              {
-                text: 'Ok',
-              },
-            ],
-          });
-          modal.present();
-        } else {
-          this.navCtrl.push('StatusPage');
-        }
+      case TicketUserStatus.PAID:
+        // if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
+        //   const modal = this.alertCtrl.create({
+        //     title: 'Tab already paid!',
+        //     message: 'You have already paid your tab, no need to do anything else.',
+        //     buttons: [
+        //       {
+        //         text: 'Ok',
+        //       },
+        //     ],
+        //   });
+        //   modal.present();
+        // } else {
+        //   this.navCtrl.push('StatusPage');
+        // }
         break;
       default:
         throw new Error('Unknown user status')
     }
-    this.ticketService.firestoreStatus$.complete();
   }
 
   async getFraudPreventionCode() {
@@ -187,12 +202,16 @@ export class TabLookupPage {
   }
 
   private async initializeTicketMetadata(ticket: any) {
-    // Add user to database ticket
-    await this.ticketService.addUserToDatabaseTicket(ticket.id);
+    this.ablyTicketService.ticket = ticket;
+    this.ablyTicketService.synchronizeFrontendTicket();
+    this.ablyTicketService.synchronizeFrontendTicketItems();
 
-    // Add user to Firestore ticket
+    // Subscribe to Ably ticket channel
+    await this.ablyTicketService.subscribeToTicketUpdates(ticket.id);
+
+    // Add user to database ticket
     try {
-      await this.ticketService.addUserToFirestoreTicket(ticket.id);
+      await this.ticketService.addUserToDatabaseTicket(ticket.id);
     } catch (e) {
       if (e.status === 403) {
         const alert = this.alertCtrl.create({
@@ -206,7 +225,27 @@ export class TabLookupPage {
       throw e;
     }
 
+    // Add user to Firestore ticket
+    // try {
+    //   await this.ticketService.addUserToFirestoreTicket(ticket.id);
+    // } catch (e) {
+    //   if (e.status === 403) {
+    //     const alert = this.alertCtrl.create({
+    //       title: 'Error',
+    //       message: e.error.message,
+    //       buttons: ['Ok']
+    //     });
+    //     alert.present();
+    //   }
+    //   e.stopErrorPropagation = true;
+    //   throw e;
+    // }
+
     // Add ticket number to fraud code
     await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
+
+    await this.viewNextPage();
+    // Get ticket
+    // await this.ablyTicketService.getTicket(ticket.id);
   }
 }

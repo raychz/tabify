@@ -10,25 +10,13 @@ import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
-import { ITicket } from '../../../interfaces/ticket.interface';
-import { ITicketItem } from '../../../interfaces/ticket-item.interface';
 import { user } from '../../home/example-stories';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
-import { plurality } from '../../../utilities/general.utilities';
+import { plurality, sleep } from '../../../utilities/general.utilities';
 import { InviteOthersPage } from './invite-others/invite-others';
-
-export interface ReceiptItem {
-  id: number;
-  name: string;
-  price: number;
-  payers: {
-    uid?: string | null;
-    firstName: string;
-    price: number;
-  }[];
-  payersDescription?: string;
-  isHidden?: boolean;
-}
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketItem } from '../../../interfaces/ticket-item.interface';
+import { TicketUserStatus } from '../../../enums';
 
 @IonicPage()
 @Component({
@@ -36,6 +24,7 @@ export interface ReceiptItem {
   templateUrl: 'select-items.html',
 })
 export class SelectItemsPage {
+  userUid = this.auth.getUid();
 
   constructor(
     public navCtrl: NavController,
@@ -46,6 +35,7 @@ export class SelectItemsPage {
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
     public modalCtrl: ModalController,
+    public ablyTicketService: AblyTicketService
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -59,48 +49,27 @@ export class SelectItemsPage {
     this.ticketService.destroySubscriptions();
   }
 
-  async addOrRemoveItem(item: any) {
+  async addOrRemoveItem(item: TicketItem) {
     if (item.loading) return;
-    if (item.isItemOnMyTab) {
-      this.removeItemFromMyTab(item);
-    } else {
-      this.addItemToMyTab(item);
-    }
-  }
-
-  async addItemToMyTab(item: any) {
     item.loading = true;
-    const {
-      success,
-      message,
-    } = await this.ticketService.addUserToFirestoreTicketItem(
-      item.id
-    );
-    item.loading = false;
-    if (!success) {
-      const error = this.alertCtrl.create({
-        title: 'Error',
-        message,
-        buttons: [
-          {
-            text: 'Ok',
-          },
-        ],
-      });
-      error.present();
-    }
-  }
-
-  async removeItemFromMyTab(item: any) {
-    item.loading = true;
-    const {
-      success,
-      message,
-    } = await this.ticketService.removeUserFromFirestoreTicketItem(
-      item.id
-    );
-    item.loading = false;
-    if (!success) {
+    try {
+      // Loading is set to false in `synchronizeFrontendTicketItems`
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      if (item.usersMap.has(this.userUid)) {
+        await this.ticketService.removeUserFromTicketItem(this.ablyTicketService.ticket.id, currentUser.id, item.id);
+      } else {
+        await this.ticketService.addUserToTicketItem(this.ablyTicketService.ticket.id, currentUser.id, item.id);
+      }
+    } catch (e) {
+      console.error(e);
+      item.loading = false;
+      let message;
+      if (e.error && e.error.message) {
+        message = e.error.message;
+      } else {
+        // TODO: Consider reloading the ticket here
+        message = `An unknown error occurred. Please try again. ${e}`
+      }
       const error = this.alertCtrl.create({
         title: 'Error',
         message,
@@ -115,14 +84,15 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
-    await this.ticketService.changeUserStatus(UserStatus.Waiting);
+    const currentTicketUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentTicketUser.id, TicketUserStatus.WAITING);
     this.navCtrl.push('WaitingRoomPage');
   }
 
   async confirmSelections() {
     const loading = this.loader.create();
     await loading.present();
-    if (this.ticketService.curUser.ticketItems.length) {
+    if (this.ablyTicketService.ticket.usersMap.get(this.userUid).selectedItemsCount) {
       this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
@@ -168,23 +138,22 @@ export class SelectItemsPage {
     actionSheet.present();
   }
 
+  // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
-    return this.ticketService.firestoreTicketItems.forEach(async item => {
-      if (!item.isItemOnMyTab) await this.addItemToMyTab(item);
-    });
+    for (const item of this.ablyTicketService.ticket.items) {
+      if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
+    }
   }
 
+  // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
-    return this.ticketService.firestoreTicketItems.forEach(async item => {
-      if (item.isItemOnMyTab) await this.removeItemFromMyTab(item);
-    });
+    for (const item of this.ablyTicketService.ticket.items) {
+      if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
+    }
   }
 
   inviteOthers() {
-    const modal = this.modalCtrl.create('InviteOthersPage', {
-      tabNumber: this.ticketService.firestoreTicket.tab_id,
-      users: this.ticketService.users,
-    });
+    const modal = this.modalCtrl.create('InviteOthersPage');
     modal.present();
   }
 }
