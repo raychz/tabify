@@ -47,6 +47,11 @@ export class WaitingRoomPage {
     return this.ablyTicketService.ticket.items.some(item => item.users.length === 0);
   }
 
+  /** Counts number of unclaimed items */
+  unclaimedTicketItemsCount(): number {
+    return this.ablyTicketService.ticket.items.filter(item => item.users.length === 0).length;
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
   }

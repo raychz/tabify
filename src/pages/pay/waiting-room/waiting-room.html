@@ -12,38 +12,37 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content class='cards-bg' *ngIf="ablyTicketService.ticket.items; else loading">
   <ng-container>
 
     <ion-card id='curUserCard'
       (click)="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded = !ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded">
       <ion-card-content>
-        <ion-row class="waiting-user-row">
-          <ion-col class="waiting-user-col waiting-user-col-1">
-            <ion-item>
-              <ion-avatar item-start>
-                <img
-                  [src]="ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
-              </ion-avatar>
-              {{ ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
-            </ion-item>
-          </ion-col>
-          <ion-col class="waiting-user-col waiting-user-col-2">
-            <ion-item>
-              <ion-badge item-end class="ticket-spinner" color="warning"
-                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.WAITING]">
-                UNCONFIRMED</ion-badge>
-              <ion-icon name="checkmark-circle-outline" item-end color="secondary"
-                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]">
-              </ion-icon>
-              <ion-icon
-                [name]="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded ? 'arrow-dropup' : 'arrow-dropdown'"
-                item-end>
-              </ion-icon>
-            </ion-item>
-          </ion-col>
-        </ion-row>
+          <ion-row class="waiting-user-row">
+            <ion-col align-self-left class="waiting-user-col waiting-user-col-1">
+              <ion-item>
+                <ion-avatar item-start>
+                  <img
+                    [src]="ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
+                </ion-avatar>
+                {{ ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
+              </ion-item>
+            </ion-col>
+            <ion-col align-self-right class="waiting-user-col waiting-user-col-2">
+              <ion-item class="waiting-user-col-2-item">
+                <ion-badge item-end class="status-badge" color="warning"
+                  *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.WAITING]">
+                  UNCONFIRMED</ion-badge>
+                <ion-badge item-end class="status-badge" color="secondary"
+                  *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]">
+                  CONFIRMED</ion-badge>
+                <ion-icon
+                  [name]="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded ? 'ios-arrow-up' : 'ios-arrow-down'"
+                  item-end>
+                </ion-icon>
+              </ion-item>
+            </ion-col>
+          </ion-row>
         <ion-list *ngIf="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded">
           <ng-container *ngFor="let item of ablyTicketService.ticket.items">
             <ion-row class="item-details" *ngIf="item.usersMap.has(currentUserUid)">
@@ -66,11 +65,11 @@
     </ion-card>
 
     <ion-card id='allUsersCard' *ngIf="ablyTicketService.ticket.users.length > 1">
-      <ion-card-header class="card-header" id="tell-your-friends">
-        Tell your friends to pick their food already!
-        <ion-label id="your-party">
-          Your Party:
-        </ion-label>
+      <ion-card-header class="card-header">
+        Your Party 🎉
+        <p id="your-party">
+          Tell your friends to pick their food & confirm!
+        </p>
       </ion-card-header>
       <ion-list>
         <ng-container *ngFor="let ticketUser of ablyTicketService.ticket.users">
@@ -87,13 +86,13 @@
               </ion-col>
               <ion-col class="waiting-user-col waiting-user-col-2">
                 <ion-item>
-                  <ion-badge item-end class="ticket-spinner" color="warning"
+                  <ion-badge item-end class="status-badge" color="warning"
                     *ngIf="TicketUserStatusOrder[ticketUser.status] <= TicketUserStatusOrder[TicketUserStatus.WAITING]">
                     UNCONFIRMED</ion-badge>
-                  <ion-icon name="checkmark-circle-outline" item-end color="secondary"
+                  <ion-badge item-end class="status-badge" color="secondary"
                     *ngIf="TicketUserStatusOrder[ticketUser.status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]">
-                  </ion-icon>
-                  <ion-icon [name]="ticketUser.isWaitingRoomExpanded ? 'arrow-dropup' : 'arrow-dropdown'" item-end>
+                    CONFIRMED</ion-badge>
+                  <ion-icon [name]="ticketUser.isWaitingRoomExpanded ? 'ios-arrow-up' : 'ios-arrow-down'" item-end>
                   </ion-icon>
                 </ion-item>
               </ion-col>
@@ -124,7 +123,13 @@
 
     <ion-card *ngIf="areTicketItemsUnclaimed()">
       <ion-card-header class="card-header">
-        ⚠️ Unclaimed Items <span id="go-back-text">Go back to claim</span>
+        Unclaimed Items 😬
+        <ion-badge float-right class="status-badge" color="danger">
+          {{unclaimedTicketItemsCount()}} ITEM{{unclaimedTicketItemsCount() === 1 ? '' : 'S'}}
+        </ion-badge>
+        <p id="go-back-to-claim">
+          Go back to claim or nudge your friends.
+        </p>
       </ion-card-header>
       <ion-card-content>
         <ion-list>
@@ -147,10 +152,10 @@
 
     <ion-card>
       <ion-card-header class="card-header">
-        Shared Items:
+        Shared Items 👥
       </ion-card-header>
       <ion-card-content>
-        <ion-label id="no-shared-items" *ngIf="!areTicketItemsShared()"> No items are being shared. </ion-label>
+        <p id="no-shared-items" *ngIf="!areTicketItemsShared()">No items are being shared.</p>
         <ion-list *ngIf="areTicketItemsShared()">
           <ng-container *ngFor="let item of ablyTicketService.ticket.items">
             <ng-container *ngIf="item.users.length > 1">
