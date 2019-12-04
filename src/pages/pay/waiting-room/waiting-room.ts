@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
-import { sleep, abbreviateName } from '../../../utilities/general.utilities';
+import { sleep, abbreviateName, plurality } from '../../../utilities/general.utilities';
 import { Platform } from 'ionic-angular';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
@@ -34,7 +34,21 @@ export class WaitingRoomPage {
   ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && (currentUser.status === TicketUserStatus.WAITING || currentUser.status === TicketUserStatus.CONFIRMED);
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewCanLeave(): boolean {
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return currentUser.status !== TicketUserStatus.WAITING && currentUser.status !== TicketUserStatus.CONFIRMED;
+    } catch {
+      return false;
+    }
   }
 
   /** Returns true if at least one item on the ticket is shared by multiple users */
@@ -76,21 +90,49 @@ export class WaitingRoomPage {
   async changeUserConfirmStatus() {
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
     if (currentUser.status === TicketUserStatus.WAITING) {
-      const alert = this.alertCtrl.create({
-        title: 'Is the party complete?',
-        message: `There are currently ${this.ablyTicketService.ticket.users.length} users on this tab. Is that everyone?`,
-        buttons: [
-          {
-            text: 'No',
-            role: 'cancel'
-          },
-          {
-            text: 'Yes',
-            handler: () => { this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.CONFIRMED); }
-          }
-        ]
-      });
-      alert.present();
+      const unclaimedItemsCount = this.unclaimedTicketItemsCount();
+      const numberOfUsers = this.ablyTicketService.ticket.users.length;
+      if (unclaimedItemsCount > 0) {
+        const alert = this.alertCtrl.create({
+          title: 'Whoops!',
+          message: `Cannot confirm until all items have been claimed by at least one person. ${unclaimedItemsCount} item${plurality(unclaimedItemsCount)} ${unclaimedItemsCount === 1 ? 'is' : 'are'} still unclaimed.`,
+          buttons: ['OK']
+        });
+        alert.present();
+        return;
+      } else if (numberOfUsers === 1) {
+        const alert = this.alertCtrl.create({
+          title: 'Is the party complete?',
+          message: `You're the only one paying for this ticket. Would you like to continue?`,
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel'
+            },
+            {
+              text: 'Yes',
+              handler: () => { this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.CONFIRMED); }
+            }
+          ]
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Is the party complete?',
+          message: `There are currently ${this.ablyTicketService.ticket.users.length} users on this tab. Is that everyone?`,
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel'
+            },
+            {
+              text: 'Yes',
+              handler: () => { this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.CONFIRMED); }
+            }
+          ]
+        });
+        alert.present();
+      }
     } else if (currentUser.status === TicketUserStatus.CONFIRMED) {
       await this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.WAITING);
     } else {
@@ -133,8 +175,24 @@ export class WaitingRoomPage {
   async backButtonAction() {
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
     if (!this.isBackButtonDisabled()) {
-      await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.SELECTING);
-      this.navCtrl.pop();
+      const loading = this.loader.create();
+      await loading.present();
+      try {
+        await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.SELECTING);
+        await this.navCtrl.pop();
+        // Push the select items page since it will be missing from the nav stack at this point
+        if (this.navParams.get('pushSelectItemsOnBack')) {
+          await this.navCtrl.push('SelectItemsPage');
+        }
+      } catch {
+        const alert = this.alertCtrl.create({
+          title: 'Whoops!',
+          message: `You cannot go back to the Select Items page anymore.`,
+          buttons: ['OK']
+        });
+        alert.present();
+      }
+      await loading.dismiss();
     }
   }
 }

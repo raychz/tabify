@@ -3,7 +3,7 @@
     <ion-buttons left>
       <button ion-button icon-start [disabled]="isBackButtonDisabled()" (click)="backButtonAction()">
         <ion-icon name="arrow-back"></ion-icon>
-        <ion-label *ngIf="platform.is('ios')">
+        <ion-label>
           Back
         </ion-label>
       </button>
@@ -14,35 +14,69 @@
 
 <ion-content class='cards-bg' *ngIf="ablyTicketService.ticket.items; else loading">
   <ng-container>
+    <ion-card *ngIf="areTicketItemsUnclaimed()">
+      <ion-card-header class="card-header">
+        Unclaimed Items 😬
+        <ion-badge float-right class="status-badge" color="danger">
+          {{unclaimedTicketItemsCount()}} ITEM{{unclaimedTicketItemsCount() === 1 ? '' : 'S'}}
+        </ion-badge>
+        <p id="go-back-to-claim">
+          Go back to claim or nudge your friends.
+        </p>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ng-container *ngFor="let item of ablyTicketService.ticket.items">
+            <ion-row class="item-details" *ngIf="item.users.length === 0">
+              <ion-col class="col-item-name">
+                <span text-wrap class="name-text">{{ item.name }}</span>
+                <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+              </ion-col>
+              <ion-col col-auto class="col-item-total">
+                <span class="total-text">
+                  ${{ item.price / 100 | number: '1.2-2' }}
+                </span>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
     <ion-card id='curUserCard'
       (click)="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded = !ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded">
+      <ion-card-header class="card-header">
+        Your Selections 🍽️
+        <p id="your-selections">
+          Tap on anyone's name to view their selections.
+        </p>
+      </ion-card-header>
       <ion-card-content>
-          <ion-row class="waiting-user-row">
-            <ion-col align-self-left class="waiting-user-col waiting-user-col-1">
-              <ion-item>
-                <ion-avatar item-start>
-                  <img
-                    [src]="ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
-                </ion-avatar>
-                {{ ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
-              </ion-item>
-            </ion-col>
-            <ion-col align-self-right class="waiting-user-col waiting-user-col-2">
-              <ion-item class="waiting-user-col-2-item">
-                <ion-badge item-end class="status-badge" color="warning"
-                  *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.WAITING]">
-                  UNCONFIRMED</ion-badge>
-                <ion-badge item-end class="status-badge" color="secondary"
-                  *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]">
-                  CONFIRMED</ion-badge>
-                <ion-icon
-                  [name]="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded ? 'ios-arrow-up' : 'ios-arrow-down'"
-                  item-end>
-                </ion-icon>
-              </ion-item>
-            </ion-col>
-          </ion-row>
+        <ion-row class="waiting-user-row">
+          <ion-col align-self-left class="waiting-user-col waiting-user-col-1">
+            <ion-item>
+              <ion-avatar item-start>
+                <img
+                  [src]="ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
+              </ion-avatar>
+              {{ ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
+            </ion-item>
+          </ion-col>
+          <ion-col align-self-right class="waiting-user-col waiting-user-col-2">
+            <ion-item class="waiting-user-col-2-item">
+              <ion-badge item-end class="status-badge" color="warning"
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.WAITING]">
+                UNCONFIRMED</ion-badge>
+              <ion-badge item-end class="status-badge" color="secondary"
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]">
+                CONFIRMED</ion-badge>
+              <ion-icon
+                [name]="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded ? 'ios-arrow-up' : 'ios-arrow-down'"
+                item-end>
+              </ion-icon>
+            </ion-item>
+          </ion-col>
+        </ion-row>
         <ion-list *ngIf="ablyTicketService.ticket.usersMap.get(currentUserUid).isWaitingRoomExpanded">
           <ng-container *ngFor="let item of ablyTicketService.ticket.items">
             <ion-row class="item-details" *ngIf="item.usersMap.has(currentUserUid)">
@@ -121,41 +155,17 @@
       </ion-list>
     </ion-card>
 
-    <ion-card *ngIf="areTicketItemsUnclaimed()">
-      <ion-card-header class="card-header">
-        Unclaimed Items 😬
-        <ion-badge float-right class="status-badge" color="danger">
-          {{unclaimedTicketItemsCount()}} ITEM{{unclaimedTicketItemsCount() === 1 ? '' : 'S'}}
-        </ion-badge>
-        <p id="go-back-to-claim">
-          Go back to claim or nudge your friends.
-        </p>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ng-container *ngFor="let item of ablyTicketService.ticket.items">
-            <ion-row class="item-details" *ngIf="item.users.length === 0">
-              <ion-col class="col-item-name">
-                <span text-wrap class="name-text">{{ item.name }}</span>
-                <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
-              </ion-col>
-              <ion-col col-auto class="col-item-total">
-                <span class="total-text">
-                  ${{ item.price / 100 | number: '1.2-2' }}
-                </span>
-              </ion-col>
-            </ion-row>
-          </ng-container>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
     <ion-card>
       <ion-card-header class="card-header">
         Shared Items 👥
+        <p id="no-shared-items" *ngIf="!areTicketItemsShared()">
+          No items are being shared.
+        </p>
+        <p id="shared-items" *ngIf="areTicketItemsShared()">
+          These items are being shared and split evenly.
+        </p>
       </ion-card-header>
       <ion-card-content>
-        <p id="no-shared-items" *ngIf="!areTicketItemsShared()">No items are being shared.</p>
         <ion-list *ngIf="areTicketItemsShared()">
           <ng-container *ngFor="let item of ablyTicketService.ticket.items">
             <ng-container *ngIf="item.users.length > 1">
@@ -200,10 +210,12 @@
 </ion-content>
 
 <ion-footer>
-  <ion-label text-wrap color="light" class="confirm-text">
-    {{ TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED] ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else to confirm.') : 'Make sure all users have joined before confirming.' }}
-  </ion-label>
-  <button ion-button block (click)="changeUserConfirmStatus()" [disabled]="isBackButtonDisabled()">
-    {{ ablyTicketService.ticket.usersMap.get(currentUserUid).status === TicketUserStatus.CONFIRMED ? 'Cancel' : 'Confirm' }}
-  </button>
+  <ion-toolbar border-top>
+    <ion-label text-wrap color="light" class="confirm-text">
+      {{ TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED] ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else to confirm.') : 'Make sure all users have joined before confirming.' }}
+    </ion-label>
+    <button ion-button block (click)="changeUserConfirmStatus()" [disabled]="isBackButtonDisabled()">
+      {{ ablyTicketService.ticket.usersMap.get(currentUserUid).status === TicketUserStatus.CONFIRMED ? 'Cancel' : 'Confirm Selections' }}
+    </button>
+  </ion-toolbar>
 </ion-footer>

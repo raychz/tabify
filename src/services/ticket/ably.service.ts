@@ -41,6 +41,10 @@ export class AblyService {
     return this.realtime.channels.get(channel, channelOptions);
   }
 
+  async detachChannel(channel: Ably.Types.RealtimeChannelPromise) {
+    await channel.detach();
+  }
+
   private onFailure() {
     console.error('The Ably connection has failed.');
     try {

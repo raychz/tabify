@@ -23,8 +23,13 @@ export class AblyTicketService {
     private auth: AuthService,
   ) { }
 
-  onTicketUpdate(data) {
-    console.log("Calling from service", data);
+  async clearState() {
+    if (this.ticket) {
+      await this.unsubscribeFromAllTicketUpdates(this.ticket.id);
+      this.ticket = null;
+    } else {
+      console.error('An attempt was made to clear the ticket service state, but the state is already empty.');
+    }
   }
 
   async subscribeToTicketUpdates(ticketId) {
@@ -35,7 +40,6 @@ export class AblyTicketService {
         (stateChange.resumed ? 'was' : 'was not') + ' preserved');
     });
     await ticketChannel.subscribe((message) => {
-      console.log("RECEIVED A MESSAGE", message);
       const messages = [];
       if (message.name === TicketUpdates.MULTIPLE_UPDATES) {
         messages.push(...message.data);
@@ -54,7 +58,7 @@ export class AblyTicketService {
             break;
           case TicketUpdates.TICKET_USERS_UPDATED:
             this.onTicketUsersUpdated(_message.data);
-            console.log("TICKET_ITEM_USERS_UPDATED", _message);
+            console.log("TICKET_USERS_UPDATED", _message);
             break;
           case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
             this.onTicketItemUsersReplaced(_message.data);
@@ -70,8 +74,11 @@ export class AblyTicketService {
     });
   }
 
-  async unsubscribe() {
-
+  async unsubscribeFromAllTicketUpdates(ticketId) {
+    const ticketChannel = this.ablyService.getChannel(ticketId);
+    ticketChannel.unsubscribe();
+    ticketChannel.off();
+    await this.ablyService.detachChannel(ticketChannel);
   }
 
   async getTicket(id: number) {
@@ -86,7 +93,9 @@ export class AblyTicketService {
   async setTicketUserStatus(ticketId: number, ticketUserId: number, status: TicketUserStatus) {
     const res = await this.http
       .patch(`${environment.serverUrl}/tickets/${ticketId}/users`, { status, ticketUserId })
-      .toPromise();
+      .toPromise() as TicketUser;
+    const currentUser = this.ticket.usersMap.get(this.auth.getUid());
+    currentUser.status = res.status;
   }
 
   private onTicketUserAdded(addedTicketUser: TicketUser) {

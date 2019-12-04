@@ -13,7 +13,8 @@ import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketItem } from '../../../interfaces/ticket-item.interface';
-import { TicketStatus } from '../../../enums';
+import { TicketStatus, TicketUserStatus } from '../../../enums';
+import { TicketUser } from '../../../interfaces/ticket-user.interface';
 
 @IonicPage()
 @Component({
@@ -22,10 +23,12 @@ import { TicketStatus } from '../../../enums';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+  currentUser: TicketUser;
   myTabItems: TicketItem[] = [];
   displayAllItems = false;
   displayLimit = 2;
+  /** Is the user selecting their payment method. */
+  selectingPaymentMethod = false;
 
   constructor(
     public navCtrl: NavController,
@@ -41,10 +44,34 @@ export class TaxTipPage {
   ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewCanLeave(): boolean {
+    try {
+      // Check if the ticket state has been cleared here
+      if (!this.ablyTicketService.ticket) return true;
+
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      // Allow user to leave only if they are trying to select their payment method
+      return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethod;
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewWillEnter() {
+    // Reset the selectingPaymentMethod boolean to false since the method has already been selected
+    this.selectingPaymentMethod = false;
   }
 
   async ionViewDidLoad() {
+    this.currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     const loading = this.loader.create();
     await loading.present();
     try {
@@ -112,6 +139,8 @@ export class TaxTipPage {
         alert.present();
       }
 
+      // Clear the state of the ticket service
+      await this.ablyTicketService.clearState();
       await this.navCtrl.setRoot('HomePage');
       // TODO: Reintegrate the status page here
       // await this.ticketService.changeUserStatus(UserStatus.Paid)
@@ -129,6 +158,7 @@ export class TaxTipPage {
   }
 
   editPaymentMethod() {
+    this.selectingPaymentMethod = true;
     this.navCtrl.push('SelectPaymentPage');
   }
 }

@@ -5,6 +5,7 @@ import {
   NavParams,
   ActionSheetController,
   ModalController,
+  Platform
 } from 'ionic-angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -35,11 +36,29 @@ export class SelectItemsPage {
     public ticketService: TicketService,
     private actionSheetCtrl: ActionSheetController,
     public modalCtrl: ModalController,
-    public ablyTicketService: AblyTicketService
+    public ablyTicketService: AblyTicketService,
+    public platform: Platform,
   ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && currentUser.status === TicketUserStatus.SELECTING;
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewCanLeave(): boolean {
+    try {
+      // Check if the ticket state has been cleared here
+      if (!this.ablyTicketService.ticket) return true;
+
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return currentUser.status !== TicketUserStatus.SELECTING;
+    } catch {
+      return false;
+    }
   }
 
   ionViewDidLoad() {
@@ -47,6 +66,11 @@ export class SelectItemsPage {
 
   ionViewWillUnload() {
     this.ticketService.destroySubscriptions();
+  }
+
+  async backButtonAction() {
+    await this.ablyTicketService.clearState();
+    await this.navCtrl.pop();
   }
 
   async addOrRemoveItem(item: TicketItem) {
@@ -64,7 +88,9 @@ export class SelectItemsPage {
       console.error(e);
       item.loading = false;
       let message;
-      if (e.error && e.error.message) {
+      if (e.status === 500) {
+        message = 'Sorry, our servers are struggling to keep up! Please try again or refresh the app. Contact support@tabifyapp.com if this persists.';
+      } else if (e.error && e.error.message) {
         message = e.error.message;
       } else {
         // TODO: Consider reloading the ticket here
@@ -84,9 +110,12 @@ export class SelectItemsPage {
   }
 
   async viewWaitingRoom() {
+    const loading = this.loader.create();
+    await loading.present();
     const currentTicketUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentTicketUser.id, TicketUserStatus.WAITING);
-    this.navCtrl.push('WaitingRoomPage');
+    await this.navCtrl.push('WaitingRoomPage');
+    await loading.dismiss();
   }
 
   async confirmSelections() {
@@ -96,7 +125,7 @@ export class SelectItemsPage {
       this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
-        title: 'Warning',
+        title: 'Whoops!',
         message: `Please add 1 or more items to your tab before continuing.`,
         buttons: [
           {

@@ -133,20 +133,16 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-    // TODO: Make the following compatible with guards at the component level. For example,
-    // if the user status is WAITING, the SelectItemsPage guard wouldn't allow the page to be created
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     switch (currentUser.status) {
       case TicketUserStatus.SELECTING:
         this.navCtrl.push('SelectItemsPage');
         break;
       case TicketUserStatus.WAITING:
-        this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage');
+        this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
         break;
       case TicketUserStatus.CONFIRMED:
-        this.navCtrl.push('SelectItemsPage');
-        this.navCtrl.push('WaitingRoomPage');
+        this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
         break;
       case TicketUserStatus.PAYING:
         this.navCtrl.push('TaxTipPage');
