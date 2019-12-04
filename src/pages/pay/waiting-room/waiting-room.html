@@ -10,6 +10,19 @@
     </ion-buttons>
     <ion-title>Waiting Lobby</ion-title>
   </ion-navbar>
+  <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
+    <ion-row no-border-top>
+      <ion-col align-self-center text-center class="toolbar-col guests">
+        <ion-icon name="md-list-box"></ion-icon>
+        <b>Tab</b>
+        <span>#{{ablyTicketService.ticket?.ticket_number}}</span>
+        <span class="invite-others">
+          <ion-icon name="send"></ion-icon>
+          Invite Others
+        </span>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class='cards-bg' *ngIf="ablyTicketService.ticket.items; else loading">

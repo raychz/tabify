@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Navbar, ModalController } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep, abbreviateName, plurality } from '../../../utilities/general.utilities';
@@ -31,6 +31,7 @@ export class WaitingRoomPage {
     public alertCtrl: AlertService,
     public ablyTicketService: AblyTicketService,
     public loader: LoaderService,
+    public modalCtrl: ModalController,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -194,5 +195,10 @@ export class WaitingRoomPage {
       }
       await loading.dismiss();
     }
+  }
+
+  inviteOthers() {
+    const modal = this.modalCtrl.create('InviteOthersPage');
+    modal.present();
   }
 }
