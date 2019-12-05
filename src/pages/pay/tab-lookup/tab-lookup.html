@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Lookup Tab</ion-title>
+    <ion-title>Find Your Ticket #</ion-title>
     <ion-buttons end>
       <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
@@ -16,14 +16,14 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            Join Table
+            Join Your Ticket
           </ion-card-header>
           <ion-card-content>
-            <p>We hope you enjoyed {{location.name}}! Enter the 6-digit Tabify code on the bottom of your check.</p>
+            <p>We hope you enjoyed {{location.name}}! Enter your ticket number below. It can usually be found on the top of your check.</p>
             <form [formGroup]="tabForm">
               <ion-list inset>
                 <ion-item [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
-                  <ion-label floating>Tab Number</ion-label>
+                  <ion-label floating>Ticket Number</ion-label>
                   <ion-input id="ticket-number-input" autofocus type="number" formControlName="ticketNumber"></ion-input>
                 </ion-item>
                 <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
@@ -35,7 +35,7 @@
         </ion-card>
         <ion-card>
           <ion-card-header>
-            For Restaurant Use Only
+            For Restaurant Use Only:
           </ion-card-header>
           <ion-card-content id="fraud-prevention-code">
             <p>If requested, show this code to your server:</p>
