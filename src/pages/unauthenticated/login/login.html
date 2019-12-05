@@ -61,7 +61,7 @@
 
               <div>
                 <div class="form-error">{{ loginError }}</div>
-                <button ion-button block type="submit" [disabled]="!loginForm.valid">
+                <button id="login-with-email" ion-button block type="submit" [disabled]="!loginForm.valid">
                   Login With Email
                 </button>
                 <button ion-button block clear color="tabify-alt" (click)="forgotPassword()">
