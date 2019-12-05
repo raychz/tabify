@@ -17,14 +17,16 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ion-refresher (ionRefresh)="refresh($event)">
+  <!-- TODO: Bring back the refresher once newsfeed is fixed -->
+  <!-- <ion-refresher (ionRefresh)="refresh($event)">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots"
       refreshingText="Refreshing stories...">
     </ion-refresher-content>
-  </ion-refresher>
+  </ion-refresher> -->
   <!-- TODO: Remove once newsfeed is fixed -->
-  The newsfeed is currently under maintenance.
-  <!-- <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
+  <h2 class="under-construction-emoji" text-center>👷</h2>
+  <p class="under-construction-text" text-center>The newsfeed is currently under maintenance.</p>
+  <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ion-card>
       <ion-card-content>
         <span style="font-weight: bold">
@@ -97,7 +99,7 @@
         </ion-row>
       </ion-card>
     </ng-container>
-  </div> -->
+  </div>
 
   <div *ngIf="this.newsfeedService.tickets?.length > 0" class="blank-space"></div>
   <button id="pay-tab" ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
