@@ -87,7 +87,7 @@ export class TaxTipPage {
     }
     this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
     // TODO: Enter the user's default tip percentage here
-    this.currentUser.tipPercentage = 18;
+    this.currentUser.tipPercentage = 20;
     this.currentUser.tips =
       Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.sub_total));
     try {

@@ -35,7 +35,7 @@ export class EnterTipPage {
     const enteredTip = Number(this.tipPercentage);
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     if (isNaN(enteredTip)) {
-      currentUser.tipPercentage = 18;
+      currentUser.tipPercentage = 20;
       currentUser.tips =
         Math.round(((currentUser.tipPercentage / 100) * currentUser.sub_total));
     } else if (enteredTip < 0) {
