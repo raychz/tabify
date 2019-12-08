@@ -98,7 +98,7 @@ export class AblyTicketService {
     currentUser.status = res.status;
   }
 
-  private onTicketUserAdded(addedTicketUser: TicketUser) {
+  onTicketUserAdded(addedTicketUser: TicketUser) {
     if (!this.ticket) {
       console.error('The ticket is falsy, but an Ably message was received.')
       return;

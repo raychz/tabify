@@ -219,7 +219,8 @@ export class TabLookupPage {
 
     // Add user to database ticket
     try {
-      await this.ticketService.addUserToDatabaseTicket(ticket.id);
+      const newTicketUser = await this.ticketService.addUserToDatabaseTicket(ticket.id);
+      this.ablyTicketService.onTicketUserAdded(newTicketUser);
     } catch (e) {
       if (e.status === 403) {
         const alert = this.alertCtrl.create({

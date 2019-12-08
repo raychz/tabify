@@ -12,6 +12,7 @@ import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
 import { HttpParams } from '@angular/common/http/src/params';
 import { TicketItem } from '../../interfaces/ticket-item.interface';
+import { TicketUser } from '../../interfaces/ticket-user.interface';
 
 // please keep the user status enum in order of execution as they are used for calculations
 export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
@@ -153,13 +154,13 @@ export class TicketService {
 
   public async addUserToDatabaseTicket(ticketId: number) {
     return await this.http
-      .post(`${environment.serverUrl}/tickets/${ticketId}/users`, {})
+      .post<TicketUser>(`${environment.serverUrl}/tickets/${ticketId}/users`, {})
       .toPromise();
   }
 
   public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
     return await this.http
-      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, { })
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, {})
       .toPromise();
   }
 
