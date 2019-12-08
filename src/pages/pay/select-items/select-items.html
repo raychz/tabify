@@ -23,7 +23,7 @@
         <b>Tab</b>
         <span>#{{ablyTicketService.ticket?.ticket_number}}</span>
         <ion-icon name="people"></ion-icon>
-        <b>Guests:</b>
+        <b>{{ablyTicketService.ticket?.users.length}} Guest{{plurality(ablyTicketService.ticket?.users.length)}}:</b>
         <span [innerHTML]="ablyTicketService.ticket?.ticketUsersDescription"></span>
         <span class="invite-others">
           <ion-icon name="send"></ion-icon>

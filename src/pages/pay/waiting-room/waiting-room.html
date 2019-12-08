@@ -16,6 +16,8 @@
         <ion-icon name="md-list-box"></ion-icon>
         <b>Tab</b>
         <span>#{{ablyTicketService.ticket?.ticket_number}}</span>
+        <ion-icon name="people"></ion-icon>
+        <b>{{ablyTicketService.ticket?.users.length}} Guest{{plurality(ablyTicketService.ticket?.users.length)}}</b>
         <span class="invite-others">
           <ion-icon name="send"></ion-icon>
           Invite Others
