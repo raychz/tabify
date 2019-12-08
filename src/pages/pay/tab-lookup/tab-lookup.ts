@@ -65,7 +65,19 @@ export class TabLookupPage {
   }
 
   async findTab() {
-    const { ticketNumber } = this.tabForm.value;
+    let { ticketNumber } = this.tabForm.value;
+
+    ticketNumber = Number(ticketNumber);
+
+    if (isNaN(ticketNumber) || !this.location.id) {
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Sorry, this ticket number doesn\'t look right. Please double-check and try again. If this issue persists, please contact support@tabifyapp.com.',
+        buttons: ['Ok']
+      });
+      alert.present();
+      return;
+    }
 
     const loading = this.loader.create();
     try {
