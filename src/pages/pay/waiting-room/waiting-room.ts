@@ -22,6 +22,7 @@ export class WaitingRoomPage {
   TicketUserStatusOrder = TicketUserStatusOrder;
   // Expose enum to template
   TicketUserStatus = TicketUserStatus;
+  plurality = plurality;
 
   constructor(
     public navCtrl: NavController,
@@ -95,8 +96,8 @@ export class WaitingRoomPage {
       const numberOfUsers = this.ablyTicketService.ticket.users.length;
       if (unclaimedItemsCount > 0) {
         const alert = this.alertCtrl.create({
-          title: 'Whoops!',
-          message: `Cannot confirm until all items have been claimed by at least one person. ${unclaimedItemsCount} item${plurality(unclaimedItemsCount)} ${unclaimedItemsCount === 1 ? 'is' : 'are'} still unclaimed.`,
+          title: `${unclaimedItemsCount} Unclaimed Item${plurality(unclaimedItemsCount)}`,
+          message: `Cannot confirm until all items have been claimed by at least one person.`,
           buttons: ['OK']
         });
         alert.present();
@@ -187,7 +188,7 @@ export class WaitingRoomPage {
         }
       } catch {
         const alert = this.alertCtrl.create({
-          title: 'Whoops!',
+          title: 'Sorry!',
           message: `You cannot go back to the Select Items page anymore.`,
           buttons: ['OK']
         });

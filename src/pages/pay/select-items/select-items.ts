@@ -26,6 +26,7 @@ import { TicketUserStatus } from '../../../enums';
 })
 export class SelectItemsPage {
   userUid = this.auth.getUid();
+  plurality = plurality;
 
   constructor(
     public navCtrl: NavController,
@@ -125,7 +126,7 @@ export class SelectItemsPage {
       this.viewWaitingRoom();
     } else {
       const warning = this.alertCtrl.create({
-        title: 'Whoops!',
+        title: 'Sorry!',
         message: `Please add 1 or more items to your tab before continuing.`,
         buttons: [
           {

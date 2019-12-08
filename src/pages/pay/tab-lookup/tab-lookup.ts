@@ -99,7 +99,7 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Whoops, something went wrong on our end! Please try again.',
+          message: 'Sorry, something went wrong on our side! Please try again.',
           buttons: ['Ok']
         });
         alert.present();
@@ -136,7 +136,7 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Whoops, something went wrong on our end! Please try again.',
+          message: 'Sorry, something went wrong on our side! Please try again.',
           buttons: ['Ok']
         });
         alert.present();

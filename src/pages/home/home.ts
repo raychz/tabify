@@ -125,7 +125,7 @@ export class HomePage {
       await loading.dismiss();
       const alert = this.alert.create({
         title: 'Error',
-        message: `Whoops, something went wrong. Please try again.`,
+        message: `Sorry, something went wrong. Please try again.`,
         buttons: [
           {
             text: 'Ok',
