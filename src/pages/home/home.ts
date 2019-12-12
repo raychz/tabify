@@ -39,7 +39,7 @@ export class HomePage {
 
   ionViewDidLoad() {
     // TODO: Remove once newsfeed is fixed
-    // this.getUserStories();
+    this.getUserStories();
   }
 
   async getUserStories() {
