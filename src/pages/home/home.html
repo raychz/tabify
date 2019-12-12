@@ -17,15 +17,12 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <!-- TODO: Bring back the refresher once newsfeed is fixed -->
-  <!-- <ion-refresher (ionRefresh)="refresh($event)">
+  <ion-refresher (ionRefresh)="refresh($event)">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots"
       refreshingText="Refreshing stories...">
     </ion-refresher-content>
-  </ion-refresher> -->
-  <!-- TODO: Remove once newsfeed is fixed -->
-  <!-- <h2 class="under-construction-emoji" text-center>👷</h2> -->
-  <!-- <p class="under-construction-text" text-center>The newsfeed is currently under maintenance.</p> -->
+  </ion-refresher>
+
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ion-card>
       <ion-card-content>
@@ -54,7 +51,7 @@
 
         <ion-row>
           <ion-col class="users-padding">
-            <span>
+            <!-- <span>
               {{ticket.userNamesDisplay.mainUsers}}
             </span>
             <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
@@ -63,7 +60,7 @@
             </span>
             <span *ngIf="ticket.userNamesDisplay.hereClause">
               {{ticket.userNamesDisplay.hereClause}}
-            </span>
+            </span> -->
           </ion-col>
         </ion-row>
 
