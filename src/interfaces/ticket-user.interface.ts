@@ -7,6 +7,10 @@ export interface TicketUser extends FrontendTicketUser {
   id: number;
   ticket: Ticket;
   user: User;
+  /** The total cost in cents of items on the ticket selected by this user */
+  items: number;
+  /** The sum total value in cents of all discounts for this user */
+  discounts: number;
   /** The subtotal in cents before tax (items + other_charges - discounts) */
   sub_total: number;
   /** The total tax in cents on the ticket */

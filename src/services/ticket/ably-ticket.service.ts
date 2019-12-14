@@ -10,6 +10,7 @@ import { getSelectItemsTicketUsersDescription, isItemOnMyTab, getPayersDescripti
 import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { keyBy, resolveByString, abbreviateName } from '../../utilities/general.utilities';
+import { TicketTotal } from '../../interfaces/ticket-total.interface';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
 @Injectable()
@@ -63,6 +64,10 @@ export class AblyTicketService {
           case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
             this.onTicketItemUsersReplaced(_message.data);
             console.log("TICKET_ITEM_USERS_REPLACED", _message);
+            break;
+          case TicketUpdates.TICKET_TOTALS_UPDATED:
+            this.onTicketTotalsUpdated(_message.data);
+            console.log("TICKET_TOTALS_UPDATED", _message);
             break;
           case TicketUpdates.TICKET_PAYMENTS_UPDATED:
             console.log("TICKET_PAYMENTS_UPDATED", _message);
@@ -155,6 +160,10 @@ export class AblyTicketService {
     const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
     ticketItem.users = newTicketItemUsers;
     this.synchronizeFrontendTicketItems([ticketItem]);
+  }
+
+  private onTicketTotalsUpdated(ticketTotal: TicketTotal) {
+    this.ticket.ticketTotal = ticketTotal;
   }
 
   /** 

@@ -38,7 +38,7 @@
         {{ ablyTicketService.ticket?.usersMap.get(userUid).selectedItemsCount }}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        ${{ (ablyTicketService.ticket?.usersMap.get(userUid).sub_total / 100 | number: '1.2-2') || 0.0 }}
+        ${{ (ablyTicketService.ticket?.usersMap.get(userUid).items / 100 | number: '1.2-2') || 0.0 }}
       </ion-col>
     </ion-row>
     <ion-row no-wrap>
