@@ -89,7 +89,7 @@ export class TaxTipPage {
     // TODO: Enter the user's default tip percentage here
     this.currentUser.tipPercentage = 20;
     this.currentUser.tips =
-      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.sub_total));
+      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.items));
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {

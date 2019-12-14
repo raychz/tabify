@@ -37,14 +37,14 @@ export class EnterTipPage {
     if (isNaN(enteredTip)) {
       currentUser.tipPercentage = 20;
       currentUser.tips =
-        Math.round(((currentUser.tipPercentage / 100) * currentUser.sub_total));
+        Math.round(((currentUser.tipPercentage / 100) * currentUser.items));
     } else if (enteredTip < 0) {
       currentUser.tipPercentage = 0;
       currentUser.tips = 0;
     } else {
       currentUser.tipPercentage = enteredTip;
       currentUser.tips =
-        Math.round(((currentUser.tipPercentage / 100) * currentUser.sub_total));
+        Math.round(((currentUser.tipPercentage / 100) * currentUser.items));
     }
     await this.viewCtrl.dismiss();
   }
