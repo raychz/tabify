@@ -13,47 +13,78 @@
 <ion-content class="cards-bg">
   <ion-card>
     <ion-card-content>
-      <ion-row>
+      <ion-row class="header">
         Exclusive Coupons, Deals, and Promos
       </ion-row>
+      <ion-row class="header">
+        Only on Tabify
+      </ion-row>
       <ion-row>
-        Only on Tabify!
+        <ion-segment (ionChange)="selectSegment($event)" [(ngModel)]="selectedSegment">
+          <ion-segment-button [value]="couponGroup.validCoupons">
+            <div>Current</div>
+          </ion-segment-button>
+          <ion-segment-button [value]="couponGroup.upcomingCoupons">
+            <div>Upcoming</div>
+          </ion-segment-button>
+          <ion-segment-button [value]="couponGroup.expiredCoupons">
+            <div>Expired</div>
+          </ion-segment-button>
+        </ion-segment>
       </ion-row>
     </ion-card-content>
+    <!-- <button (click)="createNewCoupon()">
+      Create New Coupon
+    </button> -->
   </ion-card>
 
-  <ion-list>
-    <ion-item *ngFor="let coupon of coupons">
+  <ion-list *ngIf="selectedSegment=== couponGroup.validCoupons">
+    <ion-item *ngFor="let coupon of couponService.validCoupons">
       <ion-card (click)="expandCoupon(coupon)">
         <ion-card-content>
           <ion-row>
-            <ion-col>
-              <ion-avatar class="avatar">
-                <img [src]="coupon.location.photo_url">
-              </ion-avatar>
-            </ion-col>
-            <ion-col>
+            <ion-col col-9>
               <ion-row>
-                {{ coupon.location.name }}
+                  <ion-col col-3>
+                      <ion-avatar class="avatar">
+                        <img [src]="coupon.location.photo_url">
+                      </ion-avatar>
+                    </ion-col>
+                    <ion-col col-9>
+                      <ion-row class="coupon_location">
+                        {{ coupon.location.name }}
+                      </ion-row>
+                      <ion-row text-wrap class="coupon_header">
+                        {{ coupon.header }}
+                      </ion-row>
+                    </ion-col>
               </ion-row>
-              <ion-row>
-                {{ coupon.header }}
-              </ion-row>
+              <ion-row *ngIf="coupon.id === expandedCouponId">
+                  <p text-wrap class="coupon_description">
+                    {{ coupon.description }}
+                  </p>
+                </ion-row>
+
             </ion-col>
+            <ion-col col-3 *ngIf="coupon.id === expandedCouponId">
+                <img src="https://thestayathomechef.com/wp-content/uploads/2019/07/Grilled-Chicken-Tacos-1.jpg">
+            </ion-col>
+
           </ion-row>
 
-          <ng-container *ngIf="coupon.id === expandedCouponId">
-              <ion-row>
-                <p>
-                  {{ coupon.description }}
-                </p>
-              </ion-row>
-              <ion-row>
-                <button (click)="redeemCoupon(coupon)">
+          <ion-row *ngIf="coupon.id === expandedCouponId">
+            <ion-col class="end_info">
+              Usage: {{ coupon.usage_count }}/{{ coupon.usage_limit }}
+            </ion-col>
+            <ion-col>
+              <button (click)="redeemCoupon(coupon)" class="end_info">
                   Redeem
-                </button>
-              </ion-row>
-          </ng-container>
+              </button>
+            </ion-col>
+            <ion-col class="end_info">
+              Valid until: {{ coupon.coupon_end_date.getMonth() }}-{{ coupon.coupon_end_date.getDay() }}
+            </ion-col>
+          </ion-row>
         </ion-card-content>
       </ion-card>
     </ion-item>

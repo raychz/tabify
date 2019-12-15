@@ -11,6 +11,8 @@ import { EnterTipPage } from './enter-tip/enter-tip';
 import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
+import { CouponService } from '../../../services/coupon/coupon.service';
+import { ICoupon } from '../../../interfaces/coupon.interface';
 
 @IonicPage()
 @Component({
@@ -28,6 +30,7 @@ export class TaxTipPage {
     public navParams: NavParams,
     public alertCtrl: AlertService,
     public loader: LoaderService,
+    public couponService: CouponService,
     public auth: AuthService,
     public ticketService: TicketService,
     public paymentMethodService: PaymentMethodService,
@@ -62,6 +65,24 @@ export class TaxTipPage {
           userShare
         };
       });
+
+    try {
+      const bestCoupon = await this.couponService.filterValidCouponsAndFindBest(this.ticketService.firestoreTicket.location.id,
+        this.myTabItems, this.ticketService.curUser.totals.subtotal);
+        console.log(this.couponService.validCoupons.length);
+      if (bestCoupon && this.couponService.selectedCoupon.id !== bestCoupon.id) {
+        const alert = this.alertCtrl.create({
+          title: 'Better coupon available',
+          message: `It looks like you selected a coupon with $${this.couponService.selectedCoupon.value} in savings, however you can save even
+          more with the ${bestCoupon.header} coupon which gives $${bestCoupon.value} in savings. would you like to use the other coupon?`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+    } catch (e) {
+      console.error('Caught in initializePaymentMethods', e);
+    }
+
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
@@ -93,6 +114,7 @@ export class TaxTipPage {
         this.ticketService.userPaymentMethod.id,
         this.ticketService.curUser.totals.total,
         this.ticketService.curUser.totals.tip,
+        this.couponService.selectedCoupon
       ) as any;
       await this.ticketService.changeUserStatus(UserStatus.Paid)
       await this.navCtrl.push('StatusPage')

@@ -5,6 +5,7 @@ import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
 import { ICoupon } from '../../interfaces/coupon.interface';
 
+enum CouponGroup {validCoupons, upcomingCoupons, expiredCoupons}
 
 @IonicPage()
 @Component({
@@ -13,7 +14,8 @@ import { ICoupon } from '../../interfaces/coupon.interface';
 })
 export class CouponsPage {
 
-  coupons: ICoupon[];
+  selectedSegment: CouponGroup = CouponGroup.validCoupons;
+  couponGroup = CouponGroup;
   expandedCouponId: number;
 
   constructor(
@@ -34,16 +36,27 @@ export class CouponsPage {
     await this.getCoupons();
   }
 
+  selectSegment(event: {value: number}) {
+    console.log(event);
+    this.selectedSegment = event.value;
+  }
+
   expandCoupon(coupon: ICoupon) {
-    this.expandedCouponId = coupon.id;
+    if (this.expandedCouponId === coupon.id) {
+      this.expandedCouponId = -1;
+    } else {
+      this.expandedCouponId = coupon.id;
+    }
   }
 
   async getCoupons() {
     const loading = this.loader.create();
     await loading.present();
     try {
-      this.coupons = await this.couponService.getCoupons() as ICoupon[];
+      await this.couponService.getCoupons();
       this.expandedCouponId = -1;
+      console.log(typeof this.couponService.validCoupons[0].coupon_end_date)
+
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -52,12 +65,14 @@ export class CouponsPage {
       alert.present();
     }
     await loading.dismiss();
+  }
 
-    console.log(this.coupons);
-    return this.coupons;
+  createNewCoupon() {
+    this.couponService.createCoupon();
   }
 
   redeemCoupon(coupon: ICoupon) {
+    this.couponService.selectCoupon(coupon);
     this.navCtrl.push('TabLookupPage', coupon.location);
   }
 

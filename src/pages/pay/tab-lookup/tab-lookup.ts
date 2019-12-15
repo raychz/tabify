@@ -9,6 +9,7 @@ import { ILocation } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { IFraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
+import { CouponService } from '../../../services/coupon/coupon.service';
 
 @IonicPage()
 @Component({
@@ -31,6 +32,7 @@ export class TabLookupPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public alertCtrl: AlertService,
+    public couponService: CouponService,
     public locationService: LocationService,
   ) {
     this.tabForm = fb.group({
@@ -45,6 +47,7 @@ export class TabLookupPage {
   async ionViewDidLoad() {
     this.getDateTime();
     await this.getFraudPreventionCode();
+    await this.couponService.getCoupons();
   }
 
   getDateTime() {

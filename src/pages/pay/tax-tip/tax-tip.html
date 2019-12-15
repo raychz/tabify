@@ -64,10 +64,19 @@
           <h2>${{ticketService.curUser.totals.tax / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
+      <ion-item class='total' *ngIf="couponService.selectedCoupon.value > 0">
+         <h2>Coupon </h2>
+          <ion-select [(ngModel)]="couponService.selectedCoupon" interface="popover">
+            <ion-option *ngFor="let coupon of couponService.validCoupons" [value]="coupon"> {{ coupon.header }} </ion-option>
+          </ion-select>
+        <div item-end>
+          <h2>- ${{couponService.selectedCoupon.value / 100 | number: '1.2-2'}}</h2>
+        </div>
+      </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{(ticketService.curUser.totals.total + ticketService.curUser.totals.tip) / 100 | number: '1.2-2'}}</h2>
+          <h2>${{((ticketService.curUser.totals.total + ticketService.curUser.totals.tip - couponService.selectedCoupon.value) / 100) | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item (click)="editPaymentMethod()">
