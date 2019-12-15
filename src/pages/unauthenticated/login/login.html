@@ -11,7 +11,8 @@
         <span>Login below to get started</span>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <!-- TODO: Bring back Facebook login -->
+    <!-- <ion-row>
       <ion-col>
         <ion-card>
           <ion-card-header>
@@ -25,12 +26,13 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
     <ion-row>
       <ion-col>
         <ion-card>
           <ion-card-header id="form-card-header">
-            Or connect with email
+            <!-- TODO: Change back to 'Or connect with email' -->
+            Connect with email
           </ion-card-header>
           <ion-card-content>
             <form (ngSubmit)="login()" [formGroup]="loginForm">
@@ -61,7 +63,7 @@
 
               <div>
                 <div class="form-error">{{ loginError }}</div>
-                <button ion-button block type="submit" [disabled]="!loginForm.valid">
+                <button id="login-with-email" ion-button block type="submit" [disabled]="!loginForm.valid">
                   Login With Email
                 </button>
                 <button ion-button block clear color="tabify-alt" (click)="forgotPassword()">

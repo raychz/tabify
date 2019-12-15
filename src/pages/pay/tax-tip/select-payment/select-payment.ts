@@ -5,6 +5,8 @@ import { TicketService } from '../../../../services/ticket/ticket.service';
 import { PaymentDetailsPageMode } from '../../../payment-methods/payment-details/payment-details';
 import { sleep } from '../../../../utilities/general.utilities';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { AblyTicketService } from '../../../../services/ticket/ably-ticket.service';
+import { TicketUserStatus } from '../../../../enums';
 
 @IonicPage()
 @Component({
@@ -16,12 +18,17 @@ export class SelectPaymentPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public paymentMethodService: PaymentMethodService,
-    public ticketService: TicketService,
+    public ablyTicketService: AblyTicketService,
     public auth: AuthService
   ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
+    } catch {
+      return false;
+    }
   }
 
   ionViewDidLoad() {

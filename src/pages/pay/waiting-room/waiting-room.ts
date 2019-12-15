@@ -1,10 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Navbar, ModalController } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
-import { sleep } from '../../../utilities/general.utilities';
+import { sleep, abbreviateName, plurality } from '../../../utilities/general.utilities';
 import { Platform } from 'ionic-angular';
 import { AlertService } from '../../../services/utilities/alert.service';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketUserStatus, TicketUserStatusOrder } from '../../../enums';
+import { LoaderService } from '../../../services/utilities/loader.service';
 
 @IonicPage()
 @Component({
@@ -13,86 +16,190 @@ import { AlertService } from '../../../services/utilities/alert.service';
 })
 export class WaitingRoomPage {
   @ViewChild(Navbar) navBar: Navbar;
-
-  userStatus = UserStatus;
   moveToTaxTip = false;
-  firstConfirm = true;
+  currentUserUid = this.auth.getUid();
+  // Expose const to template
+  TicketUserStatusOrder = TicketUserStatusOrder;
+  // Expose enum to template
+  TicketUserStatus = TicketUserStatus;
+  plurality = plurality;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
-    public ticketService: TicketService,
     public platform: Platform,
-    public alertCtrl: AlertService
-  ) {}
+    public alertCtrl: AlertService,
+    public ablyTicketService: AblyTicketService,
+    public loader: LoaderService,
+    public modalCtrl: ModalController,
+  ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && (currentUser.status === TicketUserStatus.WAITING || currentUser.status === TicketUserStatus.CONFIRMED);
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewCanLeave(): boolean {
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return currentUser.status !== TicketUserStatus.WAITING && currentUser.status !== TicketUserStatus.CONFIRMED;
+    } catch {
+      return false;
+    }
+  }
+
+  /** Returns true if at least one item on the ticket is shared by multiple users */
+  areTicketItemsShared() {
+    return this.ablyTicketService.ticket.items.some(item => item.users.length > 1);
+  }
+
+  /** Returns true if at least one item on the ticket is unclaimed */
+  areTicketItemsUnclaimed() {
+    return this.ablyTicketService.ticket.items.some(item => item.users.length === 0);
+  }
+
+  /** Counts number of unclaimed items */
+  unclaimedTicketItemsCount(): number {
+    return this.ablyTicketService.ticket.items.filter(item => item.users.length === 0).length;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WaitingRoomPage');
-
-    if(this.ticketService.curUser.status === UserStatus.Confirmed) {
-      this.firstConfirm = false;
-    }
   }
 
   checkConfirmedStatus(): boolean {
-    if (this.ticketService.overallUsersProgress < UserStatus.Confirmed || this.ticketService.unclaimedItems.length > 0) {
-      return false;
-    } else {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
+    if (currentUser.status === TicketUserStatus.PAYING) {
       if (!this.moveToTaxTip) {
         this.moveToTaxTip = true;
         this.viewTaxTip();
       }
       return true;
     }
+    return false;
   }
 
   async viewTaxTip() {
     await sleep(1500);
-    await this.ticketService.changeUserStatus(UserStatus.Paying);
     this.navCtrl.push('TaxTipPage');
   }
 
-  async toggleConfirm() {
-
-    if (this.firstConfirm) {
-      const alert = this.alertCtrl.create({
-        title: 'Confirm that everyone has joined',
-        message: `There are currently ${this.ticketService.users.length} users on this tab. Is that everyone in your party?`,
-        buttons: [
-          {
-            text: 'No',
-            role: 'cancel'
-          },
-          {
-            text: 'Yes',
-            handler: () => { this.firstConfirm = false; this.changeUserConfirmStatus() }
-          }
-        ]
-      });
-      alert.present();
+  async changeUserConfirmStatus() {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
+    if (currentUser.status === TicketUserStatus.WAITING) {
+      const unclaimedItemsCount = this.unclaimedTicketItemsCount();
+      const numberOfUsers = this.ablyTicketService.ticket.users.length;
+      if (unclaimedItemsCount > 0) {
+        const alert = this.alertCtrl.create({
+          title: `${unclaimedItemsCount} Unclaimed Item${plurality(unclaimedItemsCount)}`,
+          message: `Cannot confirm until all items have been claimed by at least one person.`,
+          buttons: ['OK']
+        });
+        alert.present();
+        return;
+      } else if (numberOfUsers === 1) {
+        const alert = this.alertCtrl.create({
+          title: 'Is the party complete?',
+          message: `You're the only one paying for this ticket. Would you like to continue?`,
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel'
+            },
+            {
+              text: 'Yes',
+              handler: () => { this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.CONFIRMED); }
+            }
+          ]
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Is the party complete?',
+          message: `There are currently ${this.ablyTicketService.ticket.users.length} users on this tab. Is that everyone?`,
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel'
+            },
+            {
+              text: 'Yes',
+              handler: () => { this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.CONFIRMED); }
+            }
+          ]
+        });
+        alert.present();
+      }
+    } else if (currentUser.status === TicketUserStatus.CONFIRMED) {
+      await this.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.WAITING);
     } else {
-      this.changeUserConfirmStatus();
+      throw `The current user status is invalid: ${this.ablyTicketService.ticket.usersMap.get(this.currentUserUid).status}`;
     }
   }
 
-  async changeUserConfirmStatus () {
-    if (this.ticketService.curUser.status !== UserStatus.Confirmed) {
-      await this.ticketService.changeUserStatus(UserStatus.Confirmed);
-    } else {
-      await this.ticketService.changeUserStatus(UserStatus.Waiting);
+  async setTicketUserStatus(ticketId: number, ticketUserId: number, status: TicketUserStatus) {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
+    const loading = this.loader.create();
+    await loading.present();
+    try {
+      await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, status);
+    } catch (e) {
+      console.log(e);
+      if (e && e.error && e.error.message) {
+        const alert = this.alertCtrl.create({
+          title: 'Warning',
+          message: e.error.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Unknown Error',
+          message: 'Sorry! Try refreshing the app and joining the tab again.',
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
     }
+    await loading.dismiss();
+  }
 
-    console.log('updated users: ', this.ticketService.users);
+  isBackButtonDisabled() {
+    const allConfirmed = this.ablyTicketService.ticket.users.every(u => TicketUserStatusOrder[u.status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED]);
+    return allConfirmed && !this.areTicketItemsUnclaimed();
   }
 
   async backButtonAction() {
-    await this.ticketService.changeUserStatus(UserStatus.Selecting);
-    this.ticketService.resetIsExpanded();
-    this.navCtrl.pop();
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
+    if (!this.isBackButtonDisabled()) {
+      const loading = this.loader.create();
+      await loading.present();
+      try {
+        await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.SELECTING);
+        await this.navCtrl.pop();
+        // Push the select items page since it will be missing from the nav stack at this point
+        if (this.navParams.get('pushSelectItemsOnBack')) {
+          await this.navCtrl.push('SelectItemsPage');
+        }
+      } catch {
+        const alert = this.alertCtrl.create({
+          title: 'Sorry!',
+          message: `You cannot go back to the Select Items page anymore.`,
+          buttons: ['OK']
+        });
+        alert.present();
+      }
+      await loading.dismiss();
+    }
+  }
+
+  inviteOthers() {
+    const modal = this.modalCtrl.create('InviteOthersPage');
+    modal.present();
   }
 }

@@ -25,7 +25,8 @@ export class SignUpPage {
   signUpError: string = '';
   form: FormGroup;
   showServerCodeInput = false;
-  signUpStep = SignUpStep.REFERRAL_CODE_ENTRY;
+  // TODO: Change back to SignUpStep.REFERRAL_CODE_ENTRY once the referral codes are in place
+  signUpStep = SignUpStep.USER_INFO_ENTRY;
 
   constructor(
     fb: FormBuilder,

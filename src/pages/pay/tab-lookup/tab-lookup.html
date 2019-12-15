@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Lookup Tab</ion-title>
+    <ion-title>Find Your Ticket #</ion-title>
     <ion-buttons end>
-      <button ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
+      <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
@@ -16,18 +16,18 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            Join Table
+            Join Your Ticket
           </ion-card-header>
           <ion-card-content>
-            <p>We hope you enjoyed {{location.name}}! Enter the 6-digit Tabify code on the bottom of your check.</p>
+            <p>We hope you enjoyed {{location.name}}! Enter your ticket number below. It can usually be found on the top of your check.</p>
             <form [formGroup]="tabForm">
               <ion-list inset>
-                <ion-item [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
-                  <ion-label floating>Tab Number</ion-label>
-                  <ion-input autofocus type="number" formControlName="ticketNumber"></ion-input>
+                <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
+                  <ion-label color="tabify" floating>Enter ticket number...</ion-label>
+                  <ion-input id="ticket-number-input" autofocus type="tel" formControlName="ticketNumber"></ion-input>
                 </ion-item>
                 <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
-                  <div [ngxError]="['required']" [when]="['dirty']">Enter a valid tab number.</div>
+                  <div [ngxError]="['required']" [when]="['dirty']">Enter a valid ticket number.</div>
                 </div>
               </ion-list>
             </form>
@@ -35,11 +35,11 @@
         </ion-card>
         <ion-card>
           <ion-card-header>
-            For Restaurant Use Only
+            For Restaurant Use Only:
           </ion-card-header>
           <ion-card-content id="fraud-prevention-code">
             <p>If requested, show this code to your server:</p>
-            <button ion-button block clear icon-end color="tabify" (click)="isCodeVisible = !isCodeVisible">
+            <button id="toggle-code" ion-button block clear icon-end (click)="isCodeVisible = !isCodeVisible">
               {{ isCodeVisible ? 'Hide Code' : 'Reveal Code' }}
               <ion-icon [name]="isCodeVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
             </button>

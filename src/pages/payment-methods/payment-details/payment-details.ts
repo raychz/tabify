@@ -10,8 +10,8 @@ import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentMethodService } from '../../../services/payment/payment-method.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService } from '../../../services/ticket/ticket.service';
 import { environment } from '@tabify/env';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 
 declare const Spreedly: any;
 
@@ -64,7 +64,7 @@ export class PaymentDetailsPage {
     private changeDetectorRef: ChangeDetectorRef,
     private paymentMethodService: PaymentMethodService,
     public auth: AuthService,
-    public ticketService: TicketService
+    public ablyTicketService: AblyTicketService
   ) {
     this.mode = navParams.get('mode');
     this.title = navParams.get('title') || 'Payment Details';
@@ -192,7 +192,8 @@ export class PaymentDetailsPage {
           await this.navCtrl.pop();
           break;
         case PaymentDetailsPageMode.SAVE_AND_PAY:
-          this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods.find(m => m.id === method.id);
+          const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+          currentUser.paymentMethod = this.paymentMethodService.paymentMethods.find(m => m.id === method.id);
           // Pop twice. Once to get back to Select Payment Method page. Twice to get back to Checkout page.
           await this.navCtrl.pop();
           await this.navCtrl.pop();

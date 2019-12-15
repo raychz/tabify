@@ -13,6 +13,10 @@ import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { CouponService } from '../../../services/coupon/coupon.service';
 import { ICoupon } from '../../../interfaces/coupon.interface';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketItem } from '../../../interfaces/ticket-item.interface';
+import { TicketStatus, TicketUserStatus } from '../../../enums';
+import { TicketUser } from '../../../interfaces/ticket-user.interface';
 
 @IonicPage()
 @Component({
@@ -21,9 +25,12 @@ import { ICoupon } from '../../../interfaces/coupon.interface';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  myTabItems: FirestoreTicketItem[] = [];
+  currentUser: TicketUser;
+  myTabItems: TicketItem[] = [];
   displayAllItems = false;
   displayLimit = 2;
+  /** Is the user selecting their payment method. */
+  selectingPaymentMethod = false;
 
   constructor(
     public navCtrl: NavController,
@@ -36,13 +43,38 @@ export class TaxTipPage {
     public paymentMethodService: PaymentMethodService,
     public paymentService: PaymentService,
     public modalCtrl: ModalController,
+    public ablyTicketService: AblyTicketService,
   ) { }
 
   public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
+    try {
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewCanLeave(): boolean {
+    try {
+      // Check if the ticket state has been cleared here
+      if (!this.ablyTicketService.ticket) return true;
+
+      const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+      // Allow user to leave only if they are trying to select their payment method
+      return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethod;
+    } catch {
+      return false;
+    }
+  }
+
+  public ionViewWillEnter() {
+    // Reset the selectingPaymentMethod boolean to false since the method has already been selected
+    this.selectingPaymentMethod = false;
   }
 
   async ionViewDidLoad() {
+    this.currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     const loading = this.loader.create();
     await loading.present();
     try {
@@ -56,33 +88,11 @@ export class TaxTipPage {
         console.error('something went wrong again, not retrying', e);
       }
     }
-    this.myTabItems = getItemsOnMyTab(this.ticketService.firestoreTicketItems, this.auth.getUid())
-      .map(item => {
-        const nestedUser = item.users.find((e: any) => e.uid === this.auth.getUid());
-        const userShare = (nestedUser && nestedUser.price) || 0;
-        return {
-          ...item,
-          userShare
-        };
-      });
-
-    try {
-      const bestCoupon = await this.couponService.filterValidCouponsAndFindBest(this.ticketService.firestoreTicket.location.id,
-        this.myTabItems, this.ticketService.curUser.totals.subtotal);
-        console.log(this.couponService.validCoupons.length);
-      if (bestCoupon && this.couponService.selectedCoupon.id !== bestCoupon.id) {
-        const alert = this.alertCtrl.create({
-          title: 'Better coupon available',
-          message: `It looks like you selected a coupon with $${this.couponService.selectedCoupon.value} in savings, however you can save even
-          more with the ${bestCoupon.header} coupon which gives $${bestCoupon.value} in savings. would you like to use the other coupon?`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      }
-    } catch (e) {
-      console.error('Caught in initializePaymentMethods', e);
-    }
-
+    this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
+    // TODO: Enter the user's default tip percentage here
+    this.currentUser.tipPercentage = 20;
+    this.currentUser.tips =
+      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.items));
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
@@ -91,7 +101,7 @@ export class TaxTipPage {
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentMethodService.paymentMethods.length) {
-      this.ticketService.userPaymentMethod = this.paymentMethodService.paymentMethods[0];
+      this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
     await loading.dismiss();
   }
@@ -103,25 +113,45 @@ export class TaxTipPage {
   }
 
   async pay() {
-    if (!this.ticketService.userPaymentMethod) {
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    if (!currentUser.paymentMethod) {
       throw new Error("No payment method selected!")
     }
     const loading = this.loader.create();
     await loading.present();
     try {
       const response = await this.paymentService.sendTicketPayment(
-        this.ticketService.ticket.id,
-        this.ticketService.userPaymentMethod.id,
-        this.ticketService.curUser.totals.total,
-        this.ticketService.curUser.totals.tip,
-        this.couponService.selectedCoupon
+        this.ablyTicketService.ticket.id,
+        this.currentUser.paymentMethod.id,
+        this.currentUser.total,
+        this.currentUser.tips,
       ) as any;
-      await this.ticketService.changeUserStatus(UserStatus.Paid)
-      await this.navCtrl.push('StatusPage')
+      if (response.ticket.ticket_status === TicketStatus.CLOSED) {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Success',
+          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
+          buttons: ['Ok']
+        });
+        alert.present();
+      }
+
+      // Clear the state of the ticket service
+      await this.ablyTicketService.clearState();
+      await this.navCtrl.setRoot('HomePage');
+      // TODO: Reintegrate the status page here
+      // await this.ticketService.changeUserStatus(UserStatus.Paid)
+      // await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',
-        message: 'Whoops, something went wrong on our end! Please try again.',
+        message: 'Sorry, something went wrong on our side! Please try again.',
         buttons: ['Ok']
       });
       alert.present();
@@ -131,6 +161,7 @@ export class TaxTipPage {
   }
 
   editPaymentMethod() {
+    this.selectingPaymentMethod = true;
     this.navCtrl.push('SelectPaymentPage');
   }
 }

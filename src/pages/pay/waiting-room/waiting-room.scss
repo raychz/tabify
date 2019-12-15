@@ -1,30 +1,89 @@
 page-waiting-room {
+  ion-toolbar {
+    text-align: center;
+    height: 100%;
+    .toolbar-col {
+      padding: 0px 5px;
+      &.guests {
+        color: lightgray;
+      }
+      &.top {
+        color: white;
+        font-size: 1.5em;
+        font-weight: 500;
+      }
+      &.bottom {
+        color: white;
+        font-size: 1em;
+      }
+    }
+    .plus-others {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .invite-others {
+      font-weight: bold;
+      color: map-get($colors, primary);
+      white-space: nowrap;
+      padding-left: 3px;
+    }
+    &.secondary-toolbar {
+      .toolbar-background {
+        border-color: gray;
+      }
+    }
+  }
   .confirm-text {
     text-align: center;
   }
-  #tell-your-friends {
-    text-align: center;
-  }
-  #your-party {
+  #your-party,
+  #go-back-to-claim,
+  #no-shared-items,
+  #shared-items,
+  #your-selections {
     text-align: left;
     color: darkgrey;
+    overflow-wrap: normal;
+    white-space: normal;
   }
   #go-back-text {
     font-style: italic;
-    font-size: small;
-  }
-  #no-shared-items {
-    padding: 0px;
-    padding-left: 15px;
     font-size: small;
   }
   .card-header {
     font-size: medium;
     padding-bottom: 5px;
   }
-  .ticket-spinner {
-    display: flex;
-    margin: auto;
+
+  .content-divider {
+    background-color: lightgray;
+  }
+
+  ion-badge.status-badge,
+  .item ion-badge.status-badge {
+    color: black;
+    margin-left: 0;
+  }
+
+  .waiting-user {
+    &-col {
+      padding: 0px;
+      .icon {
+        margin-right: 0;
+      }
+      &-2 {
+        .item .label {
+          margin: 0;
+        }
+      }
+      .item {
+        padding-left: 0px;
+      }
+      .item-md.item-block .item-inner,
+      .item-ios.item-block .item-inner {
+        padding-right: 0px;
+      }
+    }
   }
 
   ion-content {

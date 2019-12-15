@@ -1,6 +1,7 @@
 page-tab-lookup {
-  .item {
+  #number-input-item {
     padding-left: 0px;
+    border-bottom-color: map-get($colors, primary);
   }
   ion-label {
     color: gray;
@@ -18,6 +19,10 @@ page-tab-lookup {
     #date-time {
       text-align: center;
       font-size: 30px;
+    }
+
+    #toggle-code {
+      color: map-get($colors, light);
     }
   }
 }

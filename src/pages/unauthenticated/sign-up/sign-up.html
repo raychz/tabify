@@ -56,7 +56,8 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
+    <!-- TODO: Bring back Facebook sign up -->
+    <!-- <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
       <ion-col>
         <ion-card>
           <ion-card-header>
@@ -70,12 +71,13 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
     <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
       <ion-col>
         <ion-card>
           <ion-card-header id="form-card-header">
-            Or connect with email
+            <!-- TODO: Change back to 'Or connect with email' -->
+            Connect with email
           </ion-card-header>
           <ion-card-content>
             <form (ngSubmit)="signUp()" [formGroup]="form">

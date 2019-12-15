@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { TicketService } from '../../../../services/ticket/ticket.service';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { AblyTicketService } from '../../../../services/ticket/ably-ticket.service';
 
 @IonicPage()
 @Component({
@@ -10,14 +11,14 @@ import { AuthService } from '../../../../services/auth/auth.service';
 })
 export class EnterTipPage {
   @ViewChild('tipInput') tipInput: any;
-  tip: number = this.ticketService.userTipPercentage;
+  tipPercentage: number = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()).tipPercentage;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public ticketService: TicketService,
     public viewCtrl: ViewController,
-    public auth: AuthService
+    public auth: AuthService,
+    public ablyTicketService: AblyTicketService,
   ) { }
 
   public ionViewCanEnter(): boolean {
@@ -31,18 +32,19 @@ export class EnterTipPage {
   }
 
   async dismiss() {
-    const enteredTip = Number(this.tip);
+    const enteredTip = Number(this.tipPercentage);
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     if (isNaN(enteredTip)) {
-      this.ticketService.userTipPercentage = 18;
-      this.ticketService.curUser.totals.tip =
-        Math.round(((this.ticketService.userTipPercentage / 100) * this.ticketService.curUser.totals.subtotal));
+      currentUser.tipPercentage = 20;
+      currentUser.tips =
+        Math.round(((currentUser.tipPercentage / 100) * currentUser.items));
     } else if (enteredTip < 0) {
-      this.ticketService.userTipPercentage = 0;
-      this.ticketService.curUser.totals.tip = 0;
+      currentUser.tipPercentage = 0;
+      currentUser.tips = 0;
     } else {
-      this.ticketService.userTipPercentage = enteredTip;
-      this.ticketService.curUser.totals.tip =
-        Math.round(((this.ticketService.userTipPercentage / 100) * this.ticketService.curUser.totals.subtotal));
+      currentUser.tipPercentage = enteredTip;
+      currentUser.tips =
+        Math.round(((currentUser.tipPercentage / 100) * currentUser.items));
     }
     await this.viewCtrl.dismiss();
   }

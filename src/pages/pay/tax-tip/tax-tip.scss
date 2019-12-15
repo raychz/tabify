@@ -4,6 +4,10 @@ page-tax-tip {
   }
 
   .total {
+    &.discount h2 {
+      color: #e69900;
+      font-weight: bold;
+    }
     color: gray;
   }
 
@@ -16,6 +20,9 @@ page-tax-tip {
 
   #grand-total {
     border-bottom: 1px lightgray dashed;
+    h2 {
+      font-weight: bold;
+    }
   }
 
   .edit-icon {

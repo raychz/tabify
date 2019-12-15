@@ -1,6 +1,14 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Select Items</ion-title>
+    <ion-buttons left>
+      <button ion-button icon-start (click)="backButtonAction()">
+        <ion-icon name="arrow-back"></ion-icon>
+        <ion-label *ngIf="platform.is('ios')">
+          Back
+        </ion-label>
+      </button>
+    </ion-buttons>
     <ion-buttons end>
       <button ion-button icon-end (click)="confirmSelections()">
         Next
@@ -11,9 +19,12 @@
   <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col guests">
+        <ion-icon name="md-list-box"></ion-icon>
+        <b>Tab</b>
+        <span>#{{ablyTicketService.ticket?.ticket_number}}</span>
         <ion-icon name="people"></ion-icon>
-        <b>Guests:</b>
-        <span [innerHTML]="ticketService.ticketUsersDescription"></span>
+        <b>{{ablyTicketService.ticket?.users.length}} Guest{{plurality(ablyTicketService.ticket?.users.length)}}:</b>
+        <span [innerHTML]="ablyTicketService.ticket?.ticketUsersDescription"></span>
         <span class="invite-others">
           <ion-icon name="send"></ion-icon>
           Invite Others
@@ -24,15 +35,15 @@
   <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        {{ ticketService.userSelectedItemsCount }}
+        {{ ablyTicketService.ticket?.usersMap.get(userUid).selectedItemsCount }}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col top">
-        ${{ (ticketService.curUser.totals.subtotal / 100 | number: '1.2-2') || 0.0 }}
+        ${{ (ablyTicketService.ticket?.usersMap.get(userUid).items / 100 | number: '1.2-2') || 0.0 }}
       </ion-col>
     </ion-row>
     <ion-row no-wrap>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
-        Selected Item{{ ticketService.userSelectedItemsCount === 1 ? '' : 's'}}
+        Selected Item{{ ablyTicketService.ticket?.usersMap.get(userUid).selectedItemsCount === 1 ? '' : 's'}}
       </ion-col>
       <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
         Your Subtotal
@@ -47,31 +58,30 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container *ngIf="ticketService.firestoreTicketItems; else loading">
-    <ng-container *ngFor="let item of ticketService.firestoreTicketItems">
-      <ion-card [class.item-not-on-tab]="!item.isItemOnMyTab" [class.item-on-tab]="item.isItemOnMyTab">
+  <ng-container *ngIf="ablyTicketService.ticket; else loading">
+    <ng-container *ngFor="let item of ablyTicketService.ticket?.items">
+      <ion-card [class.item-not-on-tab]="!item.usersMap.has(userUid)" [class.item-on-tab]="item.usersMap.has(userUid)">
         <div>
           <ion-row (click)="addOrRemoveItem(item)">
-            <ion-col class="modify-item" [class.item-not-on-tab]="!item.isItemOnMyTab"
-              [class.item-on-tab]="item.isItemOnMyTab" text-center col-1>
+            <ion-col class="modify-item" [class.item-not-on-tab]="!item.usersMap.has(userUid)"
+              [class.item-on-tab]="item.usersMap.has(userUid)" text-center col-1>
               <div>
-                <ion-icon *ngIf="!item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'"
-                  [name]="item.isItemOnMyTab ? 'ios-checkmark' : 'ios-add'"></ion-icon>
-                <ion-spinner *ngIf="item.loading" [color]="item.isItemOnMyTab ? 'light' : 'primary'" name="bubbles">
+                <ion-icon *ngIf="!item.loading" [color]="item.usersMap.has(userUid) ? 'light' : 'primary'"
+                  [name]="item.usersMap.has(userUid) ? 'ios-checkmark' : 'ios-add'"></ion-icon>
+                <ion-spinner *ngIf="item.loading" [color]="item.usersMap.has(userUid) ? 'light' : 'primary'"
+                  name="bubbles">
                 </ion-spinner>
               </div>
             </ion-col>
             <ion-col class="item-details">
               <ion-row nowrap>
                 <ion-col class="col-item-name">
-                  <span text-wrap class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
+                  <span text-wrap class="name-text">{{ item.name }}</span>
                   <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                 </ion-col>
                 <ion-col col-auto class="col-item-total">
-                  <span class="my-share-text" *ngIf="
-                      item.users && item.users.length > 1 && item.isItemOnMyTab
-                    ">
-                    ${{ ticketService.findUserShareOfItem(item, this.auth.getUid()) / 100 | number: '1.2-2' }} /
+                  <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.usersMap.has(userUid)">
+                    ${{ item.usersMap.get(userUid).price / 100 | number: '1.2-2' }} /
                   </span>
                   <span class="total-text">
                     ${{ item.price / 100 | number: '1.2-2' }}

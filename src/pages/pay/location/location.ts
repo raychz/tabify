@@ -5,7 +5,7 @@ import {
   NavParams,
   ViewController,
 } from 'ionic-angular';
-import { ILocation } from '../../../interfaces/location.interface';
+import { Location } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
@@ -17,8 +17,8 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: 'location.html',
 })
 export class LocationPage {
-  locations: ILocation[] = [];
-  searchLocations: ILocation[] = [];
+  locations: Location[] = [];
+  searchLocations: Location[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -77,7 +77,7 @@ export class LocationPage {
     this.navCtrl.push('TabLookupPage');
   }
 
-  selectLocation(location: ILocation) {
+  selectLocation(location: Location) {
     this.navCtrl.push('TabLookupPage', location);
   }
 }

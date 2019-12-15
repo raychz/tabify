@@ -22,6 +22,7 @@
       refreshingText="Refreshing stories...">
     </ion-refresher-content>
   </ion-refresher>
+
   <div *ngIf="this.newsfeedService.tickets?.length > 0; else emptyFeed">
     <ion-card>
       <ion-card-content>
@@ -48,7 +49,6 @@
           <ion-icon class="gray-arrow" item-end name="ios-arrow-forward"></ion-icon>
         </ion-item>
 
-        <!-- Abbreviated names of users part of the ticket -->
         <ion-row>
           <ion-col class="users-padding">
             <span>
@@ -99,7 +99,7 @@
   </div>
 
   <div *ngIf="this.newsfeedService.tickets?.length > 0" class="blank-space"></div>
-  <button ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
+  <button id="pay-tab" ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
     <ion-icon name="md-restaurant"></ion-icon>
     Pay Tab
   </button>
