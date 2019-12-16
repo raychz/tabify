@@ -16,10 +16,12 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            Join Your Ticket
+            Join Your Ticket - {{location.name}}
           </ion-card-header>
           <ion-card-content>
-            <p>We hope you enjoyed {{location.name}}! Enter your ticket number below. It can usually be found on the top of your check.</p>
+            <p>Your ticket number can usually be found on the top of your check.</p>
+            <br>
+            <p><b>Note:</b> Verify the accuracy of the items on your check <b>before</b> entering the ticket number into Tabify. The items cannot be changed after this.</p>
             <form [formGroup]="tabForm">
               <ion-list inset>
                 <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
