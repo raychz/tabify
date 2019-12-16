@@ -61,7 +61,7 @@ page-waiting-room {
 
   ion-badge.status-badge,
   .item ion-badge.status-badge {
-    color: black;
+    color: map-get($colors, tabify-dark-2);
     margin-left: 0;
   }
 

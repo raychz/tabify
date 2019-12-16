@@ -26,8 +26,8 @@ page-tax-tip {
   }
 
   .edit-icon {
-    font-size: 1em;
-    color: map-get($colors, primary);
+    vertical-align: middle;
+    color: map-get($colors, tabify-dark-2);
   }
 
   .line {
