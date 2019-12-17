@@ -67,7 +67,7 @@ export class TabLookupPage {
   async findTab() {
     let { ticketNumber } = this.tabForm.value;
 
-    ticketNumber = Number(ticketNumber);
+    ticketNumber = Number(ticketNumber.replace(/\D/g, ''));
 
     if (isNaN(ticketNumber) || !this.location.id) {
       const alert = this.alertCtrl.create({

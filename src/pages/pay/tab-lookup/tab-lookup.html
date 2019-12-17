@@ -16,7 +16,7 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            Join Your Ticket - {{location.name}}
+            Join Your Ticket – {{location.name}}
           </ion-card-header>
           <ion-card-content>
             <p>Your ticket number can usually be found on the top of your check.</p>
@@ -26,7 +26,7 @@
               <ion-list inset>
                 <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
                   <ion-label color="tabify" floating>Enter ticket number...</ion-label>
-                  <ion-input id="ticket-number-input" autofocus type="tel" formControlName="ticketNumber"></ion-input>
+                  <ion-input id="ticket-number-input" autofocus type="text" formControlName="ticketNumber"></ion-input>
                 </ion-item>
                 <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a valid ticket number.</div>
