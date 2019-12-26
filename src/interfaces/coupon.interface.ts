@@ -1,4 +1,4 @@
-import { ILocation } from "./location.interface";
+import { Location } from "./location.interface";
 
 export enum CouponOffOf {ticket, item};
 export enum CouponType {percent, dollar_value};
@@ -12,7 +12,7 @@ export interface ICoupon {
   date_updated: Date;
   coupon_start_date: Date;
   coupon_end_date: Date;
-  location: ILocation;
+  location: Location;
   usage_limit: number;
   usage_count: number;
   coupon_off_of: CouponOffOf;
