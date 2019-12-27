@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { AuthService } from '../../services/auth/auth.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
-import { ICoupon } from '../../interfaces/coupon.interface';
+import { ICoupon, CouponOffOf, CouponType } from '../../interfaces/coupon.interface';
 
 enum CouponGroup {validCoupons, upcomingCoupons, expiredCoupons}
 
@@ -17,6 +17,8 @@ export class CouponsPage {
   selectedSegment: CouponGroup = CouponGroup.validCoupons;
   couponGroup = CouponGroup;
   expandedCouponId: number;
+  coupon_off_of = CouponOffOf;
+  coupon_type = CouponType;
 
   constructor(
     public navCtrl: NavController,
@@ -55,7 +57,6 @@ export class CouponsPage {
     try {
       await this.couponService.getCoupons();
       this.expandedCouponId = -1;
-      console.log(typeof this.couponService.validCoupons[0].coupon_end_date)
 
     } catch {
       const alert = this.alertCtrl.create({

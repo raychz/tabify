@@ -10,9 +10,10 @@ export class CouponService {
   public validCoupons: ICoupon[];
   public expiredCoupons: ICoupon[];
   public upcomingCoupons: ICoupon[];
-  public selectedCoupon: ICoupon = {id: null, usage_limit: null, header: null, description: null, value: 0, date_updated: null,
+  private emptyCoupon: ICoupon = {id: null, usage_limit: null, description: null, value: 0, date_updated: null,
     date_created: null, coupon_start_date: null, coupon_end_date: null, coupon_off_of: null,
-    location: null, usage_count: null, coupon_type: null};
+    location: null, usage_count: null, coupon_type: null, estimated_dollar_value: 0};
+  public selectedCoupon: ICoupon = this.emptyCoupon;
 
     constructor(private readonly httpClient: HttpClient) { }
 
@@ -25,11 +26,16 @@ export class CouponService {
           upcomingCoupons: ICoupon[]
         };
 
+        console.log(coupons);
+
         this.validCoupons = coupons.validCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
           return coupon;
         });
+
+        console.log(this.validCoupons);
+
         this.expiredCoupons = coupons.expiredCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
@@ -49,9 +55,7 @@ export class CouponService {
       let bestCouponValue = -1;
 
       if (this.selectedCoupon && this.selectedCoupon.location.id !== parseInt(locationId)) {
-        this.selectedCoupon = {id: null, usage_limit: null, header: null, description: null, value: 0, date_updated: null,
-          date_created: null, coupon_start_date: null, coupon_end_date: null, coupon_off_of: null,
-          location: null, usage_count: null, coupon_type: null};
+        this.selectedCoupon = this.emptyCoupon;
       }
 
       console.log(this.validCoupons);

@@ -4,10 +4,10 @@ export enum CouponOffOf {ticket, item};
 export enum CouponType {percent, dollar_value};
 
 export interface ICoupon {
-  id: number,
-  header: string,
-  description: string,
-  value: number,
+  id: number;
+  description: string;
+  value: number;
+  estimated_dollar_value: number;
   date_created: Date;
   date_updated: Date;
   coupon_start_date: Date;

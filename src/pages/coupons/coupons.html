@@ -38,7 +38,7 @@
     </button> -->
   </ion-card>
 
-  <ion-list *ngIf="selectedSegment=== couponGroup.validCoupons">
+  <ion-list *ngIf="selectedSegment === couponGroup.validCoupons">
     <ion-item *ngFor="let coupon of couponService.validCoupons">
       <ion-card (click)="expandCoupon(coupon)">
         <ion-card-content>
@@ -51,24 +51,23 @@
                       </ion-avatar>
                     </ion-col>
                     <ion-col col-9>
-                      <ion-row class="coupon_location">
                         {{ coupon.location.name }}
-                      </ion-row>
-                      <ion-row text-wrap class="coupon_header">
-                        {{ coupon.header }}
-                      </ion-row>
                     </ion-col>
               </ion-row>
               <ion-row *ngIf="coupon.id === expandedCouponId">
                   <p text-wrap class="coupon_description">
                     {{ coupon.description }}
                   </p>
-                </ion-row>
+              </ion-row>
 
             </ion-col>
-            <ion-col col-3 *ngIf="coupon.id === expandedCouponId">
-                <img src="https://thestayathomechef.com/wp-content/uploads/2019/07/Grilled-Chicken-Tacos-1.jpg">
-            </ion-col>
+            <ion-col col-3>
+                <img *ngIf="coupon.id === expandedCouponId; else coupon_value" src="https://thestayathomechef.com/wp-content/uploads/2019/07/Grilled-Chicken-Tacos-1.jpg">
+                <ng-template #coupon_value>
+                    {{ coupon.coupon_type === coupon_type.dollar_value ? '$' + coupon.value : coupon.value + '%' }}
+                    off {{ coupon.coupon_off_of === coupon_off_of.ticket ? 'whole ticket' : 'one item'}}
+                </ng-template>
+              </ion-col>
 
           </ion-row>
 
@@ -89,4 +88,7 @@
       </ion-card>
     </ion-item>
   </ion-list>
+  <ion-label *ngIf="selectedSegment !== couponGroup.validCoupons">
+    Segment under construction and coming soon!
+  </ion-label>
 </ion-content>

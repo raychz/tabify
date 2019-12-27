@@ -149,7 +149,7 @@ export class HomePage {
     refresher.complete();
   }
 
-  showNotifications() {
+  showCoupons() {
     this.navCtrl.push(
       'CouponsPage',
       {},
