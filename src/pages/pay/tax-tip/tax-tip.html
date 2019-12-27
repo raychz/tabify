@@ -24,7 +24,7 @@
         </div>
       </ion-item>
       <ion-item *ngIf='currentUser?.discounts > 0' class='total discount'>
-        <h2>My Discount  🙌</h2>
+        <h2>My Discount 🙌</h2>
         <div item-end>
           <h2>–${{currentUser?.discounts / 100 | number: '1.2-2'}}</h2>
         </div>
@@ -38,10 +38,14 @@
       <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
           <span class='line-details'>({{currentUser?.tipPercentage}}%)</span>
-          <ion-icon class="edit-icon" name='md-create'></ion-icon>
         </h2>
         <div item-end>
-          <h2>${{currentUser?.tips / 100 | number: '1.2-2'}}</h2>
+          <h2>
+            <ion-badge class="edit-icon" color="primary">
+              EDIT
+            </ion-badge>
+            ${{currentUser?.tips / 100 | number: '1.2-2'}}
+          </h2>
         </div>
       </ion-item>
       <ion-item class='total'>
@@ -70,9 +74,12 @@
       <ion-item (click)="editPaymentMethod()">
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
         <div item-end>
-          <h2>{{currentUser?.paymentMethod?.card_type}} ...{{currentUser?.paymentMethod?.last_four_digits}}
-            <ion-icon name="md-create" class="edit-icon"></ion-icon>
-          </h2>
+          <span>
+            <ion-badge class="edit-icon" color="primary">
+              EDIT
+            </ion-badge>
+            {{currentUser?.paymentMethod?.card_type}} ...{{currentUser?.paymentMethod?.last_four_digits}}
+          </span>
         </div>
       </ion-item>
     </ion-card-content>
