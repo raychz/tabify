@@ -8,8 +8,7 @@
     "start": "ionic-app-scripts serve",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
-    "lint": "ionic-app-scripts lint",
-    "preinstall": "node -e 'if(/yarn\\.js$/.test(process.env.npm_execpath)) throw new Error(\"Use npm\")'"
+    "lint": "ionic-app-scripts lint"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",

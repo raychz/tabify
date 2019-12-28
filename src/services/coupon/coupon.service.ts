@@ -3,6 +3,8 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from '@tabify/env';
 import { ICoupon, CouponOffOf, CouponType } from "../../interfaces/coupon.interface";
 import { FirestoreTicketItem } from "../../services/ticket/ticket.service";
+import { TicketItem } from '../../interfaces/ticket-item.interface';
+
 
 @Injectable()
 export class CouponService {
@@ -48,19 +50,19 @@ export class CouponService {
         });
     }
 
-    async filterValidCouponsAndFindBest(locationId: string, ticketItems: FirestoreTicketItem[], subtotal: number): Promise<ICoupon> {
+    async filterValidCouponsAndFindBest(locationId: number, ticketItems: TicketItem[], subtotal: number): Promise<ICoupon> {
      console.log(this.selectedCoupon);
       await this.getCoupons();
       let bestCoupon = undefined
       let bestCouponValue = -1;
 
-      if (this.selectedCoupon && this.selectedCoupon.location.id !== parseInt(locationId)) {
+      if (this.selectedCoupon && this.selectedCoupon.location.id !== locationId) {
         this.selectedCoupon = this.emptyCoupon;
       }
 
       console.log(this.validCoupons);
       this.validCoupons = this.validCoupons.filter( coupon => {
-        if (coupon.location.id === parseInt(locationId)) {
+        if (coupon.location.id === locationId) {
           let couponValue = -1;
           let item = {price: subtotal};
           if(coupon.coupon_off_of === CouponOffOf.item) {
@@ -79,6 +81,7 @@ export class CouponService {
             bestCouponValue = couponValue;
             bestCoupon = coupon;
           }
+          coupon.estimated_dollar_value = couponValue;
           return true;
         }
         return false;

@@ -88,6 +88,8 @@ export class TaxTipPage {
         console.error('something went wrong again, not retrying', e);
       }
     }
+    await this.couponService.getCoupons();
+
     this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
     // TODO: Enter the user's default tip percentage here
     this.currentUser.tipPercentage = 20;
@@ -103,7 +105,25 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
+    const bestCoupon = await this.couponService.filterValidCouponsAndFindBest(this.ablyTicketService.ticket.location.id, this.myTabItems, this.currentUser.sub_total);
     await loading.dismiss();
+
+    if (this.couponService.selectedCoupon.id !== bestCoupon.id) {
+      const alert = this.alertCtrl.create({
+        title: 'Better Coupon Found',
+        message: `We have found a better coupon with more savings than the one you originally selected. Would you like to automatically apply this better coupon instead?`,
+        buttons: [
+          'No',
+          {
+            text: 'Yes',
+            handler: () => {
+              this.couponService.selectCoupon(bestCoupon);
+            }
+          },
+        ],
+      });
+      alert.present();
+    }
   }
 
   async adjustTip() {

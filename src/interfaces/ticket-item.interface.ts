@@ -9,7 +9,7 @@ export interface TicketItem extends FrontendTicketItem {
   ticket_item_id?: number;
   ticket?: Ticket;
   name?: string;
-  price?: number;
+  price: number;
   quantity?: number;
   users?: TicketItemUser[];
 }
