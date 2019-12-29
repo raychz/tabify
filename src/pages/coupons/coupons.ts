@@ -16,6 +16,7 @@ export class CouponsPage {
 
   selectedSegment: CouponGroup = CouponGroup.validCoupons;
   couponGroup = CouponGroup;
+  fullCouponsPage = true;
   expandedCouponId: number;
   // Expose enum to template
   CouponOffOf = CouponOffOf;
@@ -37,7 +38,13 @@ export class CouponsPage {
 
   async ionViewDidLoad() {
     console.log('ionViewDidLoad CouponsPage');
-    await this.getCoupons();
+    if (this.navParams.data.fullCouponsPage !== undefined) {
+      this.fullCouponsPage = this.navParams.data.fullCouponsPage;
+    }
+    if (this.fullCouponsPage) {
+      console.log('full page');
+      await this.getCoupons();
+    }
   }
 
   selectSegment(event: {value: number}) {
@@ -70,13 +77,17 @@ export class CouponsPage {
     await loading.dismiss();
   }
 
-  createNewCoupon() {
-    this.couponService.createCoupon();
-  }
+  // createNewCoupon() {
+  //   this.couponService.createCoupon();
+  // }
 
-  redeemCoupon(coupon: ICoupon) {
+  async redeemCoupon(coupon: ICoupon) {
     this.couponService.selectCoupon(coupon);
-    this.navCtrl.push('TabLookupPage', coupon.location);
+    if (this.fullCouponsPage) {
+      await this.navCtrl.push('TabLookupPage', coupon.location);
+    } else {
+      await this.navCtrl.pop()
+    }
   }
 
   cancel() {

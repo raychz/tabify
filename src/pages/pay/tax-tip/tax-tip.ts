@@ -190,6 +190,6 @@ export class TaxTipPage {
 
   editCoupon() {
     this.selectingPaymentMethodOrCoupon = true;
-    this.navCtrl.push('CouponsPage');
+    this.navCtrl.push('CouponsPage', {fullCouponsPage: false});
   }
 }

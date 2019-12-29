@@ -4,6 +4,7 @@ import { environment } from '@tabify/env';
 import { ICoupon, CouponOffOf, CouponType } from "../../interfaces/coupon.interface";
 import { FirestoreTicketItem } from "../../services/ticket/ticket.service";
 import { TicketItem } from '../../interfaces/ticket-item.interface';
+import currency from 'currency.js';
 
 @Injectable()
 export class CouponService {
@@ -32,8 +33,8 @@ export class CouponService {
         this.validCoupons = coupons.validCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
-          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
-          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
+          coupon.coupon_off_of = CouponOffOf[ coupon.coupon_off_of as any as string ];
+          coupon.coupon_type = CouponType[ coupon.coupon_type as any as string ];
           return coupon;
         });
 
@@ -42,15 +43,15 @@ export class CouponService {
         this.expiredCoupons = coupons.expiredCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
-          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
-          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
+          coupon.coupon_off_of = CouponOffOf[ coupon.coupon_off_of as any as string ];
+          coupon.coupon_type = CouponType[ coupon.coupon_type as any as string ];
           return coupon;
         });
         this.upcomingCoupons = coupons.upcomingCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
-          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
-          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
+          coupon.coupon_off_of = CouponOffOf[ coupon.coupon_off_of as any as string ];
+          coupon.coupon_type = CouponType[ coupon.coupon_type as any as string ];
           return coupon;
         });
     }
@@ -83,7 +84,7 @@ export class CouponService {
           }
           couponValue = coupon.value;
           if(coupon.coupon_type === CouponType.percent) {
-            couponValue = item.price * (coupon.value / 100);
+            couponValue = currency(item.price / 100).multiply(coupon.value / 100).intValue;
           }
           if(couponValue > bestCouponValue) {
             bestCouponValue = couponValue;
@@ -112,16 +113,16 @@ export class CouponService {
       console.log(this.selectedCoupon);
     }
 
-    async createCoupon() {
-      const newCoupon = {
-        description: "This is some example randomness text in orer to make sure everything works right in this post request",
-        header: "50 off any order",
-        usage_limit: 1,
-        value: 50,
-        coupon_start_date: new Date(),
-        coupon_end_date: new Date(),
-      };
-      const res = await this.httpClient.post(`${environment.serverUrl}/coupons/location/1`,
-          { newCoupon }).toPromise();
-  }
+  //   async createCoupon() {
+  //     const newCoupon = {
+  //       description: "This is some example randomness text in orer to make sure everything works right in this post request",
+  //       header: "50 off any order",
+  //       usage_limit: 1,
+  //       value: 50,
+  //       coupon_start_date: new Date(),
+  //       coupon_end_date: new Date(),
+  //     };
+  //     const res = await this.httpClient.post(`${environment.serverUrl}/coupons/location/1`,
+  //         { newCoupon }).toPromise();
+  // }
 }
