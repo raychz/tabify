@@ -66,63 +66,158 @@
 
     </ion-row>
 
-    <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">
+    <ion-row>
+      <ion-col text-center>
+        <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+          <ion-segment-button small value="comments" icon-only>
+            <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button small value="payment-details" icon-only>
+            <ion-icon name="cash"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+    </ion-row>
+
+    <ng-container *ngIf="selectedSegment === 'comments'">
       <ion-row>
         <ion-col text-center>
           <p>Comments</p>
         </ion-col>
       </ion-row>
-      <ng-container *ngFor="let comment of comments; index as commentIndex">
-        <ng-container *ngIf="!!comment">
+      <ion-card-content *ngIf="comments.length > 0; else emptyComments" class="comment-section-padding">
+        <ng-container *ngFor="let comment of comments; index as commentIndex">
+          <ng-container *ngIf="!!comment">
+            <div class="comment-style">
+              <ion-row>
+                <ion-col col-11>
+                  <ion-item class="unset-background">
+                    <ion-avatar class="comment-avatar" item-start>
+                      <img [src]="comment.user.userDetail.photo_url" />
+                    </ion-avatar>
+                    <ion-note>{{comment.user.userDetail.displayName}}</ion-note>
+                    <div>
+                      <ion-note>{{comment.relativeTime}}</ion-note>
+                    </div>
+                  </ion-item>
+                </ion-col>
+                <ion-col text-right col-1>
+                  <ion-spinner class="comment-ellipsis" *ngIf="comment.beingDeleted" color='primary' name="bubbles"
+                    margin-right></ion-spinner>
+                  <button class="comment-ellipsis" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
+                    ion-button clear small icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
+                    <ion-icon name="md-more"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="no-padding-top">
+                  <p class="comment-text">{{comment.text}}</p>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ion-card-content>
+
+      <ng-template #emptyComments>
+        <ion-card-content class="comment-section-padding">
+          <ion-row>
+            <ion-col text-center>
+              <p>No comments yet...</p>
+              <div>
+                <p>Post your thoughts below!</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ng-template>
+
+    </ng-container>
+
+    <ng-container *ngIf="selectedSegment === 'payment-details'">
+      <ion-row>
+        <ion-col text-center>
+          <p>Payment Details</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-card-content class="comment-section-padding">
+
+        <ng-container *ngFor="let userPayment of organizedPayments">
           <div class="comment-style">
             <ion-row>
               <ion-col col-11>
-                <ion-item class="unset-background">
+                <ion-item (click)="userPayment.itemsVisible = !userPayment.itemsVisible" class="unset-background">
                   <ion-avatar class="comment-avatar" item-start>
-                    <img [src]="comment.user.userDetail.photo_url" />
+                    <img [src]="userPayment.userDetail.photo_url" />
                   </ion-avatar>
-                  <ion-note>{{comment.user.userDetail.displayName}}</ion-note>
-                  <div>
-                    <ion-note>{{comment.relativeTime}}</ion-note>
-                  </div>
+                  <ion-note>{{userPayment.userDetail.displayName}}</ion-note>
+                  <ion-icon clear icon-end item-end color="tabify"
+                    [name]="userPayment.itemsVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'">
+                  </ion-icon>
                 </ion-item>
               </ion-col>
-              <ion-col text-right col-1>
-                <ion-spinner class="comment-ellipsis" *ngIf="comment.beingDeleted" color='primary' name="bubbles"
-                  margin-right></ion-spinner>
-                <button class="comment-ellipsis" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
-                  ion-button clear small icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
-                  <ion-icon name="md-more"></ion-icon>
-                </button>
-              </ion-col>
             </ion-row>
-            <ion-row>
-              <ion-col class="no-padding-top">
-                <p class="comment-text">{{comment.text}}</p>
-              </ion-col>
-            </ion-row>
+
+            <ng-container *ngIf="userPayment.itemsVisible">
+              <ion-list margin>
+                <ion-row class="item-details" *ngFor="let item of userPayment.items">
+                  <ion-col class="col-item-name">
+                    <span text-wrap class="name-text">{{ item.name }}</span>
+                    <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+                  </ion-col>
+                  <ion-col col-auto class="col-item-total">
+                    <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                      <!-- ${{ ticketService.findUserShareOfItem(item, userPayment.uid) / 100 | number: '1.2-2' }} / -->
+                    </span>
+                    <span class="total-text">
+                      ${{ item.price / 100 | number: '1.2-2' }}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+
+              <div margin>
+                <h2>Payments:</h2>
+                <ion-list *ngFor="let payment of userPayment.payments">
+                  <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
+                  <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
+                  <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
+                  <p>Status: {{payment.ticket_payment_status}}</p>
+                  <br />
+                </ion-list>
+                <br />
+              </div>
+
+              <!-- <ion-list margin>
+                <ion-row class="item-details" *ngFor="let item of sharedItems">
+                  <ion-col class="col-item-name">
+                    <span text-wrap class="name-text">{{ item.name }}</span>
+                    <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+                  </ion-col>
+                  <ion-col col-auto class="col-item-total">
+                    <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
+                      ${{ ticketService.findUserShareOfItem(item, userPayment.uid) / 100 | number: '1.2-2' }} / -->
+                    <!-- </span>
+                    <span class="total-text">
+                      ${{ item.price / 100 | number: '1.2-2' }}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-list> --> 
+
+
+            </ng-container>
           </div>
         </ng-container>
-      </ng-container>
-    </ion-card-content>
-
-    <ng-template #emptyComments>
-      <ion-card-content class="comment-section-padding">
-        <ion-row>
-          <ion-col text-center>
-            <p>No comments yet...</p>
-            <div>
-              <p>Post your thoughts below!</p>
-            </div>
-          </ion-col>
-        </ion-row>
       </ion-card-content>
-    </ng-template>
-  </ion-card>
 
+    </ng-container>
+  </ion-card>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="selectedSegment === 'comments'">
   <ion-toolbar text-center>
     <ion-textarea class="new-comment-text" *ngIf="!newCommentPosting" [(ngModel)]="newComment"
       placeholder="Enter a new comment!">
