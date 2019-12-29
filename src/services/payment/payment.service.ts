@@ -8,17 +8,14 @@ import { ICoupon } from 'interfaces/coupon.interface';
 export class PaymentService {
   constructor(private http: HttpClient) { }
 
-  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number) {
+  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number, coupon: ICoupon) {
     const url = `${environment.serverUrl}/tickets/${ticketId}/payments`;
     const body = {
       paymentMethodId,
       amount,
       tip,
-      coupon: undefined,
+      couponId: coupon.id,
     }
-    // if(coupon.value > 0) {
-    //   body["coupon"] = coupon;
-    // }
 
     return this.http
       .post(url, body)

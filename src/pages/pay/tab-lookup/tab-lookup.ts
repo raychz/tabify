@@ -9,7 +9,6 @@ import { Location } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { FraudPreventionCode } from '../../../interfaces/fraud-prevention-code.interface';
 import { tap } from 'rxjs/operators';
-import { CouponService } from '../../../services/coupon/coupon.service';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketUserStatus } from '../../../enums';
@@ -35,7 +34,6 @@ export class TabLookupPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public alertCtrl: AlertService,
-    public couponService: CouponService,
     public locationService: LocationService,
     public ablyService: AblyService,
     public ablyTicketService: AblyTicketService,
@@ -52,7 +50,6 @@ export class TabLookupPage {
   async ionViewDidLoad() {
     this.getDateTime();
     await this.getFraudPreventionCode();
-    await this.couponService.getCoupons();
     this.ablyService.connect();
   }
 

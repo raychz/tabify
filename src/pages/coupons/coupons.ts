@@ -17,8 +17,10 @@ export class CouponsPage {
   selectedSegment: CouponGroup = CouponGroup.validCoupons;
   couponGroup = CouponGroup;
   expandedCouponId: number;
-  coupon_off_of = CouponOffOf;
-  coupon_type = CouponType;
+  // Expose enum to template
+  CouponOffOf = CouponOffOf;
+  // Expose enum to template
+  CouponType = CouponType;
 
   constructor(
     public navCtrl: NavController,

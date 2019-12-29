@@ -1,4 +1,5 @@
 import { Location } from "./location.interface";
+import { TicketItem } from "./ticket-item.interface";
 
 export enum CouponOffOf {ticket, item};
 export enum CouponType {percent, dollar_value};
@@ -18,4 +19,5 @@ export interface ICoupon {
   coupon_off_of: CouponOffOf;
   coupon_type: CouponType;
   menu_item_id?: number;
+  menu_item_name?: string;
 }

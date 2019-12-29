@@ -12,7 +12,7 @@ import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { CouponService } from '../../../services/coupon/coupon.service';
-import { ICoupon } from '../../../interfaces/coupon.interface';
+import { ICoupon, CouponOffOf, CouponType } from '../../../interfaces/coupon.interface';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketItem } from '../../../interfaces/ticket-item.interface';
 import { TicketStatus, TicketUserStatus } from '../../../enums';
@@ -30,7 +30,11 @@ export class TaxTipPage {
   displayAllItems = false;
   displayLimit = 2;
   /** Is the user selecting their payment method. */
-  selectingPaymentMethod = false;
+  selectingPaymentMethodOrCoupon = false;
+  // Expose enum to template
+  CouponOffOf = CouponOffOf;
+  // Expose enum to template
+  CouponType = CouponType;
 
   constructor(
     public navCtrl: NavController,
@@ -62,7 +66,7 @@ export class TaxTipPage {
 
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       // Allow user to leave only if they are trying to select their payment method
-      return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethod;
+      return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethodOrCoupon;
     } catch {
       return false;
     }
@@ -70,7 +74,7 @@ export class TaxTipPage {
 
   public ionViewWillEnter() {
     // Reset the selectingPaymentMethod boolean to false since the method has already been selected
-    this.selectingPaymentMethod = false;
+    this.selectingPaymentMethodOrCoupon = false;
   }
 
   async ionViewDidLoad() {
@@ -88,8 +92,6 @@ export class TaxTipPage {
         console.error('something went wrong again, not retrying', e);
       }
     }
-    await this.couponService.getCoupons();
-
     this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
     // TODO: Enter the user's default tip percentage here
     this.currentUser.tipPercentage = 20;
@@ -145,6 +147,7 @@ export class TaxTipPage {
         this.currentUser.paymentMethod.id,
         this.currentUser.total,
         this.currentUser.tips,
+        this.couponService.selectedCoupon,
       ) as any;
       if (response.ticket.ticket_status === TicketStatus.CLOSED) {
         const alert = this.alertCtrl.create({
@@ -181,7 +184,12 @@ export class TaxTipPage {
   }
 
   editPaymentMethod() {
-    this.selectingPaymentMethod = true;
+    this.selectingPaymentMethodOrCoupon = true;
     this.navCtrl.push('SelectPaymentPage');
+  }
+
+  editCoupon() {
+    this.selectingPaymentMethodOrCoupon = true;
+    this.navCtrl.push('CouponsPage');
   }
 }

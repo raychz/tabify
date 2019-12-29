@@ -64,8 +64,8 @@
             <ion-col col-3>
                 <img *ngIf="coupon.id === expandedCouponId; else coupon_value" src="https://thestayathomechef.com/wp-content/uploads/2019/07/Grilled-Chicken-Tacos-1.jpg">
                 <ng-template #coupon_value>
-                    {{ coupon.coupon_type === coupon_type.dollar_value ? '$' + coupon.value : coupon.value + '%' }}
-                    off {{ coupon.coupon_off_of === coupon_off_of.ticket ? 'whole ticket' : 'one item'}}
+                    {{ coupon.coupon_type === CouponType.dollar_value ? '$' + (coupon.value / 100 | number: '1.2-2') : coupon.value + '%' }}
+                    off {{ coupon.coupon_off_of === CouponOffOf.ticket ? 'whole ticket' : 'one item'}}
                 </ng-template>
               </ion-col>
 

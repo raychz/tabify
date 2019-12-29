@@ -5,16 +5,15 @@ import { ICoupon, CouponOffOf, CouponType } from "../../interfaces/coupon.interf
 import { FirestoreTicketItem } from "../../services/ticket/ticket.service";
 import { TicketItem } from '../../interfaces/ticket-item.interface';
 
-
 @Injectable()
 export class CouponService {
 
   public validCoupons: ICoupon[];
   public expiredCoupons: ICoupon[];
   public upcomingCoupons: ICoupon[];
-  private emptyCoupon: ICoupon = {id: null, usage_limit: null, description: null, value: 0, date_updated: null,
-    date_created: null, coupon_start_date: null, coupon_end_date: null, coupon_off_of: null,
-    location: null, usage_count: null, coupon_type: null, estimated_dollar_value: 0};
+  private emptyCoupon: ICoupon = {id: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
+    date_created: undefined, coupon_start_date: undefined, coupon_end_date: undefined, coupon_off_of: undefined,
+    location: undefined, usage_count: undefined, coupon_type: undefined, estimated_dollar_value: 0, menu_item_name: undefined, menu_item_id: undefined};
   public selectedCoupon: ICoupon = this.emptyCoupon;
 
     constructor(private readonly httpClient: HttpClient) { }
@@ -33,6 +32,8 @@ export class CouponService {
         this.validCoupons = coupons.validCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
+          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
+          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
           return coupon;
         });
 
@@ -41,37 +42,44 @@ export class CouponService {
         this.expiredCoupons = coupons.expiredCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
+          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
+          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
           return coupon;
         });
         this.upcomingCoupons = coupons.upcomingCoupons.map( coupon => {
           coupon.coupon_start_date = new Date(coupon.coupon_start_date);
           coupon.coupon_end_date = new Date(coupon.coupon_end_date);
+          coupon.coupon_off_of = CouponOffOf[coupon.coupon_off_of as unknown as string];
+          coupon.coupon_type = CouponType[coupon.coupon_type as unknown as string];
           return coupon;
         });
     }
 
     async filterValidCouponsAndFindBest(locationId: number, ticketItems: TicketItem[], subtotal: number): Promise<ICoupon> {
      console.log(this.selectedCoupon);
+     console.log(ticketItems);
       await this.getCoupons();
       let bestCoupon = undefined
       let bestCouponValue = -1;
 
-      if (this.selectedCoupon && this.selectedCoupon.location.id !== locationId) {
+      if (this.selectedCoupon && this.selectedCoupon.location && this.selectedCoupon.location.id !== locationId) {
         this.selectedCoupon = this.emptyCoupon;
       }
 
       console.log(this.validCoupons);
       this.validCoupons = this.validCoupons.filter( coupon => {
-        if (coupon.location.id === locationId) {
+        if (coupon.location && coupon.location.id === locationId) {
           let couponValue = -1;
           let item = {price: subtotal};
           if(coupon.coupon_off_of === CouponOffOf.item) {
-            item = ticketItems.find( ticketItem => {
+            const couponTicketItem = ticketItems.find( ticketItem => {
               return ticketItem.ticket_item_id === coupon.menu_item_id;
             });
-            if(!item) {
+            if(!couponTicketItem) {
               return false;
             }
+            coupon.menu_item_name = couponTicketItem.name;
+            item = couponTicketItem;
           }
           couponValue = coupon.value;
           if(coupon.coupon_type === CouponType.percent) {
