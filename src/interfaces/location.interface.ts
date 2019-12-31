@@ -21,4 +21,5 @@ export interface Location {
   tax_rate?: number;
   tickets: Ticket[];
   servers: Server[];
+  open_discount_id: string;
 }

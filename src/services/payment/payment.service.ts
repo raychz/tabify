@@ -8,13 +8,13 @@ import { ICoupon } from 'interfaces/coupon.interface';
 export class PaymentService {
   constructor(private http: HttpClient) { }
 
-  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number, coupon: ICoupon) {
+  sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number, couponId: number) {
     const url = `${environment.serverUrl}/tickets/${ticketId}/payments`;
     const body = {
       paymentMethodId,
       amount,
       tip,
-      couponId: coupon.id,
+      couponId: couponId,
     }
 
     return this.http

@@ -28,6 +28,7 @@ export class TaxTipPage {
   currentUser: TicketUser;
   myTabItems: TicketItem[] = [];
   displayAllItems = false;
+  nonTabifyDiscounts = [];
   displayLimit = 2;
   /** Is the user selecting their payment method. */
   selectingPaymentMethodOrCoupon = false;
@@ -147,7 +148,7 @@ export class TaxTipPage {
         this.currentUser.paymentMethod.id,
         this.currentUser.total,
         this.currentUser.tips,
-        this.couponService.selectedCoupon,
+        this.couponService.selectedCoupon.id,
       ) as any;
       if (response.ticket.ticket_status === TicketStatus.CLOSED) {
         const alert = this.alertCtrl.create({

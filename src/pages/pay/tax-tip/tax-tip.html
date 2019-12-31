@@ -16,15 +16,15 @@
           <h2>${{currentUser?.items / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item *ngIf='ablyTicketService.ticket?.ticketTotal.discounts > 0 &&
+      <!-- <ion-item *ngIf='ablyTicketService.ticket?.ticketTotal.discounts > 0 &&
             ablyTicketService.ticket?.ticketTotal.discounts !== currentUser?.discounts' class='total discount'>
         <h2>Table Discount</h2>
         <div item-end>
           <h2>–${{ablyTicketService.ticket?.ticketTotal.discounts / 100 | number: '1.2-2'}}</h2>
         </div>
-      </ion-item>
+      </ion-item> -->
       <ion-item *ngIf='currentUser?.discounts > 0' class='total discount'>
-        <h2>My Discount 🙌</h2>
+        <h2>Discounts 🙌</h2>
         <div item-end>
           <h2>–${{currentUser?.discounts / 100 | number: '1.2-2'}}</h2>
         </div>
@@ -35,19 +35,6 @@
           <h2>${{currentUser?.sub_total / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item class='total' *ngIf="couponService.selectedCoupon.value > 0" (click)="editCoupon()">
-        <h2>Coupon
-         <span class='line-details'> {{ couponService.selectedCoupon.coupon_type === CouponType.dollar_value ? '$' + (couponService.selectedCoupon.value / 100 | number: '1.2-2') : couponService.selectedCoupon.value + '%' }}
-           off {{ couponService.selectedCoupon.coupon_off_of === CouponOffOf.ticket ? 'whole ticket' : couponService.selectedCoupon.menu_item_name}}</span>
-        </h2>
-       <div item-end>
-         <h2>
-           <ion-badge class="edit-icon" color="primary">
-             Edit
-           </ion-badge>
-           -${{couponService.selectedCoupon.estimated_dollar_value / 100 | number: '1.2-2'}}</h2>
-       </div>
-     </ion-item>
       <ion-item class='total'>
         <h2>Tax
           <span class='line-details'>({{ablyTicketService.ticket?.location.tax_rate}}%)</span>
@@ -69,6 +56,19 @@
           </h2>
         </div>
       </ion-item>
+      <ion-item class='total' *ngIf="couponService.selectedCoupon.value > 0" (click)="editCoupon()">
+        <h2>Coupon
+         <span class='line-details'> {{ couponService.selectedCoupon.coupon_type === CouponType.dollar_value ? '$' + (couponService.selectedCoupon.value / 100 | number: '1.2-2') : couponService.selectedCoupon.value + '%' }}
+           off {{ couponService.selectedCoupon.coupon_off_of === CouponOffOf.ticket ? 'whole ticket' : couponService.selectedCoupon.menu_item_name}}</span>
+        </h2>
+       <div item-end>
+         <h2>
+           <ion-badge class="edit-icon" color="primary">
+             Edit
+           </ion-badge>
+           -${{couponService.selectedCoupon.estimated_dollar_value / 100 | number: '1.2-2'}}</h2>
+       </div>
+     </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>

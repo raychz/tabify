@@ -5,7 +5,7 @@ import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
 import { ICoupon, CouponOffOf, CouponType } from '../../interfaces/coupon.interface';
 
-enum CouponGroup {validCoupons, upcomingCoupons, expiredCoupons}
+enum CouponGroup {validCoupons, upcomingCoupons, usedCoupons}
 
 @IonicPage()
 @Component({

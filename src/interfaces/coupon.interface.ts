@@ -20,4 +20,5 @@ export interface ICoupon {
   coupon_type: CouponType;
   menu_item_id?: number;
   menu_item_name?: string;
+  applies_to_everyone: boolean;
 }
