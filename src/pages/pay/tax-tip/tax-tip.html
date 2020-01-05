@@ -40,7 +40,8 @@
           <span class='line-details'>({{ablyTicketService.ticket?.location.tax_rate}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{currentUser?.tax / 100 | number: '1.2-2'}}</h2>
+          <h2>${{(currentUser?.tax - couponService.selectedCoupon.applicableCoupon.estimated_tax_difference)
+            / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total' (click)="adjustTip()">
@@ -66,13 +67,16 @@
            <ion-badge class="edit-icon" color="primary">
              Edit
            </ion-badge>
-           -${{couponService.selectedCoupon.estimated_dollar_value / 100 | number: '1.2-2'}}</h2>
+           -${{couponService.selectedCoupon.applicableCoupon.dollar_value / 100 | number: '1.2-2'}}</h2>
        </div>
      </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{(currentUser?.total + currentUser?.tips - couponService.selectedCoupon.estimated_dollar_value) / 100 | number: '1.2-2'}}</h2>
+          <h2>${{(currentUser?.total + currentUser?.tips -
+            couponService.selectedCoupon.applicableCoupon.dollar_value -
+            couponService.selectedCoupon.applicableCoupon.estimated_tax_difference
+            ) / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item (click)="editPaymentMethod()">

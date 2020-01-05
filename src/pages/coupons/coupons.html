@@ -19,7 +19,7 @@
       <ion-row class="header">
         Only on Tabify
       </ion-row>
-      <ion-row>
+      <!-- <ion-row>
         <ion-segment [disabled]="!fullCouponsPage" (ionChange)="selectSegment($event)" [(ngModel)]="selectedSegment">
           <ion-segment-button [value]="couponGroup.validCoupons">
             <div>Current</div>
@@ -31,11 +31,11 @@
             <div>Used</div>
           </ion-segment-button>
         </ion-segment>
-      </ion-row>
+      </ion-row> -->
     </ion-card-content>
-    <!-- <button (click)="createNewCoupon()">
+    <button (click)="createNewCoupon()">
       Create New Coupon
-    </button> -->
+    </button>
   </ion-card>
 
   <ion-list *ngIf="selectedSegment === couponGroup.validCoupons">

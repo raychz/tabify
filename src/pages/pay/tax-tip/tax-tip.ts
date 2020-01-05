@@ -108,7 +108,7 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
-    const bestCoupon = await this.couponService.filterValidCouponsAndFindBest(this.ablyTicketService.ticket.location.id, this.myTabItems, this.currentUser.sub_total);
+    const bestCoupon = await this.couponService.getApplicableCoupons(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
     await loading.dismiss();
 
     if (this.couponService.selectedCoupon.id !== bestCoupon.id) {
@@ -148,7 +148,7 @@ export class TaxTipPage {
         this.currentUser.paymentMethod.id,
         this.currentUser.total,
         this.currentUser.tips,
-        this.couponService.selectedCoupon.id,
+        this.couponService.selectedCoupon.applicableCoupon.id,
       ) as any;
       if (response.ticket.ticket_status === TicketStatus.CLOSED) {
         const alert = this.alertCtrl.create({

@@ -77,16 +77,16 @@ export class CouponsPage {
     await loading.dismiss();
   }
 
-  // createNewCoupon() {
-  //   this.couponService.createCoupon();
-  // }
+  createNewCoupon() {
+    this.couponService.createCoupon();
+  }
 
   async redeemCoupon(coupon: ICoupon) {
     this.couponService.selectCoupon(coupon);
-    if (this.fullCouponsPage) {
-      await this.navCtrl.push('TabLookupPage', coupon.location);
-    } else {
+    if (!this.fullCouponsPage) {
       await this.navCtrl.pop()
+    } else {
+      await this.navCtrl.push('TabLookupPage', coupon.location);
     }
   }
 
