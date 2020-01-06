@@ -15,12 +15,14 @@ import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/
 })
 export class StoryPage {
 
+  selectedSegment = 'comments';
   story: any;
   comments: any[] = [];
   user = <any>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
   userNamesDisplay: IUsersDescription;
+  items: any[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -54,6 +56,7 @@ export class StoryPage {
       await this.determineStoryLikedByUser();
       await this.getUserDetails();
       await this.getComments();
+      await this.getTicketItemsForUser();
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -195,6 +198,11 @@ export class StoryPage {
     }
   }
 
+  async getTicketItemsForUser() {
+    const itemsRecieved = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
+    console.log(itemsRecieved);
+  }
+
   displayUsers(users: any[]) {
     const modal = this.modalCtrl.create('UsersPage', {
       users: users,
@@ -220,5 +228,9 @@ export class StoryPage {
       ],
     });
     actionSheet.present();
+  }
+
+  segmentChanged(event: any) {
+    this.selectedSegment = event.value;
   }
 }
