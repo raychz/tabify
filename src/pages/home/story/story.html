@@ -163,15 +163,14 @@
           </ion-list>
 
           <div margin>
-            <h2>Payments:</h2>
+            <h2>Payment Transactions:</h2>
             <ion-list *ngFor="let payment of ticketPayments">
-              <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
-              <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
-              <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
-              <p>Status: {{payment.ticket_payment_status}}</p>
+              <p margin-left>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
+              <p margin-left>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
+              <p margin-left>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
+              <p margin-left>Status: {{payment.ticket_payment_status}}</p>
               <br />
             </ion-list>
-            <br />
           </div>
 
         </div>
