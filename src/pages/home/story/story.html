@@ -145,7 +145,6 @@
       <ion-card-content class="comment-section-padding">
 
         <div class="comment-style">
-
           <ion-list margin>
             <ion-row class="item-details" *ngFor="let item of items">
               <ion-col class="col-item-name">
@@ -163,17 +162,17 @@
             </ion-row>
           </ion-list>
 
-          <!-- <div margin>
-                <h2>Payments:</h2>
-                <ion-list *ngFor="let payment of userPayment.payments">
-                  <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
-                  <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
-                  <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
-                  <p>Status: {{payment.ticket_payment_status}}</p>
-                  <br />
-                </ion-list>
-                <br />
-              </div> -->
+          <div margin>
+            <h2>Payments:</h2>
+            <ion-list *ngFor="let payment of ticketPayments">
+              <p>Amount: {{payment.amount / 100 | number: '1.2-2'}}</p>
+              <p>Tip: {{payment.tip / 100 | number: '1.2-2'}}</p>
+              <p>Total: {{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
+              <p>Status: {{payment.ticket_payment_status}}</p>
+              <br />
+            </ion-list>
+            <br />
+          </div>
 
         </div>
       </ion-card-content>

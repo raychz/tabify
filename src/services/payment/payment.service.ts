@@ -6,7 +6,7 @@ import { environment } from '@tabify/env';
 @Injectable()
 export class PaymentService {
   [x: string]: any;
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
   sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number) {
     const url = `${environment.serverUrl}/tickets/${ticketId}/payments`;
@@ -20,8 +20,8 @@ export class PaymentService {
       .toPromise();
   }
 
-  async getTicketPaymentsByUsers(ticketId: number) {
-    const res = await this.httpClient.get(`${environment.serverUrl}tickets/${ticketId}/payments`).toPromise();
+  async getTicketPaymentsByUser(ticketId: number) {
+    const res = await this.httpClient.get(`${environment.serverUrl}/tickets/${ticketId}/payments`).toPromise();
     return res;
   }
 }
