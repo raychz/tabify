@@ -22,7 +22,7 @@ export class StoryPage {
   newComment: string = '';
   newCommentPosting: boolean = false;
   userNamesDisplay: IUsersDescription;
-  items: any[] = [];
+  items: any;
 
   constructor(
     public navCtrl: NavController,
@@ -199,8 +199,11 @@ export class StoryPage {
   }
 
   async getTicketItemsForUser() {
-    const itemsRecieved = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
-    console.log(itemsRecieved);
+    this.items = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
+    
+    this.items.map(item => {
+      item.userShare = item.users[0].price;
+    });
   }
 
   displayUsers(users: any[]) {
