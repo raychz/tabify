@@ -8,6 +8,7 @@ import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
 import { PaymentService } from '../../../services/payment/payment.service';
+import { StorySegment } from '../../../enums/';
 
 @IonicPage()
 @Component({
@@ -60,6 +61,7 @@ export class StoryPage {
       await this.getComments();
       await this.getTicketItemsForUser();
       await this.getTicketPaymentsByUser();
+      console.log(this.story);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -204,7 +206,7 @@ export class StoryPage {
   async getTicketItemsForUser() {
     this.items = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
     
-    this.items.map(item => {
+    this.items.forEach(item => {
       item.userShare = item.users[0].price;
     });
   }
