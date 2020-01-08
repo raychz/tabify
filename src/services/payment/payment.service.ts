@@ -10,7 +10,7 @@ export class PaymentService {
   sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number) {
     const url = `${environment.serverUrl}/tickets/${ticketId}/payments`;
 
-    return this.http
+    return this.httpClient
       .post(url, {
         paymentMethodId,
         amount,
