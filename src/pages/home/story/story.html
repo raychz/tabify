@@ -168,7 +168,9 @@
               <p margin-left>Amount: ${{payment.amount / 100 | number: '1.2-2'}}</p>
               <p margin-left>Tip: ${{payment.tip / 100 | number: '1.2-2'}}</p>
               <p margin-left>Total: ${{(payment.amount + payment.tip) / 100 | number: '1.2-2'}}</p>
-              <p margin-left>Status: {{payment.ticket_payment_status}}</p>
+              <p *ngIf="payment.ticket_payment_status === 'FAILED'" margin-left>Status:
+                Payment Failed
+              </p>
               <br />
             </ion-list>
           </div>
