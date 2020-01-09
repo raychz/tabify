@@ -13,7 +13,7 @@ export class CouponService {
   public validCoupons: ICoupon[];
   public usedCoupons: ICoupon[];
   public upcomingCoupons: ICoupon[];
-  private emptyCoupon: ICoupon = {id: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
+  private emptyCoupon: ICoupon = {id: undefined, image_url: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
     date_created: undefined, coupon_start_date: undefined, coupon_end_date: undefined, coupon_off_of: undefined, applies_to_everyone: undefined,
     location: undefined, usage_count: undefined, coupon_type: undefined, estimated_dollar_value: 0, menu_item_name: undefined, menu_item_id: undefined,
     dollar_value: 0, estimated_tax_difference: 0};

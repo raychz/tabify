@@ -28,4 +28,5 @@ export interface ICoupon {
   menu_item_name?: string;
   applies_to_everyone: boolean;
   dollar_value: number;
+  image_url: string;
   estimated_tax_difference: number;}

@@ -1,20 +1,40 @@
 page-coupons {
-  .header {
-    text-align: center;
-    font-size: 18px;
+  img {
+    width: auto;
+    height: auto;
+    max-width: 75px;
+    max-height: 95px;
   }
-  .coupon_location {
-    font-size: 17px;
+
+  .coupon-image {
+    float: right;
   }
-  .cooupon_header {
-    font-size: 15px;
-    padding-left: 10px;
+
+  .coupon-value {
+    float: right;
   }
-  .coupon_description {
-    font-size: 9.5px;
+
+  ion-label {
+    white-space: normal;
+  }
+
+  ion-col {
+    padding: 0;
+    margin: 0;
+  }
+
+  ion-card-content {
+    padding: 0;
+    margin: 0;
+  }
+
+  ion-card {
+    padding: 0;
+    margin: 0;
   }
   .end_info {
     font-size: 12px;
     padding: 3px;
+    align-content: center;
   }
 }

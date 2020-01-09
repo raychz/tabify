@@ -34,7 +34,16 @@ page-tax-tip {
     white-space: normal;
     &-details {
       color: gray;
+      white-space: normal;
     }
+  }
+  .footnote {
+    color: gray;
+    text-align: center;
+    font-size: small;
+    padding: 0;
+    margin: 0;
+    white-space: normal;
   }
 
   .linked-card-icon {
