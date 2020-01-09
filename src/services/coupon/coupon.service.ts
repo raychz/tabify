@@ -16,7 +16,7 @@ export class CouponService {
   private emptyCoupon: ICoupon = {id: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
     date_created: undefined, coupon_start_date: undefined, coupon_end_date: undefined, coupon_off_of: undefined, applies_to_everyone: undefined,
     location: undefined, usage_count: undefined, coupon_type: undefined, estimated_dollar_value: 0, menu_item_name: undefined, menu_item_id: undefined,
-  applicableCoupon: {id: undefined, coupon: undefined, dollar_value: 0, estimated_tax_difference: 0, ticketUser: undefined}};
+    dollar_value: 0, estimated_tax_difference: 0};
   public selectedCoupon: ICoupon = this.emptyCoupon;
 
     constructor(private readonly httpClient: HttpClient, private auth: AuthService) { }
@@ -68,11 +68,14 @@ export class CouponService {
 
       const bestCoupon = this.validCoupons[0];
 
-      if(this.selectedCoupon.value === 0) {
+      if(this.selectedCoupon.value === 0 && bestCoupon) {
         this.selectedCoupon = bestCoupon;
       }
-
-      return bestCoupon;
+      if (!bestCoupon) {
+        return this.emptyCoupon;
+      } else {
+        return bestCoupon;
+      }
     }
 
     selectCoupon(coupon: ICoupon) {
@@ -80,20 +83,21 @@ export class CouponService {
       console.log(`selected coupon is`);
       console.log(this.selectedCoupon);
     }
-    async createCoupon() {
-      const newCoupon = {
-        description: "This is some example randomness text in orer to make sure everything works right in this post request",
-        usage_limit: 1,
-        applies_to_everyone: true,
-        coupon_off_of: CouponOffOf.ticket,
-        coupon_type: CouponType.dollar_value,
-        estimated_dollar_value: 500,
-        value: 500,
-        coupon_start_date: new Date(),
-        coupon_end_date: new Date(),
-      };
-      const res = await this.httpClient.post(`${environment.serverUrl}/coupons/location/1`,
-          { newCoupon }).toPromise();
-      console.log(res);
-  }
+
+  //   async createCoupon() {
+  //     const newCoupon = {
+  //       description: "This is some example randomness text in orer to make sure everything works right in this post request",
+  //       usage_limit: 1,
+  //       applies_to_everyone: true,
+  //       coupon_off_of: CouponOffOf.ticket,
+  //       coupon_type: CouponType.dollar_value,
+  //       estimated_dollar_value: 500,
+  //       value: 500,
+  //       coupon_start_date: new Date(),
+  //       coupon_end_date: new Date(),
+  //     };
+  //     const res = await this.httpClient.post(`${environment.serverUrl}/coupons/location/i8yBgkjT`,
+  //         { newCoupon }).toPromise();
+  //     console.log(res);
+  // }
 }

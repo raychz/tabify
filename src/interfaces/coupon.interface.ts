@@ -1,6 +1,5 @@
 import { Location } from "./location.interface";
 import { TicketItem } from "./ticket-item.interface";
-import { IApplicableCoupon } from "./applicabe_coupon";
 
 export enum CouponOffOf {ticket, item};
 export enum CouponType {percent, dollar_value};
@@ -28,5 +27,5 @@ export interface ICoupon {
   menu_item_id?: number;
   menu_item_name?: string;
   applies_to_everyone: boolean;
-  applicableCoupon?: IApplicableCoupon;
-}
+  dollar_value: number;
+  estimated_tax_difference: number;}

@@ -148,7 +148,7 @@ export class TaxTipPage {
         this.currentUser.paymentMethod.id,
         this.currentUser.total,
         this.currentUser.tips,
-        this.couponService.selectedCoupon.applicableCoupon.id,
+        this.couponService.selectedCoupon.id,
       ) as any;
       if (response.ticket.ticket_status === TicketStatus.CLOSED) {
         const alert = this.alertCtrl.create({

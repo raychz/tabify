@@ -77,9 +77,9 @@ export class CouponsPage {
     await loading.dismiss();
   }
 
-  createNewCoupon() {
-    this.couponService.createCoupon();
-  }
+  // createNewCoupon() {
+  //   this.couponService.createCoupon();
+  // }
 
   async redeemCoupon(coupon: ICoupon) {
     this.couponService.selectCoupon(coupon);
