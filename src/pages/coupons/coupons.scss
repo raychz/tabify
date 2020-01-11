@@ -1,17 +1,56 @@
 page-coupons {
   img {
-    width: auto;
-    height: auto;
-    max-width: 75px;
-    max-height: 95px;
+    &.coupon-image {
+      float: right;
+      width: 100%;
+      height: auto;
+      max-width: 80px;
+      max-height: 100px;
+    }
   }
 
-  .coupon-image {
-    float: right;
+  .card-content {
+    padding: 5px;
   }
 
-  .coupon-value {
-    float: right;
+  .page-title {
+    text-align: center;
+  }
+
+  .header {
+    text-align: center;
+    .first-header {
+      font-size: 1.4rem;
+    }
+    .second-header {
+      font-size: 1.6rem;
+    }
+  }
+
+  .location-item {
+    padding: 0;
+
+    .avatar {
+      margin-right: 8px;
+    }
+
+    div {
+      ion-label {
+        margin: 0;
+      }
+    }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .restaurant-address {
+        color: #aeacb4;
+        font-size: 1.2rem;
+      }
+  }
+
+  .value {
+    text-align: right;
+    font-size: 1.3rem;
   }
 
   ion-label {
@@ -32,9 +71,8 @@ page-coupons {
     padding: 0;
     margin: 0;
   }
-  .end_info {
-    font-size: 12px;
-    padding: 3px;
-    align-content: center;
+  .end-info {
+    font-size: 1.1rem;
+    text-align: center;
   }
 }

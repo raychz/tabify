@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
 import { AuthService } from '../../services/auth/auth.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
@@ -30,6 +30,7 @@ export class CouponsPage {
     public auth: AuthService,
     public alertCtrl: AlertController,
     public loader: LoaderService,
+    public platform: Platform,
   ) {}
 
   public ionViewCanEnter(): boolean {
@@ -76,10 +77,6 @@ export class CouponsPage {
     }
     await loading.dismiss();
   }
-
-  // createNewCoupon() {
-  //   this.couponService.createCoupon();
-  // }
 
   async redeemCoupon(coupon: ICoupon) {
     this.couponService.selectCoupon(coupon);
