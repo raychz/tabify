@@ -12,7 +12,6 @@ import { tap } from 'rxjs/operators';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketUserStatus } from '../../../enums';
-import { CouponService } from '../../../services/coupon/coupon.service';
 
 @IonicPage()
 @Component({
@@ -30,7 +29,6 @@ export class TabLookupPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public couponService: CouponService,
     public fb: FormBuilder,
     public loader: LoaderService,
     public auth: AuthService,

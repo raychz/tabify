@@ -58,7 +58,7 @@ export class CouponService {
       console.log(this.selectedCoupon);
     }
 
-    async getApplicableCoupons(ticketId: number, locationId: number): Promise<ICoupon> {
+    async getApplicableTicketCoupons(ticketId: number, locationId: number): Promise<ICoupon> {
       if (this.selectedCoupon.location && this.selectedCoupon.location.id !== locationId) {
         this.selectedCoupon = this.emptyCoupon;
       }
@@ -95,21 +95,4 @@ export class CouponService {
       console.log(`selected coupon is`);
       console.log(this.selectedCoupon);
     }
-
-  //   async createCoupon() {
-  //     const newCoupon = {
-  //       description: "This is some example randomness text in orer to make sure everything works right in this post request",
-  //       usage_limit: 1,
-  //       applies_to_everyone: true,
-  //       coupon_off_of: CouponOffOf.ticket,
-  //       coupon_type: CouponType.dollar_value,
-  //       estimated_dollar_value: 500,
-  //       value: 500,
-  //       coupon_start_date: new Date(),
-  //       coupon_end_date: new Date(),
-  //     };
-  //     const res = await this.httpClient.post(`${environment.serverUrl}/coupons/location/i8yBgkjT`,
-  //         { newCoupon }).toPromise();
-  //     console.log(res);
-  // }
 }

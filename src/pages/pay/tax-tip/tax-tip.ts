@@ -28,7 +28,6 @@ export class TaxTipPage {
   currentUser: TicketUser;
   myTabItems: TicketItem[] = [];
   displayAllItems = false;
-  nonTabifyDiscounts = [];
   displayLimit = 2;
   /** Is the user selecting their payment method. */
   selectingPaymentMethodOrCoupon = false;
@@ -108,7 +107,7 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
-    const bestCoupon = await this.couponService.getApplicableCoupons(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
+    const bestCoupon = await this.couponService.getApplicableTicketCoupons(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
     await loading.dismiss();
 
     if (this.couponService.selectedCoupon.id !== bestCoupon.id) {

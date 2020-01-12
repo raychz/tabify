@@ -29,4 +29,6 @@ export interface ICoupon {
   applies_to_everyone: boolean;
   dollar_value: number;
   image_url: string;
-  estimated_tax_difference: number;}
+  estimated_tax_difference: number;
+  coupon_restrictions?: any;
+}

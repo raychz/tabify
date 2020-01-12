@@ -14,7 +14,7 @@ export class PaymentService {
       paymentMethodId,
       amount,
       tip,
-      couponId: couponId,
+      couponId,
     }
 
     return this.http

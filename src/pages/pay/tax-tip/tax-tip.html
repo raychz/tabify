@@ -16,13 +16,6 @@
           <h2>${{currentUser?.items / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <!-- <ion-item *ngIf='ablyTicketService.ticket?.ticketTotal.discounts > 0 &&
-            ablyTicketService.ticket?.ticketTotal.discounts !== currentUser?.discounts' class='total discount'>
-        <h2>Table Discount</h2>
-        <div item-end>
-          <h2>–${{ablyTicketService.ticket?.ticketTotal.discounts / 100 | number: '1.2-2'}}</h2>
-        </div>
-      </ion-item> -->
       <ion-item *ngIf='currentUser?.discounts > 0' class='total discount'>
         <h2>Discounts 🙌</h2>
         <div item-end>
