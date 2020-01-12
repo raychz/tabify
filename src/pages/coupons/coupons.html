@@ -54,8 +54,7 @@
                     </ion-avatar>
                     <h2 text-wrap>{{ coupon.location.name }}</h2>
                     <h3 text-wrap class="restaurant-address">
-                      <span text-nowrap>{{ coupon.location.street1 }},</span>
-                      <span text-nowrap>{{ coupon.location.city }}, {{coupon.location.state }}</span>
+                      <span text-wrap>{{ coupon.location.street1 }}, {{ coupon.location.city }}, {{coupon.location.state }}</span>
                     </h3>
                   </ion-item>
                   <ion-row *ngIf="coupon.id === expandedCouponId">
@@ -82,7 +81,7 @@
             </ion-col>
             <ion-col class="end-info">
               <button (click)="redeemCoupon(coupon)">
-                  {{ fullCouponsPage ? 'Redeem' : 'Select' }}
+                  {{ fullCouponsPage ? 'Redeem' : (coupon.id === couponService.selectedCoupon.id) ? 'Deselect' : 'Select' }}
               </button>
             </ion-col>
             <ion-col class="end-info">

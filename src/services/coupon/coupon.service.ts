@@ -10,9 +10,9 @@ import { AuthService } from "../../services/auth/auth.service";
 @Injectable()
 export class CouponService {
 
-  public validCoupons: ICoupon[];
-  public usedCoupons: ICoupon[];
-  public upcomingCoupons: ICoupon[];
+  public validCoupons: ICoupon[] = [];
+  public usedCoupons: ICoupon[] = [];
+  public upcomingCoupons: ICoupon[] = [];
   private emptyCoupon: ICoupon = {id: undefined, image_url: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
     date_created: undefined, coupon_start_date: undefined, coupon_end_date: undefined, coupon_off_of: undefined, applies_to_everyone: undefined,
     location: undefined, usage_count: undefined, coupon_type: undefined, estimated_dollar_value: 0, menu_item_name: undefined, menu_item_id: undefined,
@@ -70,7 +70,15 @@ export class CouponService {
 
       if(this.selectedCoupon.value === 0 && bestCoupon) {
         this.selectedCoupon = bestCoupon;
+      } else {
+        const updatedCoupon = this.validCoupons.find(coupon => coupon.id === this.selectedCoupon.id);
+        if (updatedCoupon) {
+          this.selectedCoupon = updatedCoupon;
+        } else {
+          this.selectedCoupon = this.emptyCoupon;
+        }
       }
+
       if (!bestCoupon) {
         return this.emptyCoupon;
       } else {
@@ -79,7 +87,11 @@ export class CouponService {
     }
 
     selectCoupon(coupon: ICoupon) {
-      this.selectedCoupon = coupon;
+      if (this.selectedCoupon.id === coupon.id) {
+        this.selectedCoupon = this.emptyCoupon;
+      } else {
+        this.selectedCoupon = coupon;
+      }
       console.log(`selected coupon is`);
       console.log(this.selectedCoupon);
     }
