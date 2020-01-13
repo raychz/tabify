@@ -54,7 +54,7 @@ export class CouponService {
     }
 
     // get all valid coupons from the backend for a specific ticket
-    async getApplicableTicketCoupons(ticketId: number, locationId: number): Promise<ICoupon> {
+    async getTicketCouponsAndFindBest(ticketId: number, locationId: number): Promise<ICoupon> {
       // if the selected coupon is not of the ticket location - set the selected coupon to the empty coupon
       if (this.selectedCoupon.location && this.selectedCoupon.location.id !== locationId) {
         this.selectedCoupon = this.emptyCoupon;

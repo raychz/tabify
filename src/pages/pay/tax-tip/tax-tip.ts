@@ -107,7 +107,7 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
-    const bestCoupon = await this.couponService.getApplicableTicketCoupons(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
+    const bestCoupon = await this.couponService.getTicketCouponsAndFindBest(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
     await loading.dismiss();
 
     if (this.couponService.selectedCoupon.id !== bestCoupon.id) {
