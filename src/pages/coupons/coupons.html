@@ -42,9 +42,8 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-list *ngIf="selectedSegment === couponGroup.validCoupons">
-    <ion-item *ngFor="let coupon of couponService.validCoupons">
-      <ion-card class="coupon-card" (click)="expandCoupon(coupon)">
+  <!-- <ion-list *ngIf="selectedSegment === couponGroup.validCoupons"> -->
+      <ion-card  *ngFor="let coupon of couponService.validCoupons" class="coupon-card" (click)="expandCoupon(coupon)">
         <ion-card-content class="card-content">
           <ion-row>
             <ion-col col-9>
@@ -59,7 +58,7 @@
                   </ion-item>
                   <ion-row *ngIf="coupon.id === expandedCouponId">
                     <ion-col>
-                      <p text-wrap class="coupon_description">
+                      <p text-wrap class="coupon-description">
                         {{ coupon.description }}
                       </p>
                     </ion-col>
@@ -69,7 +68,7 @@
                 <img class="coupon-image" *ngIf="coupon.id === expandedCouponId; else coupon_value" [src]='coupon.image_url'>
                 <ng-template #coupon_value>
                     {{ coupon.coupon_type === CouponType.dollar_value ? '$' + (coupon.value / 100 | number: '1.2-2') : coupon.value + '%' }}
-                    off {{ coupon.coupon_off_of === CouponOffOf.ticket ? 'whole ticket' : 'one item'}}
+                    off {{ coupon.coupon_off_of === CouponOffOf.ticket ? 'the full bill' : 'a single item'}}
                 </ng-template>
             </ion-col>
 
@@ -79,8 +78,8 @@
             <ion-col class="end-info">
               Usage: {{ coupon.usage_count }}/{{ coupon.usage_limit ? coupon.usage_limit : '∞' }}
             </ion-col>
-            <ion-col class="end-info">
-              <button (click)="redeemCoupon(coupon)">
+            <ion-col class="redeem-button-container">
+              <button ion-button (click)="redeemCoupon(coupon)" class="redeem-button">
                   {{ fullCouponsPage ? 'Redeem' : (coupon.id === couponService.selectedCoupon.id) ? 'Deselect' : 'Select' }}
               </button>
             </ion-col>
@@ -90,8 +89,7 @@
           </ion-row>
         </ion-card-content>
       </ion-card>
-    </ion-item>
-  </ion-list>
+  <!-- </ion-list> -->
   <ion-label *ngIf="selectedSegment !== couponGroup.validCoupons">
     Segment under construction and coming soon!
   </ion-label>

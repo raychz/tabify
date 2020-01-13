@@ -4,13 +4,17 @@ page-coupons {
       float: right;
       width: 100%;
       height: auto;
-      max-width: 80px;
-      max-height: 100px;
+      max-width: 65px;
+      max-height: 90px;
     }
   }
 
   .card-content {
     padding: 5px;
+  }
+
+  .coupon-description {
+    font-size: 1.2rem;
   }
 
   .page-title {
@@ -32,6 +36,8 @@ page-coupons {
 
     .avatar {
       margin-right: 8px;
+      margin-top: 0px;
+      margin-bottom: 0px;
     }
 
     div {
@@ -40,17 +46,19 @@ page-coupons {
       }
     }
       h2 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
       }
       .restaurant-address {
         color: #aeacb4;
-        font-size: 1.2rem;
+        font-size: 1.0rem;
       }
   }
 
   .value {
     text-align: right;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    padding-top: 12px;
   }
 
   ion-label {
@@ -72,7 +80,16 @@ page-coupons {
     margin: 0;
   }
   .end-info {
-    font-size: 1.0rem;
+    padding-top: 6px;
+    font-size: 1.2rem;
     text-align: center;
+  }
+  .redeem-button-container {
+    padding-top: 0px;
+    text-align: center;
+    .redeem-button {
+      font-size: 1.2rem;
+      height: 2rem;
+    }
   }
 }
