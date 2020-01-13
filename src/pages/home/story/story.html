@@ -171,6 +171,9 @@
               <p *ngIf="payment.ticket_payment_status === 'FAILED'" margin-left>Status:
                 Payment Failed
               </p>
+              <p *ngIf="payment.paymentMethod" margin-left>Card:
+                xxxx{{payment.paymentMethod.last_four_digits}} ({{payment.paymentMethod.card_type}})
+              </p>
               <br />
             </ion-list>
           </div>
