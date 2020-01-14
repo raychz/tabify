@@ -107,25 +107,12 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
-    const bestCoupon = await this.couponService.getTicketCouponsAndFindBest(this.ablyTicketService.ticket.id, this.ablyTicketService.ticket.location.id);
-    await loading.dismiss();
-
-    if (this.couponService.selectedCoupon.id !== bestCoupon.id) {
-      const alert = this.alertCtrl.create({
-        title: 'Better Coupon Found',
-        message: `We have found a better coupon with more savings than the one you originally selected. Would you like to automatically apply this better coupon instead?`,
-        buttons: [
-          'No',
-          {
-            text: 'Yes',
-            handler: () => {
-              this.couponService.selectCoupon(bestCoupon);
-            }
-          },
-        ],
-      });
+    const alert = await this.couponService.getTicketCouponsAndReceiveCouponAlert(this.ablyTicketService.ticket.id);
+    // alert is posssibly undefined
+    if (alert) {
       alert.present();
     }
+    await loading.dismiss();
   }
 
   async adjustTip() {
