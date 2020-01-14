@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar hideBackButton>
-    <ion-title class="page-title">Coupons</ion-title>
+    <ion-title class="page-title">Promos</ion-title>
     <ion-buttons left>
       <button (click)="cancel()" ion-button icon-start>
         <ion-icon name="arrow-back"></ion-icon>
@@ -52,7 +52,7 @@
                       <img [src]="coupon.location.photo_url" class="location-image"/>
                     </ion-avatar>
                     <h2 text-wrap>{{ coupon.location.name }}</h2>
-                    <h3 text-wrap class="restaurant-address">
+                    <h3 text-wrap class="restaurant-address" *ngIf="coupon.id === expandedCouponId">
                       <span text-wrap>{{ coupon.location.street1 }}, {{ coupon.location.city }}, {{coupon.location.state }}</span>
                     </h3>
                   </ion-item>
@@ -67,9 +67,7 @@
             <ion-col class="value" col-3>
                 <img class="coupon-image" *ngIf="coupon.id === expandedCouponId; else coupon_value" [src]='coupon.image_url'>
                 <ng-template #coupon_value>
-                    {{ coupon.coupon_type === CouponType.dollar_value ? '$' + (coupon.value / 100 | number: '1.2-2') : coupon.value + '%' }}
-                    off {{ coupon.coupon_off_of === CouponOffOf.ticket ? 'the full bill' : 'a single item'}}
-                </ng-template>
+                    {{ coupon.coupon_type === CouponType.dollar_value ? '$' + (coupon.value / 100 | number: '1.2-2') : coupon.value + '%' }}                </ng-template>
             </ion-col>
 
           </ion-row>

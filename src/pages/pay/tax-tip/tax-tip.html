@@ -29,7 +29,7 @@
         </div>
       </ion-item>
       <ion-item class='total' *ngIf="couponService.validCoupons.length > 0" (click)="editCoupon()">
-        <h2>Coupon
+        <h2>Promos
          <span class='line-details' *ngIf="couponService.selectedCoupon.value > 0; else emptyCoupon;"> {{ couponService.selectedCoupon.coupon_type === CouponType.dollar_value ? '$' + (couponService.selectedCoupon.value / 100 | number: '1.2-2') : couponService.selectedCoupon.value + '%' }}
            off {{ couponService.selectedCoupon.coupon_off_of === CouponOffOf.ticket ? 'the full bill' : couponService.selectedCoupon.menu_item_name}}</span>
            <ng-template #emptyCoupon>
