@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
-import { TicketUpdates, TicketUserStatus } from '../../enums/';
+import { TicketUpdates, TicketUserStatus, TicketStatus } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
@@ -49,6 +49,10 @@ export class AblyTicketService {
       }
       for (const _message of messages) {
         switch (_message.name) {
+          case TicketUpdates.TICKET_STATUS_UPDATED:
+            this.onTicketUpdate(_message.data);
+            console.log("TICKET_STATUS_UPDATED", _message);
+            break;
           case TicketUpdates.TICKET_USER_ADDED:
             this.onTicketUserAdded(_message.data);
             console.log("TICKET_USER_ADDED", _message);
@@ -101,6 +105,14 @@ export class AblyTicketService {
       .toPromise() as TicketUser;
     const currentUser = this.ticket.usersMap.get(this.auth.getUid());
     currentUser.status = res.status;
+  }
+
+  onTicketUpdate(updatedTicket: Ticket) {
+    console.log(this.ticket);
+    this.ticket = {
+      ...this.ticket, ...updatedTicket
+    };
+    console.log('ticket updated', this.ticket)
   }
 
   onTicketUserAdded(addedTicketUser: TicketUser) {
@@ -166,7 +178,7 @@ export class AblyTicketService {
     this.ticket.ticketTotal = ticketTotal;
   }
 
-  /** 
+  /**
    * Updates the properties in the FrontendTicket interface, including:
    * - ticketUsersDescription
    * - usersMap
@@ -179,7 +191,7 @@ export class AblyTicketService {
     console.log("THE USER MAP", this.ticket.usersMap);
   }
 
-  /** 
+  /**
    * Updates the properties in the FrontendTicketItem interface for the given items, including:
    * - isItemOnMyTab
    * - payersDescription

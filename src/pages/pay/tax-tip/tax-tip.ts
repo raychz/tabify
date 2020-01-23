@@ -123,28 +123,31 @@ export class TaxTipPage {
         this.currentUser.total,
         this.currentUser.tips,
       ) as any;
-      if (response.ticket.ticket_status === TicketStatus.CLOSED) {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      } else {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      }
+
+      await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.PAID);
+      await this.navCtrl.push('StatusPage')
+
+      // if (response.ticket.ticket_status === TicketStatus.CLOSED) {
+      //   const alert = this.alertCtrl.create({
+      //     title: 'Success',
+      //     message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+      //     buttons: ['Ok']
+      //   });
+      //   alert.present();
+      // } else {
+      //   const alert = this.alertCtrl.create({
+      //     title: 'Success',
+      //     message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
+      //     buttons: ['Ok']
+      //   });
+      //   alert.present();
+      // }
 
       // Clear the state of the ticket service
-      await this.ablyTicketService.clearState();
-      await this.navCtrl.setRoot('HomePage');
+      // await this.ablyTicketService.clearState();
+      // await this.navCtrl.setRoot('HomePage');
       // TODO: Reintegrate the status page here
       // await this.ticketService.changeUserStatus(UserStatus.Paid)
-      // await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',
