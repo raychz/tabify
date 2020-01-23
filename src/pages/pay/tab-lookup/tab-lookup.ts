@@ -82,7 +82,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     try {
       await loading.present();
-      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open', true) as any;
       await this.initializeTicketMetadata(ticket);
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
