@@ -70,6 +70,7 @@ export class SelectItemsPage {
   }
 
   async backButtonAction() {
+    await this.ticketService.removeUserFromDatabaseTicket(this.ablyTicketService.ticket.id);
     await this.ablyTicketService.clearState();
     await this.navCtrl.pop();
   }
