@@ -49,9 +49,9 @@ export class AblyTicketService {
       }
       for (const _message of messages) {
         switch (_message.name) {
-          case TicketUpdates.TICKET_STATUS_UPDATED:
+          case TicketUpdates.TICKET_UPDATED:
             this.onTicketUpdate(_message.data);
-            console.log("TICKET_STATUS_UPDATED", _message);
+            console.log("TICKET_UPDATED", _message);
             break;
           case TicketUpdates.TICKET_USER_ADDED:
             this.onTicketUserAdded(_message.data);

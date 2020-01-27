@@ -28,7 +28,6 @@ export interface TicketUser extends FrontendTicketUser {
 interface FrontendTicketUser {
   /** Controls whether the waiting room card for this user is expanded */
   isWaitingRoomExpanded: boolean;
-  isStatusPageExpanded: boolean;
   /** Selected payment method */
   paymentMethod: PaymentMethod;
   /** Selected tip percentage */
