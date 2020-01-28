@@ -114,14 +114,15 @@ export class TicketService {
    * @param locationId
    * @param ticketStatus
    */
-  public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string, openedToday: boolean) {
+  public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string, openedRecently: boolean) {
     const params = {
+      opened_recently: String(false),
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
       ticket_status: ticketStatus
     };
     const ticket = await this.http
-      .get(`${environment.serverUrl}/tickets/openedToday/${openedToday}`, { params })
+      .get(`${environment.serverUrl}/tickets/`, { params })
       .toPromise();
     this.ticket = ticket;
     return ticket;
