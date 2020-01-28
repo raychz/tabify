@@ -11,7 +11,7 @@ page-status {
     color: darkgrey;
   }
 
-    #total-bill-row {
+  #total-bill-row {
     font-size: medium;
     color: white;
   }
@@ -23,10 +23,6 @@ page-status {
   }
   #total-bill {
     vertical-align: top;
-  }
-
-  ion-content {
-    padding-bottom: 10px;
   }
 
   .card_content {
@@ -57,32 +53,6 @@ page-status {
         .status-badge {
           margin: 0px;
           color: map-get($colors, tabify-dark-2);
-        }
-      }
-    }
-    &.item-details {
-      padding: 0;
-      overflow: hidden;
-      .col-item-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        .name-text {
-          font-weight: 500;
-          font-size: 1em;
-          white-space: nowrap;
-          vertical-align: top;
-        }
-      }
-      .col-item-total {
-        .my-share-text {
-          color: map-get($colors, primary);
-          font-size: 0.9em;
-          white-space: nowrap;
-          vertical-align: top;
-        }
-        .total-text {
-          font-size: 1em;
-          vertical-align: top;
         }
       }
     }
