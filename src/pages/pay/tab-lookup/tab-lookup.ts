@@ -54,7 +54,7 @@ export class TabLookupPage {
   }
 
   async ionViewWillUnload() {
-    await this.ablyTicketService.clearState();
+    // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
   }

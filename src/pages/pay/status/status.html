@@ -15,20 +15,20 @@
           <ion-col>
             <ion-item class="user-info">
               <ion-avatar item-start class="avatar">
-                <img [src]="ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
+                <img [src]="ablyTicketService.ticket?.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
               </ion-avatar>
-              {{ ablyTicketService.ticket.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
+              {{ ablyTicketService.ticket?.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
             </ion-item>
           </ion-col>
 
           <ion-col>
             <ion-item class="user-icons">
-              ${{ (ablyTicketService.ticket.usersMap.get(currentUserUid).total - ablyTicketService.ticket.usersMap.get(currentUserUid).discounts) / 100 | number: '1.2-2' }}
+              ${{ (ablyTicketService.ticket?.usersMap.get(currentUserUid).total - ablyTicketService.ticket?.usersMap.get(currentUserUid).discounts) / 100 | number: '1.2-2' }}
               <ion-badge item-end class="status-badge" color="warning"
-                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.PAYING]">
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket?.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.PAYING]">
                 PAYING</ion-badge>
               <ion-badge item-end class="status-badge" color="secondary"
-                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.PAID]">
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket?.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.PAID]">
                 PAID</ion-badge>
             </ion-item>
           </ion-col>
@@ -36,13 +36,13 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card id='allUsersCard' *ngIf="ablyTicketService.ticket.users.length > 1">
+    <ion-card id='allUsersCard' *ngIf="ablyTicketService.ticket?.users.length > 1">
       <ion-card-header class="card-header">
           Your Party:
       </ion-card-header>
       <ion-card-content class="card_content">
       <ion-list>
-        <ng-container *ngFor="let ticketUser of ablyTicketService.ticket.users">
+        <ng-container *ngFor="let ticketUser of ablyTicketService.ticket?.users">
           <ng-container *ngIf="ticketUser.user.uid != currentUserUid">
             <ion-row class="item-user">
               <ion-col>
@@ -82,10 +82,10 @@
         </ion-col>
         <ion-col col-auto>
           <span id="amount-owed">
-            ${{ ablyTicketService.ticket.ticketTotal.due / 100 | number: '1.2-2' }} /
+            ${{ ablyTicketService.ticket?.ticketTotal.due / 100 | number: '1.2-2' }} /
           </span>
           <span id="total-bill">
-            ${{ ablyTicketService.ticket.ticketTotal.total / 100 | number: '1.2-2' }}
+            ${{ ablyTicketService.ticket?.ticketTotal.total / 100 | number: '1.2-2' }}
           </span>
         </ion-col>
       </ion-row>

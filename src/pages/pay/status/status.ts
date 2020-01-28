@@ -47,7 +47,7 @@ export class StatusPage {
   }
 
   checkPaidStatus(): boolean {
-    if (this.ablyTicketService.ticket.ticket_status === TicketStatus.OPEN) {
+    if (this.ablyTicketService.ticket && this.ablyTicketService.ticket.ticket_status === TicketStatus.OPEN) {
       return false;
     } else {
       if (!this.viewHome) {
@@ -66,9 +66,10 @@ export class StatusPage {
     });
     await sleep(1500);
     // pushing the home page first avoids errors from popping up when setting root - see below comment for further explenation
-    await this.navCtrl.push('HomePage');
+    // await this.navCtrl.push('HomePage');
     // setting root unloads tab look up which clears the ably ticket service state and disconnects the ably connection
+    await alert.present();
+    await this.ablyTicketService.clearState();
     await this.navCtrl.setRoot('HomePage');
-    alert.present();
   }
 }
