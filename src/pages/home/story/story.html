@@ -68,18 +68,18 @@
 
     <ion-row>
       <ion-col text-center>
-        <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
-          <ion-segment-button small value="comments" icon-only>
+        <ion-segment color="tabify-alt" [(ngModel)]="selectedSegment">
+          <ion-segment-button small [value]="StorySegment.COMMENTS" icon-only>
             <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
           </ion-segment-button>
-          <ion-segment-button small value="payment-details" icon-only>
+          <ion-segment-button small [value]="StorySegment.PAYMENT_DETAILS" icon-only>
             <ion-icon name="cash"></ion-icon>
           </ion-segment-button>
         </ion-segment>
       </ion-col>
     </ion-row>
 
-    <ng-container *ngIf="selectedSegment === 'comments'">
+    <ng-container *ngIf="selectedSegment === StorySegment.COMMENTS">
       <ion-row>
         <ion-col text-center>
           <p>Comments</p>
@@ -135,7 +135,7 @@
 
     </ng-container>
 
-    <ng-container *ngIf="selectedSegment === 'payment-details'">
+    <ng-container *ngIf="selectedSegment === StorySegment.PAYMENT_DETAILS">
       <ion-row>
         <ion-col text-center>
           <p>Payment Details</p>
@@ -185,7 +185,7 @@
   </ion-card>
 </ion-content>
 
-<ion-footer *ngIf="selectedSegment === 'comments'">
+<ion-footer *ngIf="selectedSegment === StorySegment.COMMENTS">
   <ion-toolbar text-center>
     <ion-textarea class="new-comment-text" *ngIf="!newCommentPosting" [(ngModel)]="newComment"
       placeholder="Enter a new comment!">

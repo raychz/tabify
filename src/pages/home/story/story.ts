@@ -16,8 +16,9 @@ import { StorySegment } from '../../../enums/';
   templateUrl: 'story.html',
 })
 export class StoryPage {
-
-  selectedSegment = 'comments';
+  // Hack to expose enum to template
+  StorySegment: typeof StorySegment = StorySegment;
+  selectedSegment = StorySegment.COMMENTS;
   story: any;
   comments: any[] = [];
   user = <any>{};
@@ -240,9 +241,5 @@ export class StoryPage {
       ],
     });
     actionSheet.present();
-  }
-
-  segmentChanged(event: any) {
-    this.selectedSegment = event.value;
   }
 }
