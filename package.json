@@ -99,6 +99,7 @@
   "config": {
     "ionic_aot_write_to_disk": true,
     "ionic_optimization": "./config/webpack.config.js",
-    "ionic_webpack": "./config/webpack.config.js"
+    "ionic_webpack": "./config/webpack.config.js",
+    "ionic_generate_source_map": "true"
   }
 }
