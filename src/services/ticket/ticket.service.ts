@@ -137,6 +137,7 @@ export class TicketService {
     const body = {
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
+      check_opened_recently: true,
     };
 
     const ticket = await this.http
