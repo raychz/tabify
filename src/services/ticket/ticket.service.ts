@@ -116,7 +116,7 @@ export class TicketService {
    */
   public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string, openedRecently: boolean) {
     const params = {
-      opened_recently: String(false),
+      opened_recently: String(true),
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
       ticket_status: ticketStatus
@@ -137,7 +137,7 @@ export class TicketService {
     const body = {
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
-      check_opened_recently: true,
+      opened_recently: String(true),
     };
 
     const ticket = await this.http
