@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tabifyapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.tabifyapp" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Tabify</name>
     <description>The easiest way to pay and split the tab at your favorite restaurants. Redefine how you dine with Tabify.</description>
     <author email="hi@tabifyapp.com" href="https://tabifyapp.com/">Tabify Team</author>
