@@ -29,7 +29,7 @@
     "@ionic-native/status-bar": "~4.20.0",
     "@ionic/pro": "1.0.20",
     "@ionic/storage": "2.2.0",
-    "@types/node": "10.3.6",
+    "@types/node": "13.5.2",
     "@ultimate/ngxerrors": "1.4.0",
     "ably": "^1.1.22",
     "cordova-android": "8.1.0",
