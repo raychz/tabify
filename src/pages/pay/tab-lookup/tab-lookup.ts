@@ -111,7 +111,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, true) as any;
       await this.initializeTicketMetadata(newTicket);
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
