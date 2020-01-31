@@ -46,4 +46,9 @@ export class StoryService {
         const res = await this.httpClient.get(`${environment.serverUrl}/stories/${storyId}/likers`).toPromise();
         return res;
     }
+
+    async getTicketItemsForUser(ticketId: number) {
+        const res = await this.httpClient.get(`${environment.serverUrl}/tickets/${ticketId}/items/user`).toPromise();
+        return res;
+    }
 }
