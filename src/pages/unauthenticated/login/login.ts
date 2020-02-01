@@ -30,7 +30,7 @@ export class LoginPage {
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: [
         '',
-        Validators.compose([Validators.required, Validators.minLength(6)]),
+        Validators.compose([Validators.required, Validators.minLength(6), Validators.pattern(/^\S*$/)]),
       ],
     });
   }
@@ -49,7 +49,7 @@ export class LoginPage {
       });
       await loading.present();
       try {
-        await this.auth.signInWithEmail({ email, password })
+        await this.auth.signInWithEmail({ email: email.trim(), password: password.trim() })
       } catch (error) {
         this.loginError = this.errorService.authError(error)
       }
@@ -83,5 +83,12 @@ export class LoginPage {
   async signUp() {
     await this.navCtrl.setRoot('UnauthenticatedPage');
     await this.navCtrl.push('SignUpPage');
+  }
+
+  inputChange() {
+    // Remove trailing and leading spaces from both email and password inputs
+    // to prevent user from seeing 'invalid email' validation errors
+    const { email } = this.loginForm.value;
+    this.loginForm.patchValue({ email: email.trim() }, { emitEvent: false });
   }
 }

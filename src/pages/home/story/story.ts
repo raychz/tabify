@@ -7,6 +7,8 @@ import { User } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
+import { PaymentService } from '../../../services/payment/payment.service';
+import { StorySegment } from '../../../enums/';
 
 @IonicPage()
 @Component({
@@ -14,13 +16,17 @@ import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/
   templateUrl: 'story.html',
 })
 export class StoryPage {
-
+  // Hack to expose enum to template
+  StorySegment: typeof StorySegment = StorySegment;
+  selectedSegment = StorySegment.COMMENTS;
   story: any;
   comments: any[] = [];
   user = <any>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
   userNamesDisplay: IUsersDescription;
+  items: any;
+  ticketPayments: any;
 
   constructor(
     public navCtrl: NavController,
@@ -32,13 +38,13 @@ export class StoryPage {
     public alertCtrl: AlertController,
     public auth: AuthService,
     private actionSheetCtrl: ActionSheetController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private paymentService: PaymentService
   ) { }
 
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
-
 
   async ionViewDidLoad() {
     await this.getStory();
@@ -54,6 +60,9 @@ export class StoryPage {
       await this.determineStoryLikedByUser();
       await this.getUserDetails();
       await this.getComments();
+      await this.getTicketItemsForUser();
+      await this.getTicketPaymentsByUser();
+      console.log(this.story);
     } catch {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
@@ -193,6 +202,18 @@ export class StoryPage {
     } else {
       await this.createLike();
     }
+  }
+
+  async getTicketItemsForUser() {
+    this.items = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
+    
+    this.items.forEach(item => {
+      item.userShare = item.users[0].price;
+    });
+  }
+
+  async getTicketPaymentsByUser() {
+    this.ticketPayments = await this.paymentService.getTicketPaymentsByUser(this.story.ticket.id);
   }
 
   displayUsers(users: any[]) {

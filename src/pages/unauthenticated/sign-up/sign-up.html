@@ -83,20 +83,20 @@
             <form (ngSubmit)="signUp()" [formGroup]="form">
               <ion-list inset>
                 <ion-item>
-                  <ion-label floating>First Name</ion-label>
+                  <ion-label floating>*First Name</ion-label>
                   <ion-input type="text" formControlName="firstName"></ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label floating>Last Name</ion-label>
+                  <ion-label floating>*Last Name</ion-label>
                   <ion-input type="text" formControlName="lastName"></ion-input>
                 </ion-item>
                 <ion-item [ngClass]="{
                             invalid: emailErrors.hasError('*', ['touched', 'dirty'])
                           }">
-                  <ion-label floating>Email</ion-label>
-                  <ion-input type="text" formControlName="email"></ion-input>
+                  <ion-label floating>*Email</ion-label>
+                  <ion-input (input)="inputChange()" type="text" formControlName="email"></ion-input>
                 </ion-item>
-                <div ngxErrors="email" #emailErrors="ngxErrors">
+                <div ngxErrors="email" #emailErrors="ngxErrors" [class.errors]="emailErrors.hasErrors">
                   <div [ngxError]="['email', 'required']" [when]="['dirty']">
                     Enter a valid email
                   </div>
@@ -104,21 +104,25 @@
                 <ion-item [ngClass]="{
                             invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
                           }">
-                  <ion-label floating>Password</ion-label>
+                  <ion-label floating>*Password</ion-label>
                   <ion-input type="password" formControlName="password"></ion-input>
                 </ion-item>
-                <div ngxErrors="password" #passwordErrors="ngxErrors">
+                <div ngxErrors="password" #passwordErrors="ngxErrors" [class.errors]="passwordErrors.hasErrors">
                   <div [ngxError]="['minlength', 'required']" [when]="['dirty']">
                     Password must have at least 6 characters
+                  </div>
+                  <div [ngxError]="['pattern']" [when]="['dirty']">
+                    Password must not contain spaces
                   </div>
                 </div>
               </ion-list>
 
               <div>
-                <div class="form-error">{{ signUpError }}</div>
+                <div class="errors">{{ signUpError }}</div>
                 <button ion-button block type="submit" [disabled]="!form.valid">
                   Sign Up
                 </button>
+                <p class="muted">* indicates required field</p>
               </div>
             </form>
           </ion-card-content>
@@ -128,7 +132,7 @@
     <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
       <ion-col text-center>
         <button ion-button color="tabify-alt" (click)="login()" clear>
-          Already a user?<span class="login-text">Login.</span>
+          Already a Tabify user?<span class="login-text">Login.</span>
         </button>
       </ion-col>
     </ion-row>
