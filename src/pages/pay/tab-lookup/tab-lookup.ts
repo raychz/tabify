@@ -54,6 +54,7 @@ export class TabLookupPage {
   }
 
   async ionViewWillUnload() {
+    // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
   }
@@ -160,20 +161,7 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case TicketUserStatus.PAID:
-        // if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
-        //   const modal = this.alertCtrl.create({
-        //     title: 'Tab already paid!',
-        //     message: 'You have already paid your tab, no need to do anything else.',
-        //     buttons: [
-        //       {
-        //         text: 'Ok',
-        //       },
-        //     ],
-        //   });
-        //   modal.present();
-        // } else {
-        //   this.navCtrl.push('StatusPage');
-        // }
+          this.navCtrl.push('StatusPage');
         break;
       default:
         throw new Error('Unknown user status')
