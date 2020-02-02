@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "^3.2.3",
-    "firebase-tools": "^6.1.0",
+    "firebase-tools": "^7.12.1",
     "prettier": "1.13.7",
     "typescript": "~2.6.2"
   },
