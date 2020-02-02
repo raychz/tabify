@@ -43,7 +43,7 @@
       <ion-card-content class="card_content">
       <ion-list>
         <ng-container *ngFor="let ticketUser of ablyTicketService.ticket?.users">
-          <ng-container *ngIf="ticketUser.user.uid != currentUserUid">
+          <ng-container *ngIf="ticketUser.user.uid !== currentUserUid">
             <ion-row class="item-user">
               <ion-col>
                 <ion-item class="user-info">
