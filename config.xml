@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tabifyapp" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.tabifyapp" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Tabify</name>
     <description>The easiest way to pay and split the tab at your favorite restaurants. Redefine how you dine with Tabify.</description>
     <author email="hi@tabifyapp.com" href="https://tabifyapp.com/">Tabify Team</author>
@@ -28,6 +28,7 @@
     </feature>
     <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <preference name="WKWebViewOnly" value="true" />
+    <preference name="WKSuspendInBackground" value="false" />
     <platform name="android">
         <preference name="WKPort" value="9634" />
         <allow-intent href="market:*" />
@@ -53,6 +54,7 @@
     <platform name="ios">
         <preference name="WKPort" value="9634" />
         <preference name="UseScheme" value="true" />
+        <preference name="KeyboardAppearanceDark" value="true" />
         <allow-navigation href="*://*.spreedly.com/*" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
@@ -126,14 +128,6 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <allow-navigation href="http://10.9.24.208:8100" />
     <plugin name="cordova-plugin-ios-keychain" spec="^3.0.1" />
-    <plugin name="cordova-plugin-ionic" spec="^4.1.7">
-        <variable name="APP_ID" value="66369498" />
-        <variable name="CHANNEL_NAME" value="Master" />
-        <variable name="WARN_DEBUG" value="true" />
-        <variable name="UPDATE_API" value="https://api.ionicjs.com" />
-        <variable name="UPDATE_METHOD" value="background" />
-        <variable name="MAX_STORE" value="2" />
-    </plugin>
     <allow-navigation href="http://192.168.1.27:8100" />
     <allow-navigation href="http://192.168.1.31:8101" />
     <allow-navigation href="http://192.168.1.31:8100" />
