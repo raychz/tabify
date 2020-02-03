@@ -54,6 +54,7 @@ export class TabLookupPage {
   }
 
   async ionViewWillUnload() {
+    // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
   }
@@ -82,7 +83,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     try {
       await loading.present();
-      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open', true) as any;
       await this.initializeTicketMetadata(ticket);
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
@@ -111,7 +112,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, true) as any;
       await this.initializeTicketMetadata(newTicket);
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
@@ -160,20 +161,7 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case TicketUserStatus.PAID:
-        // if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
-        //   const modal = this.alertCtrl.create({
-        //     title: 'Tab already paid!',
-        //     message: 'You have already paid your tab, no need to do anything else.',
-        //     buttons: [
-        //       {
-        //         text: 'Ok',
-        //       },
-        //     ],
-        //   });
-        //   modal.present();
-        // } else {
-        //   this.navCtrl.push('StatusPage');
-        // }
+          this.navCtrl.push('StatusPage');
         break;
       default:
         throw new Error('Unknown user status')

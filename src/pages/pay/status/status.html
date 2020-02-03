@@ -5,161 +5,89 @@
 </ion-header>
 
 <ion-content class="cards-bg">
-  <ng-container>
-
     <ion-label id='openingText'>
-      {{ checkPaidStatus() ? 'Everyone has paid!' : 'Please wait for everyone to pay before leaving.' }}</ion-label>
-    <ion-card id='curUserCard' (click)="ticketService.toggleIsExpanded(ticketService.curUser)">
-      <ion-card-content>
+      {{ checkPaidStatus() ? 'Everyone has paid!' : 'Please wait for everyone to finish paying' }}
+    </ion-label>
+    <ion-card id='curUserCard'>
+      <ion-card-content class="card_content">
         <ion-row class="item-user">
 
-          <ion-col col-auto class="user-picture">
-            <ion-avatar class="avatar">
-              <img [src]="ticketService.curUser.photoUrl || '../../../../../assets/imgs/user-light.png'">
-            </ion-avatar>
+          <ion-col>
+            <ion-item class="user-info">
+              <ion-avatar item-start class="avatar">
+                <img [src]="ablyTicketService.ticket?.usersMap.get(currentUserUid).user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
+              </ion-avatar>
+              {{ ablyTicketService.ticket?.usersMap.get(currentUserUid).user.userDetail.abbreviatedName }}
+            </ion-item>
           </ion-col>
 
-          <ion-col col-auto class="user-name">
-            <ion-label> {{ ticketService.curUser.name }} </ion-label>
-          </ion-col>
-
-          <ion-col col-auto class="user-total">
-            <ion-label>
-              ${{ (ticketService.curUser.totals.subtotal + ticketService.curUser.totals.tax) / 100 | number: '1.2-2' }}
-            </ion-label>
-          </ion-col>
-
-          <ion-col col-auto class="ticket-spinner" *ngIf="ticketService.curUser.status < userStatus.Paid">
-            <ion-spinner name="bubbles"></ion-spinner>
-          </ion-col>
-
-          <ion-col col-auto class="user-icons">
-            <ion-icon class="icon" name="checkmark-circle-outline"
-              *ngIf="ticketService.curUser.status >= userStatus.Paid">
-            </ion-icon>
-            <ion-icon class="icon"
-              [name]="ticketService.getUserExpanded(ticketService.curUser) ? 'arrow-dropdown' : 'arrow-dropup'">
-            </ion-icon>
+          <ion-col>
+            <ion-item class="user-icons">
+              ${{ (ablyTicketService.ticket?.usersMap.get(currentUserUid).total - ablyTicketService.ticket?.usersMap.get(currentUserUid).discounts) / 100 | number: '1.2-2' }}
+              <ion-badge item-end class="status-badge" color="warning"
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket?.usersMap.get(currentUserUid).status] <= TicketUserStatusOrder[TicketUserStatus.PAYING]">
+                PAYING</ion-badge>
+              <ion-badge item-end class="status-badge" color="secondary"
+                *ngIf="TicketUserStatusOrder[ablyTicketService.ticket?.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.PAID]">
+                PAID</ion-badge>
+            </ion-item>
           </ion-col>
         </ion-row>
-
-        <ion-list *ngIf="ticketService.getUserExpanded(ticketService.curUser)">
-          <ion-row class="item-details" *ngFor="let item of ticketService.curUser.ticketItems">
-            <ion-col class="col-item-name">
-              <span class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
-            </ion-col>
-            <ion-col col-auto class="col-item-total">
-              <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
-                ${{ ticketService.findUserShareOfItem(item, this.auth.getUid()) / 100 | number: '1.2-2' }} /
-              </span>
-              <span class="total-text">
-                ${{ item.price / 100 | number: '1.2-2' }}
-              </span>
-            </ion-col>
-          </ion-row>
-          <ion-row class="item-details">
-            <ion-col class="col-item-name">
-              <span class="name-text"> 💲 Tax</span>
-            </ion-col>
-            <ion-col col-auto class="col-item-total">
-              <span class="total-text">
-                ${{ ticketService.curUser.totals.tax / 100 | number: '1.2-2' }}
-              </span>
-            </ion-col>
-          </ion-row>
-        </ion-list>
       </ion-card-content>
     </ion-card>
 
-    <ion-card id='allUsersCard' *ngIf="ticketService.users.length > 1">
-      <ion-card-header class="card-header" id="tell-your-friends">
-        <ion-label id="your-party">
+    <ion-card id='allUsersCard' *ngIf="ablyTicketService.ticket?.users.length > 1">
+      <ion-card-header class="card-header">
           Your Party:
-        </ion-label>
       </ion-card-header>
+      <ion-card-content class="card_content">
       <ion-list>
-        <ng-container *ngFor="let user of ticketService.users">
-          <ng-container *ngIf="user.uid !== ticketService.curUser.uid">
-            <ion-card-content>
-              <ion-row class="item-user" (click)="ticketService.toggleIsExpanded(user)">
-                <ion-col class="user-picture">
-                  <ion-avatar class="avatar">
-                    <img [src]="user.photoUrl || '../../../../../assets/imgs/user-light.png'">
+        <ng-container *ngFor="let ticketUser of ablyTicketService.ticket?.users">
+          <ng-container *ngIf="ticketUser.user.uid !== currentUserUid">
+            <ion-row class="item-user">
+              <ion-col>
+                <ion-item class="user-info">
+                  <ion-avatar item-start class="avatar">
+                    <img [src]="ticketUser.user.userDetail.photo_url || '../../../../../assets/imgs/user-light.png'">
                   </ion-avatar>
-                </ion-col>
+                  {{ ticketUser.user.userDetail.abbreviatedName }}
+                </ion-item>
+              </ion-col>
 
-                <ion-col class="user-name">
-                  <ion-label> {{ user.name }} </ion-label>
-                </ion-col>
-
-                <ion-col class="user-total">
-                  <ion-label>
-                    ${{ (user.totals.subtotal + user.totals.tax) / 100 | number: '1.2-2' }}
-                  </ion-label>
-                </ion-col>
-
-                <ion-col class="ticket-spinner" *ngIf="user.status < userStatus.Paid">
-                  <ion-spinner name="bubbles" color="primary"></ion-spinner>
-                </ion-col>
-
-                <ion-col class="user-icons">
-                  <ion-icon class="icon" name="checkmark-circle-outline" *ngIf="user.status >= userStatus.Paid">
-                  </ion-icon>
-                  <ion-icon class="icon"
-                    [name]="ticketService.getUserExpanded(user) ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
-                </ion-col>
-              </ion-row>
-
-              <ion-list *ngIf="ticketService.getUserExpanded(user)">
-                <ion-row class="item-details" *ngFor="let item of user.ticketItems">
-                  <ion-col class="col-item-name">
-                    <span class="name-text">{{ ticketService.getTicketItemName(item.name) }}</span>
-                  </ion-col>
-                  <ion-col col-auto class="col-item-total">
-                    <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
-                      ${{ ticketService.findUserShareOfItem(item, user.uid) / 100 | number: '1.2-2' }} /
-                    </span>
-                    <span class="total-text">
-                      ${{ item.price / 100 | number: '1.2-2' }}
-                    </span>
-                  </ion-col>
-                </ion-row>
-                <ion-row class="item-details">
-                  <ion-col class="col-item-name">
-                    <span class="name-text"> 💲 Tax</span>
-                  </ion-col>
-                  <ion-col col-auto class="col-item-total">
-                    <span class="total-text">
-                      ${{ user.totals.tax / 100 | number: '1.2-2' }}
-                    </span>
-                  </ion-col>
-                </ion-row>
-              </ion-list>
-            </ion-card-content>
+              <ion-col>
+                <ion-item class="user-icons">
+                  ${{ (ticketUser.total - ticketUser.discounts) / 100 | number: '1.2-2' }}
+                  <ion-badge item-end class="status-badge" color="warning"
+                    *ngIf="TicketUserStatusOrder[ticketUser.status] <= TicketUserStatusOrder[TicketUserStatus.PAYING]">
+                    PAYING</ion-badge>
+                  <ion-badge item-end class="status-badge" color="secondary"
+                    *ngIf="TicketUserStatusOrder[ticketUser.status] >= TicketUserStatusOrder[TicketUserStatus.PAID]">
+                    PAID</ion-badge>
+                </ion-item>
+              </ion-col>
+            </ion-row>
           </ng-container>
         </ng-container>
       </ion-list>
+     </ion-card-content>
     </ion-card>
-
-  </ng-container>
 </ion-content>
 
 <ion-footer>
-  <ng-container>
-    <ion-card>
+  <ion-toolbar border-top>
+
       <ion-row id="total-bill-row">
         <ion-col>
           Your Party Owes:
         </ion-col>
         <ion-col col-auto>
           <span id="amount-owed">
-            ${{ (ticketService.firestoreTicket.ticketTotal.total - ticketService.amountPaid) / 100 | number: '1.2-2' }} /
+            ${{ ablyTicketService.ticket?.ticketTotal.due / 100 | number: '1.2-2' }} /
           </span>
           <span id="total-bill">
-            ${{ ticketService.firestoreTicket.ticketTotal.total / 100 | number: '1.2-2' }}
+            ${{ ablyTicketService.ticket?.ticketTotal.total / 100 | number: '1.2-2' }}
           </span>
         </ion-col>
       </ion-row>
-    </ion-card>
-  </ng-container>
+</ion-toolbar>
 </ion-footer>

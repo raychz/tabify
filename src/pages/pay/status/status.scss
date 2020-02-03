@@ -1,14 +1,14 @@
 page-status {
   #openingText {
     text-align: center;
+    white-space: normal;
   }
-  #your-party {
-    text-align: left;
-    color: darkgrey;
-  }
+
   .card-header {
     font-size: medium;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    text-align: left;
+    color: darkgrey;
   }
 
   #total-bill-row {
@@ -25,77 +25,34 @@ page-status {
     vertical-align: top;
   }
 
-  ion-content {
-    padding-bottom: 10px;
-    ion-card {
-      ion-row {
-        &.item-user {
-          .user-picture {
-            padding-left: 5px;
-            white-space: nowrap;
-            .avatar {
-              padding-top: 5px;
-              width: 40px;
-              height: 40px;
-              white-space: nowrap;
-            }
-          }
-          .user-name {
-            padding-left: 10px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-size: medium;
-          }
-          .user-total {
-            align-self: flex-end;
-            color: map-get($colors, primary);
-            text-align: right;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-size: medium;
-          }
-          .ticket-spinner {
-            margin: auto;
-            align-self: flex-end;
-            white-space: nowrap;
-            padding-bottom: 10px;
+  .card_content {
+    padding: 0px;
+  }
 
-          }
-          .user-icons {
-            align-self: flex-end;
-            white-space: nowrap;
-            padding-bottom: 10px;
-
-            .icon {
-              font-size: 30px;
-            }
-          }
+  ion-row {
+    &.item-user {
+      .user-info {
+        padding-left: 8px;;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 1.6rem;
+        .avatar {
+          width: 40px;
+          height: 40px;
+          margin-right: 8px;
         }
-        &.item-details {
-          padding: 0;
-          overflow: hidden;
-          .col-item-name {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            .name-text {
-              font-weight: 500;
-              font-size: 1em;
-              white-space: nowrap;
-              vertical-align: top;
-            }
-          }
-          .col-item-total {
-            .my-share-text {
-              color: map-get($colors, primary);
-              font-size: 0.9em;
-              white-space: nowrap;
-              vertical-align: top;
-            }
-            .total-text {
-              font-size: 1em;
-              vertical-align: top;
-            }
-          }
+      }
+      .user-icons {
+        padding-left: 0px;
+        padding-top: 3.5px;
+        font-size: 1.6rem;
+        text-align: right;
+        color: map-get($colors, primary);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        .status-badge {
+          margin: 0px;
+          color: map-get($colors, tabify-dark-2);
         }
       }
     }
