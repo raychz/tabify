@@ -2,6 +2,7 @@ import { Ticket } from "./ticket.interface";
 import { User } from "./user.interface";
 import { PaymentMethod } from "./payment-method.interface";
 import { TicketUserStatus } from "../enums";
+import { ICoupon } from "./coupon.interface";
 
 export interface TicketUser extends FrontendTicketUser {
   id: number;
@@ -23,6 +24,8 @@ export interface TicketUser extends FrontendTicketUser {
   selectedItemsCount: number;
   /** Ticket user status */
   status?: TicketUserStatus;
+  /** Coupon applied by the Ticket User to the ticket */
+  selected_coupon: ICoupon
 }
 
 interface FrontendTicketUser {

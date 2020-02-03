@@ -10,26 +10,26 @@
       My Total
     </ion-card-header>
     <ion-card-content>
-      <ion-item *ngIf='currentUser?.items !== currentUser?.sub_total' class='total'>
+      <ion-item *ngIf='this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.items !== this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.sub_total' class='total'>
         <h2>My Items</h2>
         <div item-end>
-          <h2>${{currentUser?.items / 100 | number: '1.2-2'}}</h2>
+          <h2>${{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.items / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item *ngIf='currentUser?.discounts > 0' class='total discount'>
+      <ion-item *ngIf='this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.discounts > 0 && this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.items !== this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.sub_total' class='total discount'>
         <h2>Discounts 🙌</h2>
         <div item-end>
-          <h2>–${{currentUser?.discounts / 100 | number: '1.2-2'}}</h2>
+          <h2>–${{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.discounts - this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.items !== this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.selected_coupon?.estimated_dollar_value / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total'>
         <h2>Subtotal</h2>
         <div item-end>
-          <h2>${{currentUser?.sub_total / 100 | number: '1.2-2'}}</h2>
+          <h2>${{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.sub_total / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total' *ngIf="couponService.validCoupons.length > 0" (click)="editCoupon()">
-        <h2>Promos
+        <h2>Promo
          <span class='line-details' *ngIf="couponService.selectedCoupon.value > 0; else emptyCoupon;"> {{ couponService.selectedCoupon.coupon_type === CouponType.dollar_value ? '$' + (couponService.selectedCoupon.value / 100 | number: '1.2-2') : couponService.selectedCoupon.value + '%' }}
            off {{ couponService.selectedCoupon.coupon_off_of === CouponOffOf.ticket ? 'the full bill' : couponService.selectedCoupon.menu_item_name}}</span>
            <ng-template #emptyCoupon>
@@ -38,7 +38,7 @@
         </h2>
        <div item-end>
          <h2>
-           <ion-badge class="edit-icon" color="primary">
+           <ion-badge [ngClass]="{'edit-icon': true, 'disabled': ablyTicketService.ticket.usersMap.get(this.auth.getUid()).selected_coupon}" color="primary">
              EDIT
            </ion-badge>
            -${{couponService.selectedCoupon.dollar_value / 100 | number: '1.2-2'}}</h2>
@@ -49,27 +49,27 @@
           <span class='line-details'>({{ablyTicketService.ticket?.location.tax_rate}}%)</span>
         </h2>
         <div item-end>
-          <h2>${{(currentUser?.tax - couponService.selectedCoupon.estimated_tax_difference)
+          <h2>${{(this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tax - couponService.selectedCoupon.estimated_tax_difference)
             / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
       <ion-item class='total' (click)="adjustTip()">
         <h2>Tip
-          <span class='line-details'>({{currentUser?.tipPercentage}}%)</span>
+          <span class='line-details'>({{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tipPercentage}}%)</span>
         </h2>
         <div item-end>
           <h2>
             <ion-badge class="edit-icon" color="primary">
               EDIT
             </ion-badge>
-            ${{currentUser?.tips / 100 | number: '1.2-2'}}
+            ${{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tips / 100 | number: '1.2-2'}}
           </h2>
         </div>
       </ion-item>
       <ion-item id='grand-total'>
         <h2>My Grand Total</h2>
         <div item-end>
-          <h2>${{ (currentUser?.total + currentUser?.tips -
+          <h2>${{ (this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.total + this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tips -
             couponService.selectedCoupon.dollar_value -
             couponService.selectedCoupon.estimated_tax_difference) / 100 | number: '1.2-2'}}</h2>
         </div>
@@ -78,10 +78,10 @@
         <ion-icon class="linked-card-icon" name="card" item-start></ion-icon>
         <div item-end>
           <span>
-            <ion-badge class="edit-icon" color="primary">
+            <ion-badge class="edit-icon edit-payment" color="primary">
               EDIT
             </ion-badge>
-            {{currentUser?.paymentMethod?.card_type}} ...{{currentUser?.paymentMethod?.last_four_digits}}
+            {{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.paymentMethod?.card_type}} ...{{this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.paymentMethod?.last_four_digits}}
           </span>
         </div>
       </ion-item>
@@ -124,7 +124,7 @@
 <ion-footer>
   <ion-toolbar border-top>
     <button ion-button block (click)="pay()">Submit Payment of
-      ${{ (currentUser?.total + currentUser?.tips -
+      ${{ (this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.total + this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tips -
         couponService.selectedCoupon.dollar_value -
         couponService.selectedCoupon.estimated_tax_difference) / 100  | number: '1.2-2'}}
     </button>

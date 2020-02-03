@@ -6,7 +6,7 @@ import { ICoupon } from 'interfaces/coupon.interface';
 
 @Injectable()
 export class PaymentService {
-  constructor(private httpClient: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   sendTicketPayment(ticketId: number, paymentMethodId: number, amount: number, tip: number, couponId: number) {
     const url = `${environment.serverUrl}/tickets/${ticketId}/payments`;
@@ -20,5 +20,10 @@ export class PaymentService {
     return this.http
       .post(url, body)
       .toPromise();
+  }
+
+  async getTicketPaymentsByUser(ticketId: number) {
+    const res = await this.http.get(`${environment.serverUrl}/tickets/${ticketId}/payments`).toPromise();
+    return res;
   }
 }

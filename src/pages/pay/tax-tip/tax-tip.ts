@@ -25,7 +25,6 @@ import { TicketUser } from '../../../interfaces/ticket-user.interface';
 })
 export class TaxTipPage {
   @ViewChild(Navbar) navBar: Navbar;
-  currentUser: TicketUser;
   myTabItems: TicketItem[] = [];
   displayAllItems = false;
   displayLimit = 2;
@@ -65,7 +64,7 @@ export class TaxTipPage {
       if (!this.ablyTicketService.ticket) return true;
 
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
-      // Allow user to leave only if they are trying to select their payment method
+      // Allow user to leave only if they are trying to select their payment method or coupon
       return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethodOrCoupon;
     } catch {
       return false;
@@ -78,7 +77,7 @@ export class TaxTipPage {
   }
 
   async ionViewDidLoad() {
-    this.currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    console.log('taxtip did load start:', this.ablyTicketService.ticket.users)
     const loading = this.loader.create();
     await loading.present();
     try {
@@ -94,9 +93,10 @@ export class TaxTipPage {
     }
     this.myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
     // TODO: Enter the user's default tip percentage here
-    this.currentUser.tipPercentage = 20;
-    this.currentUser.tips =
-      Math.round(((this.currentUser.tipPercentage / 100) * this.currentUser.items));
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    currentUser.tipPercentage = 20;
+    currentUser.tips =
+      Math.round(((currentUser.tipPercentage / 100) * currentUser.items));
     try {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
@@ -105,7 +105,7 @@ export class TaxTipPage {
 
     // TODO: Auto select the user's default payment method here
     if (this.paymentMethodService.paymentMethods.length) {
-      this.currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
+      currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
     const alert = await this.couponService.getTicketCouponsAndReceiveCouponAlert(this.ablyTicketService.ticket.id);
     // alert is posssibly undefined
@@ -113,6 +113,7 @@ export class TaxTipPage {
       alert.present();
     }
     await loading.dismiss();
+    console.log('taxtip did load end:', this.ablyTicketService.ticket.users)
   }
 
   async adjustTip() {
@@ -129,11 +130,12 @@ export class TaxTipPage {
     const loading = this.loader.create();
     await loading.present();
     try {
+      console.log('ticket before payment', this.ablyTicketService.ticket.users)
       const response = await this.paymentService.sendTicketPayment(
         this.ablyTicketService.ticket.id,
-        this.currentUser.paymentMethod.id,
-        this.currentUser.total,
-        this.currentUser.tips,
+        currentUser.paymentMethod.id,
+        currentUser.total,
+        currentUser.tips,
         this.couponService.selectedCoupon.id,
       ) as any;
 
@@ -157,7 +159,10 @@ export class TaxTipPage {
   }
 
   editCoupon() {
-    this.selectingPaymentMethodOrCoupon = true;
-    this.navCtrl.push('CouponsPage', {fullCouponsPage: false});
+    console.log(this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()));
+    if (!this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()).selected_coupon) {
+      this.selectingPaymentMethodOrCoupon = true;
+      this.navCtrl.push('CouponsPage', {fullCouponsPage: false});
+    }
   }
 }
