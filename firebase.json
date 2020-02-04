@@ -10,6 +10,9 @@
       {
         "source": "**",
         "destination": "/index.html"
+      }, {
+        "source": "/privacy",
+        "destination": "/assets/privacy.html"
       }
     ]
   }
