@@ -77,7 +77,6 @@ export class TaxTipPage {
   }
 
   async ionViewDidLoad() {
-    console.log('taxtip did load start:', this.ablyTicketService.ticket.users)
     const loading = this.loader.create();
     await loading.present();
     try {
@@ -113,7 +112,6 @@ export class TaxTipPage {
       alert.present();
     }
     await loading.dismiss();
-    console.log('taxtip did load end:', this.ablyTicketService.ticket.users)
   }
 
   async adjustTip() {
@@ -130,7 +128,6 @@ export class TaxTipPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      console.log('ticket before payment', this.ablyTicketService.ticket.users)
       const response = await this.paymentService.sendTicketPayment(
         this.ablyTicketService.ticket.id,
         currentUser.paymentMethod.id,
@@ -159,7 +156,6 @@ export class TaxTipPage {
   }
 
   editCoupon() {
-    console.log(this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()));
     if (!this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()).selected_coupon) {
       this.selectingPaymentMethodOrCoupon = true;
       this.navCtrl.push('CouponsPage', {fullCouponsPage: false});

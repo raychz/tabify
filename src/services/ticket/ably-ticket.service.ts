@@ -48,7 +48,6 @@ export class AblyTicketService {
         messages.push(message);
       }
       for (const _message of messages) {
-        console.log('ticket users before message:', this.ticket.users);
         switch (_message.name) {
           case TicketUpdates.TICKET_UPDATED:
             this.onTicketUpdate(_message.data);
@@ -63,7 +62,6 @@ export class AblyTicketService {
             console.log("TICKET_USER_REMOVED", _message);
             break;
           case TicketUpdates.TICKET_USERS_UPDATED:
-            console.log('before userupdate:', this.ticket.users)
             this.onTicketUsersUpdated(_message.data);
             console.log("TICKET_USERS_UPDATED", _message);
             break;
@@ -81,7 +79,6 @@ export class AblyTicketService {
           default:
             throw "Message name does not correspond to a handler";
         }
-        console.log('ticket users after message is: ', this.ticket.users)
       }
     });
   }
@@ -160,8 +157,6 @@ export class AblyTicketService {
 
   private onTicketUsersUpdated(updatedTicketUsers: TicketUser[]) {
     // Merge the properties of each user in this.ticket.users that is also in updatedTicketUsers
-    console.log(updatedTicketUsers)
-    console.log(this.ticket.users);
     updatedTicketUsers.forEach(updatedTicketUser => {
       const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === updatedTicketUser.id);
       if (ticketUserIndex > -1) {
@@ -173,7 +168,6 @@ export class AblyTicketService {
         console.error('The updated ticket user could not be found.')
       }
     });
-    console.log(this.ticket);
     this.synchronizeFrontendTicket();
   }
 
@@ -193,7 +187,6 @@ export class AblyTicketService {
    * - usersMap
    */
   synchronizeFrontendTicket() {
-    console.log('synchronize ticket', this.ticket);
     this.ticket.ticketUsersDescription = getSelectItemsTicketUsersDescription(this.ticket.users);
     // TODO: Consider moving this to the backend
     this.ticket.users.forEach(u => u.user.userDetail.abbreviatedName = abbreviateName(u.user.userDetail.displayName));

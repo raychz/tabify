@@ -5,6 +5,7 @@ import { ICoupon, CouponOffOf, CouponType, CouponResponse } from "../../interfac
 import { AuthService } from "../../services/auth/auth.service";
 import { Alert } from "ionic-angular";
 import { AlertService } from "../utilities/alert.service";
+import { AblyTicketService } from "../../services/ticket/ably-ticket.service";
 
 @Injectable()
 export class CouponService {
@@ -19,7 +20,8 @@ export class CouponService {
     dollar_value: 0, estimated_tax_difference: 0};
   public selectedCoupon: ICoupon = this.emptyCoupon;
 
-    constructor(private readonly httpClient: HttpClient, private alertCtrl: AlertService) { }
+    constructor(private readonly httpClient: HttpClient, private alertCtrl: AlertService,
+      private ablyTicketService: AblyTicketService, private auth: AuthService) { }
 
     // get a user's coupons from the backend server
     async getCoupons(): Promise<any> {
@@ -67,68 +69,73 @@ export class CouponService {
       // the best coupon is the first coupon - coupons are sorted based on dollar value
       const bestCoupon = this.validCoupons[0];
 
-      // if there is no selected coupon
-      if(this.selectedCoupon.value === 0) {
-        // and there is a best coupon, set the selected coupon to the best one and tell the user, if not do nothing
-        if (bestCoupon) {
-          this.selectedCoupon = bestCoupon;
-          alert = this.alertCtrl.create({
-            title: 'Promo Found!',
-            message: `We have found valid promo(s) for your ticket and have automatically applied the best one to your ticket.`,
-            buttons: [
-              'Ok',
-            ],
-          });
-        }
-        // there is a coupon selected
+      // check to see if the user already has a coupon applied
+      const ticketUserCoupon = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid()).selected_coupon;
+      if (ticketUserCoupon) {
+        this.selectedCoupon = ticketUserCoupon;
       } else {
-        // find the coupon in the returned valid coupons - coupon will now have additional fields defined
-        const updatedCoupon = this.validCoupons.find(coupon => coupon.id === this.selectedCoupon.id);
-        // the coupon is still valid, set the selected coupon to the updated version
-        if (updatedCoupon) {
-          this.selectedCoupon = updatedCoupon;
-          // if there is still a bettter coupon, set the alert accordingly asking if they would like to select the best one
-          if (updatedCoupon.id !== bestCoupon.id) {
-            alert = this.alertCtrl.create({
-              title: 'Better Promo Found',
-              message: `We have found a better promo with more savings than the one you originally selected. Would you like to automatically apply this better promo instead?`,
-              buttons: [
-                'No',
-                {
-                  text: 'Yes',
-                  handler: () => {
-                    this.selectCoupon(bestCoupon);
-                  }
-                },
-              ],
-            });
-          }
-          // the selected coupon is not valid
-        } else {
-          // if there is still a best coupon - set the selected coupon to the best one and tell the user
+        // if there is no selected coupon
+        if(this.selectedCoupon.value === 0) {
+          // and there is a best coupon, set the selected coupon to the best one and tell the user, if not do nothing
           if (bestCoupon) {
             this.selectedCoupon = bestCoupon;
             alert = this.alertCtrl.create({
-              title: 'Invalid Promo',
-              message: `The promo you originally selected is invalid, but we have automatically applied the best one available for your ticket.`,
-              buttons: [
-                'Ok',
-              ],
-            });
-            // if there is no best coupon, set the selected coupon to the empty coupon and tell the user that there are no more coupons available
-          } else {
-            this.selectedCoupon = this.emptyCoupon;
-            alert = this.alertCtrl.create({
-              title: 'Invalid Promo',
-              message: `The promo you originally selected is invalid and unfortunately there are no other available promos for your ticket.`,
+              title: 'Promo Found!',
+              message: `We have found valid promo(s) for your ticket and have automatically applied the best one to your ticket.`,
               buttons: [
                 'Ok',
               ],
             });
           }
+          // there is a coupon selected
+        } else {
+          // find the coupon in the returned valid coupons - coupon will now have additional fields defined
+          const updatedCoupon = this.validCoupons.find(coupon => coupon.id === this.selectedCoupon.id);
+          // the coupon is still valid, set the selected coupon to the updated version
+          if (updatedCoupon) {
+            this.selectedCoupon = updatedCoupon;
+            // if there is still a bettter coupon, set the alert accordingly asking if they would like to select the best one
+            if (updatedCoupon.id !== bestCoupon.id) {
+              alert = this.alertCtrl.create({
+                title: 'Better Promo Found',
+                message: `We have found a better promo with more savings than the one you originally selected. Would you like to automatically apply this better promo instead?`,
+                buttons: [
+                  'No',
+                  {
+                    text: 'Yes',
+                    handler: () => {
+                      this.selectCoupon(bestCoupon);
+                    }
+                  },
+                ],
+              });
+            }
+            // the selected coupon is not valid
+          } else {
+            // if there is still a best coupon - set the selected coupon to the best one and tell the user
+            if (bestCoupon) {
+              this.selectedCoupon = bestCoupon;
+              alert = this.alertCtrl.create({
+                title: 'Invalid Promo',
+                message: `The promo you originally selected is invalid, but we have automatically applied the best one available for your ticket.`,
+                buttons: [
+                  'Ok',
+                ],
+              });
+              // if there is no best coupon, set the selected coupon to the empty coupon and tell the user that there are no more coupons available
+            } else {
+              this.selectedCoupon = this.emptyCoupon;
+              alert = this.alertCtrl.create({
+                title: 'Invalid Promo',
+                message: `The promo you originally selected is invalid and unfortunately there are no other available promos for your ticket.`,
+                buttons: [
+                  'Ok',
+                ],
+              });
+            }
+          }
         }
       }
-
       return alert;
     }
 

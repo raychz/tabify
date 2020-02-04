@@ -86,7 +86,6 @@ export class WaitingRoomPage {
 
   async viewTaxTip() {
     await sleep(1500);
-    console.log('waiting room ticket is:', this.ablyTicketService.ticket.users)
     this.navCtrl.push('TaxTipPage');
   }
 
