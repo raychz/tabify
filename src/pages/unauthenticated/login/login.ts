@@ -68,7 +68,7 @@ export class LoginPage {
         const alert = this.alert.create({
           title: 'Error',
           subTitle: 'An error occurred while logging in with Facebook.',
-          buttons: ['Ok'],
+          buttons: ['OK'],
         });
         return alert.present();
       })

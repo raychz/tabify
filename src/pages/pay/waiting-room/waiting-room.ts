@@ -154,14 +154,14 @@ export class WaitingRoomPage {
         const alert = this.alertCtrl.create({
           title: 'Warning',
           message: e.error.message,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       } else {
         const alert = this.alertCtrl.create({
           title: 'Unknown Error',
           message: 'Sorry! Try refreshing the app and joining the tab again.',
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       }

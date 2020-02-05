@@ -130,7 +130,7 @@ export class TaxTipPage {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: 'Sorry, something went wrong on our side! Please try again.',
-        buttons: ['Ok']
+        buttons: ['OK']
       });
       alert.present();
       console.error(e);

@@ -109,7 +109,7 @@ export class HomePage {
           message: `To pay your tab, please enter a payment method.`,
           buttons: [
             {
-              text: 'Ok',
+              text: 'OK',
             },
           ],
         });
@@ -128,7 +128,7 @@ export class HomePage {
         message: `Sorry, something went wrong. Please try again.`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });

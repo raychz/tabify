@@ -102,7 +102,7 @@ export class SelectItemsPage {
         message,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });
@@ -130,9 +130,9 @@ export class SelectItemsPage {
         message: `Please add 1 or more items to your tab before continuing.`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
             handler: () => {
-              console.log('Ok clicked');
+              console.log('OK clicked');
             },
           },
         ],

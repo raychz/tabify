@@ -74,7 +74,7 @@ export class TabLookupPage {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: 'Sorry, this ticket number doesn\'t look right. Please double-check and try again. If this issue persists, please contact support@tabifyapp.com.',
-        buttons: ['Ok']
+        buttons: ['OK']
       });
       alert.present();
       return;
@@ -101,7 +101,7 @@ export class TabLookupPage {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: 'Sorry, something went wrong on our side! Please try again.',
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       }
@@ -124,21 +124,21 @@ export class TabLookupPage {
         const alert = this.alertCtrl.create({
           title: 'Ticket Not Found',
           message: 'Please check your ticket number or location and try again.',
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       } else if (e.status === 422) {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: e.error.message,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: 'Sorry, something went wrong on our side! Please try again.',
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       }
@@ -214,7 +214,7 @@ export class TabLookupPage {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: e.error.message,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       }
@@ -230,7 +230,7 @@ export class TabLookupPage {
     //     const alert = this.alertCtrl.create({
     //       title: 'Error',
     //       message: e.error.message,
-    //       buttons: ['Ok']
+    //       buttons: ['OK']
     //     });
     //     alert.present();
     //   }
