@@ -164,6 +164,12 @@ export class TicketService {
       .toPromise();
   }
 
+  public async removeUserFromAllItemsOnTicket(ticketId: number, ticketUserId: number) {
+    return await this.http
+      .delete<TicketUser>(`${environment.serverUrl}/tickets/${ticketId}/users/${ticketUserId}`, {})
+      .toPromise();
+  }
+
   public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
     return await this.http
       .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, {})

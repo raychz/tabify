@@ -157,7 +157,7 @@ export class SelectItemsPage {
           text: 'Remove all from my tab (coming soon)',
           role: 'destructive',
           handler: () => {
-            // this.removeAllItemsFromMyTab();
+            this.removeAllItemsFromMyTab();
           },
         },
         {
@@ -178,9 +178,11 @@ export class SelectItemsPage {
 
   // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
-    for (const item of this.ablyTicketService.ticket.items) {
-      if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
-    }
+    // for (const item of this.ablyTicketService.ticket.items) {
+    //   if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
+    // }
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    this.ticketService.removeUserFromAllItemsOnTicket(this.ablyTicketService.ticket.id, currentUser.id);
   }
 
   inviteOthers() {

@@ -157,6 +157,7 @@ export class AblyTicketService {
   }
 
   private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem["id"] }) {
+    // change to filter. 
     const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
     ticketItem.users = newTicketItemUsers;
     this.synchronizeFrontendTicketItems([ticketItem]);
