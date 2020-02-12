@@ -193,7 +193,8 @@ export class AuthService {
         message: `Please check your connection and try again.`,
       });
       alert.present();
-      return false;
+      throw error;
+      // return false;
     }
   }
 }

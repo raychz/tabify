@@ -104,6 +104,7 @@ export class TabLookupPage {
           buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }
@@ -141,6 +142,7 @@ export class TabLookupPage {
           buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }

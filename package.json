@@ -29,6 +29,7 @@
     "@ionic-native/status-bar": "~4.20.0",
     "@ionic/pro": "1.0.20",
     "@ionic/storage": "2.2.0",
+    "@sentry/browser": "^5.12.1",
     "@types/node": "10.3.6",
     "@ultimate/ngxerrors": "1.4.0",
     "ably": "^1.1.22",
