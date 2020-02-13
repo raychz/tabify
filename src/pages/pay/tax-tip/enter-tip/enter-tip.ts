@@ -54,10 +54,6 @@ export class EnterTipPage {
     this.tipDollar = Math.round((event.value / 100) * this.curUser.items) / 100
   }
 
-  selectTipSegment(event: {value: string}) {
-    this.tipSegement = event.value
-  }
-
   selectDefaultValue(dollar_value: number) {
     this.tipDollar = dollar_value
     if (dollar_value === this.default_15) {
