@@ -125,7 +125,32 @@ export class TaxTipPage {
       ) as any;
 
       await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.PAID);
-      await this.navCtrl.push('StatusPage')
+      if (this.ablyTicketService.ticket.users.length > 1) {
+        await this.navCtrl.push('StatusPage');
+      } else {
+        if (this.ablyTicketService.ticket && this.ablyTicketService.ticket.ticket_status === TicketStatus.CLOSED) {
+          const alert = this.alertCtrl.create({
+            title: 'Success',
+            message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+            buttons: ['OK']
+          });
+          await sleep(1500);
+          // pushing the home page first avoids errors from popping up when setting root - see below comment for further explenation
+          // await this.navCtrl.push('HomePage');
+          // setting root unloads tab look up which clears the ably ticket service state and disconnects the ably connection
+          await alert.present();
+          await this.ablyTicketService.clearState();
+          await this.navCtrl.setRoot('HomePage');
+        } else {
+          const alert = this.alertCtrl.create({
+            title: 'Ticket not yet closed',
+            message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! We experienced an error and your ticket could not be closed.`,
+            buttons: ['OK']
+          });
+          await alert.present();
+          await this.navCtrl.push('StatusPage');
+        }
+      }
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',
