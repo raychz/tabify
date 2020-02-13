@@ -1,17 +1,60 @@
 <ion-content no-bounce>
-  <h2 id="modal-title">Enter Tip</h2>
-  <h2 id="modal-subtitle">How much would you like to <br>tip your waiter?</h2>
-  <ion-item>
-    <ion-input #tipInput type="number" placeholder="Tip Percentage" [(ngModel)]="tipPercentage"></ion-input>
-    <ion-note item-right>
-      %
-    </ion-note>
-  </ion-item>
+  <h1 class="modal-title">Enter Tip</h1>
+  <h2 class="modal-subtitle">How much would you like to tip your waiter? Enter custom amount:</h2>
   <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-label class='segment-label'>Dollar Value</ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label class="segment-label">Percentage</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input #tipInputDollar type="number" autofocus clearOnEdit placeholder="Tip Amount" [(ngModel)]="tipDollar" (ionBlur)="dollarInput($event)"></ion-input>
+          <ion-note item-left class="input-label">$</ion-note>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input #tipInputPercent type="number" autofocus clearOnEdit placeholder="Tip Percentage" [(ngModel)]="tipPercentage" (ionBlur)="percentInput($event)"></ion-input>
+          <ion-note item-right class="input-label">%</ion-note>
+        </ion-item>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col>
         <button ion-button block (click)="dismiss()">OK</button>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <h2 class='modal-subtitle' id="choose_default">Or choose a default tip:</h2>
+    <ion-buttons class="quick_tip_buttons">
+      <button ion-button (click)="selectDefaultValue(default_15)">
+        <div>
+          15%
+          <hr class="line">
+          ${{ default_15 }}
+        </div>
+    </button>
+
+    <button ion-button (click)="selectDefaultValue(default_20)">
+      <div>
+        20%
+        <hr class="line">
+        ${{ default_20 }}
+      </div>
+    </button>
+
+    <button ion-button  (click)="selectDefaultValue(default_25)">
+      <div>
+        25%
+        <hr class="line">
+        ${{ default_25 }}
+      </div>
+   </button>
+    </ion-buttons>
 </ion-content>

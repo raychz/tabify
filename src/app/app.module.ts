@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -68,6 +69,7 @@ export class MyErrorHandler implements ErrorHandler {
   entryComponents: [Tabify],
   providers: [
     StatusBar,
+    DecimalPipe,
     SplashScreen,
     // IonicErrorHandler,
     { provide: ErrorHandler, useClass: MyErrorHandler },
