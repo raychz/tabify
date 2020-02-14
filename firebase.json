@@ -8,10 +8,6 @@
     ],
     "rewrites": [
       {
-        "source": "/.well-known/**",
-        "destination": "/assets/.well-known/apple-developer-merchantid-domain-association.txt"
-      },
-      {
         "source": "/privacy",
         "destination": "/assets/privacy/privacy.html"
       },
