@@ -8,7 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "/.well-known/apple-developer-merchantid-domain-association.txt",
+        "source": "/.well-known/**",
         "destination": "/assets/.well-known/apple-developer-merchantid-domain-association.txt"
       },
       {
