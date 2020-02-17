@@ -65,7 +65,7 @@ export class SignUpPage {
           const alert = this.alert.create({
             title: 'Error',
             subTitle: 'An error occurred while signing up with Facebook.',
-            buttons: ['Ok'],
+            buttons: ['OK'],
           });
           return alert.present();
         }

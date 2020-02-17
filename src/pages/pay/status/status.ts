@@ -62,7 +62,7 @@ export class StatusPage {
     const alert = this.alertCtrl.create({
       title: 'Success',
       message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-      buttons: ['Ok']
+      buttons: ['OK']
     });
     await sleep(1500);
     // pushing the home page first avoids errors from popping up when setting root - see below comment for further explenation

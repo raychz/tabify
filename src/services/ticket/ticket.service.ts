@@ -550,7 +550,7 @@ export class TicketService {
           error}`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });
