@@ -8,6 +8,9 @@ import { StoryService } from '../../services/story/story.service';
 import { NewsfeedService } from '../../services/newsfeed/newsfeed.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { PaymentDetailsPageMode } from '../payment-methods/payment-details/payment-details';
+// TODO: Replace with import from @ionic-native when missing merchantCapabilities error is fixed
+import { ApplePay, ITransactionStatus } from '@ionic-native/apple-pay/ngx';
+import { ApplePayService } from '../../services/payment/apple-pay.service';
 
 @IonicPage()
 @Component({
@@ -30,14 +33,16 @@ export class HomePage {
     public paymentMethodService: PaymentMethodService,
     public alert: AlertService,
     public auth: AuthService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private applePay: ApplePay,
+    private applePayService: ApplePayService
   ) { }
 
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
 
-  ionViewDidLoad() {
+  async ionViewDidLoad() {
     // TODO: Remove once newsfeed is fixed
     this.getUserStories();
   }
@@ -70,10 +75,10 @@ export class HomePage {
       if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
-        {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
-        };
+          {
+            id: res.body.id,
+            user: { uid: res.body.user.uid }
+          };
 
         this.newsfeedService.addLike(ticketId, storyId, likeToBeAdded);
 
@@ -89,51 +94,73 @@ export class HomePage {
   }
 
   async payNewTab() {
-    const loading = this.loader.create();
-    await loading.present();
     try {
-      const paymentMethods = await this.paymentMethodService.getPaymentMethods();
+      const canMake = await this.applePay.canMakePayments();
+      console.log('can make apple pay payment', canMake);
 
-      // If user has a payment method on file, proceed to pay workflow
-      // Otherwise, take user to payment method entry page
-      if (paymentMethods && paymentMethods.length > 0) {
-        await this.navCtrl.push(
-          'LocationPage',
-          {},
-          { animate: true, animation: 'md-transition', direction: 'forward' }
-        );
-        await loading.dismiss();
-      } else {
-        const alert = this.alert.create({
-          title: `Let's Get Started`,
-          message: `To pay your tab, please enter a payment method.`,
-          buttons: [
-            {
-              text: 'OK',
-            },
-          ],
-        });
-        await alert.present();
-        await this.navCtrl.push(
-          'PaymentMethodsPage',
-          { mode: PaymentDetailsPageMode.NO_PAYMENT_METHOD },
-          { animate: true, animation: 'md-transition', direction: 'forward' }
-        );
-        await loading.dismiss();
-      }
-    } catch {
-      await loading.dismiss();
-      const alert = this.alert.create({
-        title: 'Error',
-        message: `Sorry, something went wrong. Please try again.`,
-        buttons: [
-          {
-            text: 'OK',
-          },
-        ],
+      const applePayTransaction = await this.applePay.makePaymentRequest({
+        items: [{ label: 'Total', amount: 5 }],
+        merchantIdentifier: 'merchant.com.tabifyapp.applepay',
+        currencyCode: 'USD',
+        countryCode: 'US',
+        billingAddressRequirement: ['name'],
+        shippingAddressRequirement: ['name'],
+        merchantCapabilities: ['3ds', 'credit', 'debit', 'emv',],
+        supportedNetworks: ['amex', 'discover', 'masterCard', 'visa']
       });
-      await alert.present();
+
+      const transactionStatus: ITransactionStatus = await this.applePayService.completeTransactionWithMerchant(applePayTransaction);
+      // await this.applePay.completeLastTransaction(transactionStatus);
+    } catch (e) {
+      // handle payment request error
+      // Can also handle stop complete transaction but these should normally not occur
+      console.error(e);
     }
+    // const loading = this.loader.create();
+    // await loading.present();
+    // try {
+    //   const paymentMethods = await this.paymentMethodService.getPaymentMethods();
+
+    //   // If user has a payment method on file, proceed to pay workflow
+    //   // Otherwise, take user to payment method entry page
+    //   if (paymentMethods && paymentMethods.length > 0) {
+    //     await this.navCtrl.push(
+    //       'LocationPage',
+    //       {},
+    //       { animate: true, animation: 'md-transition', direction: 'forward' }
+    //     );
+    //     await loading.dismiss();
+    //   } else {
+    //     const alert = this.alert.create({
+    //       title: `Let's Get Started`,
+    //       message: `To pay your tab, please enter a payment method.`,
+    //       buttons: [
+    //         {
+    //           text: 'OK',
+    //         },
+    //       ],
+    //     });
+    //     await alert.present();
+    //     await this.navCtrl.push(
+    //       'PaymentMethodsPage',
+    //       { mode: PaymentDetailsPageMode.NO_PAYMENT_METHOD },
+    //       { animate: true, animation: 'md-transition', direction: 'forward' }
+    //     );
+    //     await loading.dismiss();
+    //   }
+    // } catch {
+    //   await loading.dismiss();
+    //   const alert = this.alert.create({
+    //     title: 'Error',
+    //     message: `Sorry, something went wrong. Please try again.`,
+    //     buttons: [
+    //       {
+    //         text: 'OK',
+    //       },
+    //     ],
+    //   });
+    //   await alert.present();
+    // }
   }
 
   openDetailedStory(storyId: number) {

@@ -52,6 +52,16 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <config-file parent="com.apple.developer.in-app-payments" target="*-Debug.plist">
+            <array>
+                <string>merchant.com.tabifyapp.applepay</string>
+            </array>
+        </config-file>
+        <config-file parent="com.apple.developer.in-app-payments" target="*-Release.plist">
+            <array>
+                <string>merchant.com.tabifyapp.applepay</string>
+            </array>
+        </config-file>
         <preference name="WKPort" value="9634" />
         <preference name="UseScheme" value="true" />
         <preference name="KeyboardAppearanceDark" value="true" />
