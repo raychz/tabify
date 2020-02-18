@@ -88,7 +88,6 @@ export class TabLookupPage {
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN FIND TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -100,7 +99,7 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
+          message: 'Sorry, something went wrong. Please try again.',
           buttons: ['OK']
         });
         alert.present();
@@ -118,7 +117,6 @@ export class TabLookupPage {
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN CREATE TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -138,7 +136,7 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
+          message: 'Sorry, something went wrong. Please try again.',
           buttons: ['OK']
         });
         alert.present();
@@ -175,11 +173,13 @@ export class TabLookupPage {
     await loading.present();
     try {
       const result = await this.locationService.getFraudPreventionCode();
-      this.fraudPreventionCode = result
-    } catch (error) {
-      console.log(error);
+      this.fraudPreventionCode = result;
+      await loading.dismiss();
+    } catch (e) {
+      console.log(e);
+      await loading.dismiss();
+      throw e;
     }
-    await loading.dismiss();
   }
 
   private async initializeFirestoreTicketListeners(ticket: any) {

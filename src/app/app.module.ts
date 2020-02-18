@@ -41,6 +41,7 @@ export class TabifyErrorHandler implements ErrorHandler {
   constructor(public auth: AuthService) { }
 
   handleError(error) {
+    console.log('Sending error report to Sentry.', error);
     const eventId = Sentry.captureException(error.originalError || error);
     Sentry.showReportDialog({ eventId });
   }

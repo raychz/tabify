@@ -88,8 +88,8 @@ export class SignUpPage {
     await loading.present();
     try {
       await this.auth.signUp(credentials)
-    } catch (error) {
-      this.signUpError = this.errorService.authError(error);
+    } catch (e) {
+      this.signUpError = this.errorService.authError(e);
     };
     await loading.dismiss();
   }
