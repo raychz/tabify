@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth/auth.service';
+import * as Sentry from "@sentry/browser";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -25,9 +26,15 @@ export class TokenInterceptor implements HttpInterceptor {
     return this.auth.getToken().pipe(
       mergeMap(token => {
         if (token) {
+          // Add the transaction id to the Sentry scope
+          const transactionId = Math.random().toString(36).substr(2, 9);
+          Sentry.configureScope(scope => {
+            scope.setTransaction(transactionId);
+          });
           request = request.clone({
             setHeaders: {
               authorization: token,
+              'x-transaction-id': transactionId
             },
           });
         }

@@ -294,11 +294,11 @@ export class TicketService {
         success: true,
         message: 'User statuses updated',
       };
-    } catch (error) {
-      console.log('transaction failed', error);
+    } catch (e) {
+      console.log('transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }
@@ -367,11 +367,11 @@ export class TicketService {
         success: true,
         message: 'Ticket item added to tab successfully.',
       };
-    } catch (error) {
-      console.log('transaction failed', error);
+    } catch (e) {
+      console.log('transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }
@@ -425,11 +425,11 @@ export class TicketService {
         success: true,
         message: 'Ticket item removed from tab successfully.',
       };
-    } catch (error) {
-      console.log('Transaction failed', error);
+    } catch (e) {
+      console.log('Transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }

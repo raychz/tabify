@@ -28,24 +28,22 @@ import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
 import { ErrorService } from '../services/error/error.service';
 import { PaymentService } from '../services/payment/payment.service';
 import { SharedPayModule } from '../pages/pay/shared-pay.module';
+import * as Sentry from "@sentry/browser";
 
+Sentry.init({
+  dsn: environment.sentryDsn,
+  release: `tabify-frontend@${environment.version}`,
+  environment: environment.production ? 'production' : 'development',
+  enabled: environment.production
+});
 @Injectable()
-export class MyErrorHandler implements ErrorHandler {
-  // ionicErrorHandler: IonicErrorHandler;
+export class TabifyErrorHandler implements ErrorHandler {
+  constructor(public auth: AuthService) { }
 
-  constructor(injector: Injector) {
-    try {
-      // this.ionicErrorHandler = injector.get(IonicErrorHandler);
-    } catch (e) {
-      // Unable to get the IonicErrorHandler provider, ensure
-      // IonicErrorHandler has been added to the providers list below
-    }
-  }
-
-  handleError(err: any): void {
-    // Remove this if you want to disable Ionic's auto exception handling
-    // in development mode.
-    // this.ionicErrorHandler && this.ionicErrorHandler.handleError(err);
+  handleError(error) {
+    console.log('Sending error report to Sentry.', error);
+    const eventId = Sentry.captureException(error.originalError || error);
+    Sentry.showReportDialog({ eventId });
   }
 }
 
@@ -70,7 +68,7 @@ export class MyErrorHandler implements ErrorHandler {
     StatusBar,
     SplashScreen,
     // IonicErrorHandler,
-    { provide: ErrorHandler, useClass: MyErrorHandler },
+    { provide: ErrorHandler, useClass: TabifyErrorHandler },
     AngularFireAuth,
     AuthService,
     {

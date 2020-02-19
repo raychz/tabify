@@ -8,6 +8,8 @@ import { LoaderService } from '../services/utilities/loader.service';
 import { tap } from 'rxjs/operators';
 import { PaymentDetailsPageMode } from '../pages/payment-methods/payment-details/payment-details';
 import { NewsfeedService } from '../services/newsfeed/newsfeed.service';
+import { environment } from '@tabify/env';
+import * as Sentry from "@sentry/browser";
 
 interface IPage {
   title: string;
@@ -19,10 +21,9 @@ interface IPage {
 })
 export class Tabify {
   @ViewChild(Nav) nav: Nav;
-
   rootPage: any = 'LoadingPage';
-
   pages: Array<IPage>;
+  version = environment.version;
 
   constructor(
     public platform: Platform,
@@ -125,6 +126,7 @@ export class Tabify {
             message: `Please check your connection and try again.`,
           });
           alert.present();
+          throw error;
         }
       ))
       .subscribe(); // Subscribe here only!
@@ -146,6 +148,15 @@ export class Tabify {
             loading.dismiss();
             this.splashScreen.hide();
           }
+
+          // Once we've authenticated user, let's set the Sentry scope for better error context
+          Sentry.configureScope(scope => {
+            scope.setUser({
+              id: this.auth.getUid(),
+              email: this.auth.getEmail(),
+              displayName: this.auth.getDisplayName(),
+            });
+          });
         },
         error => {
           console.error('Error in user details tap', error);

@@ -69,13 +69,15 @@ export class PaymentMethodsPage {
 
       // Remove locally
       this.paymentMethodService.removePaymentMethod(method);
-    } catch {
+      await loading.dismiss();
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: `This payment method could not be removed.`,
       });
       alert.present();
+      await loading.dismiss();
+      throw e;
     }
-    await loading.dismiss();
   }
 }
