@@ -8,14 +8,14 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { Ionic2RatingModule } from 'ionic2-rating';
 
 import { Tabify } from './app.component';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { environment } from '@tabify/env';
 import { AuthService } from '../services/auth/auth.service';
-import { Facebook } from '@ionic-native/facebook';
+import { Facebook } from '@ionic-native/facebook/ngx';
 import { LoaderService } from '../services/utilities/loader.service';
 import { AlertService } from '../services/utilities/alert.service';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
