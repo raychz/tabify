@@ -32,7 +32,7 @@
     "@sentry/browser": "^5.12.1",
     "@types/node": "10.3.6",
     "@ultimate/ngxerrors": "1.4.0",
-    "ably": "^1.1.22",
+    "ably": "^1.1.24",
     "cordova-android": "8.1.0",
     "cordova-android-support-gradle-release": "^3.0.1",
     "cordova-browser": "6.0.0",
