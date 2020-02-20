@@ -150,7 +150,7 @@ export class SelectItemsPage {
         {
           text: 'Add all to my tab (coming soon)',
           handler: () => {
-            // this.addAllItemsToMyTab();
+            this.addAllItemsToMyTab();
           },
         },
         {
@@ -171,9 +171,11 @@ export class SelectItemsPage {
 
   // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
-    for (const item of this.ablyTicketService.ticket.items) {
-      if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
-    }
+    // for (const item of this.ablyTicketService.ticket.items) {
+    //   if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
+    // }
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    this.ticketService.addUserToAllItemsOnTicket(this.ablyTicketService.ticket.id, currentUser.id);
   }
 
   // TODO: Replace this function with a bulk add/remove action

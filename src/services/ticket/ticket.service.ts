@@ -158,6 +158,12 @@ export class TicketService {
       .toPromise();
   }
 
+  public async addUserToAllItemsOnTicket(ticketId: number, ticketUserId: number) {
+    return await this.http
+      .post<TicketUser>(`${environment.serverUrl}/tickets/${ticketId}/users/${ticketUserId}`, {})
+      .toPromise();
+  }
+
   public async removeUserFromDatabaseTicket(ticketId: number) {
     return await this.http
       .delete<TicketUser>(`${environment.serverUrl}/tickets/${ticketId}/users`, {})

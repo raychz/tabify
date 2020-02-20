@@ -161,16 +161,23 @@ export class AblyTicketService {
   //   // change to filter. 
   //   const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
   //   ticketItem.users = newTicketItemUsers;
+  //   console.log(ticketItem);
   //   this.synchronizeFrontendTicketItems([ticketItem]);
   // }
 
   private onTicketItemUsersReplaced({ newTicketItemUsers }: { newTicketItemUsers: ItemIdToTicketItemUsers }) {
     // change to filter. 
+    const ticketItems: TicketItem[] = []
+    console.log(newTicketItemUsers)
     for (let itemId in newTicketItemUsers) {
-      const ticketItem = this.ticket.items.find(_item => _item.id === Number(itemId));
+      console.log(this.ticket.items)
+      console.log(itemId)
+      const ticketItem = this.ticket.items.find(_item => _item.id == Number(itemId));
       ticketItem.users = Array.from(newTicketItemUsers[itemId]);
-      this.synchronizeFrontendTicketItems([ticketItem]);
+      ticketItems.push(ticketItem);
     }
+    console.log(ticketItems);
+    this.synchronizeFrontendTicketItems(ticketItems);
   }
 
   private onTicketTotalsUpdated(ticketTotal: TicketTotal) {
