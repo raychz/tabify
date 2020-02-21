@@ -65,12 +65,17 @@ export class LoginPage {
     await this.auth
       .signInWithFacebook()
       .catch(e => {
+        console.error(e);
+        loading.dismiss();
+        const error = (e.code && e.message) ? `${e.code}: ${e.message}` : e;
         const alert = this.alert.create({
           title: 'Error',
-          subTitle: 'An error occurred while logging in with Facebook.',
+          subTitle: 'An error occurred while logging in with Facebook. If this error persists, please continue with email instead.',
+          message: error,
           buttons: ['OK'],
         });
-        return alert.present();
+        alert.present();
+        throw e;
       })
     await loading.dismiss();
   }
