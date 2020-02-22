@@ -34,32 +34,45 @@
         <button ion-button block (click)="dismiss()">OK</button>
       </ion-col>
     </ion-row>
-  </ion-grid>
 
   <h2 class='modal-subtitle' id="choose-default">Or choose a default tip:</h2>
-  <ion-buttons class="quick-tip-buttons">
-    <button ion-button (click)="selectDefaultValue(default15)">
-      <div>
-        15%
-        <hr class="line">
-        ${{ default15 }}
-      </div>
-    </button>
+  <ion-row>
+      <ion-col no-wrap class="quick-tip-col">
+        <ion-buttons class="quick-tip-buttons">
 
-    <button ion-button (click)="selectDefaultValue(default20)">
-      <div>
-        20%
-        <hr class="line">
-        ${{ default20 }}
-      </div>
-    </button>
+        <button ion-button (click)="selectDefaultValue(default15)">
+          <div>
+            15%
+            <hr class="line">
+            ${{ default15 }}
+          </div>
+        </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col no-wrap class="quick-tip-col">
+        <ion-buttons class="quick-tip-buttons">
+        <button ion-button (click)="selectDefaultValue(default20)">
+          <div>
+            20%
+            <hr class="line">
+            ${{ default20 }}
+          </div>
+        </button>
+        </ion-buttons>
+      </ion-col>
 
-    <button ion-button (click)="selectDefaultValue(default25)">
-      <div>
-        25%
-        <hr class="line">
-        ${{ default25 }}
-      </div>
-    </button>
-  </ion-buttons>
+      <ion-col no-wrap class="quick-tip-col">
+        <ion-buttons class="quick-tip-buttons">
+
+        <button ion-button (click)="selectDefaultValue(default25)">
+          <div>
+            25%
+            <hr class="line">
+            ${{ default25 }}
+          </div>
+        </button>
+        </ion-buttons>
+      </ion-col>
+  </ion-row>
+  </ion-grid>
 </ion-content>
