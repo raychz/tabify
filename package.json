@@ -63,7 +63,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "^3.2.3",
     "firebase-tools": "^6.1.0",
-    "prettier": "1.13.7",
+    "prettier": "1.19.1",
     "typescript": "~2.6.2"
   },
   "description": "The easiest way to pay and split the tab at your favorite restaurants. Redefine how you dine with Tabify.",
