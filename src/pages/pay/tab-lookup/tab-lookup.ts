@@ -21,7 +21,6 @@ import { TicketUserStatus } from '../../../enums';
 export class TabLookupPage {
   location: Location = this.navParams.data;
   tabForm: FormGroup;
-  fraudPreventionCode: FraudPreventionCode;
   dateTime: number = Date.now();
   isCodeVisible = false;
 
@@ -146,6 +145,7 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
+    console.log(this.ablyTicketService.fraudPreventionCode)
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     switch (currentUser.status) {
       case TicketUserStatus.SELECTING:
@@ -172,8 +172,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const result = await this.locationService.getFraudPreventionCode();
-      this.fraudPreventionCode = result
+      this.ablyTicketService.fraudPreventionCode = await this.locationService.getFraudPreventionCode();
     } catch (error) {
       console.log(error);
     }
@@ -239,7 +238,7 @@ export class TabLookupPage {
     // }
 
     // Add ticket number to fraud code
-    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
+    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.ablyTicketService.fraudPreventionCode.id);
 
     await this.viewNextPage();
     // Get ticket

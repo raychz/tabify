@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { SelectItemsPage } from './select-items';
+import { FraudPreventionPage } from './fraud-prevention';
 import { SharedPayModule } from '../shared-pay.module'
 
 @NgModule({
   declarations: [
-    SelectItemsPage,
+    FraudPreventionPage,
   ],
   imports: [
-    IonicPageModule.forChild(SelectItemsPage),
-    SharedPayModule,
+    IonicPageModule.forChild(FraudPreventionPage),
+    SharedPayModule
   ],
 })
-export class SelectItemsPageModule {}
+export class FraudPreventionModule {}

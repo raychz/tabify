@@ -1,0 +1,21 @@
+<ion-content no-bounce>
+  <ion-card>
+    <ion-card-header>
+      For Restaurant Use Only:
+    </ion-card-header>
+    <ion-card-content id="fraud-prevention-code">
+      <p>If requested, show this code to your server:</p>
+      <ng-container>
+        <h2>{{ablyTicketService.fraudPreventionCode?.code}}</h2>
+        <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
+      </ng-container>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <button ion-button block (click)="dismiss()">OK</button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

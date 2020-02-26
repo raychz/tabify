@@ -46,7 +46,7 @@
               <ion-icon [name]="isCodeVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
             </button>
             <ng-container *ngIf="isCodeVisible">
-              <h2>{{fraudPreventionCode?.code}}</h2>
+              <h2>{{ablyTicketService.fraudPreventionCode?.code}}</h2>
               <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
             </ng-container>
           </ion-card-content>
