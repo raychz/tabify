@@ -17,12 +17,12 @@
       <ion-row>
         <ion-col>
           <ion-item *ngIf="tipSegment == tipSegmentEnum.DOLLAR">
-            <ion-input #tipInputDollar type="number" autofocus clearOnEdit placeholder="Tip Amount"
+            <ion-input #tipInputDollar type="number" value="string" autofocus clearOnEdit placeholder="Tip Amount"
               [(ngModel)]="tipDollar" (ionBlur)="dollarInput($event)"></ion-input>
             <ion-note item-left class="input-label">$</ion-note>
           </ion-item>
           <ion-item *ngIf="tipSegment == tipSegmentEnum.PERCENT">
-            <ion-input #tipInputPercent type="number" autofocus clearOnEdit placeholder="Tip Percentage"
+            <ion-input #tipInputPercent type="number" value="string" autofocus clearOnEdit placeholder="Tip Percentage"
               [(ngModel)]="tipPercentage" (ionBlur)="percentInput($event)"></ion-input>
             <ion-note item-right class="input-label">%</ion-note>
           </ion-item>
@@ -36,8 +36,8 @@
     </ion-row>
 
   <h2 class='modal-subtitle' id="choose-default">Or choose a default tip:</h2>
-  <ion-row>
-      <ion-col no-wrap class="quick-tip-col">
+  <ion-row no-wrap>
+      <ion-col class="quick-tip-col">
         <ion-buttons class="quick-tip-buttons">
 
         <button ion-button (click)="selectDefaultValue(default15)">
@@ -49,7 +49,7 @@
         </button>
         </ion-buttons>
       </ion-col>
-      <ion-col no-wrap class="quick-tip-col">
+      <ion-col class="quick-tip-col">
         <ion-buttons class="quick-tip-buttons">
         <button ion-button (click)="selectDefaultValue(default20)">
           <div>
@@ -61,7 +61,7 @@
         </ion-buttons>
       </ion-col>
 
-      <ion-col no-wrap class="quick-tip-col">
+      <ion-col class="quick-tip-col">
         <ion-buttons class="quick-tip-buttons">
 
         <button ion-button (click)="selectDefaultValue(default25)">

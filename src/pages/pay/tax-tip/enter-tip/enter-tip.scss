@@ -6,9 +6,6 @@ page-enter-tip {
       background-color: map-get($colors, light);
       color: map-get($colors, dark);
     }
-    #tipInputDollar {
-      color: grey;
-    }
     .grid {
       padding-bottom: 0px;
     }
@@ -27,7 +24,7 @@ page-enter-tip {
         color: map-get($colors, dark);
         font-size: 17px;
         font-weight: 600;
-        margin-top:10px;
+        margin-top: 10px;
         margin-bottom: 0px;
         text-align: center;
       }
@@ -52,19 +49,21 @@ page-enter-tip {
     }
     .quick-tip-col {
       overflow: hidden;
-    .quick-tip-buttons {
-      button {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        margin-bottom: 15px;
-        max-width: -webkit-fill-available;
-        .line {
-          margin-top: 3px;
-          margin-bottom: 3px;;
-          border: 0.1px solid map-get($colors, tabify-dark-2);
+      .quick-tip-buttons {
+        button {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          margin-bottom: 15px;
+          margin-left: 0px;
+          margin-right: 0px;
+          width: 100%;
+          .line {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            border: 0.1px solid map-get($colors, tabify-dark-2);
+          }
         }
       }
     }
-  }
   }
 }

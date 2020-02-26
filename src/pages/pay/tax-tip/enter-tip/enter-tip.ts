@@ -72,7 +72,6 @@ export class EnterTipPage {
   }
 
   percentInput(event: {value: number}) {
-    console.log(event.value)
     this.tipPercentage = event.value;
     this.tipDollar = Math.round((event.value / 100) * this.curUser.items) / 100;
     this.formatPercent(event.value);
