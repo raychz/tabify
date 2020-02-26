@@ -39,7 +39,7 @@ export class WaitingRoomPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && (currentUser.status === TicketUserStatus.WAITING || currentUser.status === TicketUserStatus.CONFIRMED);
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -48,7 +48,7 @@ export class WaitingRoomPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return currentUser.status !== TicketUserStatus.WAITING && currentUser.status !== TicketUserStatus.CONFIRMED;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -148,6 +148,7 @@ export class WaitingRoomPage {
     await loading.present();
     try {
       await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, status);
+      await loading.dismiss();
     } catch (e) {
       console.log(e);
       if (e && e.error && e.error.message) {
@@ -165,8 +166,9 @@ export class WaitingRoomPage {
         });
         alert.present();
       }
+      await loading.dismiss();
+      throw e;
     }
-    await loading.dismiss();
   }
 
   isBackButtonDisabled() {
@@ -186,7 +188,7 @@ export class WaitingRoomPage {
         if (this.navParams.get('pushSelectItemsOnBack')) {
           await this.navCtrl.push('SelectItemsPage');
         }
-      } catch {
+      } catch (e) {
         const alert = this.alertCtrl.create({
           title: 'Sorry!',
           message: `You cannot go back to the Select Items page anymore.`,

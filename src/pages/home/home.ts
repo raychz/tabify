@@ -53,6 +53,7 @@ export class HomePage {
         message: e,
       });
       await alert.present();
+      throw e;
     }
     await loading.dismiss();
   }
@@ -70,10 +71,10 @@ export class HomePage {
       if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
-        {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
-        };
+          {
+            id: res.body.id,
+            user: { uid: res.body.user.uid }
+          };
 
         this.newsfeedService.addLike(ticketId, storyId, likeToBeAdded);
 
@@ -121,7 +122,7 @@ export class HomePage {
         );
         await loading.dismiss();
       }
-    } catch {
+    } catch (e) {
       await loading.dismiss();
       const alert = this.alert.create({
         title: 'Error',
@@ -133,6 +134,7 @@ export class HomePage {
         ],
       });
       await alert.present();
+      throw e;
     }
   }
 

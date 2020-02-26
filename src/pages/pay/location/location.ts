@@ -46,11 +46,11 @@ export class LocationPage {
 
   async filterItems(ev: any) {
     this.searchLocations = this.locations;
-    const search  = ev.target.value;
+    const search = ev.target.value;
     if (search && search.trim() !== '') {
-      const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+      const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
       this.searchLocations = this.locations.filter((location) => {
-        const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi , '');
+        const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
         return (locationName.indexOf(modifiedSearch) > -1);
       });
     }
@@ -63,14 +63,16 @@ export class LocationPage {
       this.locations = await this.locationService.getLocations();
       this.searchLocations = this.locations;
       console.log('locations are', this.locations);
-    } catch {
+      await loading.dismiss();
+    } catch (e) {
+      await loading.dismiss();
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      throw e;
     }
-    await loading.dismiss();
   }
 
   next() {

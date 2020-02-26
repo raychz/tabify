@@ -1,6 +1,6 @@
 {
   "name": "tabify",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "author": "Raymond Chavez",
   "homepage": "https://tabifyapp.com/",
   "private": true,
@@ -9,6 +9,9 @@
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint"
+  },
+  "engines": {
+    "node": "10.19.0"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",
@@ -21,28 +24,29 @@
     "@angular/http": "5.2.11",
     "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
-    "@ionic-native/core": "~4.20.0",
-    "@ionic-native/facebook": "4.9.0",
-    "@ionic-native/keychain": "4.9.0",
-    "@ionic-native/splash-screen": "~4.20.0",
-    "@ionic-native/status-bar": "~4.20.0",
+    "@ionic-native/core": "^5.21.5",
+    "@ionic-native/facebook": "^5.21.5",
+    "@ionic-native/keychain": "^5.21.5",
+    "@ionic-native/splash-screen": "^5.21.5",
+    "@ionic-native/status-bar": "^5.21.5",
     "@ionic/pro": "1.0.20",
     "@ionic/storage": "2.2.0",
+    "@sentry/browser": "^5.12.1",
     "@types/node": "10.3.6",
     "@ultimate/ngxerrors": "1.4.0",
-    "ably": "^1.1.22",
+    "ably": "^1.1.24",
     "cordova-android": "8.1.0",
     "cordova-android-support-gradle-release": "^3.0.1",
-    "cordova-browser": "^6.0.0",
-    "cordova-ios": "^5.1.1",
-    "cordova-plugin-device": "2.0.2",
-    "cordova-plugin-facebook4": "2.2.0",
-    "cordova-plugin-ionic-keyboard": "2.0.5",
+    "cordova-browser": "6.0.0",
+    "cordova-ios": "5.1.1",
+    "cordova-plugin-device": "^2.0.3",
+    "cordova-plugin-facebook4": "^6.3.0",
+    "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.1.3",
     "cordova-plugin-ios-keychain": "3.0.1",
-    "cordova-plugin-splashscreen": "5.0.2",
-    "cordova-plugin-statusbar": "^2.4.2",
-    "cordova-plugin-whitelist": "1.3.3",
+    "cordova-plugin-splashscreen": "^5.0.3",
+    "cordova-plugin-statusbar": "^2.4.3",
+    "cordova-plugin-whitelist": "^1.3.4",
     "currency.js": "^1.2.2",
     "firebase": "^6.6.2",
     "ionic-angular": "3.9.5",
@@ -58,27 +62,30 @@
   "devDependencies": {
     "@ionic/app-scripts": "^3.2.3",
     "firebase-tools": "^6.1.0",
-    "prettier": "1.13.7",
+    "prettier": "1.19.1",
     "typescript": "~2.6.2"
   },
   "description": "The easiest way to pay and split the tab at your favorite restaurants. Redefine how you dine with Tabify.",
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {},
+      "cordova-plugin-ios-keychain": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
+      "cordova-android-support-gradle-release": {
+        "ANDROID_SUPPORT_VERSION": "27.+"
+      },
       "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-facebook4": {
         "APP_ID": "810366729156697",
         "APP_NAME": "Tabify",
-        "ANDROID_SDK_VERSION": "4.+"
+        "FACEBOOK_HYBRID_APP_EVENTS": "false",
+        "FACEBOOK_ANDROID_SDK_VERSION": "5.13.0"
       },
-      "cordova-plugin-ios-keychain": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-ionic-webview": {},
-      "cordova-android-support-gradle-release": {
-        "ANDROID_SUPPORT_VERSION": "27.+"
-      }
+      "cordova-plugin-whitelist": {}
     },
     "platforms": [
       "android",
