@@ -1,5 +1,6 @@
 // Local development environment
 export const environment = {
+	version: require('../../package.json').version,
 	production: false,
 	serverUrl: 'http://localhost:3000',
 	firebaseConfig: {
@@ -12,4 +13,5 @@ export const environment = {
 	},
 	spreedlyEnvKey: 'Iu3UapkcfklJXqLJV61vbJsp1dl',
 	ablyKey: 'N0WaAg.cYTfTg:XJnXR07hwbcc6Sxz',
+	sentryDsn: 'https://8b1f236b4d1f4053a24eefb1f8aea326@sentry.io/2364364',
 };

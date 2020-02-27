@@ -51,6 +51,7 @@ export class AblyService {
       this.realtime.close();
     } catch (e) {
       console.error('An error occurred while closing the failed Ably connection.', e);
+      throw e;
     }
     this.realtime = null;
   }

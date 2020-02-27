@@ -50,8 +50,8 @@ export class LoginPage {
       await loading.present();
       try {
         await this.auth.signInWithEmail({ email: email.trim(), password: password.trim() })
-      } catch (error) {
-        this.loginError = this.errorService.authError(error)
+      } catch (e) {
+        this.loginError = this.errorService.authError(e)
       }
       await loading.dismiss();
     }
@@ -64,13 +64,18 @@ export class LoginPage {
     await loading.present();
     await this.auth
       .signInWithFacebook()
-      .catch(error => {
+      .catch(e => {
+        console.error(e);
+        loading.dismiss();
+        const error = (e.code && e.message) ? `${e.code}: ${e.message}` : e;
         const alert = this.alert.create({
           title: 'Error',
-          subTitle: 'An error occurred while logging in with Facebook.',
+          subTitle: 'An error occurred while logging in with Facebook. If this error persists, please continue with email instead.',
+          message: error,
           buttons: ['OK'],
         });
-        return alert.present();
+        alert.present();
+        throw e;
       })
     await loading.dismiss();
   }

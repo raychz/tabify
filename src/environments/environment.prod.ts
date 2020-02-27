@@ -1,5 +1,6 @@
 // Production environment
 export const environment = {
+	version: require('../../package.json').version,
 	production: true,
 	serverUrl: 'https://api.tabifyapp.com',
 	firebaseConfig: {
@@ -12,4 +13,5 @@ export const environment = {
 	},
 	spreedlyEnvKey: 'SDmRjD2a2xi5KE5rQ9GPBAsBnTb',
 	ablyKey: 'bce9aQ.gOB9Dg:v8yQAtcsP-zq0tls',
+	sentryDsn: 'https://8b1f236b4d1f4053a24eefb1f8aea326@sentry.io/2364364',
 };

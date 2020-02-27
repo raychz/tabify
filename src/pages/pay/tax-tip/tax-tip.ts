@@ -47,7 +47,7 @@ export class TaxTipPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -60,7 +60,7 @@ export class TaxTipPage {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       // Allow user to leave only if they are trying to select their payment method
       return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethod;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -81,7 +81,7 @@ export class TaxTipPage {
       try {
         await sleep(1500);
         await this.ticketService.finalizeTicketTotals(this.ticketService.ticket.id);
-      } catch {
+      } catch (e) {
         console.error('something went wrong again, not retrying', e);
       }
     }
@@ -94,6 +94,7 @@ export class TaxTipPage {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
       console.error('Caught in initializePaymentMethods', e);
+      throw e;
     }
 
     // TODO: Auto select the user's default payment method here
@@ -134,6 +135,7 @@ export class TaxTipPage {
       });
       alert.present();
       console.error(e);
+      throw e;
     }
     await loading.dismiss();
   }

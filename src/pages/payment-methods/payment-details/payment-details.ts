@@ -93,9 +93,10 @@ export class PaymentDetailsPage {
     try {
       this.newCard.full_name = this.auth.getDisplayName();
       this.initializeSpreedly();
-    } catch (error) {
+    } catch (e) {
       await showError();
-      console.error(error);
+      console.error(e);
+      throw e;
     }
   }
 
@@ -203,6 +204,7 @@ export class PaymentDetailsPage {
       }
     } catch (e) {
       this.paymentMethodError = 'This payment method could not be saved.';
+      throw e;
     }
     await this.spreedlyTokenizationLoading.dismiss();
   }
