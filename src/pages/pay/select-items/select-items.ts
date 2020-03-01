@@ -148,13 +148,13 @@ export class SelectItemsPage {
       title: 'Modify your tab',
       buttons: [
         {
-          text: 'Add all to my tab (coming soon)',
+          text: 'Add all to my tab',
           handler: () => {
             this.addAllItemsToMyTab();
           },
         },
         {
-          text: 'Remove all from my tab (coming soon)',
+          text: 'Remove all from my tab',
           role: 'destructive',
           handler: () => {
             this.removeAllItemsFromMyTab();
