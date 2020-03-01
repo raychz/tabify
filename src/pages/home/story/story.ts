@@ -7,6 +7,8 @@ import { User } from '../../../interfaces/user.interface';
 import { NewsfeedService } from '../../../services/newsfeed/newsfeed.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/ticket.utilities';
+import { PaymentService } from '../../../services/payment/payment.service';
+import { StorySegment } from '../../../enums/';
 
 @IonicPage()
 @Component({
@@ -14,13 +16,17 @@ import { getStoryUsersDescription, IUsersDescription } from '../../../utilities/
   templateUrl: 'story.html',
 })
 export class StoryPage {
-
+  // Hack to expose enum to template
+  StorySegment: typeof StorySegment = StorySegment;
+  selectedSegment = StorySegment.COMMENTS;
   story: any;
   comments: any[] = [];
   user = <any>{};
   newComment: string = '';
   newCommentPosting: boolean = false;
   userNamesDisplay: IUsersDescription;
+  items: any;
+  ticketPayments: any;
 
   constructor(
     public navCtrl: NavController,
@@ -32,13 +38,13 @@ export class StoryPage {
     public alertCtrl: AlertController,
     public auth: AuthService,
     private actionSheetCtrl: ActionSheetController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private paymentService: PaymentService
   ) { }
 
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
-
 
   async ionViewDidLoad() {
     await this.getStory();
@@ -54,12 +60,16 @@ export class StoryPage {
       await this.determineStoryLikedByUser();
       await this.getUserDetails();
       await this.getComments();
-    } catch {
+      await this.getTicketItemsForUser();
+      await this.getTicketPaymentsByUser();
+      console.log(this.story);
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      throw e;
     }
     await loading.dismiss();
 
@@ -105,10 +115,10 @@ export class StoryPage {
       if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
-        {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
-        };
+          {
+            id: res.body.id,
+            user: { uid: res.body.user.uid }
+          };
 
         this.story.likes.push(likeToBeAdded);
         this.newsfeedService.addLike(this.story.ticket.id, this.story.id, likeToBeAdded);
@@ -147,12 +157,13 @@ export class StoryPage {
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
 
       this.newComment = '';
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      throw e;
     }
 
     this.newCommentPosting = false;
@@ -172,7 +183,7 @@ export class StoryPage {
 
       // Decrement comment count of story in newsfeed
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
@@ -181,6 +192,7 @@ export class StoryPage {
 
       // if deletion of comment was unsuccessful, revert to comment not being deleted
       this.comments[commentIndex].beingDeleted = false;
+      throw e;
     }
   }
 
@@ -193,6 +205,17 @@ export class StoryPage {
     } else {
       await this.createLike();
     }
+  }
+
+  async getTicketItemsForUser() {
+    this.items = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
+    this.items.forEach(item => {
+      item.userShare = item.users[0].price;
+    });
+  }
+
+  async getTicketPaymentsByUser() {
+    this.ticketPayments = await this.paymentService.getTicketPaymentsByUser(this.story.ticket.id);
   }
 
   displayUsers(users: any[]) {

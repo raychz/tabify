@@ -54,6 +54,7 @@ export class TabLookupPage {
   }
 
   async ionViewWillUnload() {
+    // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
   }
@@ -73,7 +74,7 @@ export class TabLookupPage {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: 'Sorry, this ticket number doesn\'t look right. Please double-check and try again. If this issue persists, please contact support@tabifyapp.com.',
-        buttons: ['Ok']
+        buttons: ['OK']
       });
       alert.present();
       return;
@@ -82,12 +83,11 @@ export class TabLookupPage {
     const loading = this.loader.create();
     try {
       await loading.present();
-      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open') as any;
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open', true) as any;
       await this.initializeTicketMetadata(ticket);
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN FIND TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -99,10 +99,11 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
-          buttons: ['Ok']
+          message: 'Sorry, something went wrong. Please try again.',
+          buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }
@@ -111,35 +112,35 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id) as any;
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, true) as any;
       await this.initializeTicketMetadata(newTicket);
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN CREATE TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
         const alert = this.alertCtrl.create({
           title: 'Ticket Not Found',
           message: 'Please check your ticket number or location and try again.',
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       } else if (e.status === 422) {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: e.error.message,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
-          buttons: ['Ok']
+          message: 'Sorry, something went wrong. Please try again.',
+          buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }
@@ -160,20 +161,7 @@ export class TabLookupPage {
         this.navCtrl.push('TaxTipPage');
         break;
       case TicketUserStatus.PAID:
-        // if (this.ticketService.overallUsersProgress === UserStatus.Paid) {
-        //   const modal = this.alertCtrl.create({
-        //     title: 'Tab already paid!',
-        //     message: 'You have already paid your tab, no need to do anything else.',
-        //     buttons: [
-        //       {
-        //         text: 'Ok',
-        //       },
-        //     ],
-        //   });
-        //   modal.present();
-        // } else {
-        //   this.navCtrl.push('StatusPage');
-        // }
+          this.navCtrl.push('StatusPage');
         break;
       default:
         throw new Error('Unknown user status')
@@ -185,11 +173,13 @@ export class TabLookupPage {
     await loading.present();
     try {
       const result = await this.locationService.getFraudPreventionCode();
-      this.fraudPreventionCode = result
-    } catch (error) {
-      console.log(error);
+      this.fraudPreventionCode = result;
+      await loading.dismiss();
+    } catch (e) {
+      console.log(e);
+      await loading.dismiss();
+      throw e;
     }
-    await loading.dismiss();
   }
 
   private async initializeFirestoreTicketListeners(ticket: any) {
@@ -226,7 +216,7 @@ export class TabLookupPage {
         const alert = this.alertCtrl.create({
           title: 'Error',
           message: e.error.message,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
       }
@@ -242,7 +232,7 @@ export class TabLookupPage {
     //     const alert = this.alertCtrl.create({
     //       title: 'Error',
     //       message: e.error.message,
-    //       buttons: ['Ok']
+    //       buttons: ['OK']
     //     });
     //     alert.present();
     //   }

@@ -53,6 +53,7 @@ export class HomePage {
         message: e,
       });
       await alert.present();
+      throw e;
     }
     await loading.dismiss();
   }
@@ -70,10 +71,10 @@ export class HomePage {
       if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
-        {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
-        };
+          {
+            id: res.body.id,
+            user: { uid: res.body.user.uid }
+          };
 
         this.newsfeedService.addLike(ticketId, storyId, likeToBeAdded);
 
@@ -109,7 +110,7 @@ export class HomePage {
           message: `To pay your tab, please enter a payment method.`,
           buttons: [
             {
-              text: 'Ok',
+              text: 'OK',
             },
           ],
         });
@@ -121,18 +122,19 @@ export class HomePage {
         );
         await loading.dismiss();
       }
-    } catch {
+    } catch (e) {
       await loading.dismiss();
       const alert = this.alert.create({
         title: 'Error',
         message: `Sorry, something went wrong. Please try again.`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });
       await alert.present();
+      throw e;
     }
   }
 

@@ -40,7 +40,7 @@ export class SignUpPage {
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: [
         '',
-        Validators.compose([Validators.required, Validators.minLength(6)]),
+        Validators.compose([Validators.required, Validators.minLength(6), Validators.pattern(/^\S*$/)]),
       ],
       firstName: ['', Validators.compose([Validators.required])],
       lastName: ['', Validators.compose([Validators.required])],
@@ -57,30 +57,33 @@ export class SignUpPage {
       content: 'Signing up with Facebook...',
     });
     await loading.present();
-
     await this.auth
       .signInWithFacebook()
-      .catch(
-        error => {
-          const alert = this.alert.create({
-            title: 'Error',
-            subTitle: 'An error occurred while signing up with Facebook.',
-            buttons: ['Ok'],
-          });
-          return alert.present();
-        }
+      .catch(e => {
+        console.error(e);
+        loading.dismiss();
+        const error = (e.code && e.message) ? `${e.code}: ${e.message}` : e;
+        const alert = this.alert.create({
+          title: 'Error',
+          subTitle: 'An error occurred while signing up with Facebook. If this error persists, please continue with email instead.',
+          message: error,
+          buttons: ['OK'],
+        });
+        alert.present();
+        throw e;
+      }
       );
     await loading.dismiss();
   }
 
   async signUp() {
-    let data = this.form.value;
+    const data = this.form.value;
     let credentials = {
-      email: data.email,
-      password: data.password,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      referralCode: this.referralCode
+      email: data.email.trim(),
+      password: data.password.trim(),
+      firstName: data.firstName.trim(),
+      lastName: data.lastName.trim(),
+      referralCode: this.referralCode && this.referralCode.trim()
     };
     const loading = this.loader.create({
       content: 'Signing up...',
@@ -88,8 +91,8 @@ export class SignUpPage {
     await loading.present();
     try {
       await this.auth.signUp(credentials)
-    } catch (error) {
-      this.signUpError = this.errorService.authError(error);
+    } catch (e) {
+      this.signUpError = this.errorService.authError(e);
     };
     await loading.dismiss();
   }
@@ -97,5 +100,12 @@ export class SignUpPage {
   async login() {
     await this.navCtrl.setRoot('UnauthenticatedPage');
     await this.navCtrl.push('LoginPage');
+  }
+
+  inputChange() {
+    // Remove trailing and leading spaces from both email and password inputs
+    // to prevent user from seeing 'invalid email' validation errors
+    const { email } = this.form.value;
+    this.form.patchValue({ email: email.trim() }, { emitEvent: false });
   }
 }

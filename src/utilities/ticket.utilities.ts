@@ -5,6 +5,7 @@ import { FirestoreTicketItem } from '../services/ticket/ticket.service';
 import { TicketUser } from '../interfaces/ticket-user.interface';
 import { TicketItem } from '../interfaces/ticket-item.interface';
 import { TicketItemUser } from '../interfaces/ticket-item-user.interface';
+import { User } from '../interfaces/user.interface';
 
 /**
  * Returns a string to describe the users who have claimed a ticket item.
@@ -57,7 +58,10 @@ export interface IUsersDescription {
 * @param users List of users
 * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.
 */
-export const getStoryUsersDescription = (users: any[] = [], userDisplayLimit: number) => {
+export const getStoryUsersDescription = (users: User[] = [], userDisplayLimit: number) => {
+
+    console.log("IN getStoryUsersDescription", users)
+    console.log("parsed", JSON.parse(JSON.stringify(users)));
 
     const usersDescription: IUsersDescription = {
         mainUsers: '',

@@ -20,4 +20,14 @@ page-login {
     margin-left: 1rem;
     color: map-get($colors, primary);
   }
+
+  ion-item.ng-invalid.ng-touched.ng-dirty {
+    border-bottom: 2px solid red;
+  }
+
+  .errors {
+    font-weight: bolder;
+    color: red;
+    font-size: 1.2em;
+  }
 }

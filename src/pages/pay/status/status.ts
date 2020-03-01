@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
-import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep } from '../../../utilities/general.utilities';
+import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
+import { TicketStatus, TicketUserStatusOrder, TicketUserStatus } from '../../../enums';
 import { AlertService } from '../../../services/utilities/alert.service';
 
 /**
@@ -19,15 +20,20 @@ import { AlertService } from '../../../services/utilities/alert.service';
 })
 export class StatusPage {
 
-  userStatus = UserStatus;
-  donePaying = false;
+  currentUserUid = this.auth.getUid();
+  viewHome = false;
+
+  // Expose const to template
+  TicketUserStatusOrder = TicketUserStatusOrder;
+  // Expose enum to template
+  TicketUserStatus = TicketUserStatus;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public auth: AuthService,
     public alertCtrl: AlertService,
-    public ticketService: TicketService,
+    public ablyTicketService: AblyTicketService,
   ) {
   }
 
@@ -41,26 +47,29 @@ export class StatusPage {
   }
 
   checkPaidStatus(): boolean {
-    if (this.ticketService.overallUsersProgress < UserStatus.Paid) {
+    if (this.ablyTicketService.ticket && this.ablyTicketService.ticket.ticket_status === TicketStatus.OPEN) {
       return false;
     } else {
-      if (!this.donePaying) {
-        this.donePaying = true;
-        this.viewHome();
+      if (!this.viewHome) {
+        this.viewHome = true;
+        this.viewHomePage();
       }
       return true;
     }
   }
 
-  async viewHome() {
-    await sleep(1500);
-    await this.navCtrl.setRoot('HomePage');
+  async viewHomePage() {
     const alert = this.alertCtrl.create({
       title: 'Success',
-      message: `Thanks for visiting ${this.ticketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-      buttons: ['Ok']
+      message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
+      buttons: ['OK']
     });
-    alert.present();
-    this.ticketService.clearState();
+    await sleep(1500);
+    // pushing the home page first avoids errors from popping up when setting root - see below comment for further explenation
+    // await this.navCtrl.push('HomePage');
+    // setting root unloads tab look up which clears the ably ticket service state and disconnects the ably connection
+    await alert.present();
+    await this.ablyTicketService.clearState();
+    await this.navCtrl.setRoot('HomePage');
   }
 }

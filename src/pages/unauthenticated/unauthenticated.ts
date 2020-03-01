@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class UnauthenticatedPage {
   @ViewChild(Slides) slides: Slides;
   activeSlideIndex = 0;
+  currentYear = new Date().getFullYear();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthService) {
   }

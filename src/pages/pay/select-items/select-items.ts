@@ -45,7 +45,7 @@ export class SelectItemsPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && currentUser.status === TicketUserStatus.SELECTING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -57,7 +57,7 @@ export class SelectItemsPage {
 
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return currentUser.status !== TicketUserStatus.SELECTING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -103,11 +103,12 @@ export class SelectItemsPage {
         message,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });
       error.present();
+      throw e;
     }
   }
 
@@ -131,9 +132,9 @@ export class SelectItemsPage {
         message: `Please add 1 or more items to your tab before continuing.`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
             handler: () => {
-              console.log('Ok clicked');
+              console.log('OK clicked');
             },
           },
         ],

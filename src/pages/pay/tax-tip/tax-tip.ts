@@ -47,7 +47,7 @@ export class TaxTipPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -60,7 +60,7 @@ export class TaxTipPage {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       // Allow user to leave only if they are trying to select their payment method
       return currentUser.status !== TicketUserStatus.PAYING || this.selectingPaymentMethod;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -81,7 +81,7 @@ export class TaxTipPage {
       try {
         await sleep(1500);
         await this.ticketService.finalizeTicketTotals(this.ticketService.ticket.id);
-      } catch {
+      } catch (e) {
         console.error('something went wrong again, not retrying', e);
       }
     }
@@ -94,6 +94,7 @@ export class TaxTipPage {
       await this.paymentMethodService.initializePaymentMethods();
     } catch (e) {
       console.error('Caught in initializePaymentMethods', e);
+      throw e;
     }
 
     // TODO: Auto select the user's default payment method here
@@ -123,36 +124,18 @@ export class TaxTipPage {
         this.currentUser.total,
         this.currentUser.tips,
       ) as any;
-      if (response.ticket.ticket_status === TicketStatus.CLOSED) {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket is now closed and fully paid for.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      } else {
-        const alert = this.alertCtrl.create({
-          title: 'Success',
-          message: `Thanks for visiting ${this.ablyTicketService.ticket.location!.name}! This ticket still has an open balance of $${response.due / 100}.`,
-          buttons: ['Ok']
-        });
-        alert.present();
-      }
 
-      // Clear the state of the ticket service
-      await this.ablyTicketService.clearState();
-      await this.navCtrl.setRoot('HomePage');
-      // TODO: Reintegrate the status page here
-      // await this.ticketService.changeUserStatus(UserStatus.Paid)
-      // await this.navCtrl.push('StatusPage')
+      await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.PAID);
+      await this.navCtrl.push('StatusPage')
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: 'Sorry, something went wrong on our side! Please try again.',
-        buttons: ['Ok']
+        buttons: ['OK']
       });
       alert.present();
       console.error(e);
+      throw e;
     }
     await loading.dismiss();
   }

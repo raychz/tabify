@@ -114,14 +114,15 @@ export class TicketService {
    * @param locationId
    * @param ticketStatus
    */
-  public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string) {
+  public async getTicket(ticketNumber: number, locationId: number, ticketStatus: string, openedRecently: boolean) {
     const params = {
+      opened_recently: String(openedRecently),
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
       ticket_status: ticketStatus
     };
     const ticket = await this.http
-      .get(`${environment.serverUrl}/tickets`, { params })
+      .get(`${environment.serverUrl}/tickets/`, { params })
       .toPromise();
     this.ticket = ticket;
     return ticket;
@@ -132,10 +133,11 @@ export class TicketService {
    * @param ticketNumber
    * @param locationId
    */
-  public async createTicket(ticketNumber: number, locationId: number) {
+  public async createTicket(ticketNumber: number, locationId: number, openedRecently: boolean) {
     const body = {
       ticket_number: String(ticketNumber),
       location: String(locationId), // Corresponds to location id in Tabify's db
+      opened_recently: String(openedRecently),
     };
 
     const ticket = await this.http
@@ -310,11 +312,11 @@ export class TicketService {
         success: true,
         message: 'User statuses updated',
       };
-    } catch (error) {
-      console.log('transaction failed', error);
+    } catch (e) {
+      console.log('transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }
@@ -383,11 +385,11 @@ export class TicketService {
         success: true,
         message: 'Ticket item added to tab successfully.',
       };
-    } catch (error) {
-      console.log('transaction failed', error);
+    } catch (e) {
+      console.log('transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }
@@ -441,11 +443,11 @@ export class TicketService {
         success: true,
         message: 'Ticket item removed from tab successfully.',
       };
-    } catch (error) {
-      console.log('Transaction failed', error);
+    } catch (e) {
+      console.log('Transaction failed', e);
       return {
         success: false,
-        message: error,
+        message: e,
       };
     }
   }
@@ -566,7 +568,7 @@ export class TicketService {
           error}`,
         buttons: [
           {
-            text: 'Ok',
+            text: 'OK',
           },
         ],
       });

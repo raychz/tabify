@@ -45,12 +45,12 @@ export class ForgotPasswordPage {
         const alert = this.alertCtrl.create({
           title: 'Success',
           subTitle: `A password reset link has been sent to ${email}.`,
-          buttons: ['Ok']
+          buttons: ['OK']
         });
         alert.present();
         this.navCtrl.setRoot('UnauthenticatedPage');
-      } catch (error) {
-        this.forgotPasswordError = this.errorService.forgotPasswordError(error);
+      } catch (e) {
+        this.forgotPasswordError = this.errorService.forgotPasswordError(e);
       }
     }
   }
