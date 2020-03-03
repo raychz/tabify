@@ -169,14 +169,6 @@ export class AblyTicketService {
     this.synchronizeFrontendTicket();
   }
 
-  // private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem["id"] }) {
-  //   // change to filter. 
-  //   const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
-  //   ticketItem.users = newTicketItemUsers;
-  //   console.log(ticketItem);
-  //   this.synchronizeFrontendTicketItems([ticketItem]);
-  // }
-
   private onTicketItemUsersReplaced({ newTicketItemUsers }: { newTicketItemUsers: ItemIdToTicketItemUsersArray }) {
     const ticketItems: TicketItem[] = []
     for (let itemId in newTicketItemUsers) {
@@ -184,7 +176,6 @@ export class AblyTicketService {
       ticketItem.users = Array.from(newTicketItemUsers[itemId]);
       ticketItems.push(ticketItem);
     }
-    console.log(ticketItems);
     this.synchronizeFrontendTicketItems(ticketItems);
   }
 
