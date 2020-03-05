@@ -3,9 +3,9 @@ import { IonicPage, NavController, NavParams, AlertController, Platform } from '
 import { AuthService } from '../../services/auth/auth.service';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { CouponService } from '../../services/coupon/coupon.service';
-import { ICoupon, CouponOffOf, CouponType } from '../../interfaces/coupon.interface';
-
-enum CouponGroup {validCoupons, upcomingCoupons, usedCoupons}
+import { Coupon } from '../../interfaces/coupon.interface';
+import { CouponOffOf, CouponType, CouponGroup } from '../../enums/coupons.enum'
+import * as Sentry from "@sentry/browser";
 
 @IonicPage()
 @Component({
@@ -15,6 +15,7 @@ enum CouponGroup {validCoupons, upcomingCoupons, usedCoupons}
 export class CouponsPage {
 
   selectedSegment: CouponGroup = CouponGroup.validCoupons;
+  // Expose enum to template
   couponGroup = CouponGroup;
   fullCouponsPage = true;
   expandedCouponId: number;
@@ -43,17 +44,15 @@ export class CouponsPage {
       this.fullCouponsPage = this.navParams.data.fullCouponsPage;
     }
     if (this.fullCouponsPage) {
-      console.log('full page');
       await this.getCoupons();
     }
   }
 
-  selectSegment(event: {value: number}) {
-    console.log(event);
+  selectSegment(event: {value: CouponGroup}) {
     this.selectedSegment = event.value;
   }
 
-  expandCoupon(coupon: ICoupon) {
+  expandCoupon(coupon: Coupon) {
     if (this.expandedCouponId === coupon.id) {
       this.expandedCouponId = -1;
     } else {
@@ -67,8 +66,8 @@ export class CouponsPage {
     try {
       await this.couponService.getCoupons();
       this.expandedCouponId = -1;
-
-    } catch {
+    } catch(e) {
+      Sentry.captureException(e);
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
@@ -78,7 +77,7 @@ export class CouponsPage {
     await loading.dismiss();
   }
 
-  async redeemCoupon(coupon: ICoupon) {
+  async redeemCoupon(coupon: Coupon) {
     this.couponService.selectCoupon(coupon);
     if (!this.fullCouponsPage) {
       await this.navCtrl.pop()

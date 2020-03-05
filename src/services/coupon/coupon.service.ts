@@ -1,32 +1,29 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from '@tabify/env';
-import { ICoupon, CouponOffOf, CouponType, CouponResponse } from "../../interfaces/coupon.interface";
+import { Coupon, CouponResponse } from "../../interfaces/coupon.interface";
 import { AuthService } from "../../services/auth/auth.service";
-import { Alert } from "ionic-angular";
+import { AlertButton } from "ionic-angular";
 import { AlertService } from "../utilities/alert.service";
 import { AblyTicketService } from "../../services/ticket/ably-ticket.service";
+import { CouponOffOf, CouponType } from '../../enums/coupons.enum'
 
 @Injectable()
 export class CouponService {
 
-  public validCoupons: ICoupon[] = [];
-  public usedCoupons: ICoupon[] = [];
-  public upcomingCoupons: ICoupon[] = [];
-  // empty coupon serves as a way to return a coupon with meaningless values - resolves 'not defined' issues
-  private emptyCoupon: ICoupon = {id: undefined, image_url: undefined, usage_limit: undefined, description: undefined, value: 0, date_updated: undefined,
-    date_created: undefined, coupon_start_date: undefined, coupon_end_date: undefined, coupon_off_of: undefined, applies_to_everyone: undefined,
-    location: undefined, usage_count: undefined, coupon_type: undefined, estimated_dollar_value: 0, menu_item_name: undefined, menu_item_id: undefined,
-    dollar_value: 0, estimated_tax_difference: 0};
-  public selectedCoupon: ICoupon = this.emptyCoupon;
+  public validCoupons: Coupon[] = [];
+  public usedCoupons: Coupon[] = [];
+  public upcomingCoupons: Coupon[] = [];
+  public selectedCoupon: Coupon = undefined;
 
-    constructor(private readonly httpClient: HttpClient, private alertCtrl: AlertService,
+    constructor(private readonly httpClient: HttpClient,
       private ablyTicketService: AblyTicketService, private auth: AuthService) { }
 
     // get a user's coupons from the backend server
     async getCoupons(): Promise<any> {
 
         const coupons = await this.httpClient.get(`${environment.serverUrl}/coupons`).toPromise() as CouponResponse;
+        console.log(coupons);
         this.mapCouponResponse(coupons);
     }
 
@@ -58,9 +55,9 @@ export class CouponService {
     }
 
     // get all valid coupons from the backend for a specific ticket and return an alert to tax tip - alert can possibly be undefined
-    async getTicketCouponsAndReceiveCouponAlert(ticketId: number): Promise<Alert> {
+    async getTicketCouponsAndReceiveCouponAlertInfo(ticketId: number): Promise<object> {
       // create alert object to return to tax tip
-      let alert: Alert;
+      let alert: {title: string, message: string, buttons: (string | AlertButton)[]};
 
       // back end request to get all valid coupons
       const coupons = await this.httpClient.get(`${environment.serverUrl}/coupons/ticket/${ticketId}`).toPromise() as CouponResponse;
@@ -75,19 +72,19 @@ export class CouponService {
         this.selectedCoupon = ticketUserCoupon;
       } else {
         // if there is no selected coupon
-        if(this.selectedCoupon.value === 0) {
+        if(this.selectedCoupon === undefined) {
           // and there is a best coupon, set the selected coupon to the best one and tell the user, if not do nothing
           if (bestCoupon) {
             this.selectedCoupon = bestCoupon;
-            alert = this.alertCtrl.create({
+            alert = {
               title: 'Promo Found!',
               message: `We have found valid promo(s) for your ticket and have automatically applied the best one to your ticket.`,
               buttons: [
                 'Ok',
               ],
-            });
+            };
           }
-          // there is a coupon selected
+        // there is a coupon selected
         } else {
           // find the coupon in the returned valid coupons - coupon will now have additional fields defined
           const updatedCoupon = this.validCoupons.find(coupon => coupon.id === this.selectedCoupon.id);
@@ -96,7 +93,7 @@ export class CouponService {
             this.selectedCoupon = updatedCoupon;
             // if there is still a bettter coupon, set the alert accordingly asking if they would like to select the best one
             if (updatedCoupon.id !== bestCoupon.id) {
-              alert = this.alertCtrl.create({
+              alert = {
                 title: 'Better Promo Found',
                 message: `We have found a better promo with more savings than the one you originally selected. Would you like to automatically apply this better promo instead?`,
                 buttons: [
@@ -108,30 +105,30 @@ export class CouponService {
                     }
                   },
                 ],
-              });
+              };
             }
             // the selected coupon is not valid
           } else {
             // if there is still a best coupon - set the selected coupon to the best one and tell the user
             if (bestCoupon) {
               this.selectedCoupon = bestCoupon;
-              alert = this.alertCtrl.create({
+              alert = {
                 title: 'Invalid Promo',
                 message: `The promo you originally selected is invalid, but we have automatically applied the best one available for your ticket.`,
                 buttons: [
                   'Ok',
                 ],
-              });
-              // if there is no best coupon, set the selected coupon to the empty coupon and tell the user that there are no more coupons available
+              };
+              // if there is no best coupon, set the selected coupon to undefined and tell the user that there are no more coupons available
             } else {
-              this.selectedCoupon = this.emptyCoupon;
-              alert = this.alertCtrl.create({
+              this.selectedCoupon = undefined;
+              alert = {
                 title: 'Invalid Promo',
                 message: `The promo you originally selected is invalid and unfortunately there are no other available promos for your ticket.`,
                 buttons: [
                   'Ok',
                 ],
-              });
+              };
             }
           }
         }
@@ -140,9 +137,9 @@ export class CouponService {
     }
 
     // select or deselect a coupon
-    selectCoupon(coupon: ICoupon) {
-      if (this.selectedCoupon.id === coupon.id) {
-        this.selectedCoupon = this.emptyCoupon;
+    selectCoupon(coupon: Coupon) {
+      if (this.selectedCoupon && this.selectedCoupon.id === coupon.id) {
+        this.selectedCoupon = undefined;
       } else {
         this.selectedCoupon = coupon;
       }

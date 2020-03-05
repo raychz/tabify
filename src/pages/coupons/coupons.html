@@ -78,7 +78,7 @@
             </ion-col>
             <ion-col class="redeem-button-container">
               <button ion-button (click)="redeemCoupon(coupon)" class="redeem-button">
-                  {{ fullCouponsPage ? 'Redeem' : (coupon.id === couponService.selectedCoupon.id) ? 'Deselect' : 'Select' }}
+                  {{ fullCouponsPage ? 'Redeem' : (coupon.id === couponService.selectedCoupon?.id) ? 'Deselect' : 'Select' }}
               </button>
             </ion-col>
             <ion-col class="end-info">

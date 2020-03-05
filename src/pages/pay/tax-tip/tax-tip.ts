@@ -12,11 +12,11 @@ import { PayConfirmationPage } from './pay-confirmation/pay-confirmation';
 import { PaymentService } from '../../../services/payment/payment.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { CouponService } from '../../../services/coupon/coupon.service';
-import { ICoupon, CouponOffOf, CouponType } from '../../../interfaces/coupon.interface';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketItem } from '../../../interfaces/ticket-item.interface';
 import { TicketStatus, TicketUserStatus } from '../../../enums';
 import { TicketUser } from '../../../interfaces/ticket-user.interface';
+import { CouponOffOf, CouponType } from '../../../enums/coupons.enum'
 
 @IonicPage()
 @Component({
@@ -107,9 +107,10 @@ export class TaxTipPage {
     if (this.paymentMethodService.paymentMethods.length) {
       currentUser.paymentMethod = this.paymentMethodService.paymentMethods[0];
     }
-    const alert = await this.couponService.getTicketCouponsAndReceiveCouponAlert(this.ablyTicketService.ticket.id);
+    const alertObject = await this.couponService.getTicketCouponsAndReceiveCouponAlertInfo(this.ablyTicketService.ticket.id);
     // alert is posssibly undefined
-    if (alert) {
+    if (alertObject) {
+      const alert = this.alertCtrl.create(alertObject);
       alert.present();
     }
     await loading.dismiss();
@@ -129,12 +130,17 @@ export class TaxTipPage {
     const loading = this.loader.create();
     await loading.present();
     try {
+      let selectedCouponId = undefined;
+      if (this.couponService.selectedCoupon) {
+        selectedCouponId = this.couponService.selectedCoupon.id;
+
+      }
       const response = await this.paymentService.sendTicketPayment(
         this.ablyTicketService.ticket.id,
         currentUser.paymentMethod.id,
         currentUser.total,
         currentUser.tips,
-        this.couponService.selectedCoupon.id,
+        selectedCouponId
       ) as any;
 
       await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, currentUser.id, TicketUserStatus.PAID);

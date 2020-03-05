@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from '@tabify/env';
-import { ICoupon } from 'interfaces/coupon.interface';
+import { Coupon } from 'interfaces/coupon.interface';
 
 @Injectable()
 export class PaymentService {

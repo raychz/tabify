@@ -1,16 +1,13 @@
 import { Location } from "./location.interface";
-import { TicketItem } from "./ticket-item.interface";
-
-export enum CouponOffOf {ticket, item};
-export enum CouponType {percent, dollar_value};
+import { CouponOffOf, CouponType } from '../enums/coupons.enum'
 
 export interface CouponResponse {
-  validCoupons: ICoupon[],
-  usedCoupons: ICoupon[],
-  upcomingCoupons: ICoupon[]
+  validCoupons: Coupon[],
+  usedCoupons: Coupon[],
+  upcomingCoupons: Coupon[]
 };
 
-export interface ICoupon {
+export interface Coupon {
   id: number;
   description: string;
   value: number;
