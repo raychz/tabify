@@ -45,7 +45,7 @@ export class SelectItemsPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && currentUser.status === TicketUserStatus.SELECTING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -57,7 +57,7 @@ export class SelectItemsPage {
 
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return currentUser.status !== TicketUserStatus.SELECTING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -116,6 +116,7 @@ export class SelectItemsPage {
         ],
       });
       error.present();
+      throw e;
     }
   }
 

@@ -63,12 +63,13 @@ export class StoryPage {
       await this.getTicketItemsForUser();
       await this.getTicketPaymentsByUser();
       console.log(this.story);
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      throw e;
     }
     await loading.dismiss();
 
@@ -114,10 +115,10 @@ export class StoryPage {
       if (res.body && res.body.likeCreated === true) {
 
         const likeToBeAdded =
-        {
-          id: res.body.id,
-          user: { uid: res.body.user.uid }
-        };
+          {
+            id: res.body.id,
+            user: { uid: res.body.user.uid }
+          };
 
         this.story.likes.push(likeToBeAdded);
         this.newsfeedService.addLike(this.story.ticket.id, this.story.id, likeToBeAdded);
@@ -156,12 +157,13 @@ export class StoryPage {
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
 
       this.newComment = '';
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      throw e;
     }
 
     this.newCommentPosting = false;
@@ -181,7 +183,7 @@ export class StoryPage {
 
       // Decrement comment count of story in newsfeed
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
-    } catch {
+    } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
@@ -190,6 +192,7 @@ export class StoryPage {
 
       // if deletion of comment was unsuccessful, revert to comment not being deleted
       this.comments[commentIndex].beingDeleted = false;
+      throw e;
     }
   }
 
@@ -206,7 +209,6 @@ export class StoryPage {
 
   async getTicketItemsForUser() {
     this.items = await this.storyService.getTicketItemsForUser(this.story.ticket.id);
-    
     this.items.forEach(item => {
       item.userShare = item.users[0].price;
     });

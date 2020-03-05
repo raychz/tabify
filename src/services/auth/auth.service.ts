@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { Platform, AlertController } from 'ionic-angular';
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { HttpClient } from '@angular/common/http';
 import { Observable , Subject , of , from } from 'rxjs';
 import { environment } from '@tabify/env';
@@ -184,8 +184,8 @@ export class AuthService {
         this.userDetailsConfirmedInDB$.next(false);
         return false;
       }
-    } catch (error) {
-      console.error('checkUserExistsInDB encountered an error', error);
+    } catch (e) {
+      console.error('checkUserExistsInDB encountered an error', e);
       this.userDetails = null;
       this.userDetailsConfirmedInDB$.next(false);
       const alert = this.alertCtrl.create({
@@ -193,7 +193,7 @@ export class AuthService {
         message: `Please check your connection and try again.`,
       });
       alert.present();
-      return false;
+      throw e;
     }
   }
 }

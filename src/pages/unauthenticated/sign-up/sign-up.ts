@@ -57,18 +57,21 @@ export class SignUpPage {
       content: 'Signing up with Facebook...',
     });
     await loading.present();
-
     await this.auth
       .signInWithFacebook()
-      .catch(
-        error => {
-          const alert = this.alert.create({
-            title: 'Error',
-            subTitle: 'An error occurred while signing up with Facebook.',
-            buttons: ['OK'],
-          });
-          return alert.present();
-        }
+      .catch(e => {
+        console.error(e);
+        loading.dismiss();
+        const error = (e.code && e.message) ? `${e.code}: ${e.message}` : e;
+        const alert = this.alert.create({
+          title: 'Error',
+          subTitle: 'An error occurred while signing up with Facebook. If this error persists, please continue with email instead.',
+          message: error,
+          buttons: ['OK'],
+        });
+        alert.present();
+        throw e;
+      }
       );
     await loading.dismiss();
   }
@@ -88,8 +91,8 @@ export class SignUpPage {
     await loading.present();
     try {
       await this.auth.signUp(credentials)
-    } catch (error) {
-      this.signUpError = this.errorService.authError(error);
+    } catch (e) {
+      this.signUpError = this.errorService.authError(e);
     };
     await loading.dismiss();
   }
@@ -103,6 +106,6 @@ export class SignUpPage {
     // Remove trailing and leading spaces from both email and password inputs
     // to prevent user from seeing 'invalid email' validation errors
     const { email } = this.form.value;
-    this.form.patchValue({ email: email.trim() }, { emitEvent: false});
+    this.form.patchValue({ email: email.trim() }, { emitEvent: false });
   }
 }

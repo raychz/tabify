@@ -26,7 +26,7 @@ export class SelectPaymentPage {
     try {
       const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
       return this.auth.authenticated && currentUser.status === TicketUserStatus.PAYING;
-    } catch {
+    } catch (e) {
       return false;
     }
   }

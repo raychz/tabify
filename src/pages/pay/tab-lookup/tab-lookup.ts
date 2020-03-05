@@ -12,6 +12,7 @@ import { tap } from 'rxjs/operators';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketUserStatus } from '../../../enums';
+import * as Sentry from "@sentry/browser"
 
 @IonicPage()
 @Component({
@@ -87,7 +88,6 @@ export class TabLookupPage {
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN FIND TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -99,10 +99,11 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
+          message: 'Sorry, something went wrong. Please try again.',
           buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }
@@ -116,7 +117,6 @@ export class TabLookupPage {
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
-      console.error('CAUGHT ERROR IN CREATE TAB', e);
       await loading.dismiss();
       if (e.stopErrorPropagation) return;
       if (e.status === 404) {
@@ -136,10 +136,11 @@ export class TabLookupPage {
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
-          message: 'Sorry, something went wrong on our side! Please try again.',
+          message: 'Sorry, something went wrong. Please try again.',
           buttons: ['OK']
         });
         alert.present();
+        throw e;
       }
     }
   }
@@ -174,9 +175,9 @@ export class TabLookupPage {
     try {
       this.ablyTicketService.fraudPreventionCode = await this.locationService.getFraudPreventionCode();
     } catch (error) {
+      Sentry.captureException(error);
       console.log(error);
     }
-    await loading.dismiss();
   }
 
   private async initializeFirestoreTicketListeners(ticket: any) {
