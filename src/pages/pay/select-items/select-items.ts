@@ -66,12 +66,9 @@ export class SelectItemsPage {
   }
 
   async showFraudPreventionCode() {
-    console.log(this.ablyTicketService.fraudPreventionCode)
     const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
     { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
-    console.log(fraudPreventionModal);
     await fraudPreventionModal.present();
-    console.log('presented')
   }
 
   ionViewWillUnload() {

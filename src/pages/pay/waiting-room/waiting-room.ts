@@ -53,6 +53,12 @@ export class WaitingRoomPage {
     }
   }
 
+  async showFraudPreventionCode() {
+    const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
+    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+    await fraudPreventionModal.present();
+  }
+
   /** Returns true if at least one item on the ticket is shared by multiple users */
   areTicketItemsShared() {
     return this.ablyTicketService.ticket.items.some(item => item.users.length > 1);

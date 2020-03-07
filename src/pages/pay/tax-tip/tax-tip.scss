@@ -3,6 +3,11 @@ page-tax-tip {
     color: map-get($colors, primary);
   }
 
+  .fraud-prevention-key {
+    color: map-get($colors, primary);
+    font-size: 1.6em;
+  }
+
   .total {
     &.discount h2 {
       color: #e69900;
@@ -115,7 +120,6 @@ ul.rating {
     height: auto;
     max-width: $alert-md-max-width;
     border-radius: $alert-md-border-radius;
-    background-color: $alert-md-background-color;
     box-shadow: $alert-md-box-shadow;
     border-radius: 25px;
     padding: 5px;

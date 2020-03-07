@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
@@ -33,6 +33,7 @@ export class StatusPage {
     public navParams: NavParams,
     public auth: AuthService,
     public alertCtrl: AlertService,
+    public modalCtrl: ModalController,
     public ablyTicketService: AblyTicketService,
   ) {
   }
@@ -44,6 +45,12 @@ export class StatusPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad StatusPage');
 
+  }
+
+  async showFraudPreventionCode() {
+    const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
+    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+    await fraudPreventionModal.present();
   }
 
   checkPaidStatus(): boolean {

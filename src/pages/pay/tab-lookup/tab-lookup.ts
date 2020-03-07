@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -23,8 +23,6 @@ export class TabLookupPage {
   location: Location = this.navParams.data;
   tabForm: FormGroup;
   dateTime: number = Date.now();
-  isCodeVisible = false;
-
 
   constructor(
     public navCtrl: NavController,
@@ -34,6 +32,7 @@ export class TabLookupPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public alertCtrl: AlertService,
+    public modalCtrl: ModalController,
     public locationService: LocationService,
     public ablyService: AblyService,
     public ablyTicketService: AblyTicketService,
@@ -146,7 +145,6 @@ export class TabLookupPage {
   }
 
   private async viewNextPage() {
-    console.log(this.ablyTicketService.fraudPreventionCode)
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     switch (currentUser.status) {
       case TicketUserStatus.SELECTING:
@@ -169,6 +167,12 @@ export class TabLookupPage {
     }
   }
 
+  async showFraudPreventionCode() {
+    const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
+    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+    await fraudPreventionModal.present();
+  }
+
   async getFraudPreventionCode() {
     const loading = this.loader.create();
     await loading.present();
@@ -178,6 +182,7 @@ export class TabLookupPage {
       Sentry.captureException(error);
       console.log(error);
     }
+    loading.dismiss();
   }
 
   private async initializeFirestoreTicketListeners(ticket: any) {

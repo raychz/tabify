@@ -1,6 +1,11 @@
 <ion-header>
   <ion-navbar hideBackButton>
     <ion-title>Checkout</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end (click)="showFraudPreventionCode()">
+        <ion-icon name="ios-key" class="fraud-prevention-key"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -16,7 +21,7 @@
           <h2>${{currentUser?.items / 100 | number: '1.2-2'}}</h2>
         </div>
       </ion-item>
-      <ion-item *ngIf='ablyTicketService.ticket?.ticketTotal.discounts > 0 && 
+      <ion-item *ngIf='ablyTicketService.ticket?.ticketTotal.discounts > 0 &&
             ablyTicketService.ticket?.ticketTotal.discounts !== currentUser?.discounts' class='total discount'>
         <h2>Table Discount</h2>
         <div item-end>

@@ -1,7 +1,7 @@
 page-select-items {
   .fraud-prevention-key {
     color: map-get($colors, primary);
-    font-size: 1.5em;
+    font-size: 1.6em;
   }
   .tip-modal {
     @media (min-height: 500px) {
@@ -45,12 +45,12 @@ page-select-items {
       height: auto;
       max-width: $alert-md-max-width;
       border-radius: $alert-md-border-radius;
-      background-color: $alert-md-background-color;
       box-shadow: $alert-md-box-shadow;
       border-radius: 25px;
       padding: 5px;
     }
   }
+
   ion-toolbar {
     text-align: center;
     height: 100%;
