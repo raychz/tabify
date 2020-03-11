@@ -172,7 +172,7 @@ export class AblyTicketService {
   private onTicketItemUsersReplaced({ newTicketItemUsers }: { newTicketItemUsers: ItemIdToTicketItemUsersArray }) {
     const ticketItems: TicketItem[] = []
     for (let itemId in newTicketItemUsers) {
-      const ticketItem = this.ticket.items.find(_item => _item.id == Number(itemId));
+      const ticketItem = this.ticket.items.find(_item => _item.id === Number(itemId));
       ticketItem.users = Array.from(newTicketItemUsers[itemId]);
       ticketItems.push(ticketItem);
     }
