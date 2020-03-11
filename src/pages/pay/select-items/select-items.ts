@@ -173,11 +173,7 @@ export class SelectItemsPage {
     actionSheet.present();
   }
 
-  // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
-    // for (const item of this.ablyTicketService.ticket.items) {
-    //   if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
-    // }
     const loading = this.loader.create();
     await loading.present();
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
@@ -185,11 +181,7 @@ export class SelectItemsPage {
     await loading.dismiss();
   }
 
-  // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
-    // for (const item of this.ablyTicketService.ticket.items) {
-    //   if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
-    // }
     const loading = this.loader.create();
     await loading.present();
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
