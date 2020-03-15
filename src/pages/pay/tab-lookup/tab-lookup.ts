@@ -65,7 +65,7 @@ export class TabLookupPage {
     }, 1000);
   }
 
-  async findTab() {
+  async findTab(expressCheckout: boolean) {
     let { ticketNumber } = this.tabForm.value;
 
     ticketNumber = Number(ticketNumber.replace(/\D/g, ''));
@@ -84,7 +84,7 @@ export class TabLookupPage {
     try {
       await loading.present();
       const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open', true) as any;
-      await this.initializeTicketMetadata(ticket);
+      await this.initializeTicketMetadata(ticket, expressCheckout);
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
     } catch (e) {
@@ -95,7 +95,7 @@ export class TabLookupPage {
         // 1. This could be the first user joining the tab, so we have to first fetch the data from Omnivore and save in our db
         // 2. The user could've entered the wrong ticket #
         // Let's first check for #1
-        await this.createTab(ticketNumber);
+        await this.createTab(ticketNumber, expressCheckout);
       } else {
         const alert = this.alertCtrl.create({
           title: 'Error',
@@ -108,12 +108,12 @@ export class TabLookupPage {
     }
   }
 
-  async createTab(ticketNumber: number) {
+  async createTab(ticketNumber: number, expressCheckout: boolean) {
     const loading = this.loader.create();
     await loading.present();
     try {
       const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, true) as any;
-      await this.initializeTicketMetadata(newTicket);
+      await this.initializeTicketMetadata(newTicket, expressCheckout);
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
     } catch (e) {
@@ -145,26 +145,31 @@ export class TabLookupPage {
     }
   }
 
-  private async viewNextPage() {
+  private async viewNextPage(expressCheckout: boolean) {
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
-    switch (currentUser.status) {
-      case TicketUserStatus.SELECTING:
-        this.navCtrl.push('SelectItemsPage');
-        break;
-      case TicketUserStatus.WAITING:
-        this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
-        break;
-      case TicketUserStatus.CONFIRMED:
-        this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
-        break;
-      case TicketUserStatus.PAYING:
-        this.navCtrl.push('TaxTipPage');
-        break;
-      case TicketUserStatus.PAID:
+
+    if (expressCheckout) {
+      await this.navCtrl.push('WaitingRoomPage');
+    } else {
+      switch (currentUser.status) {
+        case TicketUserStatus.SELECTING:
+          this.navCtrl.push('SelectItemsPage');
+          break;
+        case TicketUserStatus.WAITING:
+          this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
+          break;
+        case TicketUserStatus.CONFIRMED:
+          this.navCtrl.push('WaitingRoomPage', { pushSelectItemsOnBack: true });
+          break;
+        case TicketUserStatus.PAYING:
+          this.navCtrl.push('TaxTipPage');
+          break;
+        case TicketUserStatus.PAID:
           this.navCtrl.push('StatusPage');
-        break;
-      default:
-        throw new Error('Unknown user status')
+          break;
+        default:
+          throw new Error('Unknown user status')
+      }
     }
   }
 
@@ -182,24 +187,24 @@ export class TabLookupPage {
     }
   }
 
-  private async initializeFirestoreTicketListeners(ticket: any) {
-    const loading = this.loader.create();
-    await loading.present();
-    if (this.ticketService.firestoreStatus$.getValue()) {
-      this.viewNextPage();
-      await loading.dismiss();
-    } else {
-      this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
-        if (fireStoreInitializationStatus) {
-          this.viewNextPage();
-          loading.dismiss();
-        }
-      })).subscribe();
-    }
-    this.ticketService.initializeFirestoreTicket(ticket.firestore_doc_id);
-  }
+  // private async initializeFirestoreTicketListeners(ticket: any) {
+  //   const loading = this.loader.create();
+  //   await loading.present();
+  //   if (this.ticketService.firestoreStatus$.getValue()) {
+  //     this.viewNextPage();
+  //     await loading.dismiss();
+  //   } else {
+  //     this.ticketService.firestoreStatus$.pipe(tap((fireStoreInitializationStatus) => {
+  //       if (fireStoreInitializationStatus) {
+  //         this.viewNextPage();
+  //         loading.dismiss();
+  //       }
+  //     })).subscribe();
+  //   }
+  //   this.ticketService.initializeFirestoreTicket(ticket.firestore_doc_id);
+  // }
 
-  private async initializeTicketMetadata(ticket: any) {
+  private async initializeTicketMetadata(ticket: any, expressCheckout: boolean) {
     this.ablyTicketService.ticket = ticket;
     this.ablyTicketService.synchronizeFrontendTicket();
     this.ablyTicketService.synchronizeFrontendTicketItems();
@@ -211,6 +216,13 @@ export class TabLookupPage {
     try {
       const newTicketUser = await this.ticketService.addUserToDatabaseTicket(ticket.id);
       this.ablyTicketService.onTicketUserAdded(newTicketUser);
+
+      // add user to all items on the ticket, if express checkout
+      if (expressCheckout) {
+        await this.ticketService.addUserToAllItemsOnTicket(ticket.id, newTicketUser.id);
+        await this.ablyTicketService.setTicketUserStatus(this.ablyTicketService.ticket.id, newTicketUser.id, TicketUserStatus.WAITING);
+      }
+
     } catch (e) {
       if (e.status === 403) {
         const alert = this.alertCtrl.create({
@@ -243,7 +255,7 @@ export class TabLookupPage {
     // Add ticket number to fraud code
     await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
 
-    await this.viewNextPage();
+    await this.viewNextPage(expressCheckout);
     // Get ticket
     // await this.ablyTicketService.getTicket(ticket.id);
   }

@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>Find Your Ticket #</ion-title>
     <ion-buttons end>
-      <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
+      <button id="tab-lookup-next" ion-button icon-end (click)="findTab(false)" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
@@ -33,6 +33,7 @@
                 </div>
               </ion-list>
             </form>
+            <button id="express-checkout-btn" ion-button (click)="findTab(true)">Express Checkout</button>
           </ion-card-content>
         </ion-card>
         <ion-card>
