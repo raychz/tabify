@@ -1,8 +1,7 @@
 {
   "name": "tabify",
   "integrations": {
-    "cordova": {}
+    "capacitor": {}
   },
-  "type": "ionic-angular",
-  "id": "66369498"
+  "type": "angular"
 }
