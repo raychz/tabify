@@ -1,3 +1,4 @@
+$blank-space-height: 100px;
 page-story {
   ion-segment.segment-ios {
     max-width: 75%;
@@ -17,11 +18,24 @@ page-story {
       color: #8e9093;
     }
   }
-
+  .post-comment-button {
+    background-color: #f35b1e;
+    color: white;
+}
+  .blank-space {
+    height: $blank-space-height;
+  }
   .bottom-border {
     border-bottom: 1px solid gray;
   }
 
+  .post-comment {
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: #252526
+  }
   .unset-background {
     background-color: unset;
   }

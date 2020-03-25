@@ -28,7 +28,7 @@ npm install
 npm start
 ```
 
-Navigate to localhost:4200 on Chrome (note that the port may differ). If you see the login screen, you've successfully started up the dev server! 🎉
+Navigate to localhost:8100 on Chrome (note that the port may differ). If you see the login screen, you've successfully started up the dev server! 🎉
 
 ## Running the tests
 
