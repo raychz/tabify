@@ -149,7 +149,7 @@ export class TabLookupPage {
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
 
     if (expressCheckout) {
-      await this.navCtrl.push('WaitingRoomPage');
+      await this.navCtrl.push('CheckOutPage');
     } else {
       switch (currentUser.status) {
         case TicketUserStatus.SELECTING:
