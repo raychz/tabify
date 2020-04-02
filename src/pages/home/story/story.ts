@@ -141,6 +141,8 @@ export class StoryPage {
   }
 
   async createComment() {
+    const loading = this.loader.create();
+    loading.present();
     this.newCommentPosting = true;
 
     try {
@@ -157,12 +159,16 @@ export class StoryPage {
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
 
       this.newComment = '';
+
+      // Dismiss the loader
+      loading.dismiss();
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      loading.dismiss();
       throw e;
     }
 
