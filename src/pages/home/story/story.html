@@ -184,7 +184,7 @@
     </ng-container>
   </ion-card>
 
-  <div class="blank-space" *ngIf="selectedSegment === StorySegment.COMMENTS"></div>
+  <div class="blank-space"  #scroller *ngIf="selectedSegment === StorySegment.COMMENTS"></div>
 
   <div class="post-comment" text-center ion-fixed *ngIf="selectedSegment === StorySegment.COMMENTS">
       <ion-textarea class="new-comment-text" [(ngModel)]="newComment"
