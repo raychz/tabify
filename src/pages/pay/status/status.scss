@@ -3,53 +3,6 @@ page-status {
     color: map-get($colors, primary);
     font-size: 1.6em;
   }
-  .tip-modal {
-    @media (min-height: 500px) {
-      ion-backdrop {
-        visibility: visible;
-      }
-    }
-
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: $z-index-overlay;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    contain: strict;
-    .modal-wrapper {
-      &,
-      .ion-page,
-      .ion-page .content,
-      .ion-page .content .scroll-content {
-        contain: content;
-        position: relative;
-        top: auto;
-        left: auto;
-        padding: 1px;
-      }
-
-      z-index: $z-index-overlay-wrapper;
-      display: flex;
-      overflow: hidden;
-      flex-direction: column;
-      min-width: $alert-min-width;
-      max-height: $alert-max-height;
-      opacity: 0;
-      height: auto;
-      max-width: $alert-md-max-width;
-      border-radius: $alert-md-border-radius;
-      box-shadow: $alert-md-box-shadow;
-      border-radius: 25px;
-      padding: 5px;
-    }
-  }
 
   #openingText {
     text-align: center;
@@ -110,3 +63,5 @@ page-status {
     }
   }
 }
+
+@import '../../../theme/global-styles.scss'

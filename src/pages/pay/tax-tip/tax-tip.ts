@@ -106,13 +106,13 @@ export class TaxTipPage {
 
   async showFraudPreventionCode() {
     const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
-    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tabify-modal' });
     await fraudPreventionModal.present();
   }
 
   async adjustTip() {
     const tipModal = this.modalCtrl.create('EnterTipPage', null,
-      { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tip-modal' });
+      { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tabify-modal' });
     await tipModal.present();
   }
 

@@ -25,6 +25,10 @@ export class FraudPreventionPage {
     this.getDateTime();
   }
 
+  ionViewDidUnload() {
+    clearInterval(this.dateTime)
+  }
+
   getDateTime() {
     setInterval(() => {
       this.dateTime = Date.now();
