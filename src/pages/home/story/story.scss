@@ -18,10 +18,6 @@ page-story {
       color: #8e9093;
     }
   }
-  .post-comment-button {
-    background-color: #f35b1e;
-    color: white;
-}
   .blank-space {
     height: $blank-space-height;
   }
@@ -34,7 +30,11 @@ page-story {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    background-color: #252526
+    background-color: #252526;
+    &-button {
+      background-color: #f35b1e;
+      color: white;
+    }
   }
   .unset-background {
     background-color: unset;
