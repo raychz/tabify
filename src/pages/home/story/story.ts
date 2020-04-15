@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ModalController } from 'ionic-angular';
 import { StoryService } from '../../../services/story/story.service';
 import moment from 'moment';
@@ -16,7 +16,7 @@ import { StorySegment } from '../../../enums/';
   templateUrl: 'story.html',
 })
 export class StoryPage {
-  // Hack to expose enum to template
+  @ViewChild('scroller') scroller: ElementRef;
   StorySegment: typeof StorySegment = StorySegment;
   selectedSegment = StorySegment.COMMENTS;
   story: any;
@@ -41,6 +41,18 @@ export class StoryPage {
     private modalCtrl: ModalController,
     private paymentService: PaymentService
   ) { }
+
+  scrollToBottom(): void {
+    try {
+
+      this.scroller.nativeElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      // this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+      // console.log(this.scroller.nativeElement.scrollTop, this.scroller.nativeElement.scrollHeight)
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
@@ -141,6 +153,8 @@ export class StoryPage {
   }
 
   async createComment() {
+    const loading = this.loader.create();
+    loading.present();
     this.newCommentPosting = true;
 
     try {
@@ -157,12 +171,17 @@ export class StoryPage {
       this.newsfeedService.incrementCommentCount(this.story.ticket.id, this.story.id);
 
       this.newComment = '';
+
+      // Dismiss the loader
+      loading.dismiss();
+      this.scrollToBottom();
     } catch (e) {
       const alert = this.alertCtrl.create({
         title: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
+      loading.dismiss();
       throw e;
     }
 

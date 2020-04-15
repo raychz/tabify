@@ -183,15 +183,19 @@
 
     </ng-container>
   </ion-card>
+
+  <div class="blank-space" *ngIf="selectedSegment === StorySegment.COMMENTS"></div>
+  <div class="blank-space"></div>
+  <div #scroller></div>
+
+  <div class="post-comment" text-center ion-fixed *ngIf="selectedSegment === StorySegment.COMMENTS">
+      <ion-textarea class="new-comment-text" [(ngModel)]="newComment"
+        placeholder="Enter a new comment!">
+      </ion-textarea>
+      <button class="post-comment-button" [disabled]="newComment.length === 0" ion-button small outline
+        (click)='createComment()'>Post Comment</button>
+  </div>
+
+
 </ion-content>
 
-<ion-footer *ngIf="selectedSegment === StorySegment.COMMENTS">
-  <ion-toolbar text-center>
-    <ion-textarea class="new-comment-text" *ngIf="!newCommentPosting" [(ngModel)]="newComment"
-      placeholder="Enter a new comment!">
-    </ion-textarea>
-    <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
-    <button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" ion-button small outline
-      (click)='createComment()'>Post Comment</button>
-  </ion-toolbar>
-</ion-footer>
