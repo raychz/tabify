@@ -5,14 +5,16 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { mergeMap, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth/auth.service';
 import * as Sentry from "@sentry/browser";
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { combineAll } from 'rxjs/internal/operators/combineAll';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService) { }
 
   intercept(
     request: HttpRequest<any>,
@@ -23,8 +25,9 @@ export class TokenInterceptor implements HttpInterceptor {
         headers: request.headers.set('Content-Type', 'application/json'),
       });
     }
+
     return this.auth.getToken().pipe(
-      mergeMap(token => {
+      switchMap(token => {
         if (token) {
           // Add the transaction id to the Sentry scope
           const transactionId = Math.random().toString(36).substr(2, 9);
@@ -39,7 +42,7 @@ export class TokenInterceptor implements HttpInterceptor {
           });
         }
         return next.handle(request);
-      })
+      }),
     );
   }
 }

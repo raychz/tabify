@@ -4,13 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
-import currency from 'currency.js';
+import * as currency from 'currency.js';
 import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { tap, catchError } from 'rxjs/operators';
 import { of, Subscription, BehaviorSubject } from 'rxjs';
 import { AlertService } from '../utilities/alert.service';
 import { getPayersDescription, isItemOnMyTab, getSelectItemsTicketUsersDescription } from '../../utilities/ticket.utilities';
-import { HttpParams } from '@angular/common/http/src/params';
 import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 
@@ -72,7 +71,7 @@ export interface User {
   isExpanded?: boolean,
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TicketService {
   // Public class variables
   // Consumers of this service should bind to these public variables to remain up to date with the state of the ticket
@@ -544,8 +543,8 @@ export class TicketService {
   private async handleInitializationError(error: any) {
     if (!this.hasInitializationError) {
       this.hasInitializationError = true;
-      const alert = this.alertCtrl.create({
-        title: 'Error',
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
         message: `An error occurred while initializing this ticket. Please try again. ${error.message ||
           error}`,
         buttons: [

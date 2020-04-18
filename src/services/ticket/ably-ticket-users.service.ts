@@ -4,7 +4,7 @@ import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
 import { TicketUpdates } from '../../enums/';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AblyTicketUsersService {
   constructor(
   ) { }

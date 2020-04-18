@@ -6,7 +6,7 @@ import * as AblyPromises from 'ably/promises';
 import { AblyTicketService } from './ably-ticket.service';
 import { AuthService } from '../../services/auth/auth.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AblyService {
   private realtime: AblyPromises.Realtime;
 

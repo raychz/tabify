@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { getStoryUsersDescription } from '../../utilities/ticket.utilities';
 
 // This class holds that data structure that is used to represent content on the newsfeed
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NewsfeedService {
 
     // The data structure we get back is a uid, and a list of tickets.

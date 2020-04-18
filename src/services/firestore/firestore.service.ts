@@ -6,12 +6,12 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import firebase from 'firebase/app';
+import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
 type CollectionPredicate<T> = string | AngularFirestoreCollection<T>;
 type DocPredicate<T> = string | AngularFirestoreDocument<T>;
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FirestoreService {
   constructor(private afs: AngularFirestore) {}
 

@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "tabify",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}

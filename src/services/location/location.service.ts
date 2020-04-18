@@ -4,7 +4,7 @@ import { Location } from "../../interfaces/location.interface";
 import { FraudPreventionCode } from "../../interfaces/fraud-prevention-code.interface";
 import { environment } from '@tabify/env';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LocationService {
   constructor(private httpClient: HttpClient) {}
 

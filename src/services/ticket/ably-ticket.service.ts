@@ -11,11 +11,13 @@ import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { keyBy, resolveByString, abbreviateName } from '../../utilities/general.utilities';
 import { TicketTotal } from '../../interfaces/ticket-total.interface';
+import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AblyTicketService {
   ticket: Ticket;
+  fraudPreventionCode: FraudPreventionCode
 
   constructor(
     public ablyService: AblyService,

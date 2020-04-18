@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from '@tabify/env';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PaymentService {
   constructor(private httpClient: HttpClient) { }
 

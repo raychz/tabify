@@ -1,6 +1,6 @@
 // Production environment
 export const environment = {
-	version: require('../../package.json').version,
+	version: '0.0.0',
 	production: true,
 	serverUrl: 'https://api.tabifyapp.com',
 	firebaseConfig: {

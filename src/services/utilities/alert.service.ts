@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AlertController, AlertOptions } from 'ionic-angular';
+import { AlertController } from '@ionic/angular';
+import { AlertOptions } from '@ionic/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AlertService {
   constructor(public alertCtrl: AlertController) {}
 
-  create(opts : AlertOptions) {
+  create(opts: AlertOptions) {
     return this.alertCtrl.create(opts);
   }
 }

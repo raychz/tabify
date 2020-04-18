@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Loading, LoadingOptions } from 'ionic-angular';
+import { LoadingController } from '@ionic/angular';
+import { LoadingOptions } from '@ionic/core';
+import { SpinnerTypes } from '@ionic/core/dist/types/components/spinner/spinner-configs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoaderService {
-  static defaultContent = 'Loading...';
-  static defaultSpinner = 'dots';
+  static defaultContent: string = 'Loading...';
+  static defaultSpinner: SpinnerTypes = 'dots';
 
   constructor(public loadingCtrl: LoadingController) {}
 
-  create(opts: LoadingOptions = {}) {
+  async create(opts: LoadingOptions = {}) {
     const {
-      content = LoaderService.defaultContent,
+      message = LoaderService.defaultContent,
       spinner = LoaderService.defaultSpinner,
       ...rest
     } = opts;
-    return this.loadingCtrl.create({
-      content,
+    return await this.loadingCtrl.create({
+      message,
       spinner,
       ...rest,
     });

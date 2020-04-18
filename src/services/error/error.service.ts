@@ -4,7 +4,7 @@ import { authErrorMap, forgotPasswordErrorMap } from './error-maps';
 /**
  * This service aims to translate error codes into human readable messages
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ErrorService {
 
     authError(error: any) {

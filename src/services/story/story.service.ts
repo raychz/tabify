@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from '@tabify/env';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class StoryService {
     
     constructor(private readonly httpClient: HttpClient) { }

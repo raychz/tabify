@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import firebase from 'firebase/app';
+import * as firebase from 'firebase/app';
 import 'firebase/auth';
-import { Platform, AlertController } from 'ionic-angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { HttpClient } from '@angular/common/http';
-import { Observable , Subject , of , from } from 'rxjs';
+import { Observable , Subject , of , from, defer, fromEvent } from 'rxjs';
 import { environment } from '@tabify/env';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 interface ISignUpCredentials {
   email: string;
@@ -22,7 +22,7 @@ interface ISignInCredentials {
   password: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private user: firebase.User | null = null;
   private userDetails: any = null; // user details as stored in our database, not firebase
@@ -107,6 +107,7 @@ export class AuthService {
     if (!this.user) {
       throw 'User not authenticated';
     }
+    // return this.afAuth.idToken;
     return from(this.user.getIdToken());
   }
 
@@ -188,11 +189,11 @@ export class AuthService {
       console.error('checkUserExistsInDB encountered an error', e);
       this.userDetails = null;
       this.userDetailsConfirmedInDB$.next(false);
-      const alert = this.alertCtrl.create({
-        title: 'Network Error',
+      const alert = await this.alertCtrl.create({
+        header: 'Network Error',
         message: `Please check your connection and try again.`,
       });
-      alert.present();
+      await alert.present();
       throw e;
     }
   }
