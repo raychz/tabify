@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 // import { Ionic2RatingModule } from 'ionic2-rating';
+import { Facebook } from '@ionic-native/facebook/ngx';
 
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '@tabify/env';
@@ -60,7 +61,8 @@ export class TabifyErrorHandler implements ErrorHandler {
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Facebook,
   ],
   bootstrap: [AppComponent]
 })
