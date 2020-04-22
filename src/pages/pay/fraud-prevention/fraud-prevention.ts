@@ -10,6 +10,7 @@ import { AblyTicketService } from '../../../services/ticket/ably-ticket.service'
 })
 export class FraudPreventionPage {
   dateTime: number = Date.now();
+  interval: any;
 
   constructor(
     public viewCtrl: ViewController,
@@ -26,11 +27,12 @@ export class FraudPreventionPage {
   }
 
   ionViewDidUnload() {
-    clearInterval(this.dateTime)
+    clearInterval(this.interval);
+    this.interval = 0;
   }
 
   getDateTime() {
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.dateTime = Date.now();
     }, 1000);
   }

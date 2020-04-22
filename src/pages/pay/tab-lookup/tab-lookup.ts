@@ -22,7 +22,6 @@ import * as Sentry from "@sentry/browser"
 export class TabLookupPage {
   location: Location = this.navParams.data;
   tabForm: FormGroup;
-  dateTime: number = Date.now();
 
   constructor(
     public navCtrl: NavController,
@@ -47,7 +46,6 @@ export class TabLookupPage {
   }
 
   async ionViewDidLoad() {
-    this.getDateTime();
     await this.getFraudPreventionCode();
     this.ablyService.connect();
   }
@@ -56,12 +54,6 @@ export class TabLookupPage {
     // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
-  }
-
-  getDateTime() {
-    setInterval(() => {
-      this.dateTime = Date.now();
-    }, 1000);
   }
 
   async findTab() {
