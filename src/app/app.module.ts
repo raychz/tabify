@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 
-import { IonicApp, IonicModule } from 'ionic-angular';
+import { IonicApp, IonicModule } from '@ionic/angular';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { Ionic2RatingModule } from 'ionic2-rating';

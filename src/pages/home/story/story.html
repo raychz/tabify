@@ -1,8 +1,8 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>Story</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 
 </ion-header>
 
@@ -39,24 +39,24 @@
     <ion-row class="like-comment-row bottom-border">
 
       <ion-col>
-        <button ion-button [disabled]="story.loadingLike" color="primary" clear
+        <ion-button [disabled]="story.loadingLike" color="primary" clear
           (click)='createLike(); $event.stopPropagation()' class="heart-padding">
           <ion-spinner *ngIf="story.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
           <ng-container *ngIf="!story.loadingLike">
             <ion-icon [name]="story.likedByLoggedInUser ? 'ios-heart' : 'ios-heart-outline'"></ion-icon>
           </ng-container>
-        </button>
+        </ion-button>
 
-        <button ion-button color="primary" clear
+        <ion-button color="primary" clear
           (click)="this.displayLikers(story.likes.length); $event.stopPropagation()" class="like-btn-padding">
           {{ story.likes.length === 0 ? 'Like' : story.likes.length }}
-        </button>
+        </ion-button>
 
-        <button ion-button color="primary" clear icon-start class="comment-btn-padding">
+        <ion-button color="primary" clear icon-start class="comment-btn-padding">
           <ion-icon [name]="story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
           &nbsp; {{ story.comment_count === 0 ? 'Comment' : story.comment_count }}
-        </button>
+        </ion-button>
       </ion-col>
 
       <ion-col text-right class="date-padding">
@@ -90,7 +90,7 @@
           <ng-container *ngIf="!!comment">
             <div class="comment-style">
               <ion-row>
-                <ion-col col-11>
+                <ion-col size="11">
                   <ion-item class="unset-background">
                     <ion-avatar class="comment-avatar" item-start>
                       <img [src]="comment.user.userDetail.photo_url" />
@@ -101,13 +101,13 @@
                     </div>
                   </ion-item>
                 </ion-col>
-                <ion-col text-right col-1>
+                <ion-col text-right size="1">
                   <ion-spinner class="comment-ellipsis" *ngIf="comment.beingDeleted" color='primary' name="bubbles"
                     margin-right></ion-spinner>
-                  <button class="comment-ellipsis" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
-                    ion-button clear small icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
+                  <ion-button class="comment-ellipsis" *ngIf="(!comment.beingDeleted) && (comment.user.uid === user.uid)"
+                    clear small icon-start (click)='presentActionSheet(comment.id, commentIndex)'>
                     <ion-icon name="md-more"></ion-icon>
-                  </button>
+                  </ion-button>
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -151,7 +151,7 @@
                 <span text-wrap class="name-text">{{ item.name }}</span>
                 <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
               </ion-col>
-              <ion-col col-auto class="col-item-total">
+              <ion-col size="auto" class="col-item-total">
                 <span class="my-share-text">
                   ${{ item.userShare / 100 | number: '1.2-2' }} /
                 </span>
@@ -191,7 +191,7 @@
       placeholder="Enter a new comment!">
     </ion-textarea>
     <ion-spinner *ngIf="newCommentPosting" color="primary" name="bubbles"></ion-spinner>
-    <button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" ion-button small outline
-      (click)='createComment()'>Post Comment</button>
+    <ion-button *ngIf="!newCommentPosting" [disabled]="newComment.length === 0" small outline
+      (click)='createComment()'>Post Comment</ion-button>
   </ion-toolbar>
 </ion-footer>

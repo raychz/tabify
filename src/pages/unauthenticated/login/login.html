@@ -1,6 +1,6 @@
 <ion-header no-border>
-  <ion-navbar class="transparent-toolbar">
-  </ion-navbar>
+  <ion-toolbar class="transparent-toolbar">
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -18,10 +18,10 @@
             Recommended
           </ion-card-header>
           <ion-card-content>
-            <button ion-button color="tabify" (click)="loginWithFacebook()" block>
+            <ion-button color="tabify" (click)="loginWithFacebook()" block>
               <ion-icon name="logo-facebook"></ion-icon>
               Login With Facebook
-            </button>
+            </ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -38,7 +38,7 @@
                 <ion-item [ngClass]="{
                           invalid: emailErrors.hasError('*', ['touched', 'dirty'])
                         }">
-                  <ion-label floating>*Email</ion-label>
+                  <ion-label position="floating">*Email</ion-label>
                   <ion-input (input)="inputChange()" type="text" formControlName="email">
                   </ion-input>
                 </ion-item>
@@ -50,7 +50,7 @@
                 <ion-item [ngClass]="{
                           invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
                         }">
-                  <ion-label floating>*Password</ion-label>
+                  <ion-label position="floating">*Password</ion-label>
                   <ion-input type="password" formControlName="password"></ion-input>
                 </ion-item>
                 <div ngxErrors="password" #passwordErrors="ngxErrors" [class.errors]="passwordErrors.hasErrors">
@@ -65,12 +65,12 @@
 
               <div>
                 <div class="errors">{{ loginError }}</div>
-                <button id="login-with-email" ion-button block type="submit" [disabled]="!loginForm.valid">
+                <ion-button id="login-with-email" block type="submit" [disabled]="!loginForm.valid">
                   Login With Email
-                </button>
-                <button ion-button block clear color="tabify-alt" (click)="forgotPassword()">
+                </ion-button>
+                <ion-button block clear color="tabify-alt" (click)="forgotPassword()">
                   Forgot Password?
-                </button>
+                </ion-button>
                 <p class="muted">* indicates required field</p>
               </div>
             </form>
@@ -80,9 +80,9 @@
     </ion-row>
     <ion-row>
       <ion-col text-center>
-        <button ion-button color="tabify-alt" (click)="signUp()" clear>
+        <ion-button color="tabify-alt" (click)="signUp()" clear>
           New User?<span class="sign-up-text">Sign Up.</span>
-        </button>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

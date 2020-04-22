@@ -4,7 +4,7 @@ import {
   NavController,
   NavParams,
   ViewController,
-} from 'ionic-angular';
+} from '@ionic/angular';
 import { Location } from '../../../interfaces/location.interface';
 import { LocationService } from '../../../services/location/location.service';
 import { LoaderService } from '../../../services/utilities/loader.service';

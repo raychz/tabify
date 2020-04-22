@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ModalController } from '@ionic/angular';
 import { StoryService } from '../../../services/story/story.service';
 import moment from 'moment';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -65,7 +65,7 @@ export class StoryPage {
       console.log(this.story);
     } catch (e) {
       const alert = this.alertCtrl.create({
-        title: 'Network Error',
+        header: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
@@ -159,7 +159,7 @@ export class StoryPage {
       this.newComment = '';
     } catch (e) {
       const alert = this.alertCtrl.create({
-        title: 'Network Error',
+        header: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();
@@ -185,7 +185,7 @@ export class StoryPage {
       this.newsfeedService.decrementCommentCount(this.story.ticket.id, this.story.id);
     } catch (e) {
       const alert = this.alertCtrl.create({
-        title: 'Network Error',
+        header: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();

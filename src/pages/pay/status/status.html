@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-navbar hideBackButton>
+  <ion-toolbar hideBackButton>
     <ion-title>Status Page</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="cards-bg">
@@ -80,7 +80,7 @@
         <ion-col>
           Your Party Owes:
         </ion-col>
-        <ion-col col-auto>
+        <ion-col size="auto">
           <span id="amount-owed">
             ${{ ablyTicketService.ticket?.ticketTotal.due / 100 | number: '1.2-2' }} /
           </span>

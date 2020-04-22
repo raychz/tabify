@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>{{ title }}</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="cards-bg">
@@ -39,9 +39,9 @@
 
       <div *ngIf="paymentMethodError" class="payment-method-error">{{ paymentMethodError }}</div>
 
-      <button (click)="validatePaymentMethod()" ion-button block [disabled]="!spreedlyReady">
+      <ion-button (click)="validatePaymentMethod()" block [disabled]="!spreedlyReady">
         Save
-      </button>
+      </ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

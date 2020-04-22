@@ -6,7 +6,7 @@ import {
   ActionSheetController,
   ModalController,
   Platform
-} from 'ionic-angular';
+} from '@ionic/angular';
 import currency from 'currency.js';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
@@ -145,7 +145,7 @@ export class SelectItemsPage {
 
   presentActionSheet() {
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Modify your tab',
+      header: 'Modify your tab',
       buttons: [
         {
           text: 'Add all to my tab (coming soon)',

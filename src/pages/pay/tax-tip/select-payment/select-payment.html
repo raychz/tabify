@@ -1,17 +1,18 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>Payment</ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="addACard()">
+    <ion-buttons slot="primary">
+      <ion-button (click)="addACard()">
         Add a Card
-      </button>
+      </ion-button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
-  <ion-list radio-group [(ngModel)]="ablyTicketService.ticket.usersMap.get(auth.getUid()).paymentMethod">
+  <ion-list [(ngModel)]="ablyTicketService.ticket.usersMap.get(auth.getUid()).paymentMethod">
+<ion-radio-group>
     <ion-item>
       Current Payment Methods
     </ion-item>
@@ -21,7 +22,8 @@
       <ion-note item-end>
         {{method.month}}/{{method.year | number | slice:-2}}
       </ion-note>
-      <ion-radio (ionSelect)="selectPaymentMethod(method)" [value]="method" [disabled]="!canSelect"></ion-radio>
+      <ion-radio slot="start" (ionSelect)="selectPaymentMethod(method)" [value]="method" [disabled]="!canSelect"></ion-radio>
     </ion-item>
-  </ion-list>
+  </ion-radio-group>
+</ion-list>
 </ion-content>

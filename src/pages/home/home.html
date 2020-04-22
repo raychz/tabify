@@ -1,19 +1,21 @@
 <ion-header>
-  <ion-navbar>
-    <ion-buttons left>
-      <button ion-button icon-only menuToggle>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle>
+<ion-button icon-only>
         <ion-icon name="menu"></ion-icon>
-      </button>
+      </ion-button>
+</ion-menu-toggle>
     </ion-buttons>
     <img class="tabify-icon" src="assets/imgs/logo.png" />
-    <ion-buttons right>
-      <button (click)="showNotifications()" ion-button icon-only>
+    <ion-buttons slot="end">
+      <ion-button (click)="showNotifications()" icon-only>
         <ion-icon name="notifications"></ion-icon>
         <!-- Commenting out for now until we implement notifications -->
         <!-- <ion-badge color="danger">7</ion-badge> -->
-      </button>
+      </ion-button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="cards-bg">
@@ -67,25 +69,25 @@
         <ion-row class="like-comment-row">
 
           <ion-col>
-            <button ion-button [disabled]="ticket.loadingLike" color="primary" clear
+            <ion-button [disabled]="ticket.loadingLike" color="primary" clear
               (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
               <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
 
               <ng-container *ngIf="!ticket.loadingLike">
                 <ion-icon [name]="ticket.story.likedByLoggedInUser ? 'ios-heart' : 'ios-heart-outline'"></ion-icon>
               </ng-container>
-            </button>
+            </ion-button>
 
-            <button ion-button color="primary" clear
+            <ion-button color="primary" clear
               (click)="this.displayLikers(ticket.id, ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
               class="like-btn-padding">
               {{ ticket.story.likes.length === 0 ? 'Like' : ticket.story.likes.length}}
-            </button>
+            </ion-button>
 
-            <button ion-button color="primary" clear icon-start class="comment-btn-padding">
+            <ion-button color="primary" clear icon-start class="comment-btn-padding">
               <ion-icon [name]="ticket.story.comment_count > 0 ? 'ios-text' : 'ios-text-outline'"></ion-icon>
               &nbsp; {{ ticket.story.comment_count === 0 ? 'Comment' : ticket.story.comment_count }}
-            </button>
+            </ion-button>
           </ion-col>
 
           <ion-col text-right class="date-padding">
@@ -99,10 +101,10 @@
   </div>
 
   <div *ngIf="this.newsfeedService.tickets?.length > 0" class="blank-space"></div>
-  <button id="pay-tab" ion-fixed ion-button block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
+  <ion-button id="pay-tab" ion-fixed block color="tabify" class="pay-tab" icon-start (click)="payNewTab()">
     <ion-icon name="md-restaurant"></ion-icon>
     Pay Tab
-  </button>
+  </ion-button>
   <!-- If selected segment's feed is empty, display this template -->
   <ng-template #emptyFeed>
     <div class="empty-feed">

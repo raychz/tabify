@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from '@ionic/angular';
 import { TicketService } from '../../../../services/ticket/ticket.service';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { AblyTicketService } from '../../../../services/ticket/ably-ticket.service';

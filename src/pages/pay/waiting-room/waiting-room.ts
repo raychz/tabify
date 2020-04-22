@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Navbar, ModalController } from '@ionic/angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService, UserStatus } from '../../../services/ticket/ticket.service';
 import { sleep, abbreviateName, plurality } from '../../../utilities/general.utilities';
-import { Platform } from 'ionic-angular';
+import { Platform } from '@ionic/angular';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketUserStatus, TicketUserStatusOrder } from '../../../enums';

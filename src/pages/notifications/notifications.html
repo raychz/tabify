@@ -1,13 +1,13 @@
 <ion-header>
-  <ion-navbar hideBackButton>
-    <ion-buttons left>
-      <button (click)="cancel()" ion-button icon-start>
+  <ion-toolbar hideBackButton>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" icon-start>
         <ion-icon name="arrow-back"></ion-icon>
         Back
-      </button>
+      </ion-button>
     </ion-buttons>
     <ion-title>Notifications</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="cards-bg">

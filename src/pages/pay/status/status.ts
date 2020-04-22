@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from '@ionic/angular';
 import { AuthService } from '../../../services/auth/auth.service';
 import { sleep } from '../../../utilities/general.utilities';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';

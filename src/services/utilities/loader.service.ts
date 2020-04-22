@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Loading, LoadingOptions } from 'ionic-angular';
+import { LoadingController, Loading, LoadingOptions } from '@ionic/angular';
 
 @Injectable()
 export class LoaderService {
@@ -15,7 +15,7 @@ export class LoaderService {
       ...rest
     } = opts;
     return this.loadingCtrl.create({
-      content,
+      message: content,
       spinner,
       ...rest,
     });

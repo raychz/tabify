@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar, ModalController, } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Navbar, ModalController, } from '@ionic/angular';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';

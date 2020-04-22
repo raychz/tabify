@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, NavController, NavParams } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { ErrorService } from '../../../../services/error/error.service';
@@ -43,8 +43,8 @@ export class ForgotPasswordPage {
       try {
         await this.auth.sendPasswordResetEmail(email)
         const alert = this.alertCtrl.create({
-          title: 'Success',
-          subTitle: `A password reset link has been sent to ${email}.`,
+          header: 'Success',
+          subHeader: `A password reset link has been sent to ${email}.`,
           buttons: ['OK']
         });
         alert.present();

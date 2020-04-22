@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { Platform, AlertController } from 'ionic-angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { HttpClient } from '@angular/common/http';
 import { Observable , Subject , of , from } from 'rxjs';
@@ -189,7 +189,7 @@ export class AuthService {
       this.userDetails = null;
       this.userDetailsConfirmedInDB$.next(false);
       const alert = this.alertCtrl.create({
-        title: 'Network Error',
+        header: 'Network Error',
         message: `Please check your connection and try again.`,
       });
       alert.present();

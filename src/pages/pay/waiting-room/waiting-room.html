@@ -1,15 +1,15 @@
 <ion-header>
-  <ion-navbar hideBackButton>
-    <ion-buttons left>
-      <button ion-button icon-start [disabled]="isBackButtonDisabled()" (click)="backButtonAction()">
+  <ion-toolbar hideBackButton>
+    <ion-buttons slot="start">
+      <ion-button icon-start [disabled]="isBackButtonDisabled()" (click)="backButtonAction()">
         <ion-icon name="arrow-back"></ion-icon>
         <ion-label>
           Back
         </ion-label>
-      </button>
+      </ion-button>
     </ion-buttons>
     <ion-title>Waiting Lobby</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
   <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col guests">
@@ -47,7 +47,7 @@
                 <span text-wrap class="name-text">{{ item.name }}</span>
                 <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
               </ion-col>
-              <ion-col col-auto class="col-item-total">
+              <ion-col size="auto" class="col-item-total">
                 <span class="total-text">
                   ${{ item.price / 100 | number: '1.2-2' }}
                 </span>
@@ -99,7 +99,7 @@
                 <span text-wrap class="name-text">{{ item.name }}</span>
                 <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
               </ion-col>
-              <ion-col col-auto class="col-item-total">
+              <ion-col size="auto" class="col-item-total">
                 <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
                   ${{ item.usersMap.get(currentUserUid).price / 100 | number: '1.2-2' }} /
                 </span>
@@ -154,7 +154,7 @@
                     <span text-wrap class="name-text">{{ item.name }}</span>
                     <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                   </ion-col>
-                  <ion-col col-auto class="col-item-total">
+                  <ion-col size="auto" class="col-item-total">
                     <span class="my-share-text" *ngIf="item.users && item.users.length > 1">
                       ${{ item.usersMap.get(ticketUser.user.uid).price / 100 | number: '1.2-2' }} /
                     </span>
@@ -189,7 +189,7 @@
                   <span text-wrap class="name-text">{{ item.name }}</span>
                   <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                 </ion-col>
-                <ion-col col-auto class="col-item-total">
+                <ion-col size="auto" class="col-item-total">
                   <span class="my-share-text"
                     *ngIf="item.users && item.users.length > 1 && item.usersMap.has(currentUserUid)">
                     ${{ item.usersMap.get(currentUserUid).price / 100 | number: '1.2-2' }} /
@@ -229,8 +229,8 @@
     <ion-label text-wrap color="light" class="confirm-text">
       {{ TicketUserStatusOrder[ablyTicketService.ticket.usersMap.get(currentUserUid).status] >= TicketUserStatusOrder[TicketUserStatus.CONFIRMED] ? (checkConfirmedStatus() ? 'All users have confirmed! Moving on to payment...' : 'Waiting for everyone else to confirm.') : 'Make sure all users have joined before confirming.' }}
     </ion-label>
-    <button ion-button block (click)="changeUserConfirmStatus()" [disabled]="isBackButtonDisabled()">
+    <ion-button block (click)="changeUserConfirmStatus()" [disabled]="isBackButtonDisabled()">
       {{ ablyTicketService.ticket.usersMap.get(currentUserUid).status === TicketUserStatus.CONFIRMED ? 'Cancel' : 'Confirm Selections' }}
-    </button>
+    </ion-button>
   </ion-toolbar>
 </ion-footer>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, ModalController } from '@ionic/angular';
 import { Location } from '../../interfaces/location.interface';
 import { LoaderService } from '../../services/utilities/loader.service';
 import { PaymentMethodService } from '../../services/payment/payment-method.service';

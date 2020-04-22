@@ -5,7 +5,7 @@ import {
   NavParams,
   ToastController,
   Loading,
-} from 'ionic-angular';
+} from '@ionic/angular';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AlertService } from '../../../services/utilities/alert.service';
 import { PaymentMethodService } from '../../../services/payment/payment-method.service';

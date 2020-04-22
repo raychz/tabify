@@ -1,13 +1,13 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>Find Your Ticket #</ion-title>
-    <ion-buttons end>
-      <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
+    <ion-buttons slot="primary">
+      <ion-button id="tab-lookup-next" icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class='cards-bg'>
@@ -25,7 +25,7 @@
             <form [formGroup]="tabForm">
               <ion-list inset>
                 <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
-                  <ion-label color="tabify" floating>Enter ticket number...</ion-label>
+                  <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
                   <ion-input id="ticket-number-input" autofocus type="text" formControlName="ticketNumber"></ion-input>
                 </ion-item>
                 <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
@@ -41,10 +41,10 @@
           </ion-card-header>
           <ion-card-content id="fraud-prevention-code">
             <p>If requested, show this code to your server:</p>
-            <button id="toggle-code" ion-button block clear icon-end (click)="isCodeVisible = !isCodeVisible">
+            <ion-button id="toggle-code" block clear icon-end (click)="isCodeVisible = !isCodeVisible">
               {{ isCodeVisible ? 'Hide Code' : 'Reveal Code' }}
               <ion-icon [name]="isCodeVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
-            </button>
+            </ion-button>
             <ng-container *ngIf="isCodeVisible">
               <h2>{{fraudPreventionCode?.code}}</h2>
               <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>

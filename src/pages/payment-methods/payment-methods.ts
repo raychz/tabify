@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController } from '@ionic/angular';
 import { PaymentDetailsPageMode } from "./payment-details/payment-details";
 import { PaymentMethodService } from '../../services/payment/payment-method.service';
 import { AlertService } from '../../services/utilities/alert.service';

@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-navbar hideBackButton>
-    <ion-buttons left>
-      <button ion-button (click)="cancel()">
+  <ion-toolbar hideBackButton>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
         Cancel
-      </button>
+      </ion-button>
     </ion-buttons>
     <ion-title>Find Location</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
   <ion-toolbar no-border-top>
     <ion-searchbar placeholder="Search for restaurant by name" (ionInput)="filterItems($event)"></ion-searchbar>
   </ion-toolbar>

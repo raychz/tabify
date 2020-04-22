@@ -1,21 +1,21 @@
 <ion-header>
-  <ion-navbar hideBackButton>
+  <ion-toolbar hideBackButton>
     <ion-title>Select Items</ion-title>
-    <ion-buttons left>
-      <button ion-button icon-start (click)="backButtonAction()">
+    <ion-buttons slot="start">
+      <ion-button icon-start (click)="backButtonAction()">
         <ion-icon name="arrow-back"></ion-icon>
         <ion-label *ngIf="platform.is('ios')">
           Back
         </ion-label>
-      </button>
+      </ion-button>
     </ion-buttons>
-    <ion-buttons end>
-      <button ion-button icon-end (click)="confirmSelections()">
+    <ion-buttons slot="primary">
+      <ion-button icon-end (click)="confirmSelections()">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
   <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
     <ion-row no-border-top>
       <ion-col align-self-center text-center class="toolbar-col guests">
@@ -34,25 +34,25 @@
   </ion-toolbar>
   <ion-toolbar class="tab-metadata-toolbar">
     <ion-row no-wrap>
-      <ion-col col-6 align-self-center text-center class="toolbar-col top">
+      <ion-col size="6" align-self-center text-center class="toolbar-col top">
         {{ ablyTicketService.ticket?.usersMap.get(userUid).selectedItemsCount }}
       </ion-col>
-      <ion-col col-6 align-self-center text-center class="toolbar-col top">
+      <ion-col size="6" align-self-center text-center class="toolbar-col top">
         ${{ (ablyTicketService.ticket?.usersMap.get(userUid).items / 100 | number: '1.2-2') || 0.0 }}
       </ion-col>
     </ion-row>
     <ion-row no-wrap>
-      <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
+      <ion-col size="6" align-self-center text-center class="toolbar-col bottom">
         Selected Item{{ ablyTicketService.ticket?.usersMap.get(userUid).selectedItemsCount === 1 ? '' : 's'}}
       </ion-col>
-      <ion-col col-6 align-self-center text-center class="toolbar-col bottom">
+      <ion-col size="6" align-self-center text-center class="toolbar-col bottom">
         Your Subtotal
       </ion-col>
     </ion-row>
-    <ion-buttons right>
-      <button ion-button icon-only (click)="presentActionSheet()">
+    <ion-buttons slot="end">
+      <ion-button icon-only (click)="presentActionSheet()">
         <ion-icon name="md-more"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -64,7 +64,7 @@
         <div>
           <ion-row (click)="addOrRemoveItem(item)">
             <ion-col class="modify-item" [class.item-not-on-tab]="!item.usersMap.has(userUid)"
-              [class.item-on-tab]="item.usersMap.has(userUid)" text-center col-1>
+              [class.item-on-tab]="item.usersMap.has(userUid)" text-center size="1">
               <div>
                 <ion-icon *ngIf="!item.loading" [color]="item.usersMap.has(userUid) ? 'light' : 'primary'"
                   [name]="item.usersMap.has(userUid) ? 'ios-checkmark' : 'ios-add'"></ion-icon>
@@ -79,7 +79,7 @@
                   <span text-wrap class="name-text">{{ item.name }}</span>
                   <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
                 </ion-col>
-                <ion-col col-auto class="col-item-total">
+                <ion-col size="auto" class="col-item-total">
                   <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.usersMap.has(userUid)">
                     ${{ item.usersMap.get(userUid).price / 100 | number: '1.2-2' }} /
                   </span>
