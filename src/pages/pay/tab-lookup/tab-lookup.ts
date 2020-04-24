@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService } from '../../../services/utilities/loader.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -12,6 +12,7 @@ import { tap } from 'rxjs/operators';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
 import { TicketUserStatus } from '../../../enums';
+import * as Sentry from "@sentry/browser"
 
 @IonicPage()
 @Component({
@@ -21,10 +22,6 @@ import { TicketUserStatus } from '../../../enums';
 export class TabLookupPage {
   location: Location = this.navParams.data;
   tabForm: FormGroup;
-  fraudPreventionCode: FraudPreventionCode;
-  dateTime: number = Date.now();
-  isCodeVisible = false;
-
 
   constructor(
     public navCtrl: NavController,
@@ -34,6 +31,7 @@ export class TabLookupPage {
     public auth: AuthService,
     public ticketService: TicketService,
     public alertCtrl: AlertService,
+    public modalCtrl: ModalController,
     public locationService: LocationService,
     public ablyService: AblyService,
     public ablyTicketService: AblyTicketService,
@@ -48,7 +46,6 @@ export class TabLookupPage {
   }
 
   async ionViewDidLoad() {
-    this.getDateTime();
     await this.getFraudPreventionCode();
     this.ablyService.connect();
   }
@@ -57,12 +54,6 @@ export class TabLookupPage {
     // await this.ablyTicketService.clearState();
     this.ablyService.disconnect();
     console.log("ion view will unload tab-lookup!");
-  }
-
-  getDateTime() {
-    setInterval(() => {
-      this.dateTime = Date.now();
-    }, 1000);
   }
 
   async findTab() {
@@ -168,18 +159,22 @@ export class TabLookupPage {
     }
   }
 
+  async showFraudPreventionCode() {
+    const fraudPreventionModal = this.modalCtrl.create('FraudPreventionPage', null,
+    { showBackdrop: true, enableBackdropDismiss: false, cssClass: 'tabify-modal' });
+    await fraudPreventionModal.present();
+  }
+
   async getFraudPreventionCode() {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const result = await this.locationService.getFraudPreventionCode();
-      this.fraudPreventionCode = result;
-      await loading.dismiss();
-    } catch (e) {
-      console.log(e);
-      await loading.dismiss();
-      throw e;
+      this.ablyTicketService.fraudPreventionCode = await this.locationService.getFraudPreventionCode();
+    } catch (error) {
+      Sentry.captureException(error);
+      console.log(error);
     }
+    loading.dismiss();
   }
 
   private async initializeFirestoreTicketListeners(ticket: any) {
@@ -241,7 +236,7 @@ export class TabLookupPage {
     // }
 
     // Add ticket number to fraud code
-    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
+    await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.ablyTicketService.fraudPreventionCode.id);
 
     await this.viewNextPage();
     // Get ticket
