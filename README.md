@@ -30,6 +30,10 @@ npm start
 
 Navigate to localhost:4200 on Chrome (note that the port may differ). If you see the login screen, you've successfully started up the dev server! 🎉
 
+### Debugging
+
+ In order for the Fullstack compount debugger specified in .vscode/launch.json to work, you must have the Tabify backend (tabify-server) repo in your vscode workspace as well. This debugger is the same as the Fullstack debugger found in the frontend. The Frontend debugger can run independently of any other repos.
+ 
 ## Running the tests
 
 WIP Explain how to run the automated tests for this system here
