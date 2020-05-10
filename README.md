@@ -32,7 +32,7 @@ Navigate to localhost:4200 on Chrome (note that the port may differ). If you see
 
 ### Debugging
 
- In order for the Fullstack compount debugger specified in .vscode/launch.json to work, you must have the Tabify backend (tabify-server) repo in your vscode workspace as well. This debugger is the same as the Fullstack debugger found in the backend. The Frontend debugger can run independently of any other repos.
+ In order for the Fullstack compount debugger specified in .vscode/launch.json to work, you must have the Tabify backend (tabify-server) repo in your vscode workspace as well. This debugger is the same as the Fullstack debugger found in the backend. The Frontend debugger can run independently of any other repos but needs the 'Debugger for Chrome' vscode extension installed.
  
 ## Running the tests
 
