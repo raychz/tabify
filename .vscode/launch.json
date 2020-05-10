@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Frontend",
+            "type": "chrome",
+            "request": "launch",
+            "smartStep": true,
+            "preLaunchTask": "front-end",
+            "postDebugTask": "post_debug_kill_front-end",
+            "url": "http://localhost:4200/#",
+            "webRoot": "${workspaceRoot}",
+            "skipFiles": ["<node_internals>/**", "**/*.js", "**/*.spec.ts"],
+            "sourceMaps": true,
+          },
+    ],
+    "compounds": [
+        {
+            "name": "Fullstack",
+            "configurations": ["Backend", "Frontend"]
+        }
+    ]
+}
