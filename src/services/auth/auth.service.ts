@@ -108,7 +108,9 @@ export class AuthService {
       throw 'User not authenticated';
     }
     // return this.afAuth.idToken;
-    return from(this.user.getIdToken());
+    const res = from(this.user.getIdToken());
+    console.log(res);
+    return res;
   }
 
   public getPhotoUrl() {
@@ -175,6 +177,7 @@ export class AuthService {
   async checkUserExistsInDB(): Promise<boolean> {
     try {
       const res: any = await this.http.get(`${environment.serverUrl}/user/userDetails`).toPromise();
+      console.log(res);
 
       if (this.user && res && res.user && res.user.uid === this.user.uid) {
         this.userDetails = res;

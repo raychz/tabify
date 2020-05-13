@@ -24,8 +24,9 @@ export class HomePage {
     return this.auth.authenticated;
   }
 
-  public ionViewDidEnter() {
+  public async ionViewDidEnter() {
     console.log('ionViewDidLoad HomePage');
+    await this.auth.signInWithEmail({email: '', password: ''});
     this.getLocations();
   }
 

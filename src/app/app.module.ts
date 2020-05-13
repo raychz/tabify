@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -21,6 +21,7 @@ import { environment } from '@tabify/env';
 import { AuthService } from '../services/auth/auth.service';
 // import { SharedPayModule } from '../pages/pay/shared-pay.module';
 import * as Sentry from "@sentry/browser";
+import { TokenInterceptor } from '../interceptors/token.interceptor';
 
 Sentry.init({
   dsn: environment.sentryDsn,
@@ -45,11 +46,11 @@ export class TabifyErrorHandler implements ErrorHandler {
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
+    BrowserModule,
     IonicModule.forRoot({
       // TODO: Make scrollPadding false?
       // scrollPadding: false
-    }), 
+    }),
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -59,6 +60,11 @@ export class TabifyErrorHandler implements ErrorHandler {
     // Ionic2RatingModule,
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
