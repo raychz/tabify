@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button icon-only>
+        <ion-icon name="menu-outline" color="white"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <img class="tabify-icon" src="assets/imgs/logo.png" />
+    <ion-buttons slot="end">
+      <ion-button icon-only>
+        <ion-icon name="key-outline" class="fraud-code"></ion-icon>
+      </ion-button>
+      <ion-button icon-only class="notifications">
+        <ion-icon name="notifications" class="notification-icon"></ion-icon>
+        <ion-badge>7</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-grid>
+    <ion-row>
+      <ion-col> -->
+        <ion-card>
+          <ion-card-header>
+            <!-- Join Your Ticket – {{location.name}} -->
+          </ion-card-header>
+          <ion-card-content>
+            <p>Your ticket number can usually be found on the top of your check.</p>
+            <br>
+            <p><b>Note:</b> Verify the accuracy of the items on your check <b>before</b> entering the ticket number into Tabify. The items cannot be changed after this.</p>
+            <!-- <form [formGroup]="tabForm"> -->
+              <ion-list inset>
+                <!-- <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }"> -->
+                  <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
+                  <!-- <ion-input id="ticket-number-input" autofocus type="text" formControlName="ticketNumber"></ion-input> -->
+                <!-- </ion-item> -->
+                <!-- <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
+                  <div [ngxError]="['required']" [when]="['dirty']">Enter a valid ticket number.</div>
+                </div> -->
+              </ion-list>
+            <!-- </form> -->
+          </ion-card-content>
+        </ion-card>
+      <!-- </ion-col>
+    </ion-row>
+  </ion-grid> -->
+
+</ion-content>
