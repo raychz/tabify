@@ -4,6 +4,7 @@ import { Location } from 'src/interfaces/location.interface';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ import { AlertService } from 'src/services/utilities/alert.service';
 export class HomePage {
   locations: Location[] = [];
 
+
   constructor(
     public locationService: LocationService,
     public loader: LoaderService,
@@ -20,14 +22,14 @@ export class HomePage {
     public alertCtrl: AlertService,
   ) {}
 
-  public ionViewCanEnter(): boolean {
-    return this.auth.authenticated;
-  }
+  // public ionViewCanEnter(): boolean {
+  //   return this.auth.authenticated;
+  // }
 
   public async ionViewDidEnter() {
     console.log('ionViewDidLoad HomePage');
-    await this.auth.signInWithEmail({email: '', password: ''});
-    this.getLocations();
+    // await this.auth.signInWithEmail({email: '', password: ''});
+    // this.getLocations();
   }
 
   private async getLocations() {

@@ -1,0 +1,63 @@
+<ion-card>
+  <ion-card-header class="header">
+    Join Your Ticket
+    <ion-button class="fraud-code-button" fill="clear">
+      <ion-icon name="key-outline" class="fraud-code-icon"></ion-icon>
+    </ion-button>
+  </ion-card-header>
+  <ion-card-content class="content">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <p>Please enter yout ticket number, ignoring any letters which may be at the end. Your ticket number can usually be found at the top or bottom of your check.</p>
+          <form [formGroup]="tabForm">
+              <ion-item class="input">
+                <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
+                <ion-input autofocus type="number" formControlName="ticketNumber" (ionBlur)="enterTicketNumber($event.target.value)"></ion-input>
+              </ion-item>
+          </form>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="checkingTicketNumber">
+        <ion-col class="center-element">
+          <ion-spinner name="crescent"></ion-spinner>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="existingTicket">
+        <ion-col>
+          <p class="center-element">The entered ticket number has already been opened, click below to join.</p>
+          <ion-button class="submit-button" expand="block" color="warning">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Join Ticket
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="newTicket">
+        <ion-col>
+          <form>
+            <p class="center-element">The entered ticket number has not yet been opened, please enter the following:</p>
+            <br>
+            <p>How do you want to pay for the bill?</p>
+            <ion-item class="input">
+              <ion-select value="itemize" interface="popover" class="input">
+                <ion-select-option value="itemize">Itemize and Split</ion-select-option>
+                <ion-select-option value="even">Evenly Split Total</ion-select-option>
+                <ion-select-option value="full">Pay in Full/Don't Split</ion-select-option>
+              </ion-select>
+            </ion-item>
+        
+            <p>How many people are in your party?</p>
+            <ion-item class="input">
+              <ion-label color="tabify" position="floating">Enter party size...</ion-label>
+              <ion-input type="number" ></ion-input>
+            </ion-item>
+          </form>
+          <ion-button class="submit-button" expand="block" color="warning">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Open Ticket
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
