@@ -13,27 +13,7 @@ const routes: Routes = [
   {
     path: 'loading',
     loadChildren: () => import('./pages/loading/loading.module').then( m => m.LoadingPageModule)
-  },  {
-    path: 'select-items',
-    loadChildren: () => import('./src/app/pages/home/pay/select-items/select-items.module').then( m => m.SelectItemsPageModule)
   },
-  {
-    path: 'confirm',
-    loadChildren: () => import('./src/app/pages/home/pay/confirm/confirm.module').then( m => m.ConfirmPageModule)
-  },
-  {
-    path: 'status',
-    loadChildren: () => import('./src/app/pages/home/pay/status/status.module').then( m => m.StatusPageModule)
-  },
-  {
-    path: 'select-items',
-    loadChildren: () => import('./app/pages/home/pay/select-items/select-items.module').then( m => m.SelectItemsPageModule)
-  },
-  {
-    path: 'select-items',
-    loadChildren: () => import('./home/pay/select-items/select-items.module').then( m => m.SelectItemsPageModule)
-  }
-
 ];
 @NgModule({
   imports: [
