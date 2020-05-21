@@ -21,4 +21,5 @@ export interface Location {
   tax_rate?: number;
   tickets: Ticket[];
   servers: Server[];
+  coupons_only: boolean;
 }

@@ -1,0 +1,86 @@
+<ion-card>
+  <ion-img [src]="imageUrl" alt="Could not load location image"></ion-img>
+  <ion-card-header class="header">
+    Join Your Ticket
+    <ion-button class="fraud-code-button" fill="clear">
+      <ion-icon name="key-outline" class="fraud-code-icon"></ion-icon>
+    </ion-button>
+  </ion-card-header>
+  <ion-card-content class="content">
+          <p>Your ticket number can usually be found at the top or bottom of your check, please enter it below and ignore any letters at the end.</p>
+          <form [formGroup]="tabForm">
+              <ion-item class="input">
+                <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
+                <ion-input autofocus type="number" formControlName="ticketNumber" (ionBlur)="enterTicketNumber($event.target.value)"></ion-input>
+              </ion-item>
+          </form>
+          <ion-grid *ngIf="checkingTicketNumber">
+            <ion-row>
+              <ion-col class="center-element" >
+                <ion-spinner></ion-spinner>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
+      <ng-container *ngIf="existingTicket">
+          <p class="loader-good">Your ticket has already been opened, click below to join.</p>
+          <ion-button class="submit-button" expand="block" color="warning">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Join Ticket
+          </ion-button>
+      </ng-container>
+      <ng-container *ngIf="newTicket">
+          <form>
+            <p class="loader-warning">Your ticket hasn't been opened yet, please enter the following:</p>
+            <br>   
+            <p>How do you want to split the bill?</p>
+            <ion-radio-group value="itemize">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        Itemize
+                      </ion-label>
+                      <ion-radio value="itemize"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        Even Split
+                      </ion-label>
+                      <ion-radio value="even"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        No Split
+                      </ion-label>
+                      <ion-radio value="full"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>  
+            </ion-radio-group>
+            <!-- <ion-item class="input">
+              <ion-select value="itemize" interface="popover" class="input">
+                <ion-select-option value="itemize">Itemize and Split</ion-select-option>
+                <ion-select-option value="even">Evenly Split the Total</ion-select-option>
+                <ion-select-option value="full">Pay in Full/Don't Split</ion-select-option>
+              </ion-select>
+            </ion-item> -->     
+            <p>How many in your party?</p>
+            <ion-item class="input">
+              <ion-label color="tabify" position="floating">Enter party size...</ion-label>
+              <ion-input type="number"></ion-input>
+            </ion-item>
+          </form>
+          <ion-button class="submit-button" expand="block" color="warning">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Open Ticket
+          </ion-button>
+      </ng-container>
+  </ion-card-content>
+</ion-card>
