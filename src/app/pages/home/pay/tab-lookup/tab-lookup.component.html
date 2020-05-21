@@ -24,7 +24,7 @@
           <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
       <ng-container *ngIf="existingTicket">
           <p class="loader-good">Your ticket has already been opened, click below to join.</p>
-          <ion-button class="submit-button" expand="block" color="warning">
+          <ion-button class="submit-button" expand="block" color="warning" (click)="navigate()">
             <ion-icon name="restaurant-outline"></ion-icon>
             Join Ticket
           </ion-button>

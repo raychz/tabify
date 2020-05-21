@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PayPage } from './pay.page';
 import { TabLookupComponent } from './tab-lookup/tab-lookup.component';
 import { CouponComponent } from './coupon/coupon.component';
+import { PayPageRoutingModule } from './pay-routing.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { CouponComponent } from './coupon/coupon.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: PayPage }])
+    PayPageRoutingModule
+    // RouterModule.forChild([{ path: '', component: PayPage }])
   ],
   declarations: [PayPage, TabLookupComponent, CouponComponent]
 })

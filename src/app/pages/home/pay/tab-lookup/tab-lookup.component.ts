@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { sleep } from 'src/utilities/general.utilities';
 
@@ -25,10 +26,19 @@ export class TabLookupComponent implements OnInit {
   });
 
   constructor(
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    public router: Router,
+    public route: ActivatedRoute
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.router.config[1].children);
+  }
+
+  async navigate() {
+    console.log(this.router);
+    await this.router.navigate(['select'], {relativeTo: this.route});
+  }
 
   // add ticket logic control to this function
   async enterTicketNumber(ticketNumber: string) {
