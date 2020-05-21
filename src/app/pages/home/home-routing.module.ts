@@ -48,7 +48,7 @@ const routes: Routes = [
     path: '',
     redirectTo: '/home/pay',
     pathMatch: 'full'
-  }
+  },
 ];
 
 @NgModule({
