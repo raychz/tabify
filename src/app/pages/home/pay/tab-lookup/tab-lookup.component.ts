@@ -3,11 +3,11 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { sleep } from 'src/utilities/general.utilities';
 
 @Component({
-  selector: 'app-ticket',
-  templateUrl: './ticket.component.html',
-  styleUrls: ['./ticket.component.scss'],
+  selector: 'app-tab-lookup',
+  templateUrl: './tab-lookup.component.html',
+  styleUrls: ['./tab-lookup.component.scss'],
 })
-export class TicketComponent implements OnInit {
+export class TabLookupComponent implements OnInit {
   @Input()
   imageUrl: string;
 

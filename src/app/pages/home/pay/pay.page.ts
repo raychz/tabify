@@ -7,11 +7,11 @@ import { AlertService } from 'src/services/utilities/alert.service';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+  selector: 'app-pay',
+  templateUrl: 'pay.page.html',
+  styleUrls: ['pay.page.scss']
 })
-export class HomePage {
+export class PayPage {
   locations: Location[] = [
     {
         id: 1,
@@ -73,7 +73,7 @@ selectedLocation = this.locations[0];
   // }
 
   public async ionViewDidEnter() {
-    console.log('ionViewDidLoad HomePage');
+    console.log('ionViewDidLoad PayPage');
     // await this.auth.signInWithEmail({email: '', password: ''});
     // this.getLocations();
   }

@@ -3,9 +3,8 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HomePage } from './home.page';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
-import { TicketComponent } from './ticket/ticket.component';
+import { PayPage } from './pay.page';
+import { TabLookupComponent } from './tab-lookup/tab-lookup.component';
 import { CouponComponent } from './coupon/coupon.component';
 
 @NgModule({
@@ -14,9 +13,8 @@ import { CouponComponent } from './coupon/coupon.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ExploreContainerComponentModule,
-    RouterModule.forChild([{ path: '', component: HomePage }])
+    RouterModule.forChild([{ path: '', component: PayPage }])
   ],
-  declarations: [HomePage, TicketComponent, CouponComponent]
+  declarations: [PayPage, TabLookupComponent, CouponComponent]
 })
-export class HomePageModule {}
+export class PayPageModule {}
