@@ -7,14 +7,14 @@ import { NavController } from '@ionic/angular';
   templateUrl: './tax-tip.page.html',
   styleUrls: ['./tax-tip.page.scss'],
 })
-export class TaxTipPage implements OnInit {
+export class TaxTipPage {
 
   constructor(
     public tabsService: TabsService,
     public navCtrl: NavController,
   ) { }
 
-  public ngOnInit() {
+  public ionViewDidEnter() {
     this.tabsService.hideTabs();
   }
 

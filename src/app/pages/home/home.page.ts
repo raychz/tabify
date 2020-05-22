@@ -12,12 +12,9 @@ export class HomePage {
     public tabsService: TabsService
   ) {}
 
-  public ngOnInit() {
-    this.tabsService.showTabs();
-  }
-
   public ionViewDidEnter() {
     console.log('ionViewDidLoad HomePage');
+    this.tabsService.showTabs();
   }
 
 }

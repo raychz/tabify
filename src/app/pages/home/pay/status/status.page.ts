@@ -7,19 +7,19 @@ import { NavController } from '@ionic/angular';
   templateUrl: './status.page.html',
   styleUrls: ['./status.page.scss'],
 })
-export class StatusPage implements OnInit {
+export class StatusPage {
 
   constructor(
     public tabsService: TabsService,
     public navCtrl: NavController,
   ) { }
 
-  public ngOnInit() {
+  public ionViewDidEnter() {
     this.tabsService.hideTabs();
   }
 
   public async nextPage() {
-    this.navCtrl.navigateRoot('/home/pay');
+    this.navCtrl.navigateRoot('home');
   }
 
 }

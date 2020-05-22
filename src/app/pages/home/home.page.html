@@ -1,6 +1,6 @@
 <ion-tabs>
 
-  <ion-tab-bar slot="bottom" *ngIf="tabsService.viewTabs">
+  <ion-tab-bar slot="bottom" [hidden]="!tabsService.viewTabs">
     <ion-tab-button tab="activities">
       <ion-icon name="triangle"></ion-icon>
       <ion-label>Activities</ion-label>

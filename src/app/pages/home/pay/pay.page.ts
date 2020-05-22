@@ -74,12 +74,9 @@ selectedLocation = this.locations[0];
   //   return this.auth.authenticated;
   // }
 
-  public ngOnInit() {
-    this.tabsService.showTabs();
-  }
-
   public async ionViewDidEnter() {
     console.log('ionViewDidLoad PayPage');
+    this.tabsService.showTabs();
     // await this.auth.signInWithEmail({email: '', password: ''});
     // this.getLocations();
   }

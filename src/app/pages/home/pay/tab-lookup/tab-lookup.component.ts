@@ -9,7 +9,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './tab-lookup.component.html',
   styleUrls: ['./tab-lookup.component.scss'],
 })
-export class TabLookupComponent implements OnInit {
+export class TabLookupComponent {
   @Input()
   imageUrl: string;
 
@@ -31,7 +31,7 @@ export class TabLookupComponent implements OnInit {
     public navCtrl: NavController,
   ) { }
 
-  public ngOnInit() {
+  public ionViewDidEnter() {
     this.newTicket = false;
     this.existingTicket = false;
     this.errorMessage = '';

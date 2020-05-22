@@ -7,14 +7,14 @@ import { NavController } from '@ionic/angular';
   templateUrl: './select-items.page.html',
   styleUrls: ['./select-items.page.scss'],
 })
-export class SelectItemsPage implements OnInit {
+export class SelectItemsPage {
 
   constructor(
     public tabsService: TabsService,
     public navCtrl: NavController,
   ) { }
 
-  public ngOnInit() {
+  public ionViewDidEnter() {
     this.tabsService.hideTabs();
   }
 
