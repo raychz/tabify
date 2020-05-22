@@ -5,6 +5,7 @@ import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
+import { TabsService } from 'src/services/tabs/tabs.service';
 
 @Component({
   selector: 'app-pay',
@@ -66,11 +67,16 @@ selectedLocation = this.locations[0];
     public loader: LoaderService,
     public auth: AuthService,
     public alertCtrl: AlertService,
+    public tabsService: TabsService
   ) {}
 
   // public ionViewCanEnter(): boolean {
   //   return this.auth.authenticated;
   // }
+
+  public ngOnInit() {
+    this.tabsService.showTabs();
+  }
 
   public async ionViewDidEnter() {
     console.log('ionViewDidLoad PayPage');

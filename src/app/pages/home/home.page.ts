@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TabsService } from 'src/services/tabs/tabs.service';
 
 @Component({
   selector: 'app-home',
@@ -7,5 +8,16 @@ import { Component } from '@angular/core';
 })
 
 export class HomePage {
-  constructor() {}
+  constructor(
+    public tabsService: TabsService
+  ) {}
+
+  public ngOnInit() {
+    this.tabsService.showTabs();
+  }
+
+  public ionViewDidEnter() {
+    console.log('ionViewDidLoad HomePage');
+  }
+
 }

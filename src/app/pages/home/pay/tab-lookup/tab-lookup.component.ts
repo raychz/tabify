@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { sleep } from 'src/utilities/general.utilities';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab-lookup',
@@ -27,21 +28,22 @@ export class TabLookupComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
-    public router: Router,
-    public route: ActivatedRoute
+    public navCtrl: NavController,
   ) { }
 
-  ngOnInit() {
-    console.log(this.router.config[1].children);
+  public ngOnInit() {
+    this.newTicket = false;
+    this.existingTicket = false;
+    this.errorMessage = '';
+    this.checkingTicketNumber = false;
   }
 
-  async navigate() {
-    console.log(this.router);
-    await this.router.navigate(['select'], {relativeTo: this.route});
+  public async nextPage() {
+    await this.navCtrl.navigateForward('home/pay/select-items');
   }
 
   // add ticket logic control to this function
-  async enterTicketNumber(ticketNumber: string) {
+  public async enterTicketNumber(ticketNumber: string) {
     this.newTicket = false;
     this.existingTicket = false;
     this.errorMessage = '';
@@ -56,11 +58,4 @@ export class TabLookupComponent implements OnInit {
     }
 
   }
-
-  changeMode(mode: string) {
-    if (mode === 'full') {
-
-    }
-  }
-
 }

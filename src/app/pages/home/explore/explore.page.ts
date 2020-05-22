@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TabsService } from 'src/services/tabs/tabs.service';
 
 @Component({
   selector: 'app-explore',
@@ -7,6 +8,11 @@ import { Component } from '@angular/core';
 })
 export class ExplorePage {
 
-  constructor() {}
+  constructor(
+    public tabsService: TabsService,
+  ) {}
 
+  public ngOnInit() {
+    this.tabsService.showTabs();
+  }
 }

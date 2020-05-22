@@ -12,9 +12,20 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('./pay/pay.module').then(m => m.PayPageModule)
-          }
+            loadChildren: () => import('./pay/pay.module').then(m => m.PayPageModule)
+          },
+          {
+            path: 'select-items',
+            loadChildren: () => import('./pay/select-items/select-items.module').then( m => m.SelectItemsPageModule)
+          },
+          {
+            path: 'tax-tip',
+            loadChildren: () => import('./pay/tax-tip/tax-tip.module').then( m => m.TaxTipPageModule)
+          },
+          {
+            path: 'status',
+            loadChildren: () => import('./pay/status/status.module').then( m => m.StatusPageModule)
+          },
         ]
       },
       {

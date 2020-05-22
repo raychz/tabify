@@ -15,7 +15,6 @@ import { PayPageRoutingModule } from './pay-routing.module';
     FormsModule,
     ReactiveFormsModule,
     PayPageRoutingModule
-    // RouterModule.forChild([{ path: '', component: PayPage }])
   ],
   declarations: [PayPage, TabLookupComponent, CouponComponent]
 })

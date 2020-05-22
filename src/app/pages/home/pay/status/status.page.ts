@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TabsService } from 'src/services/tabs/tabs.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-status',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StatusPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public tabsService: TabsService,
+    public navCtrl: NavController,
+  ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
+    this.tabsService.hideTabs();
+  }
+
+  public async nextPage() {
+    this.navCtrl.navigateRoot('/home/pay');
   }
 
 }

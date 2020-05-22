@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TabsService } from 'src/services/tabs/tabs.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-select-items',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectItemsPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public tabsService: TabsService,
+    public navCtrl: NavController,
+  ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
+    this.tabsService.hideTabs();
+  }
+
+  public async nextPage() {
+    await this.navCtrl.navigateForward('/home/pay/tax-tip');
   }
 
 }
