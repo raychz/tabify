@@ -16,8 +16,8 @@
 
   .menu {
     border-radius: 50%;
-    height: 18px;
-    width: 18px;
+    font-size: 1.3rem;
+    --ion-color-base: white;
     background-color: black;
     position: absolute;
     bottom: 0;
@@ -44,8 +44,7 @@ ion-badge {
 .notification-icon {
     margin-right: 0.9rem;
     color: white;
-    height: 2rem;
-    width: 2rem;
+    font-size: 2rem;
   }
 }
 
