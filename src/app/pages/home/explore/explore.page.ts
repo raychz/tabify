@@ -12,7 +12,7 @@ export class ExplorePage {
     public tabsService: TabsService,
   ) {}
 
-  public ngOnInit() {
+  public ionViewDidEnter() {
     this.tabsService.showTabs();
   }
 }

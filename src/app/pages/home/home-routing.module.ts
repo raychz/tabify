@@ -9,44 +9,15 @@ const routes: Routes = [
     children: [
       {
         path: 'pay',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('./pay/pay.module').then(m => m.PayPageModule)
-          },
-          {
-            path: 'select-items',
-            loadChildren: () => import('./pay/select-items/select-items.module').then( m => m.SelectItemsPageModule)
-          },
-          {
-            path: 'tax-tip',
-            loadChildren: () => import('./pay/tax-tip/tax-tip.module').then( m => m.TaxTipPageModule)
-          },
-          {
-            path: 'status',
-            loadChildren: () => import('./pay/status/status.module').then( m => m.StatusPageModule)
-          },
-        ]
+        loadChildren: () => import('./pay/pay.module').then(m => m.PayPageModule)
       },
       {
         path: 'explore',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('./explore/explore.module').then(m => m.ExploreModule)
-          }
-        ]
+        loadChildren: () => import('./explore/explore.module').then(m => m.ExploreModule)
       },
       {
         path: 'activities',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('./activities/activities.module').then(m => m.ActivitesPageModule)
-          }
-        ]
+        loadChildren: () => import('./activities/activities.module').then(m => m.ActivitesPageModule)
       },
       {
         path: '',
