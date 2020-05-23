@@ -21,15 +21,10 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/home/pay',
+        redirectTo: 'pay',
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: '/home/pay',
-    pathMatch: 'full'
   },
 ];
 
