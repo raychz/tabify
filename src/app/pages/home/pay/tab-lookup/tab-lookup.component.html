@@ -11,8 +11,13 @@
           <form [formGroup]="tabForm">
               <ion-item class="input">
                 <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
-                <ion-input autofocus type="number" formControlName="ticketNumber" (ionBlur)="enterTicketNumber($event.target.value)"></ion-input>
+                <ion-input type="number" formControlName="ticketNumber" (ionBlur)="validateTicketNumber(tabForm.value)"></ion-input>
               </ion-item>
+              <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
+              <ion-button class="submit-button" expand="block" color="warning" (click)="enterTicketNumber(tabForm.value)" *ngIf="!checkingTicketNumber && !existingTicket && !newTicket" [disabled]="tabForm.invalid">
+                <ion-icon name="restaurant-outline"></ion-icon>
+                Find Ticket
+              </ion-button>
           </form>
           <ion-grid *ngIf="checkingTicketNumber">
             <ion-row>
@@ -21,7 +26,6 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-          <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
       <ng-container *ngIf="existingTicket">
           <p class="loader-good">Your ticket has already been opened, click below to join.</p>
           <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()">

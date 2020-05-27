@@ -42,20 +42,25 @@ export class TabLookupComponent {
     await this.navCtrl.navigateForward('home/pay/select-items');
   }
 
+  public validateTicketNumber(value: any) {
+    this.newTicket = false;
+    this.existingTicket = false;
+    if (!value.ticketNumber) {
+      this.errorMessage = 'Error: Please enter a valid ticket number.';
+    }
+  }
+
   // add ticket logic control to this function
-  public async enterTicketNumber(ticketNumber: string) {
+  public async enterTicketNumber(value: any) {
+    console.log(value.ticketNumber);
     this.newTicket = false;
     this.existingTicket = false;
     this.errorMessage = '';
     this.checkingTicketNumber = true;
     await sleep(2500);
     this.checkingTicketNumber = false;
-    if (ticketNumber === '') {
-      this.errorMessage = 'Error: Please enter a valid ticket number.';
-    } else {
-      // this.newTicket = true;
-      this.existingTicket = true;
-    }
+    // this.newTicket = true;
+    this.existingTicket = true;
 
   }
 }

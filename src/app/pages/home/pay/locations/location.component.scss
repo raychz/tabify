@@ -1,0 +1,29 @@
+.location-card {
+    ion-item {
+      --padding-start: 0.75rem;
+      --padding-end: 0.75rem;
+      --inner-padding-end: 0;
+      --inner-padding-start: 0;
+    }
+  }
+  
+  ion-card {
+      margin: 5px;
+  }
+
+  ion-avatar {
+    margin-right: 12px;
+  }
+  
+  .location-info {
+    h2 {
+      font-size: 1.1rem;
+    }
+    h3 {
+      font-size: 0.75rem;
+    }
+  }
+  
+  .location-icon {
+    font-size: 1rem;
+  }

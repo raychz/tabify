@@ -19,16 +19,16 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="location-card">
+  <ion-card class="location-card" (click)="showLocations($event)">
     <ion-item lines="none">
       <ion-avatar item-start>
-        <img [src]='selectedLocation.photo_url' />
+        <img [src]='selectedLocation?.photo_url' />
       </ion-avatar>
       <ion-label class="location-info">
-        <h2 text-wrap>{{ selectedLocation.name }}</h2>
+        <h2 text-wrap>{{ selectedLocation?.name }}</h2>
         <h3 text-wrap>
-          <span text-nowrap>{{ selectedLocation.street1 }}, </span>
-          <span text-nowrap>{{ selectedLocation.city }}, {{ selectedLocation.state }}</span>
+          <span text-nowrap>{{ selectedLocation?.street1 }}, </span>
+          <span text-nowrap>{{ selectedLocation?.city }}, {{ selectedLocation?.state }}</span>
         </h3>
       </ion-label>
       <ion-icon name="caret-down-outline" class="location-icon"></ion-icon>
@@ -37,21 +37,21 @@
 
     <ion-slides>
       <ion-slide>
-        <app-tab-lookup [imageUrl]="selectedLocation.photo_url">   </app-tab-lookup>
+        <app-tab-lookup [imageUrl]="selectedLocation?.photo_url">   </app-tab-lookup>
       </ion-slide>
       <ion-slide>
         <app-coupon>   </app-coupon>
       </ion-slide>
     </ion-slides>
 
-  <ion-select value="test1" interface="popover">
+  <!-- <ion-select value="test1" interface="popover">
     <ion-select-option value="test1">
       fgh
     </ion-select-option>
     <ion-select-option value="test2">
       fgijhg
     </ion-select-option>
-  </ion-select>
+  </ion-select> -->
   <ion-icon name="chevron-forward-outline" class="slide-arrow forward-arrow"></ion-icon>
   <ion-icon name="chevron-back-outline" class="slide-arrow back-arrow"></ion-icon>
 </ion-content>

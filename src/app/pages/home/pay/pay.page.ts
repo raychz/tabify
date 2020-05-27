@@ -4,8 +4,9 @@ import { Location } from 'src/interfaces/location.interface';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { TabsService } from 'src/services/tabs/tabs.service';
+import { PopoverController } from '@ionic/angular';
+import { LocationComponent } from './locations/location.component';
 
 @Component({
   selector: 'app-pay',
@@ -13,59 +14,15 @@ import { TabsService } from 'src/services/tabs/tabs.service';
   styleUrls: ['pay.page.scss']
 })
 export class PayPage {
-  locations: Location[] = [
-    {
-        id: 1,
-        omnivore_id: 'i8yBgkjT',
-        name: 'Piccola Italia Ristorante',
-        city: 'Manchester',
-        country: 'USA',
-        coupons_only: false,
-        servers: [],
-        tickets: [],
-        state: 'NH',
-        street1: '815 Elm St',
-        street2: null,
-        latitude: null,
-        longitude: null,
-        phone: null,
-        timezone: null,
-        website: null,
-        photo_url: 'https://luparestaurant.com/wp-content/uploads/sites/33/2019/06/wEBSITE-PIC-1-upload-1920x1080.jpg',
-        zip: null,
-        google_place_id: null,
-        tax_rate: null
-    },
-    {
-      id: 2,
-      omnivore_id: 'i8yBgkjT',
-      name: 'Virtual POS',
-      city: 'Cambridge',
-      country: 'USA',
-      coupons_only: true,
-      servers: [],
-      tickets: [],
-      state: 'MA',
-      street1: '16 York Pl',
-      street2: null,
-      latitude: null,
-      longitude: null,
-      phone: null,
-      timezone: null,
-      website: null,
-      photo_url: null,
-      zip: null,
-      google_place_id: null,
-      tax_rate: null
-  }
-];
-selectedLocation = this.locations[0];
+  locations: Location[];
+  selectedLocation: Location;
 
 
   constructor(
     public locationService: LocationService,
     public loader: LoaderService,
     public auth: AuthService,
+    public popover: PopoverController,
     public alertCtrl: AlertService,
     public tabsService: TabsService
   ) {}
@@ -78,14 +35,26 @@ selectedLocation = this.locations[0];
     console.log('ionViewDidLoad PayPage');
     this.tabsService.showTabs();
     // await this.auth.signInWithEmail({email: '', password: ''});
-    // this.getLocations();
+    if (!this.locations) {
+      await this.getLocations();
+    }
+  }
+
+  public async showLocations(event: any) {
+    const popover = await this.popover.create({
+      component: LocationComponent,
+      event,
+    });
+    popover.present();
   }
 
   private async getLocations() {
+    console.log('hi');
     const loading = await this.loader.create();
     await loading.present();
     try {
       this.locations = await this.locationService.getLocations();
+      this.selectedLocation = this.locations[0];
       // this.searchLocations = this.locations;
       console.log('locations are', this.locations);
       await loading.dismiss();
