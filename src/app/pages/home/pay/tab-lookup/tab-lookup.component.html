@@ -1,5 +1,5 @@
 <ion-card>
-  <ion-img [src]="imageUrl" alt="Could not load location image"></ion-img>
+  <ion-img [src]="locationService.selectedLocation?.photo_url" alt="Could not load location image"></ion-img>
   <ion-card-header class="header">
     Join Your Ticket
     <ion-button class="fraud-code-button" fill="clear">

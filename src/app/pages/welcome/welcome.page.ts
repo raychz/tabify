@@ -29,7 +29,7 @@ export class WelcomePage implements OnInit {
 
   async ionViewDidEnter() {
     console.log('ionViewDidLoad UnauthenticatedPage');
-    // await this.auth.signInWithEmail({email: '', password: ''});
+    await this.auth.signInWithEmail({email: 'sahil@tabifyapp.com', password: '$Yellowpond32'});
   }
 
   async slideChanged() {

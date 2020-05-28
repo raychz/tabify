@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { sleep } from 'src/utilities/general.utilities';
 import { NavController } from '@ionic/angular';
+import { LocationService } from 'src/services/location/location.service';
 
 @Component({
   selector: 'app-tab-lookup',
@@ -10,9 +11,6 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./tab-lookup.component.scss'],
 })
 export class TabLookupComponent {
-  @Input()
-  imageUrl: string;
-
   checkingTicketNumber = false;
   existingTicket = false;
   newTicket = false;
@@ -29,6 +27,7 @@ export class TabLookupComponent {
   constructor(
     public fb: FormBuilder,
     public navCtrl: NavController,
+    public locationService: LocationService,
   ) { }
 
   public ionViewDidEnter() {

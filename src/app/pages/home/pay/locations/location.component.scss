@@ -6,6 +6,10 @@
       --inner-padding-start: 0;
     }
   }
+
+  .header {
+      --padding-start: 0;
+  }
   
   ion-card {
       margin: 5px;

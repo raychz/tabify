@@ -3,12 +3,12 @@
     <ion-buttons slot="start">
       <ion-button icon-only>
           <ion-avatar class="user-profile">
-            <img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image">
+            <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
             <ion-icon name="settings-outline" color="white" class="menu"></ion-icon>
           </ion-avatar>
       </ion-button>
     </ion-buttons>
-    <img class="tabify-icon" src="assets/imgs/logo.png" />
+    <ion-img class="tabify-icon" src="assets/imgs/logo.png"></ion-img>
     <ion-buttons slot="end">
       <ion-button icon-only class="notifications">
         <ion-icon name="notifications" class="notification-icon"></ion-icon>
@@ -22,13 +22,13 @@
   <ion-card class="location-card" (click)="showLocations($event)">
     <ion-item lines="none">
       <ion-avatar item-start>
-        <img [src]='selectedLocation?.photo_url' />
+        <ion-img [src]='locationService.selectedLocation?.photo_url'></ion-img>
       </ion-avatar>
       <ion-label class="location-info">
-        <h2 text-wrap>{{ selectedLocation?.name }}</h2>
+        <h2 text-wrap>{{ locationService.selectedLocation?.name }}</h2>
         <h3 text-wrap>
-          <span text-nowrap>{{ selectedLocation?.street1 }}, </span>
-          <span text-nowrap>{{ selectedLocation?.city }}, {{ selectedLocation?.state }}</span>
+          <span text-nowrap>{{ locationService.selectedLocation?.street1 }}, </span>
+          <span text-nowrap>{{ locationService.selectedLocation?.city }}, {{ locationService.selectedLocation?.state }}</span>
         </h3>
       </ion-label>
       <ion-icon name="caret-down-outline" class="location-icon"></ion-icon>
@@ -37,7 +37,7 @@
 
     <ion-slides>
       <ion-slide>
-        <app-tab-lookup [imageUrl]="selectedLocation?.photo_url">   </app-tab-lookup>
+        <app-tab-lookup>   </app-tab-lookup>
       </ion-slide>
       <ion-slide>
         <app-coupon>   </app-coupon>

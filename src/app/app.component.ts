@@ -6,7 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LoaderService } from '../services/utilities/loader.service';
 import { AuthService } from '../services/auth/auth.service';
 import { tap } from 'rxjs/operators';
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/browser';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +46,7 @@ export class AppComponent {
         async (user) => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
           if (user) {
-            // If user is authenticated on Firebase, 
+            // If user is authenticated on Firebase,
             // wait until the user is created in our DB.
             // The loader will be dismissed in the second pipe/tap below.
             await this.auth.checkUserExistsInDB();

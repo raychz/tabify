@@ -14,9 +14,6 @@ import { LocationComponent } from './locations/location.component';
   styleUrls: ['pay.page.scss']
 })
 export class PayPage {
-  locations: Location[];
-  selectedLocation: Location;
-
 
   constructor(
     public locationService: LocationService,
@@ -34,35 +31,30 @@ export class PayPage {
   public async ionViewDidEnter() {
     console.log('ionViewDidLoad PayPage');
     this.tabsService.showTabs();
-    // await this.auth.signInWithEmail({email: '', password: ''});
-    if (!this.locations) {
-      await this.getLocations();
-    }
+    await this.auth.signInWithEmail({email: 'sahil@tabifyapp.com', password: '$Yellowpond32'});
+    await this.getLocations();
   }
 
   public async showLocations(event: any) {
     const popover = await this.popover.create({
       component: LocationComponent,
       event,
+      cssClass: 'popover'
     });
     popover.present();
   }
 
   private async getLocations() {
-    console.log('hi');
     const loading = await this.loader.create();
     await loading.present();
     try {
-      this.locations = await this.locationService.getLocations();
-      this.selectedLocation = this.locations[0];
-      // this.searchLocations = this.locations;
-      console.log('locations are', this.locations);
+      await this.locationService.getLocations();
       await loading.dismiss();
     } catch (e) {
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Network Error',
-        message: `Please check your connection and try again.`,
+        message: `Something went wrong, please check your connection and try again.`,
       });
       alert.present();
       console.log(e);

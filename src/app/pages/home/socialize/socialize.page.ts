@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { TabsService } from 'src/services/tabs/tabs.service';
 
 @Component({
-  selector: 'app-activities',
-  templateUrl: 'activities.page.html',
-  styleUrls: ['activities.page.scss']
+  selector: 'app-socialize',
+  templateUrl: 'socialize.page.html',
+  styleUrls: ['socialize.page.scss']
 })
-export class ActivitiesPage {
+export class SocializePage {
 
   constructor(
     public tabsService: TabsService,
