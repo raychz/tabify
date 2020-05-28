@@ -32,7 +32,9 @@ export class PayPage {
     console.log('ionViewDidLoad PayPage');
     this.tabsService.showTabs();
     await this.auth.signInWithEmail({email: 'sahil@tabifyapp.com', password: '$Yellowpond32'});
-    await this.getLocations();
+    if (!this.locationService.selectedLocation) {
+      await this.selectDefaultLocation();
+    }
   }
 
   public async showLocations(event: any) {
@@ -44,11 +46,11 @@ export class PayPage {
     popover.present();
   }
 
-  private async getLocations() {
+  private async selectDefaultLocation() {
     const loading = await this.loader.create();
     await loading.present();
     try {
-      await this.locationService.getLocations();
+      await this.locationService.selectDefaultLocation();
       await loading.dismiss();
     } catch (e) {
       await loading.dismiss();

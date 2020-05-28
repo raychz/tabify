@@ -13,8 +13,16 @@ export class LocationService {
 
   public async getLocations(): Promise<Location[]> {
     this.locations = await this.httpClient.get<Location[]>(`${environment.serverUrl}/locations`).toPromise();
-    this.selectedLocation = this.locations[0];
     return this.locations;
+  }
+
+  public async selectDefaultLocation() {
+      await this.getLocations();
+      this.selectedLocation = this.locations[0];
+  }
+
+  public selectLocation(index: number) {
+    this.selectedLocation = this.locations[index];
   }
 
   public async getFraudPreventionCode(): Promise<FraudPreventionCode> {

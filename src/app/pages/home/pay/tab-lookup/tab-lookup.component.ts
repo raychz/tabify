@@ -46,6 +46,8 @@ export class TabLookupComponent {
     this.existingTicket = false;
     if (!value.ticketNumber) {
       this.errorMessage = 'Error: Please enter a valid ticket number.';
+    } else {
+      this.errorMessage = '';
     }
   }
 
