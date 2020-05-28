@@ -9,6 +9,15 @@
 
   .header {
       --padding-start: 0;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+
+  }
+
+  ion-label {
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
   
   ion-card {
