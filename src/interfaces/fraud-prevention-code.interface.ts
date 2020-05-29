@@ -1,11 +1,9 @@
-import { Ticket } from "./ticket.interface";
-import { User } from "./user.interface";
+import { Ticket } from './ticket.interface';
+import { User } from './user.interface';
+import { TabifyBaseInterface } from './base.interface';
 
-export interface FraudPreventionCode {
-  id: number;
+export interface FraudPreventionCode extends TabifyBaseInterface {
   code: string;
-  date_created: Date;
-  date_updated: Date;
   ticket: Ticket;
   user: User;
 }

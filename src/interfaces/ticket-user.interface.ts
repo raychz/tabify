@@ -1,10 +1,21 @@
-import { Ticket } from "./ticket.interface";
-import { User } from "./user.interface";
-import { PaymentMethod } from "./payment-method.interface";
-import { TicketUserStatus } from "../enums";
+import { Ticket } from './ticket.interface';
+import { User } from './user.interface';
+import { PaymentMethod } from './payment-method.interface';
+import { TicketUserStatus } from '../enums';
+import { TabifyBaseInterface } from './base.interface';
+import { LocationReview } from './location-review.interface';
+import { Coupon } from './coupon.interface';
 
-export interface TicketUser extends FrontendTicketUser {
-  id: number;
+interface FrontendTicketUser {
+  /** Controls whether the waiting room card for this user is expanded */
+  isWaitingRoomExpanded: boolean;
+  /** Selected payment method */
+  paymentMethod: PaymentMethod;
+  /** Selected tip percentage */
+  tipPercentage: number;
+}
+
+export interface TicketUser extends FrontendTicketUser, TabifyBaseInterface {
   ticket: Ticket;
   user: User;
   /** The total cost in cents of items on the ticket selected by this user */
@@ -23,13 +34,6 @@ export interface TicketUser extends FrontendTicketUser {
   selectedItemsCount: number;
   /** Ticket user status */
   status?: TicketUserStatus;
-}
-
-interface FrontendTicketUser {
-  /** Controls whether the waiting room card for this user is expanded */
-  isWaitingRoomExpanded: boolean;
-  /** Selected payment method */
-  paymentMethod: PaymentMethod;
-  /** Selected tip percentage */
-  tipPercentage: number;
+  selected_coupon?: Coupon;
+  location_review: LocationReview;
 }

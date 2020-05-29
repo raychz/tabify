@@ -1,11 +1,11 @@
-import { TicketPaymentStatus } from "../enums";
-import { Ticket } from "./ticket.interface";
-import { User } from "./user.interface";
+import { TicketPaymentStatus } from '../enums';
+import { Ticket } from './ticket.interface';
+import { User } from './user.interface';
+import { PaymentMethod } from './payment-method.interface';
+import { TabifyBaseInterface } from './base.interface';
+import { Coupon } from './coupon.interface';
 
-export interface TicketPayment {
-    id?: number;
-    date_created?: Date;
-    date_updated?: Date;
+export interface TicketPayment extends TabifyBaseInterface {
     amount?: number;
     tip?: number;
     /** Spreedly transaction message */
@@ -19,4 +19,6 @@ export interface TicketPayment {
     ticket_payment_status?: TicketPaymentStatus;
     ticket?: Ticket;
     user?: User;
+    coupon?: Coupon;
+    paymentMethod: PaymentMethod;
 }

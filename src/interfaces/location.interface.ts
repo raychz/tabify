@@ -1,8 +1,10 @@
-import { Ticket } from "./ticket.interface";
-import { Server } from "./server.interface";
+import { Ticket } from './ticket.interface';
+import { Server } from './server.interface';
+import { TabifyBaseInterface } from './base.interface';
+import { LocationReview } from './location-review.interface';
+import { Coupon } from './coupon.interface';
 
-export interface Location {
-  id?: number;
+export interface Location extends TabifyBaseInterface {
   omnivore_id?: string;
   name: string;
   city: string;
@@ -21,5 +23,8 @@ export interface Location {
   tax_rate?: number;
   tickets: Ticket[];
   servers: Server[];
-  coupons_only: boolean;
+  coupons: Coupon[];
+  open_discount_id?: string;
+  coupons_only?: boolean;
+  reviews: LocationReview;
 }

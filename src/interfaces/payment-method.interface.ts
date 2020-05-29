@@ -1,7 +1,8 @@
-import { User } from "./user.interface";
+import { User } from './user.interface';
+import { TicketPayment } from './ticket-payment.interface';
+import { TabifyBaseInterface } from './base.interface';
 
-export interface PaymentMethod {
-  id: number;
+export interface PaymentMethod extends TabifyBaseInterface {
   user: User;
   token: string;
   fingerprint: string;
@@ -13,6 +14,5 @@ export interface PaymentMethod {
   zip: string;
   month: number;
   year: number;
-  date_created: Date;
-  date_updated: Date;
+  ticketPayment: TicketPayment[];
 }

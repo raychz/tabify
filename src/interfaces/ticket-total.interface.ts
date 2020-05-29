@@ -1,9 +1,7 @@
-import { Ticket } from "./ticket.interface";
+import { Ticket } from './ticket.interface';
+import { TabifyBaseInterface } from './base.interface';
 
-export interface TicketTotal {
-    id?: number;
-    date_created?: Date;
-    date_updated?: Date;
+export interface TicketTotal extends TabifyBaseInterface {
     /** The sum total value in cents of all ticket-level discounts */
     discounts: number;
     /** The unpaid total in cents of the ticket (total - paid) */
