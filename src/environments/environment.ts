@@ -13,5 +13,5 @@ export const environment = {
 	},
 	spreedlyEnvKey: 'Iu3UapkcfklJXqLJV61vbJsp1dl',
 	sentryDsn: 'https://8b1f236b4d1f4053a24eefb1f8aea326@sentry.io/2364364',
-	ablyKey: 'N0WaAg.cYTfTg:XJnXR07hwbcc6Sxz',
+	ablyKey: '3IBHgQ.-OxEag:mUk26n8qv9pfbPjM',
 };
