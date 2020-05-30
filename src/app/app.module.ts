@@ -32,7 +32,7 @@ import * as Sentry from "@sentry/browser";
 
 Sentry.init({
   dsn: environment.sentryDsn,
-  release: `tabify-frontend@${environment.version}`,
+  // release: `tabify-frontend@${environment.version}`,
   environment: environment.production ? 'production' : 'development',
   enabled: environment.production
 });

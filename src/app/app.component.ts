@@ -23,7 +23,7 @@ export class Tabify {
   @ViewChild(Nav) nav: Nav;
   rootPage: any = 'LoadingPage';
   pages: Array<IPage>;
-  version = environment.version;
+  // version = environment.version;
 
   constructor(
     public platform: Platform,
@@ -102,7 +102,7 @@ export class Tabify {
         async (user) => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
           if (user) {
-            // If user is authenticated on Firebase, 
+            // If user is authenticated on Firebase,
             // wait until the user is created in our DB.
             // The loader will be dismissed in the second pipe/tap below.
             await this.auth.checkUserExistsInDB();
