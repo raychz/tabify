@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Location } from '../../interfaces/location.interface';
 import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { environment } from '@tabify/env';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {

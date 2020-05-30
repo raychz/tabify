@@ -18,26 +18,26 @@ export enum UserStatus { Selecting, Waiting, Confirmed, Paying, Paid }
 export enum TicketStatus { Open, Closed }
 
 export interface FirestoreTicketItem {
-  name: string,
-  payersDescription: string,
-  price: number,
-  ticket_item_id: number,
-  quantity: number,
-  isItemOnMyTab: boolean,
-  users: { name: string, price: number, uid: string }[],
-  loading?: boolean,
-  rating?: number,
-  feedback?: string,
-  userShare?: number,
+  name: string;
+  payersDescription: string;
+  price: number;
+  ticket_item_id: number;
+  quantity: number;
+  isItemOnMyTab: boolean;
+  users: { name: string, price: number, uid: string }[];
+  loading?: boolean;
+  rating?: number;
+  feedback?: string;
+  userShare?: number;
 }
 
 export interface FirestoreTicket {
-  id: number,
-  date_created: Date,
-  location: { name: string, id: string, omnivore_id: string },
-  tab_id: string,
-  ticket_number: number,
-  status: TicketStatus,
+  id: number;
+  date_created: Date;
+  location: { name: string, id: string, omnivore_id: string };
+  tab_id: string;
+  ticket_number: number;
+  status: TicketStatus;
   ticketTotal: {
     date_created: string,
     date_updated: string,
@@ -51,24 +51,24 @@ export interface FirestoreTicket {
     tax: number,
     tips: number,
     total: number
-  }
-  uids: string[],
-  ticketItems: FirestoreTicketItem[],
+  };
+  uids: string[];
+  ticketItems: FirestoreTicketItem[];
 }
 
 export interface User {
-  name: string,
-  uid: string,
-  photoUrl: string,
-  status: UserStatus,
+  name: string;
+  uid: string;
+  photoUrl: string;
+  status: UserStatus;
   totals: {
     tax: number, // user's share of the tax
     tip: number, // user's tip
     subtotal: number, // user's sum of the share of their selected items
     total: number, // user's tax + tip + subtotal
-  },
-  ticketItems: FirestoreTicketItem[],
-  isExpanded?: boolean,
+  };
+  ticketItems: FirestoreTicketItem[];
+  isExpanded?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -82,7 +82,7 @@ export class TicketService {
   public users: User[];
   public curUser: User;
   /** The value is represented in pennies. */
-  public userTipPercentage: number = 18;
+  public userTipPercentage = 18;
   /** The value is represented in pennies. */
   public userPaymentMethod: any;
   public ticketUsersDescription: string = getSelectItemsTicketUsersDescription();
@@ -208,7 +208,7 @@ export class TicketService {
   }
 
   public findUserShareOfItem(item: TicketItem, uid: string) {
-    console.log("CALLING", item, uid);
+    console.log('CALLING', item, uid);
     return item.users.find(u => u.user.uid === uid).price;
   }
 
@@ -325,22 +325,22 @@ export class TicketService {
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
-          throw 'Ticket Item Document does not exist!';
+          throw new Error('Ticket Item Document does not exist!');
         }
 
         const uid = this.auth.getUid();
         const displayName = this.auth.getDisplayName();
 
-        let { users, price } = ticketItem.data()! as {
+        const { users, price } = ticketItem.data()! as {
           users: any[];
           price: number;
         };
 
         if (users.find(u => u.uid === uid)) {
-          throw 'This item has already been added to your tab.';
+          throw new Error('This item has already been added to your tab.');
         }
         users.push({
-          uid: uid,
+          uid,
           name: displayName,
           price: 0,
         });
@@ -360,7 +360,7 @@ export class TicketService {
           { merge: true }
         );
 
-        return transaction
+        return transaction;
       });
       return {
         success: true,
@@ -389,7 +389,7 @@ export class TicketService {
         ).ref;
         const ticketItem = await transaction.get(ticketItemDocRef);
         if (!ticketItem.exists) {
-          throw 'Document does not exist!';
+          throw new Error('Document does not exist!');
         }
 
         const uid = this.auth.getUid();
@@ -399,8 +399,9 @@ export class TicketService {
           price: number;
         };
 
-        if (!users.find(u => u.uid === uid))
+        if (!users.find(u => u.uid === uid)) {
           throw 'This item has already been removed from your tab.';
+        }
 
         users = users.filter(u => u.uid !== uid);
         const { length: numberOfPayers } = users;
@@ -418,7 +419,7 @@ export class TicketService {
           { merge: true }
         );
 
-        return transaction
+        return transaction;
       });
       return {
         success: true,
@@ -459,14 +460,14 @@ export class TicketService {
 
   /** reset isExpanded object for expanding/collapsing user cards throught the pay work flow */
   resetIsExpanded() {
-    for (let user of this.users) {
+    for (const user of this.users) {
       this.isExpandedList[user.uid] = false;
     }
   }
 
   /** expand/collapse the provided user's card (used in status and waiting room pages) */
   toggleIsExpanded(user: User) {
-    const isExpanded = this.getUserExpanded(user)
+    const isExpanded = this.getUserExpanded(user);
     this.isExpandedList[user.uid] = !isExpanded;
   }
 
@@ -486,7 +487,7 @@ export class TicketService {
     let highestStatus = this.overallUsersProgress;
     let highestStatusCount = 0;
 
-    for (let user of this.users) {
+    for (const user of this.users) {
       if (user.status === UserStatus.Paid) {
         this.amountPaid += user.totals.subtotal + user.totals.tax;
       }
@@ -517,7 +518,7 @@ export class TicketService {
   private updateItemsAndUsers() {
     this.unclaimedItems = [];
     this.sharedItems = [];
-    this.users.forEach(u => { u.totals.subtotal = 0; u.ticketItems = [] });
+    this.users.forEach(u => { u.totals.subtotal = 0; u.ticketItems = []; });
     this.curUser = { ...this.users.find((user) => user.uid === this.auth.getUid()) };
     this.firestoreTicketItems.forEach((item) => {
       if (item.users.length < 1) {
@@ -577,7 +578,7 @@ export class TicketService {
  */
   private onTicketUsersUpdate(firestoreUsers: User[]) {
     if (Object.keys(this.isExpandedList).length !== firestoreUsers.length) {
-      for (let user of firestoreUsers) {
+      for (const user of firestoreUsers) {
         if (!this.isExpandedList[user.uid]!) {
           this.isExpandedList[user.uid] = false;
         }
@@ -605,7 +606,7 @@ export class TicketService {
    */
   private onTicketUpdate(firestoreTicket: FirestoreTicket) {
     console.log(this.firestoreTicket);
-    console.log('updating the ticket', firestoreTicket)
+    console.log('updating the ticket', firestoreTicket);
     this.firestoreTicket = firestoreTicket;
     console.log(this.firestoreTicket);
   }

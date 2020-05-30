@@ -11,10 +11,10 @@
           <form [formGroup]="tabForm">
               <ion-item class="input">
                 <ion-label color="tabify" position="floating">Enter ticket number...</ion-label>
-                <ion-input type="number" formControlName="ticketNumber" (ionBlur)="validateTicketNumber(tabForm.value)"></ion-input>
+                <ion-input type="number" formControlName="ticketNumber" (ionChange)="validateTicketNumber(tabForm.value)"></ion-input>
               </ion-item>
               <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
-              <ion-button class="submit-button" expand="block" color="warning" (click)="enterTicketNumber(tabForm.value)" *ngIf="!checkingTicketNumber && !existingTicket && !newTicket" [disabled]="tabForm.invalid">
+              <ion-button class="submit-button" expand="block" color="warning" (click)="enterTicketNumber(tabForm.value)" *ngIf="!checkingTicketNumber && !existingTicket && !newTicket" [disabled]="tabForm.invalid || errorMessage !== ''">
                 <ion-icon name="restaurant-outline"></ion-icon>
                 Find Ticket
               </ion-button>
@@ -38,7 +38,7 @@
             <p class="loader-warning">Your ticket hasn't been opened yet, please enter the following:</p>
             <br>   
             <p>How do you want to split the bill?</p>
-            <ion-radio-group value="itemize">
+            <ion-radio-group value="ticketMode.ITEMIZE">
               <ion-grid>
                 <ion-row>
                   <ion-col size="4">
@@ -46,7 +46,7 @@
                       <ion-label>
                         Itemize
                       </ion-label>
-                      <ion-radio value="itemize"></ion-radio>
+                      <ion-radio value="ticketMode.ITEMIZE"></ion-radio>
                     </ion-item>
                   </ion-col>
                   <ion-col size="4">
@@ -54,7 +54,7 @@
                       <ion-label>
                         Even Split
                       </ion-label>
-                      <ion-radio value="even"></ion-radio>
+                      <ion-radio value="ticketMode.EVEN_SPLIT"></ion-radio>
                     </ion-item>
                   </ion-col>
                   <ion-col size="4">
@@ -62,7 +62,7 @@
                       <ion-label>
                         No Split
                       </ion-label>
-                      <ion-radio value="full"></ion-radio>
+                      <ion-radio value="ticketMode.NO_SLIT"></ion-radio>
                     </ion-item>
                   </ion-col>
                 </ion-row>

@@ -41,7 +41,7 @@ export class PayPage {
     const popover = await this.popover.create({
       component: LocationComponent,
       event,
-      cssClass: 'popover-locations'
+      cssClass: 'popover-locations',
     });
     popover.present();
   }

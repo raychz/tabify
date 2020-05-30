@@ -1,6 +1,6 @@
 import { Location } from './location.interface';
 import { FraudPreventionCode } from './fraud-prevention-code.interface';
-import { TicketStatus } from '../enums';
+import { TicketStatus, TicketMode } from '../enums';
 import { TicketItem } from './ticket-item.interface';
 import { Story } from './story.interface';
 import { TicketUser } from './ticket-user.interface';
@@ -29,5 +29,7 @@ export interface Ticket extends FrontendTicket, TabifyBaseInterface {
   ticketPayments?: TicketPayment[];
   server?: Server;
   table_name?: string;
+  partySize?: number;
+  mode: TicketMode;
   serverReward?: ServerReward;
 }
