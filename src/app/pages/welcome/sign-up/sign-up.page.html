@@ -1,9 +1,142 @@
-<ion-header>
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-title>sign-up</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <h2>Welcome 👋</h2>
+        <span>Create an account to get started</span>
+      </ion-col>
+    </ion-row>
+    <ion-row [hidden]="signUpStep!==SignUpStep.REFERRAL_CODE_ENTRY">
+      <ion-col class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            Did your server refer you to Tabify?
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row *ngIf="showServerCodeInput">
+              <!-- <ion-list inset> -->
+              <ion-item>
+                <ion-label position="floating">Enter Referral Code</ion-label>
+                <ion-input type="text" [(ngModel)]="referralCode"></ion-input>
+              </ion-item>
+              <!-- </ion-list> -->
+            </ion-row>
+            <ion-row *ngIf="showServerCodeInput">
+              <ion-col size="6">
+                <ion-button expand="block" [disabled]="referralCode.length === 0"
+                  (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                  Submit
+                </ion-button>
+              </ion-col>
+              <ion-col size="6">
+                <!-- TODO: Fix button colors, tabify and tabify-alt -->
+                <ion-button expand="block" [disabled]="referralCode.length !== 0"
+                  (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                  Skip
+                </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="!showServerCodeInput">
+              <ion-col size="6">
+                <ion-button expand="block" color="tabify" (click)="showServerCodeInput=true">
+                  Yes
+                </ion-button>
+              </ion-col>
+              <ion-col size="6">
+                <ion-button expand="block" color="tabify-alt" (click)="signUpStep=SignUpStep.USER_INFO_ENTRY">
+                  No
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            Recommended
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button expand="block" (click)="signUpWithFacebook()">
+              <ion-icon slot="start" name="logo-facebook"></ion-icon>
+              Sign Up With Facebook
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
+      <ion-col>
+        <ion-card>
+          <ion-card-header id="form-card-header">
+            Or Connect with email
+          </ion-card-header>
+          <ion-card-content>
+            <form (ngSubmit)="signUp()" [formGroup]="form">
+              <ion-list inset>
+                <ion-item>
+                  <ion-label position="floating">*First Name</ion-label>
+                  <ion-input type="text" formControlName="firstName"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">*Last Name</ion-label>
+                  <ion-input type="text" formControlName="lastName"></ion-input>
+                </ion-item>
+                <ion-item [ngClass]="{
+                            invalid: emailErrors.hasError('*', ['touched', 'dirty'])
+                          }">
+                  <ion-label position="floating">*Email</ion-label>
+                  <ion-input (ionChange)="inputChange()" type="text" formControlName="email"></ion-input>
+                </ion-item>
+                <div ngxErrors="email" #emailErrors="ngxErrors" [class.errors]="emailErrors.hasErrors">
+                  <div [ngxError]="['email', 'required']" [when]="['dirty']">
+                    Enter a valid email
+                  </div>
+                </div>
+                <ion-item [ngClass]="{
+                            invalid: passwordErrors.hasError('*', ['touched', 'dirty'])
+                          }">
+                  <ion-label position="floating">*Password</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                </ion-item>
+                <div ngxErrors="password" #passwordErrors="ngxErrors" [class.errors]="passwordErrors.hasErrors">
+                  <div [ngxError]="['minlength', 'required']" [when]="['dirty']">
+                    Password must have at least 6 characters
+                  </div>
+                  <div [ngxError]="['pattern']" [when]="['dirty']">
+                    Password must not contain spaces
+                  </div>
+                </div>
+              </ion-list>
 
+              <div>
+                <div class="errors">{{ signUpError }}</div>
+                <ion-button expand="block" type="submit" [disabled]="!form.valid">
+                  Sign Up
+                </ion-button>
+                <p class="muted">* indicates required field</p>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row [hidden]="signUpStep!==SignUpStep.USER_INFO_ENTRY">
+      <ion-col class="ion-text-center">
+        <ion-button color="tabify-alt" (click)="login()" fill="clear">
+          Already a Tabify user?<span class="login-text">Login.</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
