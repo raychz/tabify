@@ -26,8 +26,9 @@ export class TabLookupComponent {
     ticketNumber: ['', Validators.compose([Validators.required])],
   });
   newTicketForm: FormGroup = this.fb.group({
-    ticketMode: ['', Validators.compose([Validators.required])],
-    numberInParty: ['', Validators.compose([Validators.required])],
+    // validators not working for mode enum/radio
+    mode: ['', Validators.compose([Validators.required])],
+    partySize: ['', Validators.compose([Validators.required])],
   });
 
   constructor(
@@ -98,6 +99,28 @@ export class TabLookupComponent {
     console.log('ticket is', ticket);
     this.checkingTicketNumber = false;
     return ticket;
+  }
+
+  public async updateTicketConfig(config: {mode: TicketMode, partySize: number}) {
+    // this.checkingTicketNumber = true;
+    console.log(config);
+    try {
+      const ticket = await this.ablyTicketService.updateTicketConfig(config);
+      if (ticket) {
+        this.nextPage();
+      } else {
+        this.errorMessage = 'Error: Something went wrong - no ticket selected';
+      }
+    } catch (e) {
+      if (e.stopErrorPropagation) { console.log(e); return; }
+      if (e.status === 403) {
+        this.errorMessage = 'Warning: Someone else already opened your ticket and your config was not set.';
+        this.nextPage();
+      } else {
+        this.errorMessage = 'Error: ' + e.error.message;
+        throw e;
+      }
+    }
   }
 
   async createTab(ticketNumber: number) {

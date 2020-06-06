@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { LocationService } from 'src/services/location/location.service';
 import { Location } from 'src/interfaces/location.interface';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { TabsService } from 'src/services/tabs/tabs.service';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, IonCard } from '@ionic/angular';
 import { LocationComponent } from './locations/location.component';
 
 @Component({
@@ -14,6 +14,8 @@ import { LocationComponent } from './locations/location.component';
   styleUrls: ['pay.page.scss']
 })
 export class PayPage {
+  @ViewChild('location', { static: false }) locationCard: any;
+
 
   constructor(
     public locationService: LocationService,
@@ -31,13 +33,17 @@ export class PayPage {
   public async ionViewDidEnter() {
     console.log('ionViewDidLoad PayPage');
     this.tabsService.showTabs();
-    await this.auth.signInWithEmail({email: 'sahil@tabifyapp.com', password: '$Yellowpond32'});
+    // await this.auth.signInWithEmail({email: '', password: ''});
     if (!this.locationService.selectedLocation) {
       await this.selectDefaultLocation();
     }
   }
 
-  public async showLocations(event: any) {
+  public async showLocations(event: Event) {
+    if (event.target !== this.locationCard.el) {
+      // click el
+    }
+
     const popover = await this.popover.create({
       component: LocationComponent,
       event,
