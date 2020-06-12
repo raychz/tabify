@@ -76,7 +76,7 @@ export class PaymentDetailsPage {
   public ionViewCanEnter(): boolean {
     return this.auth.authenticated;
   }
- 
+
   async ionViewDidLoad() {
     this.spreedlyInitializationLoading = this.loader.create();
     await this.spreedlyInitializationLoading.present();
@@ -184,8 +184,8 @@ export class PaymentDetailsPage {
         case PaymentDetailsPageMode.NO_PAYMENT_METHOD:
           await this.navCtrl.popToRoot();
           await this.navCtrl.push(
-            'LocationPage',
-            {},
+            'TabLookupPage',
+            {locationId: NaN, ticketNumber: NaN},
             { animate: true, animation: 'md-transition', direction: 'forward' }
           );
           break;

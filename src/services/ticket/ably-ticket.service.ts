@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
-import { TicketUpdates, TicketUserStatus, TicketStatus } from '../../enums/';
+import { TicketUpdates, TicketUserStatus, TicketStatus, TicketMode } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
@@ -107,6 +107,18 @@ export class AblyTicketService {
       .toPromise() as TicketUser;
     const currentUser = this.ticket.usersMap.get(this.auth.getUid());
     currentUser.status = res.status;
+  }
+
+  public async updateTicketConfig(mode: TicketMode, partySize?: number) {
+    if (!this.ticket) {
+      console.log('cannot update ticket config - no ticket selected');
+      return undefined;
+    }
+    const ticket = await this.http
+      .patch(`${environment.serverUrl}/tickets/${this.ticket.id}`, {mode, partySize})
+      .toPromise() as Ticket;
+    this.onTicketUpdate(ticket);
+    return this.ticket;
   }
 
   onTicketUpdate(updatedTicket: Ticket) {

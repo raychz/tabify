@@ -99,8 +99,8 @@ export class HomePage {
       // Otherwise, take user to payment method entry page
       if (paymentMethods && paymentMethods.length > 0) {
         await this.navCtrl.push(
-          'LocationPage',
-          {},
+          'TabLookupPage',
+          {locationId: NaN, ticketNumber: NaN},
           { animate: true, animation: 'md-transition', direction: 'forward' }
         );
         await loading.dismiss();
@@ -123,6 +123,7 @@ export class HomePage {
         await loading.dismiss();
       }
     } catch (e) {
+      console.log(e);
       await loading.dismiss();
       const alert = this.alert.create({
         title: 'Error',

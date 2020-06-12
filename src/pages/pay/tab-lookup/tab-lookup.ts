@@ -11,17 +11,25 @@ import { FraudPreventionCode } from '../../../interfaces/fraud-prevention-code.i
 import { tap } from 'rxjs/operators';
 import { AblyService } from '../../../services/ticket/ably.service';
 import { AblyTicketService } from '../../../services/ticket/ably-ticket.service';
-import { TicketUserStatus } from '../../../enums';
+import { TicketUserStatus, TicketMode } from '../../../enums';
 import * as Sentry from "@sentry/browser"
 
-@IonicPage()
+@IonicPage({
+  segment: 'tab-lookup/:locationId/:ticketNumber',
+  defaultHistory: ['HomePage'],
+})
 @Component({
   selector: 'page-tab-lookup',
   templateUrl: 'tab-lookup.html',
 })
 export class TabLookupPage {
-  location: Location = this.navParams.data;
+  navData: any = this.navParams.data;
   tabForm: FormGroup;
+  newTicketMode: TicketMode = TicketMode.ITEMIZE;
+  existingTicket: boolean;
+  newTicket: boolean;
+  // expose enums to template
+  ticketMode = TicketMode;
 
   constructor(
     public navCtrl: NavController,
@@ -39,6 +47,8 @@ export class TabLookupPage {
     this.tabForm = fb.group({
       ticketNumber: ['', Validators.compose([Validators.required])],
     });
+    console.log(this.navData);
+    // console.log(this.id);
   }
 
   public ionViewCanEnter(): boolean {
@@ -46,8 +56,27 @@ export class TabLookupPage {
   }
 
   async ionViewDidLoad() {
+    this.resetForm();
     await this.getFraudPreventionCode();
     this.ablyService.connect();
+    if (isNaN(this.navData.locationId)) {
+      this.selectDefaultLocation();
+    } else {
+      await this.selectLocation(this.navData.locationId);
+      if (!isNaN(this.navData.ticketNumber)) {
+        this.tabForm.setValue({ticketNumber: this.navData.ticketNumber.toString()});
+        this.findTab();
+      }
+    }
+  }
+
+  public async showLocations() {
+     this.navCtrl.push('LocationPage');
+  }
+
+  public resetForm() {
+    this.newTicket = false;
+    this.existingTicket = false;
   }
 
   async ionViewWillUnload() {
@@ -58,10 +87,10 @@ export class TabLookupPage {
 
   async findTab() {
     let { ticketNumber } = this.tabForm.value;
-
+    console.log(typeof ticketNumber );
     ticketNumber = Number(ticketNumber.replace(/\D/g, ''));
 
-    if (isNaN(ticketNumber) || !this.location.id) {
+    if (isNaN(ticketNumber) || !this.locationService.selectedLocation.id) {
       const alert = this.alertCtrl.create({
         title: 'Error',
         message: 'Sorry, this ticket number doesn\'t look right. Please double-check and try again. If this issue persists, please contact support@tabifyapp.com.',
@@ -74,7 +103,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     try {
       await loading.present();
-      const ticket = await this.ticketService.getTicket(ticketNumber, this.location.id, 'open', true) as any;
+      const ticket = await this.ticketService.getTicket(ticketNumber, this.locationService.selectedLocation.id, 'open', true) as any;
       await this.initializeTicketMetadata(ticket);
       // await this.initializeFirestoreTicketListeners(ticket);
       await loading.dismiss();
@@ -103,7 +132,7 @@ export class TabLookupPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      const newTicket = await this.ticketService.createTicket(ticketNumber, this.location.id, true) as any;
+      const newTicket = await this.ticketService.createTicket(ticketNumber, this.locationService.selectedLocation.id, true) as any;
       await this.initializeTicketMetadata(newTicket);
       // await this.initializeFirestoreTicketListeners(newTicket);
       await loading.dismiss();
@@ -136,7 +165,74 @@ export class TabLookupPage {
     }
   }
 
-  private async viewNextPage() {
+  public async updateTicketConfig() {
+    try {
+      console.log(this.newTicketMode);
+      const ticket = await this.ablyTicketService.updateTicketConfig(this.newTicketMode);;
+      if (ticket) {
+        this.viewNextPage();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Network Error',
+          message: `Something went wrong, please check your connection and try again.`,
+        });
+        alert.present();
+      }
+    } catch (e) {
+      if (e.stopErrorPropagation) { console.log(e); return; }
+      if (e.status === 403) {
+        const alert = this.alertCtrl.create({
+          title: 'Failed to open ticket',
+          message: `Someone else in your party has already opened the ticket and set the ticket mode. Click below to join your ticket.`,
+          buttons: [{text: 'ok', handler: () => {this.viewNextPage()}}],
+        });
+        alert.present();
+      } else {
+        const alert = this.alertCtrl.create({
+          title: 'Network Error',
+          message: `Something went wrong, please check your connection and try again.`,
+        });
+        alert.present();
+      }
+      console.log(e);
+    }
+  }
+
+  private async selectDefaultLocation() {
+    const loading = await this.loader.create();
+    await loading.present();
+    try {
+      await this.locationService.selectDefaultLocation();
+      await loading.dismiss();
+    } catch (e) {
+      await loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Something went wrong, please check your connection and try again.`,
+      });
+      alert.present();
+      console.log(e);
+    }
+  }
+
+  private async selectLocation(id: number) {
+    const loading = await this.loader.create();
+    await loading.present();
+    try {
+      await this.locationService.selectLocation(id);
+      await loading.dismiss();
+    } catch (e) {
+      await loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Network Error',
+        message: `Something went wrong, please check your connection and try again.`,
+      });
+      alert.present();
+      console.log(e);
+    }
+  }
+
+  public async viewNextPage() {
     const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
     switch (currentUser.status) {
       case TicketUserStatus.SELECTING:
@@ -238,7 +334,13 @@ export class TabLookupPage {
     // Add ticket number to fraud code
     await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.ablyTicketService.fraudPreventionCode.id);
 
-    await this.viewNextPage();
+    if (this.ablyTicketService.ticket.mode) {
+      this.existingTicket = true;
+    } else {
+      this.newTicket = true;
+    }
+
+    // await this.viewNextPage();
     // Get ticket
     // await this.ablyTicketService.getTicket(ticket.id);
   }

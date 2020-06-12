@@ -21,7 +21,8 @@ interface IPage {
 })
 export class Tabify {
   @ViewChild(Nav) nav: Nav;
-  rootPage: any = 'LoadingPage';
+  originalURL: string = '';
+  rootPage: any;
   pages: Array<IPage>;
   // version = environment.version;
 
@@ -36,7 +37,6 @@ export class Tabify {
     public newsFeedService: NewsfeedService,
   ) {
     this.initializeApp();
-
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: 'HomePage', icon: 'home' },
@@ -54,6 +54,9 @@ export class Tabify {
   }
 
   async initializeApp() {
+    this.originalURL = window.location.href;
+    console.log(this.originalURL);
+    this.rootPage = 'LoadingPage'
     const readySource = await this.platform.ready();
     console.log('Platform ready from', readySource);
     // Okay, so the platform is ready and our plugins are available.
@@ -138,7 +141,17 @@ export class Tabify {
           if (userDetailsConfirmedInDB) {
             // If user has been created in Tabify's db
             // Loader can be dismissed.
-            this.rootPage = 'HomePage';
+            const path = this.originalURL.split('#/')[1];
+            let pathArr = [];
+            if (path) {
+              pathArr = path.split('/')
+            }
+            if (pathArr.length === 3 && pathArr[0] === 'tab-lookup' && !isNaN(Number(pathArr[1]))) {
+              console.log('moving to tab lookup');
+              this.nav.setPages([{page: 'HomePage'}, {page: 'TabLookupPage', params: {locationId: Number(pathArr[1]), ticketNumber: Number(pathArr[2])}}]);
+            } else {
+              this.rootPage = 'HomePage'
+            }
             loading.dismiss();
             this.splashScreen.hide();
           } else {

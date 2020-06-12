@@ -17,7 +17,6 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: 'location.html',
 })
 export class LocationPage {
-  locations: Location[] = [];
   searchLocations: Location[] = [];
 
   constructor(
@@ -25,7 +24,7 @@ export class LocationPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public loader: LoaderService,
-    private locationService: LocationService,
+    public locationService: LocationService,
     public alertCtrl: AlertService,
     public auth: AuthService
   ) {
@@ -45,11 +44,11 @@ export class LocationPage {
   }
 
   async filterItems(ev: any) {
-    this.searchLocations = this.locations;
+    this.searchLocations = this.locationService.locations;
     const search = ev.target.value;
     if (search && search.trim() !== '') {
       const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
-      this.searchLocations = this.locations.filter((location) => {
+      this.searchLocations = this.locationService.locations.filter((location) => {
         const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
         return (locationName.indexOf(modifiedSearch) > -1);
       });
@@ -60,9 +59,9 @@ export class LocationPage {
     const loading = this.loader.create();
     await loading.present();
     try {
-      this.locations = await this.locationService.getLocations();
-      this.searchLocations = this.locations;
-      console.log('locations are', this.locations);
+      await this.locationService.getLocations();
+      this.searchLocations = this.locationService.locations;
+      console.log('locations are', this.locationService.locations);
       await loading.dismiss();
     } catch (e) {
       await loading.dismiss();
@@ -75,11 +74,12 @@ export class LocationPage {
     }
   }
 
-  next() {
-    this.navCtrl.push('TabLookupPage');
-  }
+  // next() {
+  //   this.navCtrl.push('TabLookupPage');
+  // }
 
   selectLocation(location: Location) {
-    this.navCtrl.push('TabLookupPage', location);
+    this.locationService.selectLocation(location.id);
+    this.navCtrl.pop();
   }
 }

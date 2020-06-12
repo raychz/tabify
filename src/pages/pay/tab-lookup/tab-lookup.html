@@ -5,21 +5,36 @@
       <button ion-button icon-end (click)="showFraudPreventionCode()">
         <ion-icon name="ios-key" class="fraud-prevention-key"></ion-icon>
       </button>
-      <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
+      <!-- <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
-      </button>
+      </button> -->
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content class='cards-bg'>
+  <ion-card class="location-card" #location (click)="showLocations()">
+    <ion-item lines="none" class="location-info">
+      <ion-avatar item-start>
+        <img [src]='locationService.selectedLocation?.photo_url'>
+      </ion-avatar>
+      <ion-label class="location-info">
+        <h2 text-wrap>{{ locationService.selectedLocation?.name }}</h2>
+        <h3 text-wrap>
+          <span text-nowrap>{{ locationService.selectedLocation?.street1 }}, </span>
+          <span text-nowrap>{{ locationService.selectedLocation?.city }}, {{ locationService.selectedLocation?.state }}</span>
+        </h3>
+      </ion-label>
+      <ion-icon name="ios-arrow-forward" class="location-icon"></ion-icon>
+    </ion-item>
+  </ion-card>
   <ion-grid>
     <ion-row>
       <ion-col>
         <ion-card>
           <ion-card-header>
-            Join Your Ticket – {{location.name}}
+            Join Your Ticket
           </ion-card-header>
           <ion-card-content>
             <p>Your ticket number can usually be found on the top of your check.</p>
@@ -29,13 +44,65 @@
               <ion-list inset>
                 <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
                   <ion-label color="tabify" floating>Enter ticket number...</ion-label>
-                  <ion-input id="ticket-number-input" autofocus type="text" formControlName="ticketNumber"></ion-input>
+                  <ion-input id="ticket-number-input" autofocus type="text" formControlName="ticketNumber" (ionChange)="resetForm()"></ion-input>
                 </ion-item>
                 <div ngxErrors="ticketNumber" #tabErrors="ngxErrors">
                   <div [ngxError]="['required']" [when]="['dirty']">Enter a valid ticket number.</div>
                 </div>
               </ion-list>
+              <button ion-button class="submit-button" expand="block" color="warning" (click)="findTab()" *ngIf="!existingTicket && !newTicket">
+                <ion-icon name="restaurant-outline" class="submit-icon"></ion-icon>
+                Find Ticket
+              </button>
             </form>
+            <ng-container *ngIf="existingTicket">
+              <p class="loader-good">Your ticket has already been opened, click below to join.</p>
+              <button ion-button class="submit-button" expand="block" color="warning" (click)="viewNextPage()">
+                <ion-icon name="restaurant-outline" class="submit-icon"></ion-icon>
+                Join Ticket
+              </button>
+          </ng-container>
+          <ng-container *ngIf="newTicket">
+                <p class="loader-warning">Your ticket hasn't been opened yet, please enter the following:</p>
+                <br>
+                <p>How do you want to split the bill?</p>
+                <ion-list radio-group [(ngModel)]="newTicketMode">
+                <!-- Default Selected Value not working when binding radio to form  -->
+                <!-- <ion-radio-group formControlName="mode" [value]="ticketMode.ITEMIZE"> -->
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="4">
+                        <ion-item class="ticket-mode">
+                          <ion-label class="ticket-mode-label">
+                            Itemize
+                          </ion-label>
+                          <ion-radio [value]="ticketMode.ITEMIZE" class="ticket-mode-radio"></ion-radio>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="ticket-mode">
+                          <ion-label class="ticket-mode-label">
+                            Even Split
+                          </ion-label>
+                          <ion-radio [value]="ticketMode.EVEN_SPLIT" class="ticket-mode-radio"></ion-radio>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="ticket-mode">
+                          <ion-label class="ticket-mode-label">
+                            No Split
+                          </ion-label>
+                          <ion-radio [value]="ticketMode.NO_SLIT" class="ticket-mode-radio"></ion-radio>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-list>
+              <button ion-button class="submit-button" expand="block" color="warning" (click)="updateTicketConfig()">
+                <ion-icon name="restaurant-outline" class="submit-icon"></ion-icon>
+                Open Ticket
+              </button>
+          </ng-container>
           </ion-card-content>
         </ion-card>
       </ion-col>

@@ -28,7 +28,7 @@
 
   </ion-card>
   <p class="muted" *ngIf="!searchLocations.length">No restaurants matched your search.</p>
-  <ion-card *ngIf="locations.length">
+  <ion-card *ngIf="locationService.locations.length">
     <ion-item>
       <p class="muted">More locations coming soon!</p>
     </ion-item>

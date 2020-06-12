@@ -7,10 +7,78 @@ page-tab-lookup {
     color: gray;
   }
 
+  .location-card {
+    margin-top: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    .location-info {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
+
+  .submit-button {
+    width: 100%;
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 1.5rem;
+    .submit-icon {
+      padding-right: 5px;
+      font-size: 1.75rem;
+    }
+  }
+
+  .loader {
+    &-good {
+      text-align: center;
+      color: green;
+    }
+    &-warning {
+      text-align: center;
+      color: yellow;
+    }
+  }
+
+  .item-radio-checked {
+    outline: auto;
+  }
+
+  .ticket-mode {
+    width: 100%;
+    height: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    // --padding-start: 0 !important;
+    // --padding-end: 0 !important;
+    text-align: center;
+    .ticket-mode-label {
+      font-size: 1.5rem;
+      white-space: normal;
+      margin: auto;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .ticket-mode-radio {
+      // --color: transparent !important;
+      // --color-checked: transparent !important;
+      color: transparent;
+      margin: 0;
+      padding: 0;
+      width: 0;
+      height: 0;
+      .radio-icon {
+        .radio-inner {
+          border-color: transparent;
+        }
+      }
+    }
+  }
+
   .fraud-prevention-key {
     color: map-get($colors, primary);
     font-size: 1.6em;
   }
 }
-
-
