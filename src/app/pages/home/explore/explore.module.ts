@@ -4,10 +4,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ExplorePage } from './explore.page';
+import { TabifyHeaderModule } from '../tabify-header/tabify-header.module';
 
 @NgModule({
   imports: [
     IonicModule,
+    TabifyHeaderModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: ExplorePage }])

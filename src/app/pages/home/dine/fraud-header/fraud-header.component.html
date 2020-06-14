@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+     <ion-buttons slot="start" *ngIf="falseVal">
+       <!-- back button not showing - tho renders in dom - need to be able to hide/disable back button manually as 
+      well so that the title is to te left not right -->
+       <ion-back-button *ngIf="falseVal"></ion-back-button> 
+     </ion-buttons>
+     <ion-title> {{ headerTitle }} </ion-title>
+     <ion-buttons slot="end">
+       <ion-button icon-only class="notifications">
+        <ion-icon name="key-outline" class="fraud-code-icon"></ion-icon>
+      </ion-button>
+     </ion-buttons>
+   </ion-toolbar>
+ </ion-header>

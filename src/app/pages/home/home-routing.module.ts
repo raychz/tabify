@@ -8,8 +8,8 @@ const routes: Routes = [
     component: HomePage,
     children: [
       {
-        path: 'pay',
-        loadChildren: () => import('./pay/pay.module').then(m => m.PayPageModule)
+        path: 'dine',
+        loadChildren: () => import('./dine/dine.module').then(m => m.DinePageModule)
       },
       {
         path: 'explore',
@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'pay',
+        redirectTo: 'dine',
         pathMatch: 'full'
       }
     ]

@@ -1,0 +1,46 @@
+.user-bill {
+    text-align: right;
+}
+
+ion-card {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+ion-segment-button {
+    --indicator-color: transparent !important;
+    --indicator-color-checked: transparent !important;
+    --border-style: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    ion-label {
+        line-height: 1rem;
+        white-space: normal;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    ion-avatar {
+        border-radius: 50%;
+        margin-bottom: 3px;
+        ion-icon {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.85rem;
+        }
+        &.status-avatar {
+            border: 2px solid red;
+        }
+        &.add-user {
+            border: 2px dotted white;
+        }
+        &.refresh-button {
+            border: 2px solid grey;
+        }
+    }   
+  }

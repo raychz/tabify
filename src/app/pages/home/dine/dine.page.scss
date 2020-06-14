@@ -1,0 +1,56 @@
+.slide-arrow {
+  z-index: 3;
+  position: fixed;
+  top: 60%;
+  transform: translateY(-50%);
+  &.forward-arrow {
+    right: 5px;
+  }
+  &.back-arrow {
+    left: 5px;
+  }
+}
+
+.submit-button {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 1rem;
+  ion-icon {
+      padding-right: 5px;
+  }
+}
+
+.location-card {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  ion-item {
+    --padding-start: 0.75rem;
+    --padding-end: 0.75rem;
+    --inner-padding-end: 0;
+    --inner-padding-start: 0;
+  }
+}
+
+ion-avatar {
+  margin-right: 12px;
+}
+
+.location-info {
+  h2 {
+    font-size: 1.1rem;
+  }
+  h3 {
+    font-size: 0.75rem;
+  }
+}
+
+app-tab-lookup {
+  width: 100%;
+}
+
+.location-icon {
+  font-size: 1rem;
+}

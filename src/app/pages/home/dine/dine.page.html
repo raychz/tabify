@@ -1,0 +1,46 @@
+<app-tabify-header>
+
+</app-tabify-header>
+
+<ion-content>
+  <ion-card class="location-card" #location (click)="showLocations($event)">
+    <ion-item lines="none">
+      <ion-avatar item-start>
+        <ion-img [src]='locationService.selectedLocation?.photo_url'></ion-img>
+      </ion-avatar>
+      <ion-label class="location-info">
+        <h2 text-wrap>{{ locationService.selectedLocation?.name }}</h2>
+        <h3 text-wrap>
+          <span text-nowrap>{{ locationService.selectedLocation?.street1 }}, </span>
+          <span text-nowrap>{{ locationService.selectedLocation?.city }}, {{ locationService.selectedLocation?.state }}</span>
+        </h3>
+      </ion-label>
+      <ion-icon name="caret-down-outline" class="location-icon"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <ion-card>
+    <ion-img [src]="locationService.selectedLocation?.photo_url" alt="Could not load location image"></ion-img>
+    <ion-button class="submit-button" expand="block" color="warning" href="http://www.piccolaitalianh.com/menu/">
+      <ion-icon name="book-outline"></ion-icon>
+      See Menu
+    </ion-button>
+  </ion-card>
+
+
+  <app-tab-lookup>   </app-tab-lookup>
+
+  <app-coupon>   </app-coupon>
+
+
+  <!-- <ion-select value="test1" interface="popover">
+    <ion-select-option value="test1">
+      fgh
+    </ion-select-option>
+    <ion-select-option value="test2">
+      fgijhg
+    </ion-select-option>
+  </ion-select> -->
+  <!-- <ion-icon name="chevron-forward-outline" class="slide-arrow forward-arrow"></ion-icon>
+  <ion-icon name="chevron-back-outline" class="slide-arrow back-arrow"></ion-icon> -->
+</ion-content>

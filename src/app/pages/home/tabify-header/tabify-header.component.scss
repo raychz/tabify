@@ -1,0 +1,50 @@
+.tabify-icon {
+    position: absolute;
+    top: constant(safe-area-inset-top);
+    top: env(safe-area-inset-top);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 3px;
+    height: 42px;
+  }
+  
+  .user-profile {
+    height: 32px;
+    width: 32px;
+    margin-right: 12px;
+  
+    .menu {
+      border-radius: 50%;
+      font-size: 1.3rem;
+      --ion-color-base: white;
+      background-color: black;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
+  
+  // .menu {
+  //   position: absolute;
+  //   bottom: 0;
+  //   right: 0;
+  // }
+  
+  .notifications {
+  ion-badge {
+    position: absolute;
+    background-color: red;
+    top: 0;
+    border-radius: 50%;
+    right: 0;
+    opacity: 0.7;
+  }
+  
+  .notification-icon {
+      margin-right: 0.9rem;
+      color: white;
+      font-size: 2rem;
+    }
+  }

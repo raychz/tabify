@@ -1,0 +1,91 @@
+<ion-card>
+  <!-- <ion-card-header class="header">
+    Join Your Ticket
+    <ion-button class="fraud-code-button" fill="clear">
+      <ion-icon name="key-outline" class="fraud-code-icon"></ion-icon>
+    </ion-button>
+  </ion-card-header> -->
+  <app-fraud-header headerTitle="Pay for your Meal">
+
+  </app-fraud-header>
+  <!-- <ion-card-content class="content"> -->
+          <form [formGroup]="tabForm">
+            <ion-item>
+              <ion-input class="small-input" type="tel" inputmode="tel" placeholder="Enter ticket number..." formControlName="ticketNumber" (ionChange)="validateTicketNumber(tabForm.value)"></ion-input>
+              <ion-icon name="help-circle-outline" class="help-icon" (click)="helpPopover($event, 'Your ticket number can usually be found at the top or bottom of your check. When entering your ticket number please ignore any letters trailing at the end')"></ion-icon>
+            </ion-item>
+              <p class="loader-bad" *ngIf="errorMessage"> {{this.errorMessage}} </p>
+              <ion-button class="submit-button" expand="block" color="warning" (click)="enterTicketNumber(tabForm.value)" *ngIf="!checkingTicketNumber && !existingTicket && !newTicket" [disabled]="tabForm.invalid || errorMessage !== ''">
+                <ion-icon name="restaurant-outline"></ion-icon>
+                Find Ticket
+              </ion-button>
+          </form>
+          <ion-grid *ngIf="checkingTicketNumber">
+            <ion-row>
+              <ion-col class="center-element" >
+                <ion-spinner></ion-spinner>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      <ng-container *ngIf="existingTicket">
+          <p class="loader-good">Your ticket has already been opened, click below to join.</p>
+          <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Join Ticket
+          </ion-button>
+      </ng-container>
+      <ng-container *ngIf="newTicket">
+          <form [formGroup]="newTicketForm">
+            <p class="loader-warning">Your ticket hasn't been opened yet, please enter the following:</p>
+            <p class="explain-text">How do you want to split the bill?</p>
+            <ion-radio-group formControlName="mode">
+            <!-- Default Selected Value not working when binding radio to form  -->
+            <!-- <ion-radio-group formControlName="mode" [value]="ticketMode.ITEMIZE"> -->
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        Itemize
+                      </ion-label>
+                      <ion-radio [value]="ticketMode.ITEMIZE"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        Even Split
+                      </ion-label>
+                      <ion-radio [value]="ticketMode.EVEN_SPLIT"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-item class="ticket-mode">
+                      <ion-label>
+                        No Split
+                      </ion-label>
+                      <ion-radio value="ticketMode.NO_SLIT"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>  
+            </ion-radio-group>
+            <!-- <ion-item class="input">
+              <ion-select value="itemize" interface="popover" class="input">
+                <ion-select-option value="itemize">Itemize and Split</ion-select-option>
+                <ion-select-option value="even">Evenly Split the Total</ion-select-option>
+                <ion-select-option value="full">Pay in Full/Don't Split</ion-select-option>
+              </ion-select>
+            </ion-item> -->     
+            <p class="explain-text">How many in your party?</p>
+            <ion-item class="input">
+              <ion-input type="tel" formControlName="partySize" placeholder="Enter party size..."></ion-input>
+            </ion-item>
+          </form>
+          <ion-button class="submit-button" expand="block" color="warning" (click)="updateTicketConfig(newTicketForm.value)">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Open Ticket
+          </ion-button>
+      </ng-container>
+  <!-- </ion-card-content> -->
+</ion-card>
