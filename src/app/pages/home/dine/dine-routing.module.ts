@@ -16,6 +16,10 @@ const routes: Routes = [
       path: ':locationSlug/pay',
       loadChildren: () => import('./pay/pay.module').then( m => m.PayPageModule)
     },
+    {
+      path: ':locationSlug/menu',
+      // loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
+    },
 ];
 
 @NgModule({

@@ -7,6 +7,7 @@ import { AlertService } from 'src/services/utilities/alert.service';
 import { TabsService } from 'src/services/tabs/tabs.service';
 import { PopoverController, IonCard, NavController } from '@ionic/angular';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { stat } from 'fs';
 
 // export class ActivateDinePage implements CanActivate {
 
@@ -38,33 +39,28 @@ export class DinePage implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    console.log(route);
-    console.log(state);
-    const postDineUrl = state.url.split('/dine').pop();
-    const urlSegments = postDineUrl.split('/');
-    console.log(urlSegments);
+    // maybe somehow parametize match variable and reuse this location gaurd in places like home/explore/:locationSlug where we show reviews
+    const match = '/dine';
+    const splitIndex = state.url.indexOf(match) + match.length;
+    const preIndexUrl = state.url.substring(0, splitIndex);
+    const postIndexUrl = state.url.substring(splitIndex);
+    const urlSegments = postIndexUrl.split('/');
     const locationSlug = urlSegments[1];
     if (locationSlug) {
-      console.log('in true');
       const locations = await this.locationService.getLocations();
-      console.log('slug is ', locationSlug);
       const locationIndex = locations.findIndex( loc => loc.slug === locationSlug);
-      console.log(locationIndex);
       if (locationIndex !== -1) {
-        console.log(locationIndex);
         this.locationService.selectLocation(locationIndex);
         return true;
       } else {
         const location = await this.locationService.selectDefaultLocation();
         urlSegments[1] = location.slug;
-        console.log(`/home/dine/${urlSegments.join('/')}`);
-        return this.router.parseUrl(`/home/dine${urlSegments.join('/')}`);
+        return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}`);
       }
     } else {
       const location = await this.locationService.selectDefaultLocation();
       urlSegments[1] = location.slug;
-      console.log(`/home/dine/${urlSegments.join('/')}`);
-      return this.router.parseUrl(`/home/dine${urlSegments.join('/')}`);
+      return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}`);
     }
   }
 
@@ -77,22 +73,4 @@ export class DinePage implements CanActivate {
   public async showLocations() {
     await this.navCtrl.navigateForward('home/locations');
   }
-
-  private async selectDefaultLocation() {
-    const loading = await this.loader.create();
-    await loading.present();
-    try {
-      await this.locationService.selectDefaultLocation();
-      await loading.dismiss();
-    } catch (e) {
-      await loading.dismiss();
-      const alert = await this.alertCtrl.create({
-        header: 'Network Error',
-        message: `Something went wrong, please check your connection and try again.`,
-      });
-      alert.present();
-      console.log(e);
-    }
-  }
-
 }
