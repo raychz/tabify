@@ -14,7 +14,6 @@ export class HomePage {
 
   public ionViewDidEnter() {
     console.log('ionViewDidLoad HomePage');
-    this.tabsService.showTabs();
   }
 
 }

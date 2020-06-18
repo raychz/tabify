@@ -6,6 +6,7 @@ import { Coupon } from './coupon.interface';
 
 export interface Location extends TabifyBaseInterface {
   omnivore_id?: string;
+  slug?: string;
   name: string;
   city: string;
   country: string;

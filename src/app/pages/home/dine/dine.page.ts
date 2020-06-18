@@ -5,51 +5,77 @@ import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { TabsService } from 'src/services/tabs/tabs.service';
-import { PopoverController, IonCard } from '@ionic/angular';
-import { LocationComponent } from './locations/location.component';
+import { PopoverController, IonCard, NavController } from '@ionic/angular';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+
+// export class ActivateDinePage implements CanActivate {
+
+// }
 
 @Component({
   selector: 'app-dine',
   templateUrl: 'dine.page.html',
   styleUrls: ['dine.page.scss']
 })
-export class DinePage {
+export class DinePage implements CanActivate {
   @ViewChild('location', { static: false }) locationCard: any;
-
 
   constructor(
     public locationService: LocationService,
     public loader: LoaderService,
     public auth: AuthService,
+    public router: Router,
+    public navCtrl: NavController,
     public popover: PopoverController,
     public alertCtrl: AlertService,
-    public tabsService: TabsService
   ) {}
 
   // public ionViewCanEnter(): boolean {
   //   return this.auth.authenticated;
   // }
 
-  public async ionViewDidEnter() {
-    console.log('ionViewDidLoad DinePage');
-    this.tabsService.showTabs();
-    // await this.auth.signInWithEmail({email: '', password: ''});
-    if (!this.locationService.selectedLocation) {
-      await this.selectDefaultLocation();
+  public async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    console.log(route);
+    console.log(state);
+    const postDineUrl = state.url.split('/dine').pop();
+    const urlSegments = postDineUrl.split('/');
+    console.log(urlSegments);
+    const locationSlug = urlSegments[1];
+    if (locationSlug) {
+      console.log('in true');
+      const locations = await this.locationService.getLocations();
+      console.log('slug is ', locationSlug);
+      const locationIndex = locations.findIndex( loc => loc.slug === locationSlug);
+      console.log(locationIndex);
+      if (locationIndex !== -1) {
+        console.log(locationIndex);
+        this.locationService.selectLocation(locationIndex);
+        return true;
+      } else {
+        const location = await this.locationService.selectDefaultLocation();
+        urlSegments[1] = location.slug;
+        console.log(`/home/dine/${urlSegments.join('/')}`);
+        return this.router.parseUrl(`/home/dine${urlSegments.join('/')}`);
+      }
+    } else {
+      const location = await this.locationService.selectDefaultLocation();
+      urlSegments[1] = location.slug;
+      console.log(`/home/dine/${urlSegments.join('/')}`);
+      return this.router.parseUrl(`/home/dine${urlSegments.join('/')}`);
     }
   }
 
-  public async showLocations(event: Event) {
-    if (event.target !== this.locationCard.el) {
-      // click el
-    }
+  public async ionViewDidEnter() {
+    console.log('ionViewDidLoad DinePage');
+    console.log(this.locationService.selectedLocation);
+    // await this.auth.signInWithEmail({email: '', password: ''});
+  }
 
-    const popover = await this.popover.create({
-      component: LocationComponent,
-      event,
-      cssClass: 'popover-locations',
-    });
-    popover.present();
+  public async showLocations() {
+    await this.navCtrl.navigateForward('home/locations');
   }
 
   private async selectDefaultLocation() {

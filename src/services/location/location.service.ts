@@ -20,10 +20,12 @@ export class LocationService {
   public async selectDefaultLocation() {
       await this.getLocations();
       this.selectedLocation = this.locations[0];
+      return this.selectedLocation;
   }
 
   public selectLocation(index: number) {
     this.selectedLocation = this.locations[index];
+    return this.selectedLocation;
   }
 
   public async getFraudPreventionCode(): Promise<FraudPreventionCode> {

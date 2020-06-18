@@ -9,10 +9,8 @@ import { TabsService } from 'src/services/tabs/tabs.service';
 export class ExplorePage {
 
   constructor(
-    public tabsService: TabsService,
   ) {}
 
   public ionViewDidEnter() {
-    this.tabsService.showTabs();
   }
 }

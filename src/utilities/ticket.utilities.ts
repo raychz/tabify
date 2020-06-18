@@ -102,7 +102,7 @@ export const getStoryUsersDescription = (users: User[] = [], userDisplayLimit: n
 }
 
 /**
- * For the select-items page: Returns a string to describe the users who have joined the ticket/story.
+ * For the select page: Returns a string to describe the users who have joined the ticket/story.
  * Ex: Ray, Hassan, Sahil +3 others
  * @param users List of users
  * @param userDisplayLimit The max number of usernames to render. The rest of the users will be truncated and represented by "+x others", where x is the number of truncated users. Defaults to 3.

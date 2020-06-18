@@ -12,7 +12,7 @@ import { HomePage } from './home.page';
     IonicModule,
     CommonModule,
     FormsModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
   ],
   declarations: [HomePage],
 })

@@ -3,7 +3,7 @@
 </app-tabify-header>
 
 <ion-content>
-  <ion-card class="location-card" #location (click)="showLocations($event)">
+  <ion-card class="location-card" #location (click)="showLocations()">
     <ion-item lines="none">
       <ion-avatar item-start>
         <ion-img [src]='locationService.selectedLocation?.photo_url'></ion-img>

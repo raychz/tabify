@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DinePage } from './dine.page';
 import { TabLookupComponent } from './tab-lookup/tab-lookup.component';
 import { CouponComponent } from './coupon/coupon.component';
-import { LocationComponent } from './locations/location.component';
 import { DinePageRoutingModule } from './dine-routing.module';
 import { TabifyHeaderModule } from '../tabify-header/tabify-header.module';
 import { FraudHeaderModule } from './fraud-header/fraud-header.module';
@@ -22,7 +21,7 @@ import { TabLookupModule } from './tab-lookup/tab-lookup.module';
     ReactiveFormsModule,
     DinePageRoutingModule
   ],
-  declarations: [DinePage, CouponComponent, LocationComponent],
-  entryComponents: [LocationComponent]
+  providers: [DinePage],
+  declarations: [DinePage, CouponComponent],
 })
 export class DinePageModule {}

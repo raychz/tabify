@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { SelectItemsPageRoutingModule } from './select-items-routing.module';
+import { SelectPageRoutingModule } from './select-routing.module';
 
-import { SelectItemsPage } from './select-items.page';
+import { SelectPage } from './select.page';
 import { StatusModule } from '../../status/status.module';
 import { FraudHeaderModule } from '../../fraud-header/fraud-header.module';
 
@@ -17,8 +17,8 @@ import { FraudHeaderModule } from '../../fraud-header/fraud-header.module';
     IonicModule,
     StatusModule,
     FraudHeaderModule,
-    SelectItemsPageRoutingModule
+    SelectPageRoutingModule
   ],
-  declarations: [SelectItemsPage]
+  declarations: [SelectPage]
 })
-export class SelectItemsPageModule {}
+export class SelectPageModule {}

@@ -4,11 +4,11 @@ import { NavController } from '@ionic/angular';
 import { LocationService } from 'src/services/location/location.service';
 
 @Component({
-  selector: 'app-review',
-  templateUrl: './review.page.html',
-  styleUrls: ['./review.page.scss'],
+  selector: 'app-confirm',
+  templateUrl: './confirm.page.html',
+  styleUrls: ['./confirm.page.scss'],
 })
-export class ReviewPage {
+export class ConfirmPage {
 
   constructor(
     public navCtrl: NavController,
@@ -19,7 +19,7 @@ export class ReviewPage {
   }
 
   public async nextPage() {
-    this.navCtrl.navigateRoot(`home/dine/${this.locationService.selectedLocation.slug}`);
+    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/review`);
   }
 
 }

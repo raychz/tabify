@@ -2,10 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { LocationService } from 'src/services/location/location.service';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AlertService } from 'src/services/utilities/alert.service';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, NavController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-location',
+  selector: 'app-location-component',
   templateUrl: './location.component.html',
   styleUrls: ['./location.component.scss'],
 })
@@ -15,7 +15,7 @@ export class LocationComponent {
     public locationService: LocationService,
     public loader: LoaderService,
     public alertCtrl: AlertService,
-    public popover: PopoverController,
+    public navCtrl: NavController,
   ) { }
 
   public async ionViewDidEnter() {
@@ -23,7 +23,7 @@ export class LocationComponent {
   }
 
   public selectLocation(index: number) {
-    this.locationService.selectLocation(index);
-    this.popover.dismiss();
+    const location = this.locationService.selectLocation(index);
+    this.navCtrl.navigateRoot(`home/dine/${location.slug}`);
   }
 }

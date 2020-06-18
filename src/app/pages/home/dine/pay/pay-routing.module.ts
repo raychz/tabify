@@ -9,12 +9,12 @@ const routes: Routes = [
     component: PayPage,
     children: [
       {
-        path: 'select-items',
-        loadChildren: () => import('./select-items/select-items.module').then( m => m.SelectItemsPageModule)
+        path: 'select',
+        loadChildren: () => import('./select/select.module').then( m => m.SelectPageModule)
       },
       {
-        path: 'tax-tip',
-        loadChildren: () => import('./tax-tip/tax-tip.module').then( m => m.TaxTipPageModule)
+        path: 'confirm',
+        loadChildren: () => import('./confirm/confirm.module').then( m => m.ConfirmPageModule)
       },
       {
         path: 'review',
@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'select-items',
+        redirectTo: 'select',
         pathMatch: 'full'
       }
     ]

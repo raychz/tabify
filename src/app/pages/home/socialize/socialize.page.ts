@@ -9,10 +9,8 @@ import { TabsService } from 'src/services/tabs/tabs.service';
 export class SocializePage {
 
   constructor(
-    public tabsService: TabsService,
   ) {}
 
   public ionViewDidEnter() {
-    this.tabsService.showTabs();
   }
 }

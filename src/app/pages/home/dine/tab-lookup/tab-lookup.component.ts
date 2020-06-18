@@ -46,7 +46,8 @@ export class TabLookupComponent implements OnInit {
   }
 
   public async nextPage() {
-    await this.navCtrl.navigateForward('home/dine/pay');
+    console.log('in next page');
+    await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/pay`);
   }
 
   public validateTicketNumber(value: any) {

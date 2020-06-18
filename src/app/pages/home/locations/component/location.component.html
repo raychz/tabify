@@ -1,12 +1,5 @@
-<ion-item class="header">
-  <ion-searchbar></ion-searchbar>
-  <ion-button>
-    Sort By
-  </ion-button>
-</ion-item>
+<ion-searchbar></ion-searchbar>
 
-<ion-infinite-scroll>
-  <ion-infinite-scroll-content>
     <ion-card class="location-card" *ngFor="let location of locationService.locations; let i = index" (click)="selectLocation(i)">
       <ion-item lines="none">
         <ion-avatar item-start>
@@ -23,5 +16,3 @@
       </ion-item>
     </ion-card>
     <ion-label>No more locations</ion-label>
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>

@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TaxTipPageRoutingModule } from './tax-tip-routing.module';
+import { ConfirmPageRoutingModule } from './confirm-routing.module';
 
-import { TaxTipPage } from './tax-tip.page';
+import { ConfirmPage } from './confirm.page';
 import { StatusModule } from '../../status/status.module';
 
 @NgModule({
@@ -15,8 +15,8 @@ import { StatusModule } from '../../status/status.module';
     FormsModule,
     IonicModule,
     StatusModule,
-    TaxTipPageRoutingModule
+    ConfirmPageRoutingModule
   ],
-  declarations: [TaxTipPage]
+  declarations: [ConfirmPage]
 })
-export class TaxTipPageModule {}
+export class ConfirmPageModule {}
