@@ -6,6 +6,7 @@ import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
 import { Ticket } from 'src/interfaces/ticket.interface';
 import { TicketMode } from '../../../../../enums/index';
 import { HelpTextComponent } from './help-text/help-text.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab-lookup',
@@ -34,6 +35,7 @@ export class TabLookupComponent implements OnInit {
     public fb: FormBuilder,
     public navCtrl: NavController,
     public locationService: LocationService,
+    public router: Router,
     public popover: PopoverController,
     public ablyTicketService: AblyTicketService,
   ) { }

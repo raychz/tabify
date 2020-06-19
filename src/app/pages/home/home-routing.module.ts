@@ -20,21 +20,12 @@ const routes: Routes = [
         loadChildren: () => import('./socialize/socialize.module').then(m => m.SocializePageModule)
       },
       {
-        path: 'locations',
-        loadChildren: () => import('./locations/locations.module').then(m => m.LocationsPageModule)
-      },
-      {
         path: '',
         redirectTo: 'dine',
         pathMatch: 'full'
       }
     ]
   },
-  {
-    path: 'locations',
-    loadChildren: () => import('./locations/locations.module').then( m => m.LocationsPageModule)
-  },
-
 ];
 
 @NgModule({

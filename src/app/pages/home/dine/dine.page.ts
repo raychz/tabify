@@ -7,7 +7,6 @@ import { AlertService } from 'src/services/utilities/alert.service';
 import { TabsService } from 'src/services/tabs/tabs.service';
 import { PopoverController, IonCard, NavController } from '@ionic/angular';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { stat } from 'fs';
 
 // export class ActivateDinePage implements CanActivate {
 
@@ -47,8 +46,10 @@ export class DinePage implements CanActivate {
     const urlSegments = postIndexUrl.split('/');
     const locationSlug = urlSegments[1];
     if (locationSlug) {
-      const locations = await this.locationService.getLocations();
-      const locationIndex = locations.findIndex( loc => loc.slug === locationSlug);
+      if (!this.locationService.locations) {
+        await this.locationService.getLocations();
+      }
+      const locationIndex = this.locationService.locations.findIndex( loc => loc.slug === locationSlug);
       if (locationIndex !== -1) {
         this.locationService.selectLocation(locationIndex);
         return true;
@@ -71,6 +72,8 @@ export class DinePage implements CanActivate {
   }
 
   public async showLocations() {
-    await this.navCtrl.navigateForward('home/locations');
+    await this.navCtrl.navigateForward('home/dine/locations');
+    // await this.router.navigate(['home', 'dine', 'locations']);
+    // await this.router.
   }
 }

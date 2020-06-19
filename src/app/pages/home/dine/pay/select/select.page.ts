@@ -19,7 +19,8 @@ export class SelectPage {
   }
 
   public async nextPage() {
-    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/confirm`);
+    // await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/confirm`);
+    await this.navCtrl.pop();
   }
 
 }

@@ -6,19 +6,22 @@ import { PayPage } from './pay.page';
 const routes: Routes = [
   {
     path: '',
-    component: PayPage,
+    // component: PayPage,
     children: [
       {
         path: 'select',
-        loadChildren: () => import('./select/select.module').then( m => m.SelectPageModule)
+        loadChildren: () => import('./select/select.module').then( m => m.SelectPageModule),
+        // outlet: 'pay-routing'
       },
       {
         path: 'confirm',
-        loadChildren: () => import('./confirm/confirm.module').then( m => m.ConfirmPageModule)
+        loadChildren: () => import('./confirm/confirm.module').then( m => m.ConfirmPageModule),
+        // outlet: 'pay-routing'
       },
       {
         path: 'review',
-        loadChildren: () => import('./review/review.module').then( m => m.ReviewPageModule)
+        loadChildren: () => import('./review/review.module').then( m => m.ReviewPageModule),
+        // outlet: 'pay-routing'
       },
       {
         path: '',

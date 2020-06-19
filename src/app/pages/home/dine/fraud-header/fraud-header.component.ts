@@ -5,20 +5,13 @@ import { Component, OnInit, Input } from '@angular/core';
   templateUrl: './fraud-header.component.html',
   styleUrls: ['./fraud-header.component.scss'],
 })
-export class FraudHeaderComponent implements OnInit {
+export class FraudHeaderComponent {
   @Input()
   headerTitle: string;
-  @Input()
-  noBackButton: boolean;
+  // @Input()
+  // backButtonHref: string;
 
-  falseVal = false;
 
   constructor() { }
-
-  public ngOnInit() {
-    console.log(this.noBackButton);
-    this.noBackButton = this.noBackButton !== undefined;
-    console.log(this.noBackButton);
-  }
 
 }

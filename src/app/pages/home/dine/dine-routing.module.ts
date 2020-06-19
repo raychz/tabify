@@ -7,7 +7,12 @@ const routes: Routes = [
       path: '',
       // component: DinePage,
       canActivate: [DinePage],
-    }, {
+    },
+    {
+      path: 'locations',
+      loadChildren: () => import('./locations/locations.module').then(m => m.LocationsPageModule)
+    },
+    {
       path: ':locationSlug',
       component: DinePage,
       canActivate: [DinePage],

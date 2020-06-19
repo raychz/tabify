@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tabify-header',
@@ -7,8 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TabifyHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public menuController: MenuController,
+  ) { }
 
   ngOnInit() {}
+
+  async openMenu() {
+    await this.menuController.open();
+  }
 
 }
