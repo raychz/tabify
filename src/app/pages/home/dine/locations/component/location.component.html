@@ -1,0 +1,18 @@
+<ion-searchbar></ion-searchbar>
+
+    <ion-card class="location-card" *ngFor="let location of locationService.locations; let i = index" (click)="selectLocation(i)">
+      <ion-item lines="none">
+        <ion-avatar item-start>
+          <ion-img [src]="location.photo_url"></ion-img>
+        </ion-avatar>
+        <ion-label class="location-info">
+          <h2 text-wrap> {{ location.name }} </h2>
+          <h3 text-wrap>
+            <span text-nowrap> {{ location.street1 }}, </span>
+            <span text-nowrap> {{ location.city}}, {{ location.state }}</span>
+          </h3>
+        </ion-label>
+        <!-- <ion-icon name="caret-down-outline" class="location-icon"></ion-icon> -->
+      </ion-item>
+    </ion-card>
+    <ion-label>No more locations</ion-label>
