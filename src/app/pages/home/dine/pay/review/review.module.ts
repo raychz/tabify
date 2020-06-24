@@ -8,6 +8,7 @@ import { ReviewPageRoutingModule } from './review-routing.module';
 
 import { ReviewPage } from './review.page';
 import { StatusModule } from '../../status/status.module';
+import { FraudCodeModule } from '../../fraud-code/fraud-code.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { StatusModule } from '../../status/status.module';
     FormsModule,
     IonicModule,
     StatusModule,
+    FraudCodeModule,
     ReviewPageRoutingModule
   ],
   declarations: [ReviewPage]

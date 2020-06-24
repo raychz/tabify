@@ -8,6 +8,8 @@ import { ConfirmPageRoutingModule } from './confirm-routing.module';
 
 import { ConfirmPage } from './confirm.page';
 import { StatusModule } from '../../status/status.module';
+import { FraudCodeComponent } from '../../fraud-code/fraud-code.component';
+import { FraudCodeModule } from '../../fraud-code/fraud-code.module';
 
 @NgModule({
   imports: [
@@ -15,7 +17,8 @@ import { StatusModule } from '../../status/status.module';
     FormsModule,
     IonicModule,
     StatusModule,
-    ConfirmPageRoutingModule
+    ConfirmPageRoutingModule,
+    FraudCodeModule,
   ],
   declarations: [ConfirmPage]
 })

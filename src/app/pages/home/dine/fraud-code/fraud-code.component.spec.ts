@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FraudHeaderComponent } from './fraud-header.component';
+import { FraudCodeComponent } from './fraud-code.component';
 
 describe('FraudHeaderComponent', () => {
-  let component: FraudHeaderComponent;
-  let fixture: ComponentFixture<FraudHeaderComponent>;
+  let component: FraudCodeComponent;
+  let fixture: ComponentFixture<FraudCodeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FraudHeaderComponent ],
+      declarations: [ FraudCodeComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FraudHeaderComponent);
+    fixture = TestBed.createComponent(FraudCodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

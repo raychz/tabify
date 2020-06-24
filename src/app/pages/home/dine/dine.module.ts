@@ -7,7 +7,6 @@ import { TabLookupComponent } from './tab-lookup/tab-lookup.component';
 import { CouponComponent } from './coupon/coupon.component';
 import { DinePageRoutingModule } from './dine-routing.module';
 import { TabifyHeaderModule } from '../tabify-header/tabify-header.module';
-import { FraudHeaderModule } from './fraud-header/fraud-header.module';
 import { TabLookupModule } from './tab-lookup/tab-lookup.module';
 
 @NgModule({
@@ -15,7 +14,6 @@ import { TabLookupModule } from './tab-lookup/tab-lookup.module';
     IonicModule,
     CommonModule,
     TabifyHeaderModule,
-    FraudHeaderModule,
     TabLookupModule,
     FormsModule,
     ReactiveFormsModule,

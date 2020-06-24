@@ -1,6 +1,6 @@
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
-import { FraudHeaderComponent } from './fraud-header.component';
+import { FraudCodeComponent } from './fraud-code.component';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
     IonicModule,
     CommonModule,
   ],
-  declarations: [FraudHeaderComponent],
-  exports: [FraudHeaderComponent],
+  declarations: [FraudCodeComponent],
+  exports: [FraudCodeComponent],
 })
-export class FraudHeaderModule {}
+export class FraudCodeModule {}

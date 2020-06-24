@@ -8,7 +8,7 @@ import { SelectPageRoutingModule } from './select-routing.module';
 
 import { SelectPage } from './select.page';
 import { StatusModule } from '../../status/status.module';
-import { FraudHeaderModule } from '../../fraud-header/fraud-header.module';
+import { FraudCodeModule } from '../../fraud-code/fraud-code.module';
 
 @NgModule({
   imports: [
@@ -16,7 +16,7 @@ import { FraudHeaderModule } from '../../fraud-header/fraud-header.module';
     FormsModule,
     IonicModule,
     StatusModule,
-    FraudHeaderModule,
+    FraudCodeModule,
     SelectPageRoutingModule
   ],
   declarations: [SelectPage]

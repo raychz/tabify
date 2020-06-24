@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HelpTextComponent } from './help-text/help-text.component';
 import { TabLookupComponent } from './tab-lookup.component';
-import { FraudHeaderModule } from '../fraud-header/fraud-header.module';
+import { FraudCodeModule } from '../fraud-code/fraud-code.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
-    FraudHeaderModule,
+    FraudCodeModule,
     FormsModule,
     ReactiveFormsModule,
   ],

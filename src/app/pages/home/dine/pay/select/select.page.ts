@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { TabsService } from 'src/services/tabs/tabs.service';
+import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { LocationService } from 'src/services/location/location.service';
 
@@ -15,12 +14,8 @@ export class SelectPage {
     public locationService: LocationService,
   ) { }
 
-  public ionViewDidEnter() {
-  }
-
   public async nextPage() {
-    // await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/confirm`);
-    await this.navCtrl.pop();
+    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/confirm`);
   }
 
 }
