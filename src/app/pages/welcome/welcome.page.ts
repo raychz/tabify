@@ -29,7 +29,6 @@ export class WelcomePage implements OnInit {
 
   async ionViewDidEnter() {
     console.log('ionViewDidLoad UnauthenticatedPage');
-    // await this.auth.signInWithEmail({email: '', password: ''});
   }
 
   async slideChanged() {

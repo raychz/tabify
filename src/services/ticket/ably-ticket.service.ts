@@ -35,6 +35,28 @@ export class AblyTicketService {
     }
   }
 
+  public async addUserToDatabaseTicket() {
+    if (!this.ticket) {
+      console.log('can not add user to ticket - ably ticket is undefined');
+      return;
+    }
+    return await this.http
+      .post<TicketUser>(`${environment.serverUrl}/tickets/${this.ticket.id}/users`, {})
+      .toPromise();
+  }
+
+  public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, {})
+      .toPromise();
+  }
+
+  public async removeUserFromTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`)
+      .toPromise();
+  }
+
   async subscribeToTicketUpdates(ticketId) {
     const ticketChannel = this.ablyService.getChannel(ticketId);
     ticketChannel.on('attached', (stateChange) => {
@@ -143,9 +165,10 @@ export class AblyTicketService {
       console.log('cannot update ticket config - no ticket selected');
       return undefined;
     }
-    this.ticket = await this.http
+    const updatedTicket = await this.http
       .patch(`${environment.serverUrl}/tickets/${this.ticket.id}`, body)
       .toPromise() as Ticket;
+    this.onTicketUpdate(updatedTicket);
     return this.ticket;
   }
 

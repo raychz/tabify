@@ -45,17 +45,19 @@ export class DinePage implements CanActivate {
     const postIndexUrl = state.url.substring(splitIndex);
     const urlSegments = postIndexUrl.split('/');
     const locationSlug = urlSegments[1];
+
+    if (!this.locationService.locations) {
+      await this.locationService.getLocations();
+    }
+
     if (locationSlug) {
-      if (!this.locationService.locations) {
-        await this.locationService.getLocations();
-      }
-      const locationIndex = this.locationService.locations.findIndex( loc => loc.slug === locationSlug);
-      if (locationIndex !== -1) {
-        this.locationService.selectLocation(locationIndex);
+      const findLoc = {slug: locationSlug} as Location;
+      const selectedLoc = this.locationService.selectLocation(findLoc);
+
+      if (selectedLoc.slug === locationSlug) {
         return true;
       } else {
-        const location = await this.locationService.selectDefaultLocation();
-        urlSegments[1] = location.slug;
+        urlSegments[1] = selectedLoc.slug;
         return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}`);
       }
     } else {

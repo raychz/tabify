@@ -1,18 +1,22 @@
-<ion-searchbar></ion-searchbar>
+<ng-container>
+  <ion-searchbar placeholder="Search for a restaurant by name" (ionInput)="filterItems($event)"></ion-searchbar>
 
-    <ion-card class="location-card" *ngFor="let location of locationService.locations; let i = index" (click)="selectLocation(i)">
-      <ion-item lines="none">
-        <ion-avatar item-start>
-          <ion-img [src]="location.photo_url"></ion-img>
-        </ion-avatar>
-        <ion-label class="location-info">
-          <h2 text-wrap> {{ location.name }} </h2>
-          <h3 text-wrap>
-            <span text-nowrap> {{ location.street1 }}, </span>
-            <span text-nowrap> {{ location.city}}, {{ location.state }}</span>
-          </h3>
-        </ion-label>
-        <!-- <ion-icon name="caret-down-outline" class="location-icon"></ion-icon> -->
-      </ion-item>
-    </ion-card>
-    <ion-label>No more locations</ion-label>
+  <ion-card class="location-card" *ngFor="let location of filteredLocations" (click)="selectLocation(location)">
+    <ion-item lines="none">
+      <ion-avatar item-start>
+        <ion-img [src]="location.photo_url"></ion-img>
+      </ion-avatar>
+      <ion-label class="location-info">
+        <h2 text-wrap> {{ location.name }} </h2>
+        <h3 text-wrap>
+          <span text-nowrap> {{ location.street1 }}, </span>
+          <span text-nowrap> {{ location.city}}, {{ location.state }}</span>
+        </h3>
+      </ion-label>
+      <!-- <ion-icon name="caret-down-outline" class="location-icon"></ion-icon> -->
+    </ion-item>
+  </ion-card>
+
+  <p class="end-text" *ngIf="!filteredLocations.length">No restaurants matched your search.</p>
+  <p class="end-text" *ngIf="filteredLocations.length">More locations coming soon!</p>
+</ng-container>

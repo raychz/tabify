@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { NavController, PopoverController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { LocationService } from 'src/services/location/location.service';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
 import { Ticket } from 'src/interfaces/ticket.interface';
 import { TicketMode } from '../../../../../enums/index';
-import { HelpTextComponent } from './help-text/help-text.component';
 import { Router } from '@angular/router';
+import { AblyService } from 'src/services/ticket/ably.service';
 
 @Component({
   selector: 'app-tab-lookup',
@@ -27,7 +27,7 @@ export class TabLookupComponent implements OnInit {
   });
   newTicketForm: FormGroup = this.fb.group({
     // validators not working for mode enum/radio
-    mode: ['', Validators.compose([Validators.required])],
+    mode: [TicketMode.ITEMIZE, Validators.compose([Validators.required])],
     partySize: ['', Validators.compose([Validators.required])],
   });
 
@@ -36,7 +36,8 @@ export class TabLookupComponent implements OnInit {
     public navCtrl: NavController,
     public locationService: LocationService,
     public router: Router,
-    public popover: PopoverController,
+    public toastController: ToastController,
+    public ablyService: AblyService,
     public ablyTicketService: AblyTicketService,
   ) { }
 
@@ -52,6 +53,26 @@ export class TabLookupComponent implements OnInit {
     await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/pay`);
   }
 
+  private async initializeTicketMetadata() {
+    console.log('1');
+    this.ablyTicketService.synchronizeFrontendTicket();
+    console.log('2');
+    this.ablyTicketService.synchronizeFrontendTicketItems();
+    console.log('3');
+
+    // Subscribe to Ably ticket channel - ToDo: move ably connection logic to pay workflow
+    this.ablyService.connect();
+    await this.ablyTicketService.subscribeToTicketUpdates(this.ablyTicketService.ticket.id);
+
+    // Add user to database ticket
+    console.log('adding user');
+    const newTicketUser = await this.ablyTicketService.addUserToDatabaseTicket();
+    this.ablyTicketService.onTicketUserAdded(newTicketUser);
+    // await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
+    this.nextPage();
+
+  }
+
   public validateTicketNumber(value: any) {
     this.newTicket = false;
     this.existingTicket = false;
@@ -62,13 +83,13 @@ export class TabLookupComponent implements OnInit {
     }
   }
 
-  public async helpPopover(event: Event, helpText: string) {
-    const popover = await this.popover.create({
-      component: HelpTextComponent,
-      event,
-      cssClass: 'popover-help',
+  public async helpToast(message: string, duration: number) {
+    const toast = await this.toastController.create({
+      message,
+      duration,
+      animated: true,
     });
-    popover.present();
+    toast.present();
   }
 
   public async enterTicketNumber(value: any) {
@@ -90,12 +111,12 @@ export class TabLookupComponent implements OnInit {
       ) as Ticket;
       if (ticket.mode) {
         this.existingTicket = true;
+        await this.initializeTicketMetadata();
       } else {
         this.newTicket = true;
       }
-      // await this.initializeTicketMetadata(ticket);
-      // await this.initializeFirestoreTicketListeners(ticket);
     } catch (e) {
+      console.log(e);
       if (e.stopErrorPropagation) { console.log(e); return; }
       if (e.status === 404) {
         // Two things could've happened here.
@@ -115,25 +136,24 @@ export class TabLookupComponent implements OnInit {
   }
 
   public async updateTicketConfig(config: {mode: TicketMode, partySize: number}) {
-    // this.checkingTicketNumber = true;
+    this.checkingTicketNumber = true;
     console.log(config);
     try {
       const ticket = await this.ablyTicketService.updateTicketConfig(config);
-      if (ticket) {
-        this.nextPage();
-      } else {
-        this.errorMessage = 'Error: Something went wrong - no ticket selected';
-      }
+      await this.initializeTicketMetadata();
     } catch (e) {
+      console.log(e);
       if (e.stopErrorPropagation) { console.log(e); return; }
       if (e.status === 403) {
-        this.errorMessage = 'Warning: Someone else already opened your ticket and your config was not set.';
-        this.nextPage();
+        this.newTicket = false;
+        this.errorMessage = 'Error: Someone else already set the ticket config before you. Joining ticket now...';
+        await this.initializeTicketMetadata();
       } else {
         this.errorMessage = 'Error: ' + e.error.message;
         throw e;
       }
     }
+    this.checkingTicketNumber = false;
   }
 
   async createTab(ticketNumber: number) {
@@ -141,9 +161,8 @@ export class TabLookupComponent implements OnInit {
       const newTicket = await this.ablyTicketService.createTicket(ticketNumber, this.locationService.selectedLocation.id, true);
       this.newTicket = true;
       return newTicket;
-      // await this.initializeTicketMetadata(newTicket);
-      // await this.initializeFirestoreTicketListeners(newTicket);
     } catch (e) {
+      console.log(e);
       if (e.stopErrorPropagation) { console.log(e); return; } else {
         this.errorMessage = 'Error: ' + e.error.message;
       }

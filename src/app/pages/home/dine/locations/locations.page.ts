@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LocationService } from 'src/services/location/location.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { LocationService } from 'src/services/location/location.service';
   styleUrls: ['./locations.page.scss'],
 })
 export class LocationsPage {
-
+  
   constructor(
     public locationService: LocationService,
   ) { }

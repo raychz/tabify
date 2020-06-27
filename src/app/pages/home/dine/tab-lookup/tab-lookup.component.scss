@@ -1,12 +1,13 @@
-.fraud-code-button {
-    position: absolute;
-    top: 0.3rem;
-    right: 0.2rem;
-     .fraud-code-icon {
-        font-size: 2rem;
-        color: orange;
-     }
-  }
+.header {
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
+    font-size: 0.8rem;
+    .fraud-code {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.2rem;
+    }
+}
 
 .input {
     padding-left: 0px;
@@ -14,9 +15,10 @@
     max-width: 100%;
 }
 
-.explain-text {
-    margin-left: 0.75rem;
-}
+// .explain-text {
+//     ma
+//     margin: 0.75rem;
+// }
 
 .small-input {
     max-width: 90%; // need to make this more precise - scaled for iphone 5

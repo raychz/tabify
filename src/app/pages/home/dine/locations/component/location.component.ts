@@ -3,6 +3,7 @@ import { LocationService } from 'src/services/location/location.service';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { PopoverController, NavController } from '@ionic/angular';
+import { Location } from 'src/interfaces/location.interface';
 
 @Component({
   selector: 'app-location-component',
@@ -10,6 +11,7 @@ import { PopoverController, NavController } from '@ionic/angular';
   styleUrls: ['./location.component.scss'],
 })
 export class LocationComponent {
+  filteredLocations = this.locationService.locations;
 
   constructor(
     public locationService: LocationService,
@@ -22,8 +24,20 @@ export class LocationComponent {
     await this.locationService.getLocations();
   }
 
-  public async selectLocation(index: number) {
-    const location = this.locationService.selectLocation(index);
+  public async selectLocation(loc: Location) {
+    const location = this.locationService.selectLocation(loc);
     await this.navCtrl.navigateRoot(`home/dine/${location.slug}`);
+  }
+
+  async filterItems(ev: any) {
+    this.filteredLocations = this.locationService.locations;
+    const search = ev.target.value;
+    if (search && search.trim() !== '') {
+      const modifiedSearch = search.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
+      this.filteredLocations = this.locationService.locations.filter((location) => {
+        const locationName = location.name.toLowerCase().replace(/[^a-zA-Z\d\s]/gi, '');
+        return (locationName.indexOf(modifiedSearch) > -1);
+      });
+    }
   }
 }

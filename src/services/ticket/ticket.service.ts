@@ -263,7 +263,7 @@ export class TicketService {
         // };
 
         // if (status < UserStatus.Confirmed && users.every(user => user.status >= UserStatus.Confirmed)) {
-        //   throw 'All users have already confirmed, cannot set status to selecting or waiting'
+        //   throw 'All users have already Fed, cannot set status to selecting or waiting'
         // }
         // if (status < UserStatus.Paid && users.every(user => user.status >= UserStatus.Paid)) {
         //   throw 'All users have already paid, cannot set status to anything other than paid'

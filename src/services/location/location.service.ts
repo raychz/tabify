@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Location } from '../../interfaces/location.interface';
 import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 import { environment } from '@tabify/env';
-import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
@@ -18,13 +17,17 @@ export class LocationService {
   }
 
   public async selectDefaultLocation() {
-      await this.getLocations();
-      this.selectedLocation = this.locations[0];
+      this.selectedLocation = this.locations.find(loc => loc.slug === 'VirtualPos');
       return this.selectedLocation;
   }
 
-  public selectLocation(index: number) {
-    this.selectedLocation = this.locations[index];
+  public selectLocation(location: Location) {
+    const foundLoc = this.locations.find(loc => loc.id === location.id);
+    if (foundLoc) {
+      this.selectedLocation = foundLoc;
+    } else if (!this.selectedLocation) {
+      this.selectDefaultLocation();
+    }
     return this.selectedLocation;
   }
 

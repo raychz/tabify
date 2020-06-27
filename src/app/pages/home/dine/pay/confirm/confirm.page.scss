@@ -3,3 +3,73 @@
     font-weight: 400;
     font-size: 1rem;
   }
+
+  ion-row {
+    &.item-details {
+      padding: 0;
+      overflow: hidden;
+      .col-item-name {
+        .name-text {
+          font-weight: 500;
+          font-size: 1em;
+        }
+        .quantity-text {
+          margin-left: 5px;
+          font-size: 0.9em;
+          color: lightgray;
+        }
+      }
+      .col-item-total {
+        .my-share-text {
+          color: var(--ion-color-primary);
+          font-size: 0.9em;
+          white-space: nowrap;
+          vertical-align: top;
+        }
+        .total-text {
+          font-size: 1em;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+
+  .total {
+    &-discount h2 {
+      color: #e69900;
+      font-weight: bold;
+    }
+    color: gray;
+  }
+
+  .grand-total {
+    border-bottom: 1px lightgray dashed;
+    h2 {
+      font-weight: bold;
+    }
+  }
+
+  .edit-icon {
+    vertical-align: middle;
+    color: var(--ion-color-dark)
+  }
+
+  .line {
+    white-space: normal;
+    &-details {
+      color: gray;
+    }
+  }
+
+  .help-icon {
+    font-size: 1.5rem;
+    position: relative;
+    color: white;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .linked-card-icon {
+    color: var(--ion-color-primary);
+    font-size: 1.5rem;
+  }

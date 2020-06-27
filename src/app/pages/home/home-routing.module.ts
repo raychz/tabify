@@ -26,6 +26,15 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'notifications',
+    loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+  },  {
+    path: 'payment-methods',
+    loadChildren: () => import('./payment-methods/payment-methods.module').then( m => m.PaymentMethodsPageModule)
+  },
+
+
 ];
 
 @NgModule({

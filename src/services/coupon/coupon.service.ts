@@ -55,9 +55,8 @@ export class CouponService {
     }
 
     // get all valid coupons from the backend for a specific ticket and return an alert to tax tip - alert can possibly be undefined
-    async getTicketCouponsAndReceiveCouponAlertInfo(ticketId: number): Promise<void> {
-      // create alert object to return to tax tip
-      // let alert: {title: string, message: string, buttons: (string | AlertButton)[]};
+    async getTicketCoupons(ticketId: number): Promise<string> {
+      let returnMessage = '';
 
       // back end request to get all valid coupons
       const coupons = await this.httpClient.get(`${environment.serverUrl}/coupons/ticket/${ticketId}`).toPromise() as CouponResponse;
@@ -76,13 +75,7 @@ export class CouponService {
           // and there is a best coupon, set the selected coupon to the best one and tell the user, if not do nothing
           if (bestCoupon) {
             this.selectedCoupon = bestCoupon;
-            const alert = {
-              title: 'Promo Found!',
-              message: `We have found valid promo(s) for your ticket and have automatically applied the best one to your ticket.`,
-              buttons: [
-                'Ok',
-              ],
-            };
+            returnMessage = `We have found valid promo(s) for your ticket and have automatically applied the best one to your ticket.`;
           }
         // there is a coupon selected
         } else {
@@ -93,47 +86,24 @@ export class CouponService {
             this.selectedCoupon = updatedCoupon;
             // if there is still a bettter coupon, set the alert accordingly asking if they would like to select the best one
             if (updatedCoupon.id !== bestCoupon.id) {
-              const alert = {
-                title: 'Better Promo Found',
-                message: `We have found a better promo with more savings than the one you originally selected. Would you like to automatically apply this better promo instead?`,
-                buttons: [
-                  'No',
-                  {
-                    text: 'Yes',
-                    handler: () => {
-                      this.selectCoupon(bestCoupon);
-                    }
-                  },
-                ],
-              };
+              returnMessage = `We have found a better promo with more savings than the one you originally selected. Would you like to automatically apply this better promo instead?`;
+              this.selectedCoupon = bestCoupon;
             }
             // the selected coupon is not valid
           } else {
             // if there is still a best coupon - set the selected coupon to the best one and tell the user
             if (bestCoupon) {
               this.selectedCoupon = bestCoupon;
-              const alert = {
-                title: 'Invalid Promo',
-                message: `The promo you originally selected is invalid, but we have automatically applied the best one available for your ticket.`,
-                buttons: [
-                  'Ok',
-                ],
-              };
+              returnMessage = `The promo you originally selected is invalid, but we have automatically applied the best one available for your ticket.`;
               // if there is no best coupon, set the selected coupon to undefined and tell the user that there are no more coupons available
             } else {
               this.selectedCoupon = undefined;
-              const alert = {
-                title: 'Invalid Promo',
-                message: `The promo you originally selected is invalid and unfortunately there are no other available promos for your ticket.`,
-                buttons: [
-                  'Ok',
-                ],
-              };
+              returnMessage = `The promo you originally selected is invalid and unfortunately there are no other available promos for your ticket.`;
             }
           }
         }
       }
-      // return alert;
+      return returnMessage;
     }
 
     // select or deselect a coupon

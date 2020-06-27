@@ -4,7 +4,10 @@
        <ion-back-button></ion-back-button> 
      </ion-buttons>
      <ion-title> Select </ion-title>
-     <app-fraud-code></app-fraud-code>
+     <ion-buttons slot="end">
+        <app-fraud-code></app-fraud-code>
+     </ion-buttons>
+   
    </ion-toolbar>
  </ion-header>
 
@@ -13,12 +16,65 @@
   <app-status>
 
   </app-status>
+  <ng-container *ngFor="let item of ablyTicketService.ticket?.items">
+    <ion-card [class.item-not-on-tab]="!item.usersMap.has(userUid)" [class.item-on-tab]="item.usersMap.has(userUid)">
+      <div>
+        <ion-row (click)="addOrRemoveItem(item)">
+          <ion-col class="modify-item" [class.item-not-on-tab]="!item.usersMap.has(userUid)"
+            [class.item-on-tab]="item.usersMap.has(userUid)" text-center size="1.5">
+            <div>
+              <ion-icon *ngIf="!item.loading" [color]="item.usersMap.has(userUid) ? 'light' : 'primary'"
+                [name]="item.usersMap.has(userUid) ? 'checkmark-outline' : 'add-outline'"></ion-icon>
+              <ion-spinner *ngIf="item.loading" [color]="item.usersMap.has(userUid) ? 'light' : 'primary'"
+                name="bubbles">
+              </ion-spinner>
+            </div>
+          </ion-col>
+          <ion-col class="item-details" size="10.5">
+            <ion-row nowrap>
+              <ion-col class="col-item-name">
+                <span text-wrap class="name-text">{{ item.name }}</span>
+                <span *ngIf="item.quantity > 1" text-nowrap class="quantity-text">x{{ item.quantity }}</span>
+              </ion-col>
+              <ion-col size="auto" class="col-item-total">
+                <span class="my-share-text" *ngIf="item.users && item.users.length > 1 && item.usersMap.has(userUid)">
+                  ${{ item.usersMap.get(userUid).price / 100 | number: '1.2-2' }} /
+                </span>
+                <span class="total-text">
+                  ${{ item.price / 100 | number: '1.2-2' }}
+                </span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="col-payers">
+                <ion-icon color="primary" class="payers-icon-alert" *ngIf="item.users && item.users.length === 0"
+                  name="md-warning"></ion-icon>
+                <ion-icon color="primary" class="payers-icon" *ngIf="item.users && item.users.length > 0" name="ios-{{
+                    item.users && item.users.length > 1 ? 'people' : 'person'
+                  }}"></ion-icon>
+                <span class="payers-count" *ngIf="item.users && item.users.length > 1">
+                  {{ item.users.length }}:
+                </span>
+                <span class="payers-description-text">
+                  {{ item.payersDescription || 'Nobody has claimed this.' }}
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-card>
+  </ng-container>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()">
-      Next Page
-    </ion-button>
-  </ion-toolbar>
+  <ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()">
+        Finish Selecting
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-footer>

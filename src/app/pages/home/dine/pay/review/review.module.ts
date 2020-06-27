@@ -9,6 +9,7 @@ import { ReviewPageRoutingModule } from './review-routing.module';
 import { ReviewPage } from './review.page';
 import { StatusModule } from '../../status/status.module';
 import { FraudCodeModule } from '../../fraud-code/fraud-code.module';
+import { RatingComponent } from './rating/rating.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { FraudCodeModule } from '../../fraud-code/fraud-code.module';
     FraudCodeModule,
     ReviewPageRoutingModule
   ],
-  declarations: [ReviewPage]
+  declarations: [ReviewPage, RatingComponent]
 })
 export class ReviewPageModule {}

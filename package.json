@@ -40,7 +40,6 @@
     "core-js": "^2.5.4",
     "currency.js": "^1.2.2",
     "firebase": "^7.14.0",
-    "ionic2-rating": "^1.2.2",
     "moment": "^2.24.0",
     "rxjs": "^6.5.5",
     "tslib": "^1.9.0",

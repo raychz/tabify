@@ -10,28 +10,6 @@
     height: 42px;
   }
   
-  .user-profile {
-    height: 32px;
-    width: 32px;
-    // margin-right: 12px;
-  
-    .menu {
-      border-radius: 50%;
-      font-size: 1.3rem;
-      --ion-color-base: white;
-      background-color: black;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
-  }
-  
-  // .menu {
-  //   position: absolute;
-  //   bottom: 0;
-  //   right: 0;
-  // }
-  
   .notifications {
   ion-badge {
     position: absolute;
