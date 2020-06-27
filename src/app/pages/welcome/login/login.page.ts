@@ -13,7 +13,7 @@ export class LoginPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    await this.auth.signInWithEmail({email: 'fakeemail123@gmail.com', password: 'sahilsim12'});
+    // await this.auth.signInWithEmail({email: '', password: ''});
   }
 
 }
