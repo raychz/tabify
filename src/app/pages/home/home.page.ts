@@ -22,4 +22,21 @@ export class HomePage {
     this.navCtrl.navigateForward('home/payment-methods');
   }
 
+  public viewHelp() {
+    this.navCtrl.navigateForward('home/help');
+  }
+
+  public viewHome() {
+    this.navCtrl.navigateRoot('home');
+  }
+
+  public viewAuth() {
+    this.navCtrl.navigateRoot('welcome');
+  }
+
+  public logout() {
+    // ToDo: add auth logout logic here
+    this.viewAuth();
+  }
+
 }

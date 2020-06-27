@@ -7,11 +7,12 @@
     </ion-header>
     <ion-content>
       <ion-list>
+        <ion-item (click)="viewHome()">Home</ion-item>
         <ion-item (click)="viewPaymentMethods()">Payment Methods</ion-item>
-        <ion-item>Menu Item</ion-item>
-        <ion-item>Menu Item</ion-item>
-        <ion-item>Menu Item</ion-item>
-        <ion-item>Menu Item</ion-item>
+        <ion-item (click)="viewHelp()">Help</ion-item>
+        <!-- add ngIf to only show one of the below buttons dependign on auth state -->
+        <ion-item (click)="viewAuth()">Login/Sign Up</ion-item>
+        <ion-item (click)="logout()">Log out</ion-item>
       </ion-list>
     </ion-content>
    </ion-menu>
