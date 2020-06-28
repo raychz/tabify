@@ -194,7 +194,7 @@ export class AuthService {
       this.userDetailsConfirmedInDB$.next(false);
       const alert = await this.alertCtrl.create({
         header: 'Network Error',
-        message: `Please check your connection and try again.`,
+        message: `Please check your connection and try again. - auth service`,
       });
       await alert.present();
       throw e;

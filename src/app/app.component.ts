@@ -67,7 +67,7 @@ export class AppComponent {
           await loading.dismiss();
           const alert = await this.alertCtrl.create({
             header: 'Network Error',
-            message: `Please check your connection and try again.`,
+            message: `Please check your connection and try again. - app component`,
           });
           alert.present();
           throw error;

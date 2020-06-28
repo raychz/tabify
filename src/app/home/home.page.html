@@ -1,0 +1,69 @@
+<!-- <ion-split-pane> -->
+  <ion-menu contentId="hamburger-menu">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Start Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item (click)="viewHome()">
+          <ion-icon name="home-outline"></ion-icon>
+          Home
+        </ion-item>
+        <ion-item (click)="viewPeople()">
+          <ion-icon name="search-outline"></ion-icon>
+          Find Peole
+        </ion-item>
+        <ion-item (click)="viewPaymentMethods()">
+          <ion-icon name="card-outline"></ion-icon>
+          Payment Methods
+        </ion-item>
+        <!-- add ngIf to only show one of the below buttons dependign on auth state: guest -->
+        <!-- login / sign up will be visible to guest accounts -->
+        <ion-item (click)="viewAuth()">
+          <ion-icon name="log-in-outline"></ion-icon>
+          Log In 
+        </ion-item>
+        <!-- log out will be visible to all other user accounts-->
+        <ion-item (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Log out
+        </ion-item>
+        <ion-item (click)="viewHelp()">
+          <ion-icon name="help-outline"></ion-icon>
+          Help
+        </ion-item>
+        <ion-item (click)="viewSettings()">
+          <ion-icon name="settings-outline"></ion-icon>
+          Settings
+        </ion-item>
+      </ion-list>
+    </ion-content>
+   </ion-menu>
+   <ion-router-outlet id="hamburger-menu"></ion-router-outlet>
+ <!-- </ion-split-pane> -->
+
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom" [hidden]="!tabsService.viewTabs">
+    <ion-tab-button tab="socialize">
+      <!-- <ion-icon name="people-outline"></ion-icon> -->
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>History</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="dine">
+      <!-- <ion-icon name="receipt-outline"></ion-icon> -->
+      <ion-icon name="fast-food-outline"></ion-icon>
+      <!-- <ion-icon name="beer-outline"></ion-icon> -->
+      <ion-label>Dine</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="explore">
+      <ion-icon name="business-outline"></ion-icon>
+      <ion-label>Explore</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>

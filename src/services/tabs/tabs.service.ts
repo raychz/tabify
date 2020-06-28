@@ -9,8 +9,15 @@ import { Platform } from '@ionic/angular';
 })
 export class TabsService {
   viewTabs = true;
-  private hideTabBarPages: string[] = [
-    'locations', 'pay', 'select', 'confirm', 'review'
+
+  // routes that have any of following as their last path element will show the tabs
+  private showTabBarPages: string[] = [
+    'dine', 'explore', 'socialize'
+  ];
+
+  // routes that have any of following as their second to last path element (last may be a dynamic path) will show the tabs
+  private showTabBarParamPage: string[] = [
+    'dine',
   ];
 
   constructor(private router: Router, private platform: Platform) {
@@ -30,19 +37,24 @@ export class TabsService {
       // Split the URL up into an array and get last page
       const urlArray = event.urlAfterRedirects.split('/');
       const pageUrl = urlArray[urlArray.length - 1] ;
+      const pageUrlParent = urlArray[urlArray.length - 2];
+
       // remove any query params at the end
       const page = pageUrl.split('?')[0];
-      const shouldHide = this.hideTabBarPages.indexOf(page) > -1;
+      const showPage = this.showTabBarPages.indexOf(page) > -1;
+      const showParamPage = this.showTabBarParamPage.indexOf(pageUrlParent) > -1;
+
       console.log(page);
-      console.log(shouldHide);
-      console.log(this.hideTabBarPages);
-      // Not ideal to set the timeout, but I haven't figured out a better method to wait until the page is in transition...
+      console.log(showPage);
+      console.log(showParamPage);
+      console.log(this.showTabBarPages);
       try {
-        shouldHide ? this.hideTabs() : this.showTabs();
+        showPage || showParamPage ? this.showTabs() : this.hideTabs();
       } catch (err) {
         console.log(err);
       }
     }
+
   public hideTabs() {
     this.viewTabs = false;
   }
