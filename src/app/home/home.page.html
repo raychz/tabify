@@ -1,9 +1,13 @@
 <!-- <ion-split-pane> -->
   <ion-menu contentId="hamburger-menu">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Start Menu</ion-title>
-      </ion-toolbar>
+      <ion-avatar class="tabify-sidemenu-profile-pic">
+        <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
+      </ion-avatar>
+      <h5 class="tabify-sidemenu-display-name">{{ auth.getDisplayName() }}</h5>
+      <p class="muted tabify-sidemenu-detail">{{ auth.getEmail() }}</p>
+      <p class="tabify-sidemenu-detail">Tickets Opened: 23</p>
+      <p class="tabify-sidemenu-detail">Amount Saved: $54.63</p>
     </ion-header>
     <ion-content>
       <ion-list>
