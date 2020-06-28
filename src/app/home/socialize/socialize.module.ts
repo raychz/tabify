@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { SocializePage } from './socialize.page';
 import { TabifyHeaderModule } from '../tabify-header/tabify-header.module';
 import { SocializePageRoutingModule } from './socialize-routing.module';
+import { NewsFeedComponent } from './news-feed/news-feed.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { SocializePageRoutingModule } from './socialize-routing.module';
     FormsModule,
     SocializePageRoutingModule
   ],
-  declarations: [SocializePage]
+  declarations: [SocializePage, NewsFeedComponent]
 })
 export class SocializePageModule {}
