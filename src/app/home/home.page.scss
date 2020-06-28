@@ -4,13 +4,12 @@ ion-label {
 
 .tabify-sidemenu {
     &-display-name {
-      margin-top: 2px;
-      margin-bottom: 2px;
+      margin: 0;
       color: lightgray;
     }
     &-detail {
       color: lightgray;
-      margin-top: 2px;
+      margin: 0;
     }
     &-profile-pic {
       height: 75px;

@@ -3,5 +3,25 @@
 </app-tabify-header>
 
 <ion-content>
-  <app-news-feed></app-news-feed>
+  <ion-searchbar placeholder="Search for your friends and family" (ionInput)="searchUsers($event)"></ion-searchbar>
+  <ng-container *ngIf="showNewFeed">
+    <ion-segment value="me">
+      <ion-segment-button value="me">
+        <ion-label>Me</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="friends">
+        <ion-label>Friends</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="public">
+        <ion-label>Public</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <app-news-feed></app-news-feed>
+  </ng-container>
+  <ng-container *ngIf="!showNewFeed">
+    users list goes here
+    <ion-button (click)="userProfile()">
+      user profile page
+    </ion-button>
+  </ng-container>
 </ion-content>

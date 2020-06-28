@@ -21,7 +21,7 @@
 
   <ion-card>
     <ion-img [src]="locationService.selectedLocation?.photo_url" alt="Could not load location image"></ion-img>
-    <ion-button class="submit-button" expand="block" color="warning" href="http://www.piccolaitalianh.com/menu/">
+    <ion-button class="submit-button" expand="block" color="warning" (click)="viewMenu()">
       <ion-icon name="book-outline"></ion-icon>
       See Menu
     </ion-button>

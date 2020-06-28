@@ -30,10 +30,6 @@ export class HomePage implements CanActivate {
     this.navCtrl.navigateForward('home/payment-methods');
   }
 
-  public viewPeople() {
-    this.navCtrl.navigateForward('home/find-people');
-  }
-
   public viewHelp() {
     this.navCtrl.navigateForward('home/help');
   }

@@ -3,8 +3,19 @@
     font-size: 1.2rem;
   }
 
+  ion-grid {
+    --ion-grid-column-padding: 0;
+  }
+
 .gray-arrow {
     color: lightgray;
+  }
+
+  .date-info {
+    .story-privacy {
+      color: var(--ion-color-primary);
+      font-size: 1.2rem;
+    }
   }
 
   .users-padding {
@@ -19,32 +30,17 @@
   }
 
   .like-comment-row {
-    font-size: 1.3rem;
     white-space: nowrap;
-  }
-
-  .like-btn-padding {
-    font-size: inherit;
-    margin: 0;
-    padding-left: 6px;
-    right: 2px;
-  }
-
-  .heart-padding {
-    font-size: inherit;
-    margin: 0px 0px 0px 0px;
-    padding-left: 11px;
-    padding-right: 6px;
-  }
-
-  .comment-btn-padding {
-    font-size: inherit;
-    margin: 0px 0px 0px 0px;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .date-padding {
-    padding-top: 12px;
-    padding-right: 16px;
+    .like-comment-item {
+      --padding-start: 0;
+      --inner-padding-end: 5px;
+      font-size: 0.75rem;
+        .like-comment-icon {
+          color: var(--ion-color-primary);
+        }
+        .like-comment-label {
+          color: var(--ion-color-primary);
+          padding-left: 3px;
+        }
+    }
   }

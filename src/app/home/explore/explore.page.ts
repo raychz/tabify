@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TabsService } from 'src/services/tabs/tabs.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-explore',
@@ -9,8 +10,13 @@ import { TabsService } from 'src/services/tabs/tabs.service';
 export class ExplorePage {
 
   constructor(
+    public navCtrl: NavController
   ) {}
 
   public ionViewDidEnter() {
+  }
+
+  viewLocationDetails() {
+    this.navCtrl.navigateForward('home/explore/someLocationSlug');
   }
 }

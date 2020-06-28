@@ -5,19 +5,15 @@
         <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
       </ion-avatar>
       <h5 class="tabify-sidemenu-display-name">{{ auth.getDisplayName() }}</h5>
-      <p class="muted tabify-sidemenu-detail">{{ auth.getEmail() }}</p>
-      <p class="tabify-sidemenu-detail">Tickets Opened: 23</p>
-      <p class="tabify-sidemenu-detail">Amount Saved: $54.63</p>
+      <p class="muted tabify-sidemenu-detail">Username here</p>
+      <p class="muted tabify-sidemenu-detail">Tickets Opened: 23</p>
+      <p class="muted tabify-sidemenu-detail">Amount Saved: $54.63</p>
     </ion-header>
     <ion-content>
       <ion-list>
         <ion-item (click)="viewHome()">
           <ion-icon name="home-outline"></ion-icon>
           Home
-        </ion-item>
-        <ion-item (click)="viewPeople()">
-          <ion-icon name="search-outline"></ion-icon>
-          Find People
         </ion-item>
         <ion-item (click)="viewPaymentMethods()">
           <ion-icon name="card-outline"></ion-icon>
@@ -54,9 +50,9 @@
 
   <ion-tab-bar slot="bottom" [hidden]="!tabsService.viewTabs">
     <ion-tab-button tab="socialize">
-      <!-- <ion-icon name="people-outline"></ion-icon> -->
-      <ion-icon name="calendar-outline"></ion-icon>
-      <ion-label>History</ion-label>
+      <ion-icon name="people-outline"></ion-icon>
+      <!-- <ion-icon name="calendar-outline"></ion-icon> -->
+      <ion-label>Socialize</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="dine">

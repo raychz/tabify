@@ -8,6 +8,14 @@ const routes: Routes = [
     path: '',
     component: SocializePage
   },
+  {
+    path: ':username',
+    loadChildren: () => import('./user-profile/user-profile.module').then( m => m.UserProfilePageModule)
+  },
+  {
+    path: 'story',
+    loadChildren: () => import('./news-feed/story/story.module').then( m => m.StoryPageModule)
+  }
 ];
 
 @NgModule({

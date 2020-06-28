@@ -43,10 +43,6 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
   },
-  {
-    path: 'find-people',
-    loadChildren: () => import('./find-people/find-people.module').then( m => m.FindPeoplePageModule)
-  },
 ];
 
 @NgModule({

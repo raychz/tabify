@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: ExplorePage
+  },
+  {
+    path: ':locationSlug',
+    loadChildren: () => import('./location-details/location-details.module').then( m => m.LocationDetailsPageModule)
   }
 ];
 

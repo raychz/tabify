@@ -1,61 +1,87 @@
 <ng-container *ngFor="let ticket of this.newsfeedService.tickets">
   <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
-    <ion-item>
-      <ion-avatar item-start>
-        <img [src]='ticket.location.photo_url || "assets/imgs/restaurants/naco-taco.png"' />
-      </ion-avatar>
-      <h2 text-wrap>{{ ticket.location.name }}</h2>
-      <h3 text-wrap class="restaurant-address">
-        <span text-nowrap>{{ ticket.location.street1 }},</span>
-        <span text-nowrap>{{ ticket.location.city }}, {{ ticket.location.state }}</span>
-      </h3>
-      <ion-icon class="gray-arrow" item-end name="caret-forward"></ion-icon>
-    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none">
+            <ion-avatar item-start>
+              <ion-img [src]="ticket.location.photo_url"></ion-img>
+            </ion-avatar>
+            <ion-label class="date-info">
+              <h2 text-wrap> {{ ticket.location.name }} </h2>
+              <!-- <h3 text-wrap>
+                <span text-nowrap> {{ ticket.location.street1 }}, </span>
+                <span text-nowrap> {{ ticket.location.city}}, {{ ticket.location.state }}</span>
+              </h3> -->
+              <h3>
+                {{ ticket.story.date_created | date:'shortDate' }}
+                {{ ticket.story.date_created | date:'shortTime' }}
+                  <ion-icon class="story-privacy" name="globe-outline"></ion-icon>
+              </h3>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col text-right class="date-padding" size="auto"> 
+       </ion-col>
+      </ion-row>
 
-    <ion-row>
-      <ion-col class="users-padding">
-        <span>
-          {{ticket.userNamesDisplay.mainUsers}}
-        </span>
-        <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
-          (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
-          {{this.ticket.userNamesDisplay.othersNum}}
-        </span>
-        <span *ngIf="ticket.userNamesDisplay.hereClause">
-          {{ticket.userNamesDisplay.hereClause}}
-        </span>
-      </ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col class="users-padding">
+          <span>
+            {{ticket.userNamesDisplay.mainUsers}}
+          </span>
+          <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+            (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+            {{this.ticket.userNamesDisplay.othersNum}}
+          </span>
+          <span *ngIf="ticket.userNamesDisplay.hereClause">
+            {{ticket.userNamesDisplay.hereClause}}
+          </span>
+        </ion-col>
+      </ion-row>
 
-    <ion-row class="like-comment-row">
+      <ion-row class="like-comment-row">
+            <ion-col size="4">
+            <ion-item class="like-comment-item">
 
-      <ion-col>
-        <ion-button [disabled]="ticket.loadingLike" color="primary" fill="clear"
-          (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()' class="heart-padding">
-          <ion-spinner *ngIf="ticket.loadingLike" color="primary" name="bubbles"></ion-spinner>
+              <ion-spinner *ngIf="ticket.loadingLike" class="like-comment-icon" name="bubbles"></ion-spinner>
+              <ion-icon class="like-comment-icon" *ngIf="!ticket.loadingLike" [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"
+              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'> </ion-icon>
+              <ion-label class="like-comment-label">
+                {{ticket.story.likes.length}} Like{{ticket.story.likes.length !== 1 ? 's' : ''}}
+              </ion-label>
+  
+            </ion-item>
+            </ion-col>
+            <ion-col size="5">
+               
+            <ion-item class="like-comment-item">
+                <ion-icon class="like-comment-icon" [name]="ticket.story.comment_count > 0 ? 'chatbox' : 'chatbox-outline'">
+                </ion-icon>
+                <ion-label class="like-comment-label">
+                  {{ticket.story.comment_count}} Comment{{ticket.story.comment_count !== 1 ? 's' : ''}}
+                </ion-label>
+               
+            </ion-item>
 
-          <ng-container *ngIf="!ticket.loadingLike">
-            <ion-icon [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"></ion-icon>
-          </ng-container>
-        </ion-button>
+            </ion-col>
+            <ion-col size="3">
+            <ion-item class="like-comment-item">
+                <ion-icon name="arrow-redo-outline" class="like-comment-icon"></ion-icon>                
+                <ion-label class="like-comment-label">
+                  Share
+                </ion-label>
+            </ion-item>
+          </ion-col>
+      </ion-row>
 
-        <ion-button color="primary" fill="clear"
-          (click)="this.displayLikers(ticket.id, ticket.story.id, ticket.story.likes.length); $event.stopPropagation()"
-          class="like-btn-padding">
-          {{ ticket.story.likes.length === 0 ? 'Like' : ticket.story.likes.length}}
-        </ion-button>
+      <ion-row class="like-comment-row">
+        <ion-col> 
+         
+          <!-- <ion-note class="ion-float-right"> </ion-note> -->
+       </ion-col>
+      </ion-row>
 
-        <ion-button color="primary" fill="clear" icon-start class="comment-btn-padding">
-          <ion-icon [name]="ticket.story.comment_count > 0 ? 'chatbox' : 'chatbox-outline'"></ion-icon>
-          &nbsp; {{ ticket.story.comment_count === 0 ? 'Comment' : ticket.story.comment_count }}
-        </ion-button>
-      </ion-col>
-
-      <ion-col text-right class="date-padding">
-        <ion-note>{{ ticket.story.date_created | date:'shortDate' }}
-          {{ ticket.story.date_created | date:'shortTime' }} </ion-note>
-      </ion-col>
-
-    </ion-row>
+    </ion-grid>
   </ion-card>
 </ng-container>

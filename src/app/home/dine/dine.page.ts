@@ -131,6 +131,10 @@ export class DinePage implements CanActivate, OnInit, OnDestroy {
     // await this.router.
   }
 
+  public async viewMenu() {
+    await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/menu`);
+  }
+
   public async nextPage() {
     console.log('in next page');
     await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/pay/${this.ablyTicketService.ticket.ticket_number}`);
