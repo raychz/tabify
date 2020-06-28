@@ -4,10 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { PayPage } from './pay.page';
 
 const routes: Routes = [
-  // {
-    // path: '',
-    // // component: PayPage,
-    // children: [
+  {
+    path: ':ticketNumber',
+    // component: PayPage,
+    canActivate: [PayPage],
+    canDeactivate: [PayPage],
+    children: [
       {
         path: 'select',
         loadChildren: () => import('./select/select.module').then( m => m.SelectPageModule),
@@ -28,8 +30,8 @@ const routes: Routes = [
         redirectTo: 'select',
         pathMatch: 'full'
       }
-    // ]
-  // }
+    ]
+  }
 ];
 
 @NgModule({

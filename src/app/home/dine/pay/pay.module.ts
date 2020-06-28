@@ -15,6 +15,7 @@ import { PayPage } from './pay.page';
     IonicModule,
     PayPageRoutingModule
   ],
+  providers: [PayPage],
   declarations: [PayPage]
 })
 export class PayPageModule {}

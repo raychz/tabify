@@ -17,7 +17,7 @@
         </ion-item>
         <ion-item (click)="viewPeople()">
           <ion-icon name="search-outline"></ion-icon>
-          Find Peole
+          Find People
         </ion-item>
         <ion-item (click)="viewPaymentMethods()">
           <ion-icon name="card-outline"></ion-icon>
@@ -25,10 +25,12 @@
         </ion-item>
         <!-- add ngIf to only show one of the below buttons dependign on auth state: guest -->
         <!-- login / sign up will be visible to guest accounts -->
-        <ion-item (click)="viewAuth()">
+
+        <!-- <ion-item (click)="viewAuth()">
           <ion-icon name="log-in-outline"></ion-icon>
           Log In 
-        </ion-item>
+        </ion-item> -->
+        
         <!-- log out will be visible to all other user accounts-->
         <ion-item (click)="logout()">
           <ion-icon name="log-out-outline"></ion-icon>

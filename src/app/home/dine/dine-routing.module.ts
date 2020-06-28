@@ -23,7 +23,7 @@ const routes: Routes = [
     },
     {
       path: ':locationSlug/menu',
-      // loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
+      loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
     },
 ];
 

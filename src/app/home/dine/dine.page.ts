@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { LocationService } from 'src/services/location/location.service';
 import { Location } from 'src/interfaces/location.interface';
 import { LoaderService } from 'src/services/utilities/loader.service';
@@ -6,7 +6,7 @@ import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { TabsService } from 'src/services/tabs/tabs.service';
 import { PopoverController, IonCard, NavController } from '@ionic/angular';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { CanActivate, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 
 // export class ActivateDinePage implements CanActivate {
 
@@ -17,7 +17,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
   templateUrl: 'dine.page.html',
   styleUrls: ['dine.page.scss']
 })
-export class DinePage implements CanActivate {
+export class DinePage implements CanActivate, OnInit {
   @ViewChild('location', { static: false }) locationCard: any;
 
   constructor(
@@ -28,21 +28,31 @@ export class DinePage implements CanActivate {
     public navCtrl: NavController,
     public popover: PopoverController,
     public alertCtrl: AlertService,
+    public activatedRoute: ActivatedRoute,
   ) {}
 
   // public ionViewCanEnter(): boolean {
   //   return this.auth.authenticated;
   // }
 
+  public ngOnInit() {
+    console.log(this.activatedRoute.queryParams);
+  }
+
+  // bug - this causes an infinite loop if selected location slug is an empty sting
   public async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
     // maybe somehow parametize match variable and reuse this location gaurd in places like home/explore/:locationSlug where we show reviews
+    const splitUrl = state.url.split('?');
+    const pathUrl = splitUrl[0];
+    const queryParams = splitUrl[1];
+
     const match = '/dine';
-    const splitIndex = state.url.indexOf(match) + match.length;
-    const preIndexUrl = state.url.substring(0, splitIndex);
-    const postIndexUrl = state.url.substring(splitIndex);
+    const splitIndex = pathUrl.indexOf(match) + match.length;
+    const preIndexUrl = pathUrl.substring(0, splitIndex);
+    const postIndexUrl = pathUrl.substring(splitIndex);
     const urlSegments = postIndexUrl.split('/');
     const locationSlug = urlSegments[1];
 
@@ -58,12 +68,12 @@ export class DinePage implements CanActivate {
         return true;
       } else {
         urlSegments[1] = selectedLoc.slug;
-        return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}`);
+        return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}?${queryParams}`);
       }
     } else {
       const location = await this.locationService.selectDefaultLocation();
       urlSegments[1] = location.slug;
-      return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}`);
+      return this.router.parseUrl(`${preIndexUrl}${urlSegments.join('/')}?${queryParams}`);
     }
   }
 

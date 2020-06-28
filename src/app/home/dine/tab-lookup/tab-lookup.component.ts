@@ -42,15 +42,21 @@ export class TabLookupComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    this.newTicket = false;
-    this.existingTicket = false;
-    this.errorMessage = '';
-    this.checkingTicketNumber = false;
+    this.clearState();
   }
 
   public async nextPage() {
     console.log('in next page');
-    await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/pay`);
+    await this.navCtrl.navigateForward(`home/dine/${this.locationService.selectedLocation.slug}/pay/${this.ablyTicketService.ticket.ticket_number}`);
+  }
+
+  public async clearState() {
+    this.tabForm.reset();
+    this.newTicketForm.reset();
+    this.newTicket = false;
+    this.existingTicket = false;
+    this.errorMessage = '';
+    this.checkingTicketNumber = false;
   }
 
   private async initializeTicketMetadata() {
@@ -60,17 +66,13 @@ export class TabLookupComponent implements OnInit {
     this.ablyTicketService.synchronizeFrontendTicketItems();
     console.log('3');
 
-    // Subscribe to Ably ticket channel - ToDo: move ably connection logic to pay workflow
-    this.ablyService.connect();
-    await this.ablyTicketService.subscribeToTicketUpdates(this.ablyTicketService.ticket.id);
-
     // Add user to database ticket
     console.log('adding user');
     const newTicketUser = await this.ablyTicketService.addUserToDatabaseTicket();
     this.ablyTicketService.onTicketUserAdded(newTicketUser);
     // await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
     this.nextPage();
-
+    this.clearState();
   }
 
   public validateTicketNumber(value: any) {
