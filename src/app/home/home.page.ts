@@ -41,7 +41,7 @@ export class HomePage {
   }
 
   public viewAuth() {
-    this.navCtrl.navigateRoot('welcome');
+    this.navCtrl.navigateRoot('auth');
   }
 
   public logout() {

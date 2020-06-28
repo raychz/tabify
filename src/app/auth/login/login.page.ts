@@ -77,13 +77,13 @@ export class LoginPage implements OnInit {
   }
 
   forgotPassword() {
-    this.navCtrl.navigateForward('/welcome/login/forgot-password');
+    this.navCtrl.navigateForward('/auth/login/forgot-password');
     return false;
   }
 
   async signUp() {
     await this.navCtrl.pop();
-    await this.navCtrl.navigateForward('/welcome/sign-up');
+    await this.navCtrl.navigateForward('/auth/sign-up');
   }
 
   inputChange() {

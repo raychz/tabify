@@ -3,11 +3,11 @@ import { NavController, NavParams, IonSlides } from '@ionic/angular';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
-  selector: 'app-welcome',
-  templateUrl: './welcome.page.html',
-  styleUrls: ['./welcome.page.scss'],
+  selector: 'app-auth',
+  templateUrl: './auth.page.html',
+  styleUrls: ['./auth.page.scss'],
 })
-export class WelcomePage implements OnInit {
+export class AuthPage implements OnInit {
   @ViewChild(IonSlides, { static: false }) slides: IonSlides;
   activeSlideIndex = 0;
   currentYear = new Date().getFullYear();
@@ -39,10 +39,10 @@ export class WelcomePage implements OnInit {
   }
 
   signUp() {
-    this.navCtrl.navigateForward('/welcome/sign-up');
+    this.navCtrl.navigateForward('/auth/sign-up');
   }
 
   login() {
-    this.navCtrl.navigateForward('/welcome/login');
+    this.navCtrl.navigateForward('/auth/login');
   }
 }

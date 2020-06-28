@@ -96,7 +96,7 @@ export class SignUpPage implements OnInit {
 
   async login() {
     await this.navCtrl.pop();
-    await this.navCtrl.navigateForward('/welcome/login');
+    await this.navCtrl.navigateForward('/auth/login');
   }
 
   inputChange() {

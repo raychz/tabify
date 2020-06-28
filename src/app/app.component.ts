@@ -53,7 +53,7 @@ export class AppComponent {
           } else {
             // Otherwise, send user back to unauthenticated screen.
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/welcome');
+            await this.navCtrl.navigateRoot('/auth');
             await loading.dismiss();
             this.splashScreen.hide();
           }
@@ -62,7 +62,7 @@ export class AppComponent {
           // If an error occurs, send user back to unauthenticated screen.
           // Loader can be dismissed.
           console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
-          await this.navCtrl.navigateRoot('/welcome');
+          await this.navCtrl.navigateRoot('/auth');
           this.splashScreen.hide();
           await loading.dismiss();
           const alert = await this.alertCtrl.create({
@@ -83,13 +83,13 @@ export class AppComponent {
             // If user has been created in Tabify's db
             // Loader can be dismissed.
             await this.navCtrl.navigateRoot('/home');
-            // this.navCtrl.navigateForward('/welcome/sign-up');
+            // this.navCtrl.navigateForward('/auth/sign-up');
             await loading.dismiss();
             this.splashScreen.hide();
           } else {
             // If user has not been created in Tabify's db
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/welcome');
+            await this.navCtrl.navigateRoot('/auth');
             await loading.dismiss();
             this.splashScreen.hide();
           }
