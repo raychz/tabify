@@ -19,7 +19,7 @@
     <app-news-feed></app-news-feed>
   </ng-container>
   <ng-container *ngIf="!showNewFeed">
-    users list goes here
+    <app-users-list [users]="filteredUsers"></app-users-list>
     <ion-button (click)="userProfile()">
       user profile page
     </ion-button>

@@ -35,11 +35,6 @@ export class HamburgerMenuPage implements OnInit {
       icon: 'card-outline',
     },
     {
-      url: 'auth',
-      title: 'Log Out', // will be log in if guest authenticated
-      icon: 'log-out-outline',
-    },
-    {
       url: 'help',
       title: 'Help',
       icon: 'help-outline',
@@ -48,6 +43,11 @@ export class HamburgerMenuPage implements OnInit {
       url: 'settings',
       title: 'Settings',
       icon: 'settings-outline',
+    },
+    {
+      url: 'auth',
+      title: 'Log Out', // will be log in if guest authenticated
+      icon: 'log-out-outline',
     },
   ];
 

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TabsService } from 'src/services/tabs/tabs.service';
 import { NavController } from '@ionic/angular';
 
 @Component({

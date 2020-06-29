@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TabsService } from 'src/services/tabs/tabs.service';
 import { NavController, ToastController } from '@ionic/angular';
 import { LocationService } from 'src/services/location/location.service';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
