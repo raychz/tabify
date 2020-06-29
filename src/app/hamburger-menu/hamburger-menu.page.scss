@@ -2,6 +2,14 @@ ion-label {
     font-size: 0.8rem;
 }
 
+.active-item {
+    color: var(--ion-color-primary);
+}
+
+.split-pane {
+    --side-max-width: 300px;
+}
+
 .tabify-sidemenu {
     &-display-name {
       margin: 0;

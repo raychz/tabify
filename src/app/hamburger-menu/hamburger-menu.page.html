@@ -1,5 +1,5 @@
-<!-- <ion-split-pane> -->
-  <ion-menu contentId="hamburger-menu">
+<ion-split-pane contentId="main" class="split-pane">
+  <ion-menu contentId="main">
     <ion-header>
       <ion-avatar class="tabify-sidemenu-profile-pic">
         <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
@@ -11,54 +11,14 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-menu-toggle autoHide="false">
-          <ion-item (click)="viewHome()">
-            <ion-icon name="home-outline"></ion-icon>
-            Home
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-menu-toggle autoHide="false">
-          <ion-item (click)="viewPaymentMethods()">
-            <ion-icon name="card-outline"></ion-icon>
-            Payment Methods
-          </ion-item>
-        </ion-menu-toggle>
-
-      
-        <!-- add ngIf to only show one of the below buttons dependign on auth state: guest -->
-        <!-- login / sign up will be visible to guest accounts -->
-
-        <!-- <ion-item (click)="viewAuth()">
-          <ion-icon name="log-in-outline"></ion-icon>
-          Log In 
-        </ion-item> -->
-        
-        <!-- log out will be visible to all other user accounts-->
-
-        <ion-menu-toggle autoHide="false">
-          <ion-item (click)="logout()">
-            <ion-icon name="log-out-outline"></ion-icon>
-            Log out
-          </ion-item>
-        </ion-menu-toggle>
-
-        
-        <ion-menu-toggle autoHide="false">
-          <ion-item (click)="viewHelp()">
-            <ion-icon name="help-outline"></ion-icon>
-            Help
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-menu-toggle autoHide="false">
-          <ion-item (click)="viewSettings()">
-            <ion-icon name="settings-outline"></ion-icon>
-            Settings
+        <ion-menu-toggle autoHide="false" *ngFor="let page of pages">
+          <ion-item (click)="openPage(page)" [class.active-item]="selectedPath.startsWith(page.url)">
+            <ion-icon [name]="page.icon" [class.active-item]="selectedPath.startsWith(page.url)"></ion-icon>
+            {{page.title}}
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
    </ion-menu>
-   <ion-router-outlet id="hamburger-menu"></ion-router-outlet>
- <!-- </ion-split-pane> -->
+   <ion-router-outlet id="main"></ion-router-outlet>
+ </ion-split-pane>
