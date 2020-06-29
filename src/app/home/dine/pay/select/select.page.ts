@@ -22,7 +22,7 @@ export class SelectPage {
   ) { }
 
   public async nextPage() {
-    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/confirm`);
+    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/${this.ablyTicketService.ticket.tab_id}/confirm`);
   }
 
   async addOrRemoveItem(item: TicketItem) {

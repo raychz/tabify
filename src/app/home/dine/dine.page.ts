@@ -12,6 +12,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
 import { AblyService } from 'src/services/ticket/ably.service';
 import { Ticket } from 'src/interfaces/ticket.interface';
+import { sleep } from 'src/utilities/general.utilities';
 
 @Component({
   selector: 'app-dine',
@@ -161,7 +162,7 @@ export class DinePage implements CanActivate, OnInit, OnDestroy {
     const newTicketUser = await this.ablyTicketService.addUserToDatabaseTicket();
     this.ablyTicketService.onTicketUserAdded(newTicketUser);
     // await this.ticketService.addTicketNumberToFraudCode(ticket.id, this.fraudPreventionCode.id);
-    this.nextPage();
+    await this.nextPage();
     this.clearState();
   }
 

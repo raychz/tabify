@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TabsService } from 'src/services/tabs/tabs.service';
 import { NavController, ToastController } from '@ionic/angular';
 import { LocationService } from 'src/services/location/location.service';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
@@ -63,7 +62,7 @@ export class ConfirmPage {
   }
 
   public async nextPage() {
-    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/review`);
+    await this.navCtrl.navigateForward(`/home/dine/${this.locationService.selectedLocation.slug}/pay/${this.ablyTicketService.ticket.tab_id}/review`);
   }
 
   public adjustTip() {
