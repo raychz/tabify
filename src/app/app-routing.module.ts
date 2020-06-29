@@ -3,18 +3,9 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
-  },
-  {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then( m => m.AuthPageModule)
-  },
-  {
     path: '',
-    redirectTo: 'auth',
-    pathMatch: 'full'
-  }
+    loadChildren: () => import('./hamburger-menu/hamburger-menu.module').then( m => m.HamburgerMenuPageModule)
+  },
 ];
 @NgModule({
   imports: [

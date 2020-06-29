@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { PaymentMethodsPageRoutingModule } from './payment-methods-routing.module';
 
 import { PaymentMethodsPage } from './payment-methods.page';
-import { MenuButtonModule } from '../menu-button/menu-button.module';
 import { PaymentMethodsListModule } from './payment-methods-list/payment-methods-list.module';
+import { MenuButtonModule } from '../hamburger-menu/menu-button/menu-button.module';
 
 @NgModule({
   imports: [
@@ -16,8 +16,8 @@ import { PaymentMethodsListModule } from './payment-methods-list/payment-methods
     FormsModule,
     IonicModule,
     PaymentMethodsPageRoutingModule,
-    MenuButtonModule,
     PaymentMethodsListModule,
+    MenuButtonModule,
   ],
   declarations: [PaymentMethodsPage]
 })

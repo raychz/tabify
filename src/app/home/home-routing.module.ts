@@ -31,18 +31,6 @@ const routes: Routes = [
     path: 'notifications',
     loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
   },
-  {
-    path: 'payment-methods',
-    loadChildren: () => import('./payment-methods/payment-methods.module').then( m => m.PaymentMethodsPageModule)
-  },
-  {
-    path: 'help',
-    loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule)
-  },
-  {
-    path: 'settings',
-    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
-  },
 ];
 
 @NgModule({

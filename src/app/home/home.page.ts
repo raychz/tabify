@@ -25,29 +25,4 @@ export class HomePage implements CanActivate {
   public ionViewDidEnter() {
     console.log('ionViewDidLoad HomePage');
   }
-
-  public viewPaymentMethods() {
-    this.navCtrl.navigateForward('home/payment-methods');
-  }
-
-  public viewHelp() {
-    this.navCtrl.navigateForward('home/help');
-  }
-
-  public viewSettings() {
-    this.navCtrl.navigateForward('home/settings');
-  }
-
-  public viewHome() {
-    this.navCtrl.navigateRoot('home');
-  }
-
-  public viewAuth() {
-    this.navCtrl.navigateRoot('auth');
-  }
-
-  public logout() {
-    this.auth.signOut();
-  }
-
 }

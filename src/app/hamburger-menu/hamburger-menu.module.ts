@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HelpPageRoutingModule } from './help-routing.module';
+import { HamburgerMenuPageRoutingModule } from './hamburger-menu-routing.module';
 
-import { HelpPage } from './help.page';
+import { HamburgerMenuPage } from './hamburger-menu.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HelpPageRoutingModule
+    HamburgerMenuPageRoutingModule
   ],
-  declarations: [HelpPage]
+  declarations: [HamburgerMenuPage]
 })
-export class HelpPageModule {}
+export class HamburgerMenuPageModule {}

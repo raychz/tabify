@@ -82,7 +82,7 @@ export class AppComponent {
           if (userDetailsConfirmedInDB) {
             // If user has been created in Tabify's db
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/home');
+            await this.navCtrl.navigateRoot('home');
             // this.navCtrl.navigateForward('/auth/sign-up');
             await loading.dismiss();
             this.splashScreen.hide();
