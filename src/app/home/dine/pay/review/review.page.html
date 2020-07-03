@@ -98,7 +98,7 @@
           <ion-label>
             Enable auto pay
           </ion-label>
-          <ion-checkbox checked="true"></ion-checkbox>
+          <ion-checkbox [(ngModel)]="autoPayEnabled"></ion-checkbox>
         </ion-item>
       </ion-col>
       <ion-col size="auto">
@@ -108,8 +108,8 @@
 
     <ion-row>
       <ion-col>
-        <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()">
-          Submit Review
+        <ion-button class="submit-button" expand="block" color="warning" (click)="nextPage()" [disabled]="!autoPayEnabled">
+          Submit {{autoPayEnabled ? 'Review' : 'Payment and Review'}}
         </ion-button>
       </ion-col>
     </ion-row>

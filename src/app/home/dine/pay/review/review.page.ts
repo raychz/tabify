@@ -11,6 +11,7 @@ import { AuthService } from 'src/services/auth/auth.service';
 })
 export class ReviewPage {
   myTabItems = this.ablyTicketService.ticket.items.filter(item => item.usersMap.has(this.auth.getUid()));
+  autoPayEnabled = true;
 
   constructor(
     public navCtrl: NavController,
