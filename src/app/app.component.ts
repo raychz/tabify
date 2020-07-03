@@ -7,7 +7,7 @@ import { LoaderService } from '../services/utilities/loader.service';
 import { AuthService } from '../services/auth/auth.service';
 import { tap } from 'rxjs/operators';
 import * as Sentry from '@sentry/browser';
-import { CanActivate } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -36,25 +36,18 @@ export class AppComponent implements CanActivate {
     await this.checkAuthState();
   }
 
-  public async canActivate() {
+  // ToDO: move checkAuthState logic into canActivate - avoid observable state change redirects
+  // in order to allow deep linking to EVERY page in our application with redirects based off
+  // similar activation gaurds if the link is not valid. Default to guest authentication.
+  // See Dine Page canActivate or Pay page canActivate for examples.
+  public async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
     // const loading = await this.loader.create();
     // // Present loader while the auth check is being completed.
     // await loading.present();
-    // const userAuthState = true;
-    // // const userAuthState = await this.auth.checkAuthState().toPromise();
-    // // console.log('auth state is', userAuthState);
-    // if (userAuthState) {
-    //   // check user exist in db
-    //   const userInDb = this.auth.checkUserExistsInDB();
-    //   if (userInDb) {
-    //     // return true;
-    //   } else {
-    //     // guest authenticate here
-    //   }
-    // } else {
-    //   // guest authenticate here
-    // }
-    // loading.dismiss();
+    // await loading.dismiss();
     return true;
   }
 
