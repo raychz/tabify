@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['home.page.scss']
 })
 
-export class HomePage implements CanActivate {
+export class HomePage {
   viewTabs = true;
 
   // routes that have any of following as their last path element will show the tabs
@@ -31,11 +31,6 @@ export class HomePage implements CanActivate {
     this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((event: any) => {
       this.showHideTabs(event.urlAfterRedirects);
     });
-  }
-
-  public canActivate() {
-    // move auth logic from app component to here and welcome
-    return true;
   }
 
     private showHideTabs(url: string) {

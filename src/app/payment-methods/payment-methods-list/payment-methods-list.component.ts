@@ -22,7 +22,7 @@ export class PaymentMethodsListComponent implements OnInit {
     }
 
   addNewCard() {
-    this.navCtrl.navigateForward('home/payment-methods/create');
+    this.navCtrl.navigateForward('payment-methods/create');
   }
 
   public async showMethodActions(method: any) {

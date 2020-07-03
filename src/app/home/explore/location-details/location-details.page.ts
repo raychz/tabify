@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LocationService } from 'src/services/location/location.service';
 
 @Component({
   selector: 'app-location-details',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LocationDetailsPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public locationService: LocationService
+  ) { }
 
   ngOnInit() {
-  }
-
 }
+
+  }

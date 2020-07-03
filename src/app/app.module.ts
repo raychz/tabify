@@ -65,6 +65,7 @@ export class TabifyErrorHandler implements ErrorHandler {
       useClass: TokenInterceptor,
       multi: true,
     },
+    AppComponent,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -7,13 +7,14 @@ import { LoaderService } from '../services/utilities/loader.service';
 import { AuthService } from '../services/auth/auth.service';
 import { tap } from 'rxjs/operators';
 import * as Sentry from '@sentry/browser';
+import { CanActivate } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements CanActivate {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -32,7 +33,28 @@ export class AppComponent {
 
     this.statusBar.styleDefault();
     this.splashScreen.hide();
-    await this.checkAuthState();
+    // await this.checkAuthState();
+  }
+
+  public async canActivate() {
+    const loading = await this.loader.create();
+    // Present loader while the auth check is being completed.
+    await loading.present();
+
+    const userAuthState = await this.auth.checkAuthState().toPromise();
+    console.log('auth state is', userAuthState);
+    if (userAuthState) {
+      // check user exist in db
+      const userInDb = this.auth.checkUserExistsInDB();
+      if (userInDb) {
+        return true;
+      } else {
+        // guest authenticate here
+      }
+    } else {
+      // guest authenticate here
+    }
+    return true;
   }
 
   async checkAuthState() {

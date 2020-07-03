@@ -6,3 +6,10 @@
     <ion-label>{{user.displayName}}</ion-label>
   </ion-item>
 </ion-card>
+
+<ion-card *ngIf="users.length === 0">
+  <ion-icon name="warning-outline"></ion-icon>
+  <ion-label>
+    Sorry, we couldn't find anyone by that name. 
+  </ion-label>
+</ion-card>

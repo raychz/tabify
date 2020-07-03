@@ -8,5 +8,60 @@
 </ion-header>
 
 <ion-content>
-  Location Details Content
+  <ion-item lines="none">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+              <ion-avatar item-start>
+                <ion-img [src]="locationService.selectedLocation.photo_url"></ion-img>
+              </ion-avatar>
+          </ion-col>
+          <ion-col>
+              <ion-label class="location-info">
+                <h2 text-wrap> {{ locationService.selectedLocation.name }} </h2>
+                <h3 text-wrap>
+                  <span text-nowrap> {{ locationService.selectedLocation.street1 }}, </span>
+                  <span text-nowrap> {{ locationService.selectedLocation.city}}, {{ locationService.selectedLocation.state }}</span>
+                </h3>
+              </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h3 text-wrap>
+                <span text-nowrap>{{ locationService.selectedLocation.phone }} - </span>
+                <span text-nowrap>{{ locationService.selectedLocation.website}}</span>
+              </h3>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h3>
+                Open Today from 9:00 am - 5:00 pm
+              </h3>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      
+
+      
+      <!-- <ion-icon name="caret-down-outline" class="location-icon"></ion-icon> -->
+  </ion-item>
+    <google-map height="20%" width="100%"></google-map>
+    <ion-segment value="stories">
+      <ion-segment-button value="menu">
+        <ion-label>Menu</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="reviews">
+        <ion-label>Reviews</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="stories">
+        <ion-label>Stories</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <app-news-feed></app-news-feed>
 </ion-content>

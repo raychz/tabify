@@ -6,7 +6,6 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
-    canActivate: [HomePage],
     children: [
       {
         path: 'dine',

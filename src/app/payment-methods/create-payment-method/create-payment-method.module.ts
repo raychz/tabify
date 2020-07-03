@@ -5,12 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { CreatePaymentMethodPageRoutingModule } from './create-payment-method-routing.module';
-
 import { CreatePaymentMethodPage } from './create-payment-method.page';
+import { NgPaymentCardModule } from 'ng-payment-card';
+
 
 @NgModule({
   imports: [
     CommonModule,
+    NgPaymentCardModule,
     FormsModule,
     IonicModule,
     CreatePaymentMethodPageRoutingModule
