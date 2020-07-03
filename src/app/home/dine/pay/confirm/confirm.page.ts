@@ -6,6 +6,7 @@ import { AuthService } from 'src/services/auth/auth.service';
 import { PaymentMethodService } from 'src/services/payment/payment-method.service';
 import { CouponService } from 'src/services/coupon/coupon.service';
 import { LoaderService } from 'src/services/utilities/loader.service';
+import { CouponOffOf, CouponType } from 'src/enums/coupons.enum';
 
 @Component({
   selector: 'app-confirm',
@@ -15,6 +16,10 @@ import { LoaderService } from 'src/services/utilities/loader.service';
 export class ConfirmPage {
   currentUserUid = this.auth.getUid();
   currentTicketUser = this.ablyTicketService.ticket.usersMap.get(this.currentUserUid);
+
+  // expose enum to template
+  couponType = CouponType;
+  couponOffOf = CouponOffOf;
 
   constructor(
     public navCtrl: NavController,
@@ -68,6 +73,11 @@ export class ConfirmPage {
   public adjustTip() {
     console.log('tip edit not yet implemented');
   }
+
+  public editCoupon() {
+    console.log('coupon edit not yet implemented');
+  }
+
   public editPaymentMethod() {
     console.log('payment methods not implemented');
   }

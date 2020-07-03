@@ -1,7 +1,7 @@
 // Stateless ticket helper functions
 
 import { abbreviateName } from './general.utilities';
-import { FirestoreTicketItem } from '../services/ticket/ticket.service';
+// import { FirestoreTicketItem } from '../services/ticket/ticket.service';
 import { TicketUser } from '../interfaces/ticket-user.interface';
 import { TicketItem } from '../interfaces/ticket-item.interface';
 import { TicketItemUser } from '../interfaces/ticket-item-user.interface';
@@ -128,9 +128,9 @@ export const getSelectItemsTicketUsersDescription = (users: TicketUser[] = [], u
  * @param items
  * @param uid
  */
-export const getItemsOnMyTab = (items: FirestoreTicketItem[] = [], uid: any) => {
-    return items.filter((item: FirestoreTicketItem) => item.users.find(user => user.uid === uid));
-}
+// export const getItemsOnMyTab = (items: FirestoreTicketItem[] = [], uid: any) => {
+//     return items.filter((item: FirestoreTicketItem) => item.users.find(user => user.uid === uid));
+// }
 
 export const findUserShareOfItem = (item: TicketItem, uid: string) => {
     const ticketItemUser = item.users.find(u => u.user.uid === uid);

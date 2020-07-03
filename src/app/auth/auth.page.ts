@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth/auth.service';
   styleUrls: ['./auth.page.scss'],
 })
 export class AuthPage implements OnInit {
-  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
+  @ViewChild(IonSlides) slides: IonSlides;
   activeSlideIndex = 0;
   currentYear = new Date().getFullYear();
 
