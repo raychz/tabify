@@ -62,6 +62,17 @@ export class HamburgerMenuPage implements OnInit {
           if (this.selectedPath.startsWith('/')) {
             this.selectedPath = this.selectedPath.substring(1);
           }
+
+          const authPage = this.pages.find(page => page.url === 'auth');
+          // check if url contains auth
+          if (this.selectedPath.includes('auth')) {
+            authPage.title = 'Log In / Sign Up';
+            authPage.icon = 'log-in-outline';
+          } else {
+            authPage.title = 'Log Out';
+            authPage.icon = 'log-out-outline';
+          }
+
           this.showHideSplitPane(this.selectedPath);
       });
     }
