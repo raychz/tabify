@@ -37,24 +37,24 @@ export class AppComponent implements CanActivate {
   }
 
   public async canActivate() {
-    const loading = await this.loader.create();
-    // Present loader while the auth check is being completed.
-    await loading.present();
-    const userAuthState = true;
-    // const userAuthState = await this.auth.checkAuthState().toPromise();
-    // console.log('auth state is', userAuthState);
-    if (userAuthState) {
-      // check user exist in db
-      const userInDb = this.auth.checkUserExistsInDB();
-      if (userInDb) {
-        // return true;
-      } else {
-        // guest authenticate here
-      }
-    } else {
-      // guest authenticate here
-    }
-    loading.dismiss();
+    // const loading = await this.loader.create();
+    // // Present loader while the auth check is being completed.
+    // await loading.present();
+    // const userAuthState = true;
+    // // const userAuthState = await this.auth.checkAuthState().toPromise();
+    // // console.log('auth state is', userAuthState);
+    // if (userAuthState) {
+    //   // check user exist in db
+    //   const userInDb = this.auth.checkUserExistsInDB();
+    //   if (userInDb) {
+    //     // return true;
+    //   } else {
+    //     // guest authenticate here
+    //   }
+    // } else {
+    //   // guest authenticate here
+    // }
+    // loading.dismiss();
     return true;
   }
 
