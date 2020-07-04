@@ -9,6 +9,11 @@
       </button>
     </ion-buttons>
     <ion-title>Waiting Lobby</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end (click)="showFraudPreventionCode()">
+        <ion-icon name="ios-key" class="fraud-prevention-key"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
   <ion-toolbar (click)="inviteOthers()" no-border-top color="tabify-dark-1" class="secondary-toolbar">
     <ion-row no-border-top>

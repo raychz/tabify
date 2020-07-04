@@ -11,12 +11,14 @@ import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { keyBy, resolveByString, abbreviateName } from '../../utilities/general.utilities';
 import { TicketTotal } from '../../interfaces/ticket-total.interface';
-import { ItemIdToTicketItemUsersArray } from 'interfaces/ItemIdToTicketItemUsersArray.interface';
+import { ItemIdToTicketItemUsersArray } from '../../interfaces/ItemIdToTicketItemUsersArray.interface';
+import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
 @Injectable()
 export class AblyTicketService {
   ticket: Ticket;
+  fraudPreventionCode: FraudPreventionCode
 
   constructor(
     public ablyService: AblyService,

@@ -1,4 +1,9 @@
 page-waiting-room {
+  .fraud-prevention-key {
+    color: map-get($colors, primary);
+    font-size: 1.6em;
+  }
+
   ion-toolbar {
     text-align: center;
     height: 100%;
@@ -137,3 +142,5 @@ page-waiting-room {
     }
   }
 }
+
+

@@ -1,4 +1,9 @@
 page-status {
+  .fraud-prevention-key {
+    color: map-get($colors, primary);
+    font-size: 1.6em;
+  }
+
   #openingText {
     text-align: center;
     white-space: normal;
@@ -58,3 +63,5 @@ page-status {
     }
   }
 }
+
+

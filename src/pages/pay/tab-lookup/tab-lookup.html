@@ -3,6 +3,10 @@
     <ion-title>Find Your Ticket #</ion-title>
     <ion-buttons end>
       <!-- <button id="tab-lookup-next" ion-button icon-end (click)="findTab(false)" [disabled]="!tabForm.valid">
+      <button ion-button icon-end (click)="showFraudPreventionCode()">
+        <ion-icon name="ios-key" class="fraud-prevention-key"></ion-icon>
+      </button>
+      <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
       </button> -->
@@ -42,22 +46,6 @@
                   Select Items</button>
               </ion-col>
             </ion-row>
-          </ion-card-content>
-        </ion-card>
-        <ion-card>
-          <ion-card-header>
-            For Restaurant Use Only:
-          </ion-card-header>
-          <ion-card-content id="fraud-prevention-code">
-            <p>If requested, show this code to your server:</p>
-            <button id="toggle-code" ion-button block clear icon-end (click)="isCodeVisible = !isCodeVisible">
-              {{ isCodeVisible ? 'Hide Code' : 'Reveal Code' }}
-              <ion-icon [name]="isCodeVisible ? 'md-arrow-dropdown' : 'md-arrow-dropright'"></ion-icon>
-            </button>
-            <ng-container *ngIf="isCodeVisible">
-              <h2>{{fraudPreventionCode?.code}}</h2>
-              <p id="date-time">{{dateTime | date: 'mediumTime'}}</p>
-            </ng-container>
           </ion-card-content>
         </ion-card>
       </ion-col>
