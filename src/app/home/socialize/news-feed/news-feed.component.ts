@@ -6,6 +6,7 @@ import { LoaderService } from 'src/services/utilities/loader.service';
 import { PaymentMethodService } from 'src/services/payment/payment-method.service';
 import { AlertService } from 'src/services/utilities/alert.service';
 import { AuthService } from 'src/services/auth/auth.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-news-feed',
@@ -17,6 +18,7 @@ export class NewsFeedComponent implements OnInit {
   constructor(
     public navCtrl: NavController,
     private storyService: StoryService,
+    public screenOrientation: ScreenOrientation,
     public newsfeedService: NewsfeedService,
     public loader: LoaderService,
     public paymentMethodService: PaymentMethodService,

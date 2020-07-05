@@ -2,86 +2,99 @@
   <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
     <ion-grid>
       <ion-row>
-        <ion-col>
-          <ion-item lines="none">
-            <ion-avatar item-start>
-              <ion-img [src]="ticket.location.photo_url"></ion-img>
-            </ion-avatar>
-            <ion-label class="date-info">
-              <h2 text-wrap> {{ ticket.location.name }} </h2>
-              <!-- <h3 text-wrap>
-                <span text-nowrap> {{ ticket.location.street1 }}, </span>
-                <span text-nowrap> {{ ticket.location.city}}, {{ ticket.location.state }}</span>
-              </h3> -->
-              <h3>
-                {{ ticket.story.date_created | date:'shortDate' }}
-                {{ ticket.story.date_created | date:'shortTime' }}
-                  <ion-icon class="story-privacy" name="globe-outline"></ion-icon>
-              </h3>
-            </ion-label>
-          </ion-item>
+        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12">
+          <ion-slides pager class="slides">
+            <ion-slide class="image" class="slide">
+              <ion-img src="https://hips.hearstapps.com/del.h-cdn.co/assets/18/06/1600x800/landscape-1517928338-delish-mongolian-ramen-and-meatballs-still001.jpg"></ion-img>
+            </ion-slide>
+            <ion-slide class="slide">
+              <ion-img class="image" src="https://www.expatica.com/app/uploads/sites/5/2020/03/Boeuf-bourguignon-1920x1080.jpg"></ion-img>
+            </ion-slide>
+            <ion-slide class="slide">
+              <ion-img class="image" src="https://www.tyson.com/static/9fe6c765b10d46b857ea7540b897f764/9352a/grilled_and_ready_home_page_1600x900.jpg"></ion-img>
+            </ion-slide>
+            <ion-slide class="slide">
+              <ion-img class="image" src="https://www.jacquelinescatering.ca/image/hotdog.jpg"></ion-img>
+            </ion-slide>
+          </ion-slides>
         </ion-col>
-        <ion-col text-right class="date-padding" size="auto"> 
-       </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col class="users-padding">
-          <span>
-            {{ticket.userNamesDisplay.mainUsers}}
-          </span>
-          <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
-            (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
-            {{this.ticket.userNamesDisplay.othersNum}}
-          </span>
-          <span *ngIf="ticket.userNamesDisplay.hereClause">
-            {{ticket.userNamesDisplay.hereClause}}
-          </span>
+        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12">
+          <ion-row>
+            <ion-col>
+              <ion-item lines="none">
+                <ion-avatar item-start>
+                  <ion-img [src]="ticket.location.photo_url"></ion-img>
+                </ion-avatar>
+                <ion-label class="date-info">
+                  <h2 text-wrap> {{ ticket.location.name }} </h2>
+                  <!-- <h3 text-wrap>
+                    <span text-nowrap> {{ ticket.location.street1 }}, </span>
+                    <span text-nowrap> {{ ticket.location.city}}, {{ ticket.location.state }}</span>
+                  </h3> -->
+                  <h3>
+                    {{ ticket.story.date_created | date:'shortDate' }}
+                    {{ ticket.story.date_created | date:'shortTime' }}
+                      <ion-icon class="story-privacy" name="globe-outline"></ion-icon>
+                  </h3>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col text-right class="date-padding" size="auto"> 
+           </ion-col>
+          </ion-row>
+    
+          <ion-row>
+            <ion-col class="users-padding">
+              <span>
+                {{ticket.userNamesDisplay.mainUsers}}
+              </span>
+              <span *ngIf="ticket.userNamesDisplay.othersNum" class="plus-others"
+                (click)="this.displayUsers(ticket.users); $event.stopPropagation()">
+                {{this.ticket.userNamesDisplay.othersNum}}
+              </span>
+              <span *ngIf="ticket.userNamesDisplay.hereClause">
+                {{ticket.userNamesDisplay.hereClause}}
+              </span>
+            </ion-col>
+          </ion-row>
+    
+          <ion-row class="like-comment-row">
+                <ion-col size="4">
+                <ion-item class="like-comment-item">
+    
+                  <ion-spinner *ngIf="ticket.loadingLike" class="like-comment-icon" name="bubbles"></ion-spinner>
+                  <ion-icon class="like-comment-icon" *ngIf="!ticket.loadingLike" [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"
+                  (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'> </ion-icon>
+                  <ion-label class="like-comment-label">
+                    {{ticket.story.likes.length}} Like{{ticket.story.likes.length !== 1 ? 's' : ''}}
+                  </ion-label>
+      
+                </ion-item>
+                </ion-col>
+                <ion-col size="5">
+                   
+                <ion-item class="like-comment-item">
+                    <ion-icon class="like-comment-icon" [name]="ticket.story.comment_count > 0 ? 'chatbox' : 'chatbox-outline'">
+                    </ion-icon>
+                    <ion-label class="like-comment-label">
+                      {{ticket.story.comment_count}} Comment{{ticket.story.comment_count !== 1 ? 's' : ''}}
+                    </ion-label>
+                   
+                </ion-item>
+    
+                </ion-col>
+                <ion-col size="3">
+                <ion-item class="like-comment-item">
+                    <ion-icon name="arrow-redo-outline" class="like-comment-icon"></ion-icon>                
+                    <ion-label class="like-comment-label">
+                      Share
+                    </ion-label>
+                </ion-item>
+              </ion-col>
+          </ion-row>
+    
         </ion-col>
       </ion-row>
-
-      <ion-row class="like-comment-row">
-            <ion-col size="4">
-            <ion-item class="like-comment-item">
-
-              <ion-spinner *ngIf="ticket.loadingLike" class="like-comment-icon" name="bubbles"></ion-spinner>
-              <ion-icon class="like-comment-icon" *ngIf="!ticket.loadingLike" [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"
-              (click)='createLike(ticket.id, ticket.story.id); $event.stopPropagation()'> </ion-icon>
-              <ion-label class="like-comment-label">
-                {{ticket.story.likes.length}} Like{{ticket.story.likes.length !== 1 ? 's' : ''}}
-              </ion-label>
-  
-            </ion-item>
-            </ion-col>
-            <ion-col size="5">
-               
-            <ion-item class="like-comment-item">
-                <ion-icon class="like-comment-icon" [name]="ticket.story.comment_count > 0 ? 'chatbox' : 'chatbox-outline'">
-                </ion-icon>
-                <ion-label class="like-comment-label">
-                  {{ticket.story.comment_count}} Comment{{ticket.story.comment_count !== 1 ? 's' : ''}}
-                </ion-label>
-               
-            </ion-item>
-
-            </ion-col>
-            <ion-col size="3">
-            <ion-item class="like-comment-item">
-                <ion-icon name="arrow-redo-outline" class="like-comment-icon"></ion-icon>                
-                <ion-label class="like-comment-label">
-                  Share
-                </ion-label>
-            </ion-item>
-          </ion-col>
-      </ion-row>
-
-      <ion-row class="like-comment-row">
-        <ion-col> 
-         
-          <!-- <ion-note class="ion-float-right"> </ion-note> -->
-       </ion-col>
-      </ion-row>
-
     </ion-grid>
   </ion-card>
 </ng-container>
