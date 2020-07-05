@@ -2,7 +2,7 @@
   <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
     <ion-grid>
       <ion-row>
-        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12">
+        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12" [push]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 0">
           <ion-slides pager class="slides">
             <ion-slide class="image" class="slide">
               <ion-img src="https://hips.hearstapps.com/del.h-cdn.co/assets/18/06/1600x800/landscape-1517928338-delish-mongolian-ramen-and-meatballs-still001.jpg"></ion-img>
@@ -18,7 +18,7 @@
             </ion-slide>
           </ion-slides>
         </ion-col>
-        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12">
+        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12" [pull]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 0">
           <ion-row>
             <ion-col>
               <ion-item lines="none">
@@ -60,7 +60,7 @@
     
           <ion-row class="like-comment-row">
                 <ion-col size="4">
-                <ion-item class="like-comment-item">
+                <ion-item class="like-comment-item" lines="none">
     
                   <ion-spinner *ngIf="ticket.loadingLike" class="like-comment-icon" name="bubbles"></ion-spinner>
                   <ion-icon class="like-comment-icon" *ngIf="!ticket.loadingLike" [name]="ticket.story.likedByLoggedInUser ? 'heart' : 'heart-outline'"
@@ -73,7 +73,7 @@
                 </ion-col>
                 <ion-col size="5">
                    
-                <ion-item class="like-comment-item">
+                <ion-item class="like-comment-item" lines="none">
                     <ion-icon class="like-comment-icon" [name]="ticket.story.comment_count > 0 ? 'chatbox' : 'chatbox-outline'">
                     </ion-icon>
                     <ion-label class="like-comment-label">
@@ -84,7 +84,7 @@
     
                 </ion-col>
                 <ion-col size="3">
-                <ion-item class="like-comment-item">
+                <ion-item class="like-comment-item" lines="none">
                     <ion-icon name="arrow-redo-outline" class="like-comment-icon"></ion-icon>                
                     <ion-label class="like-comment-label">
                       Share
