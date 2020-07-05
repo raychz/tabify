@@ -12,6 +12,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
 import { AblyService } from 'src/services/ticket/ably.service';
 import { Ticket } from 'src/interfaces/ticket.interface';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { sleep } from 'src/utilities/general.utilities';
 
 @Component({
@@ -42,6 +43,7 @@ export class DinePage implements CanActivate, OnInit, OnDestroy {
     public locationService: LocationService,
     public loader: LoaderService,
     public auth: AuthService,
+    public screenOrientation: ScreenOrientation,
     public router: Router,
     public navCtrl: NavController,
     public popover: PopoverController,

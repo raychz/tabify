@@ -38,6 +38,7 @@ export class CouponComponent implements OnInit {
   }
 
   async getCoupons() {
+    console.log('getting coupons');
     const loading = await this.loader.create();
     loading.present();
     try {

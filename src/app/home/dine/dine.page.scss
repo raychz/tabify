@@ -43,11 +43,13 @@ ion-avatar {
 .header {
   padding-top: 0.8rem;
   padding-bottom: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 1.5rem;
+  text-align: left;
+  text-overflow: ellipsis;
   .fraud-code {
       position: absolute;
-      top: 0.2rem;
-      right: 0.2rem;
+      top: 5px;
+      right: 0px;
   }
 }
 
@@ -64,12 +66,6 @@ ion-avatar {
 
 .small-input {
   max-width: 90%; // need to make this more precise - scaled for iphone 5
-}
-
-.header {
-  font-size: 1.75rem;
-  text-align: left;
-  text-overflow: ellipsis;
 }
 
 // .content {

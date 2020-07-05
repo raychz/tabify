@@ -112,7 +112,7 @@
           </h2>
         </ion-col>
         <ion-col size="auto">
-          <h2>${{(this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tax - (couponService.selectedCoupon?.ticketInformation.estimated_tax_difference || 0))
+          <h2>${{(this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tax - (couponService.selectedCoupon?.ticketInformation?.estimated_tax_difference || 0))
                 / 100 | number: '1.2-2'}}</h2>
         </ion-col>
       </ion-row>
@@ -141,7 +141,7 @@
         <ion-col size="auto">
           <h2>${{ (this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.total + this.ablyTicketService.ticket.usersMap.get(this.auth.getUid())?.tips -
                 (couponService.selectedCoupon?.ticketInformation.dollar_value || 0) -
-                (couponService.selectedCoupon?.ticketInformation.estimated_tax_difference || 0)) / 100 | number: '1.2-2'}}</h2>
+                (couponService.selectedCoupon?.ticketInformation?.estimated_tax_difference || 0)) / 100 | number: '1.2-2'}}</h2>
         </ion-col>
       </ion-row>
 

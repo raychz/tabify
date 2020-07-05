@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "tabify",
+  "appId": "com.tabify",
+  "appName": "Tabify",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

@@ -1,7 +1,14 @@
-.slide-arrow {
+.header {
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
     font-size: 1.5rem;
-    position: absolute;
-    left: 0px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  ion-card {
+      margin-top: 0px;
+      margin-bottom: 5px;
+      margin-right: 5px;
+      margin-left: 5px;
+  }
