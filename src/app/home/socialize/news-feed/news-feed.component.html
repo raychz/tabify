@@ -2,10 +2,10 @@
   <ion-card (click)="openDetailedStory(ticket.story.id)" *ngIf="!!ticket">
     <ion-grid>
       <ion-row>
-        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12" [push]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 0">
+        <ion-col [size]="platform.isLandscape() ? 6 : 12" [push]="platform.isLandscape() ? 6 : 0">
           <ion-slides pager class="slides">
-            <ion-slide class="image" class="slide">
-              <ion-img src="https://hips.hearstapps.com/del.h-cdn.co/assets/18/06/1600x800/landscape-1517928338-delish-mongolian-ramen-and-meatballs-still001.jpg"></ion-img>
+            <ion-slide class="slide">
+              <ion-img class="image" src="https://hips.hearstapps.com/del.h-cdn.co/assets/18/06/1600x800/landscape-1517928338-delish-mongolian-ramen-and-meatballs-still001.jpg"></ion-img>
             </ion-slide>
             <ion-slide class="slide">
               <ion-img class="image" src="https://www.expatica.com/app/uploads/sites/5/2020/03/Boeuf-bourguignon-1920x1080.jpg"></ion-img>
@@ -18,7 +18,7 @@
             </ion-slide>
           </ion-slides>
         </ion-col>
-        <ion-col [size]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 12" [pull]="screenOrientation.type === screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ? 6 : 0">
+        <ion-col [size]="platform.isLandscape() ? 6 : 12" [pull]="platform.isLandscape() ? 6 : 0">
           <ion-row>
             <ion-col>
               <ion-item lines="none">

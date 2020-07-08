@@ -23,8 +23,6 @@ import { AuthService } from '../services/auth/auth.service';
 import * as Sentry from "@sentry/browser";
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-
 Sentry.init({
   dsn: environment.sentryDsn,
   release: `tabify-frontend@${environment.version}`,
@@ -58,8 +56,6 @@ export class TabifyErrorHandler implements ErrorHandler {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    // TODO: Update to use a modern ionic rating module
-    // Ionic2RatingModule,
   ],
   providers: [
     {
@@ -68,7 +64,6 @@ export class TabifyErrorHandler implements ErrorHandler {
       multi: true,
     },
     AppComponent,
-    ScreenOrientation,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

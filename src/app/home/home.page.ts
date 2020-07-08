@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/services/auth/auth.service';
 import { CanActivate, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -12,6 +12,8 @@ import { filter } from 'rxjs/operators';
 
 export class HomePage {
   viewTabs = true;
+  tabsPlacement = 'bottom';
+  tabsLayout = 'icon-top';
 
   // routes that have any of following as their last path element will show the tabs
   private showTabBarPages: string[] = [
@@ -27,10 +29,18 @@ export class HomePage {
     public auth: AuthService,
     public navCtrl: NavController,
     public router: Router,
+    public platform: Platform,
   ) {
     this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((event: any) => {
       this.showHideTabs(event.urlAfterRedirects);
     });
+
+    // platform does not correctly identify a desktop device
+    if (this.platform.is('desktop')) {
+      // variable tabs placement not working - always defaults to bottom
+      this.tabsPlacement = 'top';
+      this.tabsLayout = 'icon-start';
+    }
   }
 
     private showHideTabs(url: string) {

@@ -4,7 +4,7 @@ import { Location } from 'src/interfaces/location.interface';
 import { LoaderService } from 'src/services/utilities/loader.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { AlertService } from 'src/services/utilities/alert.service';
-import { PopoverController, IonCard, NavController, ToastController } from '@ionic/angular';
+import { PopoverController, IonCard, NavController, ToastController, Platform } from '@ionic/angular';
 import { CanActivate, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TicketMode } from 'src/enums';
@@ -12,7 +12,6 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AblyTicketService } from 'src/services/ticket/ably-ticket.service';
 import { AblyService } from 'src/services/ticket/ably.service';
 import { Ticket } from 'src/interfaces/ticket.interface';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { sleep } from 'src/utilities/general.utilities';
 
 @Component({
@@ -43,7 +42,7 @@ export class DinePage implements CanActivate, OnInit, OnDestroy {
     public locationService: LocationService,
     public loader: LoaderService,
     public auth: AuthService,
-    public screenOrientation: ScreenOrientation,
+    public platform: Platform,
     public router: Router,
     public navCtrl: NavController,
     public popover: PopoverController,
