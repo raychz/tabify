@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable , Subject , of , from, defer, fromEvent } from 'rxjs';
 import { environment } from '@tabify/env';
 import { tap, map } from 'rxjs/operators';
+import { User } from 'src/interfaces/user.interface';
+import { UserDetail } from 'src/interfaces/user-detail.interface';
 
 interface ISignUpCredentials {
   email: string;
@@ -29,6 +31,7 @@ export class AuthService {
   private authState$: Observable<firebase.User | null>;
   private referralCode: string = '';
   public userDetailsConfirmedInDB$ = new Subject<boolean>();
+  public otherUsers: UserDetail[];
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -194,7 +197,24 @@ export class AuthService {
       this.userDetailsConfirmedInDB$.next(false);
       const alert = await this.alertCtrl.create({
         header: 'Network Error',
-        message: `Please check your connection and try again.`,
+        message: `Please check your connection and try again. - auth service`,
+      });
+      await alert.present();
+      throw e;
+    }
+  }
+
+  async getAllOtherUsers(): Promise<UserDetail[]> {
+    try {
+      this.otherUsers = await this.http.get(`${environment.serverUrl}/user/all`).toPromise() as UserDetail[];
+      console.log(this.otherUsers);
+      return this.otherUsers;
+    } catch (e) {
+      console.error('getAllOtherUsers encountered an error', e);
+      this.otherUsers = undefined;
+      const alert = await this.alertCtrl.create({
+        header: 'Network Error',
+        message: `Please check your connection and try again. - auth service2`,
       });
       await alert.present();
       throw e;

@@ -1,15 +1,16 @@
-import { User } from "./user.interface";
-import { Server } from "./server.interface";
+import { User } from './user.interface';
+import { Server } from './server.interface';
+import { TabifyBaseInterface } from './base.interface';
 
-export interface UserDetail extends FrontendUserDetail {
-  id: number;
+export interface FrontendUserDetail {
+  abbreviatedName: string;
+}
+
+export interface UserDetail extends FrontendUserDetail, TabifyBaseInterface {
   displayName: string;
   email: string;
   photo_url: string;
   user: User;
   server: Server;
-}
-
-export interface FrontendUserDetail {
-  abbreviatedName: string;
+  newUser: boolean;
 }

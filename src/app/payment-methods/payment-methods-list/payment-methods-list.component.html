@@ -1,0 +1,21 @@
+<ion-label *ngIf="!paymentMethodService.paymentMethods.length">
+  No Payment Methods available
+</ion-label>
+  <ion-card *ngFor="let method of this.paymentMethodService.paymentMethods" (click)="showMethodActions(method)">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-icon class="linked-card-icon" name="card"></ion-icon>
+          {{method.card_type}} ...{{method.last_four_digits}} {{method.l}}
+        </ion-col>
+        <ion-col size="auto">
+          {{method.month}}/{{method.year | number | slice:-2}}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+    
+  <ion-card ion-item (click)="addNewCard()">
+    <ion-icon class="linked-card-icon" name="add" item-start></ion-icon>
+    Add New Card
+  </ion-card>

@@ -1,0 +1,15 @@
+ <ion-header>
+ <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-menu-button></app-menu-button>
+    </ion-buttons>
+    <ion-img class="tabify-icon" src="assets/imgs/logo.png"></ion-img>
+    <ion-buttons slot="end">
+      <ion-button icon-only class="notifications" (click)="showNotifications()">
+        <ion-icon name="notifications" class="notification-icon"></ion-icon>
+        <!-- setting badge ngIf to false so it'll never render -> notifications not yet implemented -->
+        <ion-badge *ngIf="false">7</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

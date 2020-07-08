@@ -1,0 +1,51 @@
+<ion-card>
+  <ion-card-header class="header">
+    Coupons
+  </ion-card-header>
+      <ion-card  *ngFor="let coupon of couponService.validCoupons" class="coupon-card" (click)="expandCoupon(coupon)">
+        <!-- <ion-card-content class="card-content"> -->
+          <ion-grid>
+            <ion-row>
+              <ion-col col-9>
+                <ion-row>
+                  <ion-col>
+                    <span class='line-details'>
+                      {{ coupon.coupon_type === CouponType.dollar_value ? '$' + (coupon.value / 100 | number: '1.2-2') : coupon.value + '%' }}
+                      off
+                      {{ coupon.coupon_off_of === CouponOffOf.ticket ? 'the full bill' : coupon.ticketInformation.menu_item_name}}</span>
+                  </ion-col>
+                </ion-row>
+                    <ion-row>
+                      <ion-col>
+                        <p text-wrap class="coupon-description">
+                          {{ coupon.description }}
+                        </p>
+                      </ion-col>
+                    </ion-row>
+              </ion-col>
+              <ion-col class="value" col-3>
+                  <ion-img class="coupon-image" [src]='coupon.image_url'></ion-img>
+              </ion-col>
+  
+            </ion-row>
+  
+            <ion-row >
+              <ion-col class="end-info">
+                Usage: {{ coupon. userToCoupons[0].usage_count }}/{{ coupon.usage_limit ? coupon.usage_limit : '∞' }}
+              </ion-col>
+              <!-- <ion-col class="redeem-button-container">
+                <button ion-button class="redeem-button">
+                    Redeem
+                </button>
+              </ion-col> -->
+              <ion-col class="end-info">
+                Valid until: {{ coupon.coupon_end_date.getMonth() + 1}}-{{ coupon.coupon_end_date.getDate() }}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        <!-- </ion-card-content> -->
+      </ion-card>
+      <ion-card *ngIf="couponService.validCoupons.length === 0">
+        Sorry, no coupons are available at this time :(
+      </ion-card>
+</ion-card>

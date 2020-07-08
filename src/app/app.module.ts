@@ -19,7 +19,7 @@ import { Facebook } from '@ionic-native/facebook/ngx';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '@tabify/env';
 import { AuthService } from '../services/auth/auth.service';
-// import { SharedPayModule } from '../pages/pay/shared-pay.module';
+// import { SharedPayModule } from '../pages/dine/shared-dine.module';
 import * as Sentry from "@sentry/browser";
 import { TokenInterceptor } from '../interceptors/token.interceptor';
 
@@ -56,8 +56,6 @@ export class TabifyErrorHandler implements ErrorHandler {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    // TODO: Update to use a modern ionic rating module
-    // Ionic2RatingModule,
   ],
   providers: [
     {
@@ -65,6 +63,7 @@ export class TabifyErrorHandler implements ErrorHandler {
       useClass: TokenInterceptor,
       multi: true,
     },
+    AppComponent,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

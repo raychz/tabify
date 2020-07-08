@@ -1,0 +1,87 @@
+.submit-button {
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 1rem;
+  }
+
+    .ticket-spinner {
+      display: flex;
+      margin: auto;
+    }
+    ion-card {
+      margin: 10px;
+      ion-row {
+        ion-col {
+          &.modify-item {
+            padding: 0;
+            ion-spinner {
+              fill: var(--ion-color-primary);
+              margin: auto;
+            }
+            &.item-on-tab {
+              background-color: var(--ion-color-primary);
+              color:var(--ion-color-light);
+            }
+            &.item-not-on-tab {
+              background-color: var(--ion-color-dark);;
+              border-right: 1px solid var(--ion-color-primary);;
+            }
+            > div {
+              justify-content: center;
+              flex-direction: column;
+              text-align: center;
+              display: flex;
+              height: 100%;
+            }
+            ion-icon {
+              font-size: 1.5rem;
+              margin: auto;
+            }
+          }
+          &.item-details {
+            padding: 0;
+            overflow: hidden;
+            .col-item-name {
+              .name-text {
+                font-weight: 500;
+                font-size: 1em;
+              }
+              .quantity-text {
+                font-size: 0.9em;
+                color: lightgray;
+                margin-left: 5px;
+              }
+            }
+            .col-item-total {
+              .my-share-text {
+                color: var(--ion-color-primary);;
+                font-size: 0.9em;
+                white-space: nowrap;
+                vertical-align: top;
+              }
+              .total-text {
+                font-size: 1em;
+                vertical-align: top;
+              }
+            }
+            .col-payers {
+              padding-top: 0px;
+              .payers-icon {
+                &-alert {
+                  color: var(--ion-color-primary);;
+                }
+                vertical-align: text-bottom;
+              }
+              .payers-description-text,
+              .payers-count {
+                font-size: 0.9em;
+                color: lightgray;
+              }
+              .payers-count {
+                color: var(--ion-color-primary);;
+              }
+            }
+          }
+        }
+      }
+    }

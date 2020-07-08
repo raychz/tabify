@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@tabify/env';
 import { AblyService } from '../../services/ticket/ably.service';
-import { TicketUpdates, TicketUserStatus, TicketStatus } from '../../enums/';
+import { TicketUpdates, TicketUserStatus, TicketStatus, TicketMode } from '../../enums/';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketUser } from '../../interfaces/ticket-user.interface';
 import { TicketItemUser } from '../../interfaces/ticket-item-user.interface';
@@ -17,7 +17,7 @@ import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.inte
 @Injectable({ providedIn: 'root' })
 export class AblyTicketService {
   ticket: Ticket;
-  fraudPreventionCode: FraudPreventionCode
+  fraudPreventionCode: FraudPreventionCode;
 
   constructor(
     public ablyService: AblyService,
@@ -33,6 +33,28 @@ export class AblyTicketService {
     } else {
       console.error('An attempt was made to clear the ticket service state, but the state is already empty.');
     }
+  }
+
+  public async addUserToDatabaseTicket() {
+    if (!this.ticket) {
+      console.log('can not add user to ticket - ably ticket is undefined');
+      return;
+    }
+    return await this.http
+      .post<TicketUser>(`${environment.serverUrl}/tickets/${this.ticket.id}/users`, {})
+      .toPromise();
+  }
+
+  public async addUserToTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .post(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`, {})
+      .toPromise();
+  }
+
+  public async removeUserFromTicketItem(ticketId: number, ticketUserId: number, itemId: number) {
+    return await this.http
+      .delete(`${environment.serverUrl}/tickets/${ticketId}/items/${itemId}/users/${ticketUserId}`)
+      .toPromise();
   }
 
   async subscribeToTicketUpdates(ticketId) {
@@ -53,33 +75,33 @@ export class AblyTicketService {
         switch (_message.name) {
           case TicketUpdates.TICKET_UPDATED:
             this.onTicketUpdate(_message.data);
-            console.log("TICKET_UPDATED", _message);
+            console.log('TICKET_UPDATED', _message);
             break;
           case TicketUpdates.TICKET_USER_ADDED:
             this.onTicketUserAdded(_message.data);
-            console.log("TICKET_USER_ADDED", _message);
+            console.log('TICKET_USER_ADDED', _message);
             break;
           case TicketUpdates.TICKET_USER_REMOVED:
             this.onTicketUserRemoved(_message.data);
-            console.log("TICKET_USER_REMOVED", _message);
+            console.log('TICKET_USER_REMOVED', _message);
             break;
           case TicketUpdates.TICKET_USERS_UPDATED:
             this.onTicketUsersUpdated(_message.data);
-            console.log("TICKET_USERS_UPDATED", _message);
+            console.log('TICKET_USERS_UPDATED', _message);
             break;
           case TicketUpdates.TICKET_ITEM_USERS_REPLACED:
             this.onTicketItemUsersReplaced(_message.data);
-            console.log("TICKET_ITEM_USERS_REPLACED", _message);
+            console.log('TICKET_ITEM_USERS_REPLACED', _message);
             break;
           case TicketUpdates.TICKET_TOTALS_UPDATED:
             this.onTicketTotalsUpdated(_message.data);
-            console.log("TICKET_TOTALS_UPDATED", _message);
+            console.log('TICKET_TOTALS_UPDATED', _message);
             break;
           case TicketUpdates.TICKET_PAYMENTS_UPDATED:
-            console.log("TICKET_PAYMENTS_UPDATED", _message);
+            console.log('TICKET_PAYMENTS_UPDATED', _message);
             break;
           default:
-            throw "Message name does not correspond to a handler";
+            throw new Error('Message name does not correspond to a handler');
         }
       }
     });
@@ -97,8 +119,57 @@ export class AblyTicketService {
       .get(`${environment.serverUrl}/tickets/${id}`)
       .toPromise();
     this.ticket = ticket as any;
-    console.log("ABLY TICKET", this.ticket);
+    console.log('ABLY TICKET', this.ticket);
     return ticket;
+  }
+
+  /**
+   * Sends a request to retrieve a ticket object from tabify-server's database (not Firestore).
+   * @param ticketNumber
+   * @param locationId
+   * @param ticketStatus
+   */
+  public async searchTicket(ticketNumber: number, locationId: number, ticketStatus: string, openedRecently: boolean) {
+    const params = {
+      opened_recently: String(openedRecently),
+      ticket_number: String(ticketNumber),
+      location: String(locationId), // Corresponds to location id in Tabify's db
+      ticket_status: ticketStatus
+    };
+    this.ticket = await this.http
+      .get(`${environment.serverUrl}/tickets/`, { params })
+      .toPromise() as Ticket;
+    return this.ticket;
+  }
+
+  /**
+   * Sends a request to create a ticket object in tabify-server's database (not Firestore).
+   * @param ticketNumber
+   * @param locationId
+   */
+  public async createTicket(ticketNumber: number, locationId: number, openedRecently: boolean) {
+    const body = {
+      ticket_number: String(ticketNumber),
+      location: String(locationId), // Corresponds to location id in Tabify's db
+      opened_recently: String(openedRecently),
+    };
+
+    this.ticket = await this.http
+      .post(`${environment.serverUrl}/tickets`, body)
+      .toPromise() as Ticket;
+    return this.ticket;
+  }
+
+  public async updateTicketConfig(body: {mode: TicketMode, partySize: number}) {
+    if (!this.ticket) {
+      console.log('cannot update ticket config - no ticket selected');
+      return undefined;
+    }
+    const updatedTicket = await this.http
+      .patch(`${environment.serverUrl}/tickets/${this.ticket.id}`, body)
+      .toPromise() as Ticket;
+    this.onTicketUpdate(updatedTicket);
+    return this.ticket;
   }
 
   async setTicketUserStatus(ticketId: number, ticketUserId: number, status: TicketUserStatus) {
@@ -114,40 +185,40 @@ export class AblyTicketService {
     this.ticket = {
       ...this.ticket, ...updatedTicket
     };
-    console.log('ticket updated', this.ticket)
+    console.log('ticket updated', this.ticket);
   }
 
   onTicketUserAdded(addedTicketUser: TicketUser) {
     if (!this.ticket) {
-      console.error('The ticket is falsy, but an Ably message was received.')
+      console.error('The ticket is falsy, but an Ably message was received.');
       return;
     }
 
     const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === addedTicketUser.id);
     if (ticketUserIndex > -1) {
-      console.log("This ticket user already exists in the ticket. Replacing...");
+      console.log('This ticket user already exists in the ticket. Replacing...');
       this.ticket.users[ticketUserIndex] = addedTicketUser;
     } else {
-      console.log("A new ticket user was added.");
+      console.log('A new ticket user was added.');
       this.ticket.users.push(addedTicketUser);
     }
 
     this.synchronizeFrontendTicket();
-    console.log("Updated ticket", this.ticket);
+    console.log('Updated ticket', this.ticket);
   }
 
   private onTicketUserRemoved(removedTicketUser: TicketUser) {
     if (!this.ticket) {
-      console.error('The ticket is falsy, but an Ably message was received.')
+      console.error('The ticket is falsy, but an Ably message was received.');
       return;
     }
 
     const ticketUserIndex = this.ticket.users.findIndex(_ticketUser => _ticketUser.id === removedTicketUser.id);
     if (ticketUserIndex > -1) {
-      console.log("A ticket user was removed.");
+      console.log('A ticket user was removed.');
       this.ticket.users.splice(ticketUserIndex, 1);
     } else {
-      console.log("The removed ticket user does not exist in the ticket. Skipping...");
+      console.log('The removed ticket user does not exist in the ticket. Skipping...');
     }
 
     this.synchronizeFrontendTicket();
@@ -164,13 +235,13 @@ export class AblyTicketService {
           ...updatedTicketUser
         };
       } else {
-        console.error('The updated ticket user could not be found.')
+        console.error('The updated ticket user could not be found.');
       }
     });
     this.synchronizeFrontendTicket();
   }
 
-  private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem["id"] }) {
+  private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem['id'] }) {
     const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
     ticketItem.users = newTicketItemUsers;
     this.synchronizeFrontendTicketItems([ticketItem]);
@@ -190,7 +261,7 @@ export class AblyTicketService {
     // TODO: Consider moving this to the backend
     this.ticket.users.forEach(u => u.user.userDetail.abbreviatedName = abbreviateName(u.user.userDetail.displayName));
     this.ticket.usersMap = keyBy(this.ticket.users, 'user.uid');
-    console.log("THE USER MAP", this.ticket.usersMap);
+    console.log('THE USER MAP', this.ticket.usersMap);
   }
 
   /**

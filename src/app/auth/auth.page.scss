@@ -1,0 +1,117 @@
+@mixin vendor-prefix($name, $value) {
+  @each $vendor in ('-webkit-', '-moz-', '-ms-', '-o-', '') {
+    #{$vendor}#{$name}: #{$value};
+  }
+}
+@mixin animation(
+  $name,
+  $duration,
+  $iteration-count,
+  $timing-function,
+  $direction
+) {
+  @include vendor-prefix('animation-name', $name);
+  @include vendor-prefix('animation-duration', $duration);
+  @include vendor-prefix('animation-iteration-count', $iteration-count);
+  @include vendor-prefix('animation-timing-function', $timing-function);
+  @include vendor-prefix('animation-direction', $direction);
+}
+@mixin keyframe($animation_name) {
+  @-webkit-keyframes #{$animation_name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation_name} {
+    @content;
+  }
+  @-o-keyframes #{$animation_name} {
+    @content;
+  }
+  @keyframes #{$animation_name} {
+    @content;
+  }
+}
+ion-content {
+  position: relative;
+  &::before {
+    width: 100%;
+    height: 100%;
+    content: '';
+    position: absolute;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    background-color: black;
+    @media (min-width: 700px) {
+      background-image: url(../../assets/imgs/login/img1.png);
+    }
+    background-image: url(../../assets/imgs/login/img1.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    will-change: transform;
+    @include vendor-prefix('transition', background-image 0.2s linear);
+    @include vendor-prefix('filter', brightness(50%) grayscale(20%));
+    @include animation(move, 15s, infinite, linear, alternate-reverse);
+    @include keyframe(move) {
+      from {
+        transform: scale(1.2, 1.2);
+      }
+      to {
+        transform: scale(1, 1);
+      }
+    }
+  }
+  h1,
+  h4 {
+    font-weight: 400;
+  }
+
+  .action-btn {
+    width: 70%;
+  }
+  .scroll-content {
+    overflow: hidden;
+  }
+  .swiper-pagination-bullet {
+    // background: map-get($colors, light);
+  }
+  .swiper-pagination-bullet-active {
+    // background: map-get($colors, primary);
+  }
+  ion-grid {
+    position: relative;
+    height: 100%;
+    ion-row {
+      &:nth-child(1) {
+        height: 38%;
+      }
+      &:nth-child(2) {
+        height: 43%;
+      }
+      &:nth-child(3) {
+        height: 13%;
+      }
+      &:nth-child(4) {
+        height: 6%;
+      }
+      ion-col {
+        height: 100%;
+        .slides {
+          height: 100%;
+        }
+        .slide-zoom {
+          width: 95%;
+          height: 100%;
+        }
+        .slide-icon {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          margin: auto auto 0 auto;
+          height: 60px;
+        }
+      }
+    }
+  }
+}

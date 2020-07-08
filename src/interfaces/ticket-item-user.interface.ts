@@ -1,8 +1,8 @@
-import { TicketItem } from "./ticket-item.interface";
-import { User } from "./user.interface";
+import { TicketItem } from './ticket-item.interface';
+import { User } from './user.interface';
+import { TabifyBaseInterface } from './base.interface';
 
-export interface TicketItemUser {
-  id?: number;
+export interface TicketItemUser extends TabifyBaseInterface {
   ticketItem: TicketItem;
   user: User;
   price: number;

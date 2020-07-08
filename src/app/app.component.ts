@@ -6,14 +6,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LoaderService } from '../services/utilities/loader.service';
 import { AuthService } from '../services/auth/auth.service';
 import { tap } from 'rxjs/operators';
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/browser';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements CanActivate {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -35,6 +36,21 @@ export class AppComponent {
     await this.checkAuthState();
   }
 
+  // ToDO: move checkAuthState logic into canActivate - avoid observable state change redirects
+  // in order to allow deep linking to EVERY page in our application with redirects based off
+  // similar activation gaurds if the link is not valid. Default to guest authentication.
+  // See Dine Page canActivate or Pay page canActivate for examples.
+  public async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    // const loading = await this.loader.create();
+    // // Present loader while the auth check is being completed.
+    // await loading.present();
+    // await loading.dismiss();
+    return true;
+  }
+
   async checkAuthState() {
     const loading = await this.loader.create();
     // Present loader while the auth check is being completed.
@@ -46,14 +62,14 @@ export class AppComponent {
         async (user) => {
           console.log('IN SUBSCRIBE APP COMPONENT, USER: ', user);
           if (user) {
-            // If user is authenticated on Firebase, 
+            // If user is authenticated on Firebase,
             // wait until the user is created in our DB.
             // The loader will be dismissed in the second pipe/tap below.
             await this.auth.checkUserExistsInDB();
           } else {
             // Otherwise, send user back to unauthenticated screen.
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/welcome');
+            await this.navCtrl.navigateRoot('/auth');
             await loading.dismiss();
             this.splashScreen.hide();
           }
@@ -62,12 +78,12 @@ export class AppComponent {
           // If an error occurs, send user back to unauthenticated screen.
           // Loader can be dismissed.
           console.log('IN SUBSCRIBE APP COMPONENT, ERROR: ', error);
-          await this.navCtrl.navigateRoot('/welcome');
+          await this.navCtrl.navigateRoot('/auth');
           this.splashScreen.hide();
           await loading.dismiss();
           const alert = await this.alertCtrl.create({
             header: 'Network Error',
-            message: `Please check your connection and try again.`,
+            message: `Please check your connection and try again. - app component`,
           });
           alert.present();
           throw error;
@@ -82,14 +98,14 @@ export class AppComponent {
           if (userDetailsConfirmedInDB) {
             // If user has been created in Tabify's db
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/home/pay');
-            // this.navCtrl.navigateForward('/welcome/sign-up');
+            await this.navCtrl.navigateRoot('home');
+            // this.navCtrl.navigateForward('/auth/sign-up');
             await loading.dismiss();
             this.splashScreen.hide();
           } else {
             // If user has not been created in Tabify's db
             // Loader can be dismissed.
-            await this.navCtrl.navigateRoot('/welcome');
+            await this.navCtrl.navigateRoot('/auth');
             await loading.dismiss();
             this.splashScreen.hide();
           }

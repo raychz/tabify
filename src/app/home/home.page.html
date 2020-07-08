@@ -1,0 +1,25 @@
+<!-- <app-tabify-header></app-tabify-header> -->
+
+<ion-tabs>
+
+  <ion-tab-bar [slot]="tabsPlacement" [hidden]="!viewTabs">
+    <ion-tab-button tab="socialize" [layout]="tabsLayout">
+      <ion-icon name="people-outline"></ion-icon>
+      <!-- <ion-icon name="calendar-outline"></ion-icon> -->
+      <ion-label>Socialize</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="dine" [layout]="tabsLayout">
+      <!-- <ion-icon name="receipt-outline"></ion-icon> -->
+      <ion-icon name="fast-food-outline"></ion-icon>
+      <!-- <ion-icon name="beer-outline"></ion-icon> -->
+      <ion-label>Dine</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="explore" [layout]="tabsLayout">
+      <ion-icon name="business-outline"></ion-icon>
+      <ion-label>Explore</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>

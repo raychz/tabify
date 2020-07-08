@@ -1,0 +1,15 @@
+.user-profile {
+    height: 32px;
+    width: 32px;
+    // margin-right: 12px;
+  
+    .menu {
+      border-radius: 50%;
+      font-size: 1.3rem;
+      --ion-color-base: white;
+      background-color: black;
+      position: fixed;
+      bottom: 0rem;
+      right: 0rem;
+    }
+  }

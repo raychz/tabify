@@ -1,0 +1,24 @@
+<ion-split-pane contentId="main" class="split-pane" [disabled]="!viewSplitPane" when="lg">
+  <ion-menu contentId="main">
+    <ion-header>
+      <ion-avatar class="tabify-sidemenu-profile-pic">
+        <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
+      </ion-avatar>
+      <h5 class="tabify-sidemenu-display-name">{{ auth.getDisplayName() }}</h5>
+      <p class="muted tabify-sidemenu-detail">Username here</p>
+      <p class="muted tabify-sidemenu-detail">Tickets Opened: 23</p>
+      <p class="muted tabify-sidemenu-detail">Amount Saved: $54.63</p>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle autoHide="false" *ngFor="let page of pages">
+          <ion-item (click)="openPage(page)" [class.active-item]="selectedPath.startsWith(page.url)">
+            <ion-icon [name]="page.icon" [class.active-item]="selectedPath.startsWith(page.url)"></ion-icon>
+            {{page.title}}
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+   </ion-menu>
+   <ion-router-outlet id="main"></ion-router-outlet>
+ </ion-split-pane>

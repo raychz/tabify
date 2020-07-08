@@ -1,0 +1,84 @@
+<ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="user-total">
+        Ticket #:
+      </ion-col>
+      <ion-col class="user-bill">
+        123456
+      </ion-col>
+    </ion-row>
+    <ion-row class="user-total">
+      <ion-col>
+        Your Total:
+      </ion-col>
+      <ion-col class="user-bill">
+        <span>
+          $12.73
+        </span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+<ion-segment scrollable>
+  <ion-segment-button *ngFor="let number of [1,1,1,1,1,1,1,1]">
+    
+      <ion-avatar class="status-avatar">
+        <ion-img src="https://cdn3.f-cdn.com/contestentries/1376995/30494909/5b566bc71d308_thumb900.jpg" class="profile-image"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        Some Name
+      </ion-label>
+
+    
+  </ion-segment-button>
+  <ion-segment-button>
+    
+      <ion-avatar class="add-user">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-avatar>
+      <ion-label>Add A Friend</ion-label>
+
+  </ion-segment-button>
+  <ion-segment-button>
+    
+      <ion-avatar class="status-avatar">
+        <ion-icon name="people-outline"></ion-icon>
+
+      </ion-avatar>
+      <ion-label>8/10 Joined</ion-label>
+
+</ion-segment-button>
+  <ion-segment-button>
+    
+      <ion-avatar class="status-avatar">
+        <ion-icon name="alert-outline"></ion-icon>
+      </ion-avatar>
+      <ion-label>Unclaimed Items</ion-label>
+
+  </ion-segment-button>
+  <ion-segment-button>
+    
+    <ion-avatar class="status-avatar">
+      <ion-icon name="cash-outline"></ion-icon>
+    </ion-avatar>
+    <ion-label>Total Bill</ion-label>
+
+</ion-segment-button>
+  <ion-segment-button>
+    
+      <ion-avatar class="status-avatar">
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-avatar>
+      <ion-label>Ticket Config</ion-label>
+
+  </ion-segment-button>
+  <ion-segment-button>
+    
+      <ion-avatar class="refresh-button">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-avatar>
+      <ion-label>Refresh Ticket</ion-label>
+
+</ion-segment-button>
+</ion-segment>
+</ion-card>
