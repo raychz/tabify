@@ -2,13 +2,14 @@
   <ion-navbar>
     <ion-title>Find Your Ticket #</ion-title>
     <ion-buttons end>
+      <!-- <button id="tab-lookup-next" ion-button icon-end (click)="findTab(false)" [disabled]="!tabForm.valid">
       <button ion-button icon-end (click)="showFraudPreventionCode()">
         <ion-icon name="ios-key" class="fraud-prevention-key"></ion-icon>
       </button>
       <button id="tab-lookup-next" ion-button icon-end (click)="findTab()" [disabled]="!tabForm.valid">
         Next
         <ion-icon name="arrow-forward"></ion-icon>
-      </button>
+      </button> -->
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -24,7 +25,8 @@
           <ion-card-content>
             <p>Your ticket number can usually be found on the top of your check.</p>
             <br>
-            <p><b>Note:</b> Verify the accuracy of the items on your check <b>before</b> entering the ticket number into Tabify. The items cannot be changed after this.</p>
+            <p><b>Note:</b> Verify the accuracy of the items on your check <b>before</b> entering the ticket number into
+              Tabify. The items cannot be changed after this.</p>
             <form [formGroup]="tabForm">
               <ion-list inset>
                 <ion-item id="number-input-item" [ngClass]="{ invalid: tabErrors.hasError('*', ['touched', 'dirty']) }">
@@ -36,6 +38,14 @@
                 </div>
               </ion-list>
             </form>
+            <ion-row>
+              <ion-col text-center>
+                <button id="express-checkout-btn" ion-button (click)="findTab(true)" [disabled]="!tabForm.valid">Express
+                  - Only You</button>
+                <button id="tab-lookup-next" ion-button (click)="findTab(false)" [disabled]="!tabForm.valid">Split -
+                  Select Items</button>
+              </ion-col>
+            </ion-row>
           </ion-card-content>
         </ion-card>
       </ion-col>

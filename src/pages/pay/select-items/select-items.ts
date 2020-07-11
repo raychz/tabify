@@ -76,8 +76,12 @@ export class SelectItemsPage {
   }
 
   async backButtonAction() {
+    const loading = this.loader.create();
+    await loading.present();
+    await this.ticketService.removeUserFromDatabaseTicket(this.ablyTicketService.ticket.id);
     await this.ablyTicketService.clearState();
     await this.navCtrl.pop();
+    await loading.dismiss();
   }
 
   async addOrRemoveItem(item: TicketItem) {
@@ -154,16 +158,16 @@ export class SelectItemsPage {
       title: 'Modify your tab',
       buttons: [
         {
-          text: 'Add all to my tab (coming soon)',
+          text: 'Add all to my tab',
           handler: () => {
-            // this.addAllItemsToMyTab();
+            this.addAllItemsToMyTab();
           },
         },
         {
-          text: 'Remove all from my tab (coming soon)',
+          text: 'Remove all from my tab',
           role: 'destructive',
           handler: () => {
-            // this.removeAllItemsFromMyTab();
+            this.removeAllItemsFromMyTab();
           },
         },
         {
@@ -175,18 +179,20 @@ export class SelectItemsPage {
     actionSheet.present();
   }
 
-  // TODO: Replace this function with a bulk add/remove action
   async addAllItemsToMyTab() {
-    for (const item of this.ablyTicketService.ticket.items) {
-      if (!item.usersMap.has(this.userUid)) this.addOrRemoveItem(item);
-    }
+    const loading = this.loader.create();
+    await loading.present();
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    await this.ticketService.addUserToAllItemsOnTicket(this.ablyTicketService.ticket.id, currentUser.id);
+    await loading.dismiss();
   }
 
-  // TODO: Replace this function with a bulk add/remove action
   async removeAllItemsFromMyTab() {
-    for (const item of this.ablyTicketService.ticket.items) {
-      if (item.usersMap.has(this.userUid)) await this.addOrRemoveItem(item);
-    }
+    const loading = this.loader.create();
+    await loading.present();
+    const currentUser = this.ablyTicketService.ticket.usersMap.get(this.auth.getUid());
+    await this.ticketService.removeUserFromAllItemsOnTicket(this.ablyTicketService.ticket.id, currentUser.id);
+    await loading.dismiss();
   }
 
   inviteOthers() {

@@ -11,6 +11,7 @@ import { TicketItem } from '../../interfaces/ticket-item.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { keyBy, resolveByString, abbreviateName } from '../../utilities/general.utilities';
 import { TicketTotal } from '../../interfaces/ticket-total.interface';
+import { ItemIdToTicketItemUsersArray } from '../../interfaces/ItemIdToTicketItemUsersArray.interface';
 import { FraudPreventionCode } from '../../interfaces/fraud-prevention-code.interface';
 // import { AblyTicketUsersService } from '../../services/ticket/ably-ticket-users.service';
 
@@ -170,10 +171,14 @@ export class AblyTicketService {
     this.synchronizeFrontendTicket();
   }
 
-  private onTicketItemUsersReplaced({ newTicketItemUsers, itemId }: { newTicketItemUsers: TicketItemUser[], itemId: TicketItem["id"] }) {
-    const ticketItem = this.ticket.items.find(_item => _item.id === itemId);
-    ticketItem.users = newTicketItemUsers;
-    this.synchronizeFrontendTicketItems([ticketItem]);
+  private onTicketItemUsersReplaced({ newTicketItemUsers }: { newTicketItemUsers: ItemIdToTicketItemUsersArray }) {
+    const ticketItems: TicketItem[] = []
+    for (let itemId in newTicketItemUsers) {
+      const ticketItem = this.ticket.items.find(_item => _item.id === Number(itemId));
+      ticketItem.users = Array.from(newTicketItemUsers[itemId]);
+      ticketItems.push(ticketItem);
+    }
+    this.synchronizeFrontendTicketItems(ticketItems);
   }
 
   private onTicketTotalsUpdated(ticketTotal: TicketTotal) {
