@@ -52,7 +52,7 @@
     "ionic-angular": "3.9.5",
     "ionic2-rating": "^1.2.2",
     "ionicons": "3.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "promise-polyfill": "8.0.0",
     "rxjs": "6.2.1",
     "rxjs-compat": "6.0.0",
